@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciberseguridad y Estrategia Nacional - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            background: #34495e;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: #ecf0f1;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: #3498db;
+            border-bottom-color: #2980b9;
+        }
+
+        .content-area {
+            background: #f8f9fa;
+            border: 4px solid #3498db;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .governance-structure {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .governance-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .governance-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .governance-card h4 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2em; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Ciberseguridad</h1>
+            <p>La Estrategia Nacional de Ciberseguridad</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('conceptos')">📚 Conceptos</div>
+                <div class="tab" onclick="showTab('estrategia')">🎯 Estrategia Nacional</div>
+                <div class="tab" onclick="showTab('amenazas')">⚠️ Amenazas</div>
+                <div class="tab" onclick="showTab('objetivos')">📋 Objetivos</div>
+                <div class="tab" onclick="showTab('gobernanza')">🏛️ Gobernanza</div>
+                <div class="tab" onclick="showTab('marco-legal')">⚖️ Marco Legal</div>
+            </div>
+
+            <div class="content-area">
+                <div id="conceptos" class="tab-content active">
+                    <h2>🔐 Conceptos Fundamentales</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">4º</span>
+                            <div>Posición Global España en Ciberseguridad</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">3º</span>
+                            <div>Posición Europea (2º en UE)</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2019</span>
+                            <div>Última Estrategia Nacional</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2013</span>
+                            <div>Primera Estrategia Nacional</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🌐 Ciberespacio</h3>
+                        <p>Espacio común global caracterizado por:</p>
+                        <ul class="list-checkmark">
+                            <li>Apertura funcional y dinamismo</li>
+                            <li>Ausencia de soberanía</li>
+                            <li>Débil jurisdicción</li>
+                            <li>Facilidad de acceso</li>
+                            <li>Dificultad de atribución de acciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🛡️ Ciberseguridad</h3>
+                        <p><strong>Definición:</strong> Conjunto de actividades dirigidas a proteger el ciberespacio contra el uso indebido del mismo, defendiendo su infraestructura tecnológica, los servicios que prestan y la información que manejan.</p>
+                        
+                        <div class="highlight-box">
+                            <h4>📜 Marco Legal</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Artículo 82 LO 3/2018 LOPDGDD:</strong> "Derecho a la seguridad digital"</li>
+                                <li><strong>Carta de Derechos Digitales:</strong> Apartado sexto</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚔️ Ciberdefensa</h3>
+                        <p>Además de prevenir los ataques como hace la Ciberseguridad, da respuesta a los mismos con nuevos ataques con fin de salvaguardar la seguridad.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🤝 Ciberdiplomacia</h3>
+                        <p>Fomento del comportamiento responsable por parte de los Estados en relación al ciberespacio, considerando aspectos políticos, legales y técnicos para mitigar amenazas.</p>
+                    </div>
+                </div>
+
+                <div id="estrategia" class="tab-content">
+                    <h2>🎯 Estrategia Nacional de Ciberseguridad 2019</h2>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h3>2013 - Primera Estrategia</h3>
+                            <p>Se aprobó la primera Estrategia Nacional de Ciberseguridad en España, diseñando el modelo de gobernanza para la ciberseguridad nacional.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>12 de Abril 2019 - Nueva Estrategia</h3>
+                            <p>Aprobación de la nueva Estrategia Nacional de Ciberseguridad 2019 en el Consejo de Seguridad Nacional.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Estructura de la Estrategia 2019</h3>
+                        <div class="governance-structure">
+                            <div class="governance-card">
+                                <h4>Capítulo 1</h4>
+                                <p>El Ciberespacio: más allá de un espacio común global</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>Capítulo 2</h4>
+                                <p>Las amenazas y desafíos en el ciberespacio</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>Capítulo 3</h4>
+                                <p>Propósito, principios y objetivos</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>Capítulo 4</h4>
+                                <p>Líneas de acción y medidas</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>Capítulo 5</h4>
+                                <p>Ciberseguridad en el Sistema de Seguridad Nacional</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔄 Nueva Concepción del Ciberespacio</h3>
+                        <ul class="list-checkmark">
+                            <li>Preservar la defensa de valores y principios constitucionales</li>
+                            <li>Proteger derechos fundamentales en el ciberespacio</li>
+                            <li>Especial énfasis en protección de datos personales</li>
+                            <li>Garantizar privacidad y libertad de expresión</li>
+                            <li>Acceso a información veraz y de calidad</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>💡 Transición del Modelo</h3>
+                        <p>Cambio de un modelo de ciberseguridad preventivo y defensivo hacia un esquema que incorpore elementos de mayor fuerza disuasoria, incluyendo capacidades de ciberdefensa.</p>
+                    </div>
+                </div>
+
+                <div id="amenazas" class="tab-content">
+                    <h2>⚠️ Amenazas y Desafíos</h2>
+
+                    <div class="danger-box">
+                        <h3>🎯 Ciberamenazas</h3>
+                        <p><strong>Definición:</strong> Todas aquellas disrupciones o manipulaciones maliciosas que afectan a elementos tecnológicos, sin distinguir fronteras y afectando a la práctica totalidad de los ámbitos de la Seguridad Nacional.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🕵️ Ciberespionaje</h3>
+                        <ul class="list-checkmark">
+                            <li>Método relativamente económico y rápido</li>
+                            <li>Menos riesgos que el espionaje tradicional</li>
+                            <li>Dificultad de atribución de autoría</li>
+                            <li>Actores estatales y APT (Advanced Persistent Threats)</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>💻 Cibercriminalidad</h3>
+                        <p><strong>Definición:</strong> Conjunto de actividades ilícitas cometidas en el ciberespacio que tienen por objeto elementos o sistemas informáticos.</p>
+                        
+                        <div class="governance-structure">
+                            <div class="governance-card">
+                                <h4>🏴‍☠️ Ciberterrorismo</h4>
+                                <p>Ataques con motivación terrorista</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>🚫 Ciberdelito</h4>
+                                <p>Delitos comunes en el ciberespacio</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>✊ Hacktivismo</h4>
+                                <p>Activismo a través de medios digitales</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>🔀 Amenazas Híbridas</h3>
+                        <p>Acciones coordinadas y sincronizadas dirigidas a atacar vulnerabilidades sistémicas de los estados democráticos, explotando las facilidades de Internet para la desinformación y propaganda.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Uso Malintencionado de Datos Personales</h3>
+                        <ul class="list-checkmark">
+                            <li>Alto potencial desestabilizador en la sociedad</li>
+                            <li>Violación a la privacidad de las personas</li>
+                            <li>Afectación a integridad y confidencialidad de datos</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📰 Campañas de Desinformación</h3>
+                        <p>Uso de noticias falsas para influir en la opinión pública, amplificadas por Internet y redes sociales. Pueden dirigirse contra:</p>
+                        <ul class="list-checkmark">
+                            <li>Organizaciones internacionales</li>
+                            <li>Estados e iniciativas políticas</li>
+                            <li>Personajes públicos</li>
+                            <li>Procesos electorales democráticos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="objetivos" class="tab-content">
+                    <h2>🎯 Objetivos y Principios</h2>
+
+                    <div class="highlight-box">
+                        <h3>📜 Propósito de la Estrategia</h3>
+                        <p>Fijar las directrices generales del ámbito de la ciberseguridad para alcanzar los objetivos de la Estrategia de Seguridad Nacional de 2017.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏛️ Principios Rectores</h3>
+                        <div class="governance-structure">
+                            <div class="governance-card">
+                                <h4>1️⃣ Unidad de Acción</h4>
+                                <p>Coordinación entre todos los actores</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>2️⃣ Anticipación</h4>
+                                <p>Prevención proactiva de amenazas</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>3️⃣ Eficiencia</h4>
+                                <p>Optimización de recursos y capacidades</p>
+                            </div>
+                            <div class="governance-card">
+                                <h4>4️⃣ Resiliencia</h4>
+                                <p>Capacidad de recuperación ante ataques</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🎯 Objetivo General</h3>
+                        <p><em>"España garantizará el uso seguro y fiable del ciberespacio, protegiendo los derechos y las libertades de los ciudadanos y promoviendo el progreso socio económico"</em></p>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Objetivos Específicos</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>Ob 1: Seguridad y Resiliencia</h4>
+                                <p>De las redes y sistemas de información y comunicaciones del sector público y de los servicios esenciales.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ob 2: Uso Seguro</h4>
+                                <p>Uso seguro y fiable del ciberespacio frente a su uso ilícito o malicioso.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ob 3: Protección Ciudadana</h4>
+                                <p>Protección del ecosistema empresarial y social y de los ciudadanos.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ob 4: Cultura y Capacidades</h4>
+                                <p>Cultura y compromiso con la ciberseguridad y potenciación de capacidades humanas y tecnológicas.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ob 5: Seguridad Internacional</h4>
+                                <p>Seguridad del ciberespacio en el ámbito internacional.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="gobernanza" class="tab-content">
+                    <h2>🏛️ Sistema de Gobernanza</h2>
+
+                    <div class="governance-structure">
+                        <div class="governance-card">
+                            <h4>🏛️ Consejo de Seguridad Nacional</h4>
+                            <p>Órgano superior, asiste al Presidente del Gobierno en la dirección de la Política de Seguridad Nacional</p>
+                        </div>
+                        <div class="governance-card">
+                            <h4>🚨 Comité de Situación</h4>
+                            <p>Único para el Sistema de Seguridad Nacional, actúa en situaciones de crisis</p>
+                        </div>
+                        <div class="governance-card">
+                            <h4>🛡️ Consejo Nacional de Ciberseguridad</h4>
+                            <p>Órgano colegiado de apoyo, creado por Acuerdo del 5 de diciembre de 2013</p>
+                        </div>
+                        <div class="governance-card">
+                            <h4>⚙️ Comisión Permanente</h4>
+                            <p>Facilita coordinación interministerial a nivel operacional</p>
+                        </div>
+                        <div class="governance-card">
+                            <h4>🤝 Foro Nacional</h4>
+                            <p>Elemento novedoso de colaboración público-privada</p>
+                        </div>
+                        <div class="governance-card">
+                            <h4>🛠️ CSIRT Nacionales</h4>
+                            <p>CCN-CERT, MCCE e INCIBE-CERT como referencias nacionales</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🛡️ Funciones del Consejo Nacional de Ciberseguridad</h3>
+                        <ul class="list-checkmark">
+                            <li>Apoyar la toma de decisiones del Consejo de Seguridad Nacional</li>
+                            <li>Reforzar coordinación entre Administraciones Públicas</li>
+                            <li>Contribuir a elaboración de propuestas normativas</li>
+                            <li>Verificar cumplimiento de la Estrategia de Ciberseguridad</li>
+                            <li>Realizar valoración de riesgos y amenazas</li>
+                            <li>Facilitar coordinación operativa entre órganos competentes</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📡 Real Decreto 43/2021</h3>
+                        <p>Desarrolla el RD-ley 12/2018 y define la cooperación de los CSIRT de referencia, creando la Plataforma Nacional de Notificación y Seguimiento de Ciberincidentes.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔗 Red de CSIRT</h3>
+                        <p>Coordinación entre CSIRT nacionales, autonómicos y privados:</p>
+                        <ul class="list-checkmark">
+                            <li><strong>CCN-CERT:</strong> Centro Criptológico Nacional</li>
+                            <li><strong>MCCE:</strong> Mando Conjunto del Ciberespacio</li>
+                            <li><strong>INCIBE-CERT:</strong> Instituto Nacional de Ciberseguridad</li>
+                            <li>CSIRT autonómicos y locales</li>
+                            <li>CSIRT del sector privado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="marco-legal" class="tab-content">
+                    <h2>⚖️ Marco Jurídico</h2>
+
+                    <div class="card">
+                        <h3>📋 Normativa Nacional Principal</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>Real Decreto 311/2022</h4>
+                                <p>Regula el Esquema Nacional de Seguridad (3 de mayo)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Real Decreto-ley 12/2018</h4>
+                                <p>Seguridad de redes y sistemas de información - Transpone Directiva NIS (7 de septiembre)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Real Decreto 43/2021</h4>
+                                <p>Desarrolla el RD-ley 12/2018 (26 de enero)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ley 36/2015</h4>
+                                <p>Ley de Seguridad Nacional - Contempla ciberseguridad como ámbito de especial interés (28 de septiembre)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Ley 8/2011</h4>
+                                <p>Protección de infraestructuras críticas (28 de abril)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🇪🇺 Normativa Europea</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Reglamento (UE) 2019/881:</strong> ENISA y certificación de ciberseguridad</li>
+                            <li><strong>Directiva NIS:</strong> Directiva (UE) 2016/1148</li>
+                            <li><strong>Estrategia Europea de Ciberseguridad:</strong> 52013JC0001</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📈 Programas de Desarrollo</h3>
+                        <div class="highlight-box">
+                            <h4>España Digital 2026</h4>
+                            <p><strong>Eje 3 - Ciberseguridad:</strong> Medidas 9-12 del programa nacional de digitalización</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>⚡ Actualizaciones Importantes</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>RD 1150/2021:</strong> Estrategia de Seguridad Nacional 2021</li>
+                            <li><strong>Global Cybersecurity Index:</strong> España 4º mundial, 3º europeo</li>
+                            <li>Verificar actualizaciones periódicas del índice UIT</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔗 Enlaces de Referencia</h3>
+                        <ul class="list-checkmark">
+                            <li>ITU Global Cybersecurity Index</li>
+                            <li>Carta de Derechos Digitales española</li>
+                            <li>Portal oficial de Ciberseguridad Nacional</li>
+                            <li>INCIBE - Instituto Nacional de Ciberseguridad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

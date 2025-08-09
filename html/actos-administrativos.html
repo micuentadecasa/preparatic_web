@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actos Administrativos - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: fit-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .tab-button.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ecf0f1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #3498db;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .check-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .check-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .danger-box {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        .process-step {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .process-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .law-reference {
+            background: #ecf0f1;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-left: 3px solid #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Actos Administrativos</h1>
+            <p>Revisión, Recursos Administrativos y Contencioso-Administrativo</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Actos</button>
+                <button class="tab-button" onclick="showTab('validity')">⚖️ Validez</button>
+                <button class="tab-button" onclick="showTab('review')">🔍 Revisión</button>
+                <button class="tab-button" onclick="showTab('resources')">📝 Recursos</button>
+                <button class="tab-button" onclick="showTab('contentious')">🏛️ Contencioso</button>
+                <button class="tab-button" onclick="showTab('procedure')">⚡ Procedimiento</button>
+            </div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="content-card">
+                <h2>📋 Actos Administrativos</h2>
+                <p>Definen la <strong>voluntad, juicio, deseo o conocimiento</strong> realizado por la AAPP en el ejercicio de una potestad administrativa.</p>
+                <div class="law-reference">Regulados en Ley 39/2015, Título I</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Tipos Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Tipos de Recursos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Causas de Nulidad</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Fases del Proceso</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">✅ Actos Favorables</div>
+                    <p><strong>Amplían la esfera jurídica</strong> de los particulares</p>
+                    <ul class="check-list">
+                        <li>Fáciles de dictar, difíciles de anular/revocar</li>
+                        <li>Excepcionalmente pueden ser retroactivos</li>
+                        <li>Declaran o reconocen derechos</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">❌ Actos de Gravamen</div>
+                    <p><strong>Limitan libertades o derechos</strong> de los administrados</p>
+                    <ul class="check-list">
+                        <li>Efecto retroactivo prohibido (Art. 9.3 CE)</li>
+                        <li>Inexcusable trámite de audiencia</li>
+                        <li>Requieren motivación obligatoria</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📋 Requisitos de los Actos</h3>
+                <ul class="check-list">
+                    <li><strong>Contenido:</strong> Ajustado al procedimiento y ordenamiento jurídico</li>
+                    <li><strong>Forma:</strong> Por escrito a través de medios electrónicos</li>
+                    <li><strong>Competencia:</strong> Del órgano que los dicta</li>
+                    <li><strong>Motivación:</strong> Especialmente en actos desfavorables</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Eficacia de los Actos</h3>
+                <p>La <strong>capacidad de producir efectos</strong>, definiendo derechos o creando obligaciones:</p>
+                <div class="process-step">
+                    <span class="process-number">1</span>
+                    <strong>Inderogabilidad Singular:</strong> No pueden vulnerar disposiciones generales
+                </div>
+                <div class="process-step">
+                    <span class="process-number">2</span>
+                    <strong>Ejecutividad:</strong> Capacidad de producir efectos contra la voluntad del afectado
+                </div>
+                <div class="process-step">
+                    <span class="process-number">3</span>
+                    <strong>Presunción de Validez:</strong> Producen efectos desde su dictado
+                </div>
+            </div>
+        </div>
+
+        <div id="validity" class="tab-content">
+            <div class="content-card">
+                <h2>⚖️ Invalidez del Acto Administrativo</h2>
+                <p>Los actos se <strong>presumen válidos</strong> hasta declaración formal de nulidad por AAPP o tribunales.</p>
+            </div>
+
+            <div class="danger-box">
+                <h3>🚫 Nulidad de Pleno Derecho (Art. 47 L39/2015)</h3>
+                <p>Los actos son <strong>nulos de pleno derecho</strong> en estos casos:</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">a) Derechos Fundamentales</div>
+                    <p>Actos que lesionen derechos y libertades susceptibles de amparo constitucional</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">b) Incompetencia Manifiesta</div>
+                    <p>Dictados por órgano incompetente por razón de materia o territorio</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">c) Contenido Imposible</div>
+                    <p>Actos con contenido materialmente imposible de cumplir</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">d) Infracción Penal</div>
+                    <p>Constitutivos de infracción penal o dictados como consecuencia de ella</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">e) Defecto Procedimiento</div>
+                    <p>Prescindiendo total y absolutamente del procedimiento establecido</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">f) Derechos Sin Requisitos</div>
+                    <p>Adquisición de facultades sin cumplir requisitos esenciales</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Anulabilidad (Art. 48 L39/2015)</h3>
+                <p><strong>Son anulables</strong> los actos que incurran en cualquier infracción del ordenamiento jurídico, incluso desviación de poder.</p>
+                <ul class="check-list">
+                    <li>Defecto de forma cuando carezca de requisitos indispensables</li>
+                    <li>Actuaciones fuera de tiempo según naturaleza del plazo</li>
+                    <li>Cualquier otra infracción del ordenamiento</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🔄 Límites de la Nulidad</h3>
+                <ul class="check-list">
+                    <li>La nulidad de un acto <strong>no implica</strong> la de actos sucesivos independientes</li>
+                    <li>La nulidad de una parte <strong>no implica</strong> la del resto si son independientes</li>
+                    <li>Excepción: si la parte nula es tan importante que sin ella no se hubiera dictado</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔧 Convalidación</h3>
+                <p>Las AAPP pueden <strong>convalidar actos anulables</strong> subsanando los vicios. El acto de convalidación es efectivo desde su fecha salvo disposición contraria.</p>
+            </div>
+        </div>
+
+        <div id="review" class="tab-content">
+            <div class="content-card">
+                <h2>🔍 Revisión de Actos en Vía Administrativa</h2>
+                <p>Procedimientos que permiten a las AAPP revisar sus propios actos para corregir errores o ilegalidades.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🚫</div>
+                    <h3>Revisión de Actos Nulos</h3>
+                    <p><strong>En cualquier momento</strong></p>
+                    <p>• Iniciativa propia o solicitud del interesado</p>
+                    <p>• Previo dictamen del Consejo de Estado</p>
+                    <p>• Actos que pusieron fin a la vía administrativa</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⚖️</div>
+                    <h3>Declaración de Lesividad</h3>
+                    <p><strong>Plazo: 4 años</strong></p>
+                    <p>• Para impugnar actos favorables anulables</p>
+                    <p>• Ante Jurisdicción Contencioso-Administrativa</p>
+                    <p>• Procedimiento: 6 meses</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⏸️</div>
+                    <h3>Suspensión</h3>
+                    <p><strong>Medida Cautelar</strong></p>
+                    <p>• Cuando cause perjuicios difíciles de reparar</p>
+                    <p>• Por órgano competente</p>
+                    <p>• Durante tramitación de revisión</p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📅 Plazos de Revisión</h4>
+                    <p><strong>6 meses</strong> para resolver proceso de revisión</p>
+                    <ul class="check-list">
+                        <li>Oficiales: caducan si no se resuelven</li>
+                        <li>A instancia de parte: silencio negativo</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🔄 Revocación y Rectificación</h4>
+                    <p><strong>Revocación:</strong> Actos desfavorables no prescritos</p>
+                    <p><strong>Rectificación:</strong> Errores materiales, de hecho o aritméticos</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🚫 Límites a la Revisión</h4>
+                    <ul class="check-list">
+                        <li>Prescripción por paso del tiempo</li>
+                        <li>Contrario a equidad, buena fe o derechos de terceros</li>
+                        <li>Vulneración de leyes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏛️ Competencias para Revisión en AGE</h3>
+                <p><strong>Consejo de Ministros:</strong> Sus propios actos y de ministros</p>
+                <p><strong>Ministros:</strong> Actos de Secretarios de Estado y órganos no dependientes</p>
+                <p><strong>Secretarios de Estado:</strong> Actos de órganos dependientes</p>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="content-card">
+                <h2>📝 Recursos Administrativos</h2>
+                <p>Revisión en vía administrativa que la propia AAPP realiza sobre actos dictados por sus organismos.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">⬆️</div>
+                    <h3>Recurso de Alzada</h3>
+                    <p><strong>Contra actos que NO pongan fin a la vía administrativa</strong></p>
+                    <div class="law-reference">
+                        • Plazo interposición: 1 mes (acto expreso)<br>
+                        • Plazo resolución: 3 meses<br>
+                        • Resuelve: Superior jerárquico
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">🔄</div>
+                    <h3>Recurso Potestativo de Reposición</h3>
+                    <p><strong>Contra actos que pongan FIN a la vía administrativa</strong></p>
+                    <div class="law-reference">
+                        • Plazo interposición: 1 mes (acto expreso)<br>
+                        • Plazo resolución: 1 mes<br>
+                        • Resuelve: Mismo órgano que dictó el acto
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⭐</div>
+                    <h3>Recurso Extraordinario de Revisión</h3>
+                    <p><strong>Contra actos firmes en vía administrativa</strong></p>
+                    <div class="law-reference">
+                        • Plazo: 4 años (error de hecho)<br>
+                        • Plazo: 3 meses (documentos/sentencia)<br>
+                        • Resuelve: Mismo órgano
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>📋 Causas del Recurso Extraordinario (Art. 125.1)</h3>
+                <ul class="check-list">
+                    <li><strong>a)</strong> Error de hecho de los propios documentos del expediente</li>
+                    <li><strong>b)</strong> Documentos posteriores de valor esencial</li>
+                    <li><strong>c)</strong> Documentos o testimonios declarados falsos por sentencia firme</li>
+                    <li><strong>d)</strong> Resolución por prevaricación, cohecho, violencia o fraude</li>
+                </ul>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📍 Interposición del Recurso de Alzada</h4>
+                    <p>Se puede interponer:</p>
+                    <ul class="check-list">
+                        <li>Ante órgano que dictó el acto (remite en 10 días)</li>
+                        <li>Directamente ante superior jerárquico</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>⚖️ Efectos de los Recursos</h4>
+                    <p><strong>Alzada:</strong> Solo cabe Extraordinario de Revisión o Contencioso</p>
+                    <p><strong>Reposición:</strong> Solo cabe Contencioso-Administrativo</p>
+                    <p><strong>Extraordinario:</strong> Agota la vía administrativa</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Importante:</strong> Los recursos administrativos tienen <strong>silencio negativo</strong> si transcurren los plazos sin resolución expresa.
+            </div>
+        </div>
+
+        <div id="contentious" class="tab-content">
+            <div class="content-card">
+                <h2>🏛️ Recurso Contencioso-Administrativo</h2>
+                <p>Proceso judicial para impugnar actos y disposiciones de las Administraciones Públicas.</p>
+                <div class="law-reference">Ley 29/1998, reguladora de la Jurisdicción Contencioso-Administrativa</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Partes Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Tipos de Legitimados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Actos Impugnables</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Fases del Proceso</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">👥 Capacidad Procesal</div>
+                    <p>Tienen capacidad procesal:</p>
+                    <ul class="check-list">
+                        <li>Personas con capacidad según LEC</li>
+                        <li>Menores para defensa de sus derechos</li>
+                        <li>Grupos de afectados cuando la ley lo declare</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">⚖️ Legitimación</div>
+                    <p>Están legitimados:</p>
+                    <ul class="check-list">
+                        <li>Personas con derecho o interés legítimo</li>
+                        <li>Corporaciones y sindicatos afectados</li>
+                        <li>Administraciones para impugnar entre ellas</li>
+                        <li>Ciudadanos (acción popular en casos legales)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📋 Materias del Orden Contencioso-Administrativo</h3>
+                <ul class="check-list">
+                    <li>Protección jurisdiccional de derechos fundamentales</li>
+                    <li>Contratos administrativos y actos de preparación</li>
+                    <li>Actos de Corporaciones de Derecho público</li>
+                    <li>Responsabilidad patrimonial de las AAPP</li>
+                    <li>Actos de control o fiscalización</li>
+                    <li>Otras materias que atribuya expresamente una ley</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>🚫 No Pueden Interponer Recurso</h3>
+                <ul class="check-list">
+                    <li>Órganos de la misma Administración (salvo ley contraria)</li>
+                    <li>Particulares por delegación o como agentes</li>
+                    <li>Entidades dependientes (salvo estatuto de autonomía)</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>👨‍💼 Reglas de Postulación</h3>
+                <p><strong>Administración:</strong> Abogados del Estado (asumen abogado y procurador)</p>
+                <p><strong>Particulares:</strong></p>
+                <ul class="check-list">
+                    <li><strong>Regla general:</strong> Abogado + Procurador</li>
+                    <li><strong>Órganos unipersonales:</strong> Solo abogado con poder bastante</li>
+                    <li><strong>Personal:</strong> Funcionario puede actuar por sí mismo</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="procedure" class="tab-content">
+            <div class="content-card">
+                <h2>⚡ Procedimiento Contencioso-Administrativo</h2>
+                <p>Fases del proceso judicial desde la interposición hasta la sentencia.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>1️⃣ Diligencias Preliminares</h4>
+                    <p>Varían según lo promueva la administración o particular</p>
+                    <div class="law-reference">Art. 43 y 44 LJCA</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>2️⃣ Interposición y Reclamación</h4>
+                    <p><strong>Escrito de interposición</strong> + documentos (Art. 45.2)</p>
+                    <p>⚠️ Solo es un escrito, no se llena de contenido hasta la demanda</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>3️⃣ Emplazamiento y Admisión</h4>
+                    <p>• Emplazamiento: lo hace la Administración (9 días)</p>
+                    <p>• Admisión: el juez o tribunal admite o no a trámite</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>4️⃣ Demanda y Contestación</h4>
+                    <p><strong>Demanda:</strong> 20 días (pretensiones y cuantía)</p>
+                    <p><strong>Contestación:</strong> 20 días desde recepción</p>
+                    <div class="law-reference">Art. 52 y siguientes</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>5️⃣ Alegaciones Previas</h4>
+                    <p>Oposición sin entrar al fondo</p>
+                    <p><strong>Plazo:</strong> 5 primeros días de los 20 para contestación</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🔍 Prueba</div>
+                    <p>Se solicita mediante fórmula <strong>OTROSÍ</strong></p>
+                    <ul class="check-list">
+                        <li>Proponer: 15 días</li>
+                        <li>Practicar: 30 días</li>
+                        <li>En escritos de demanda, contestación o alegaciones</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">👁️ Vista y Conclusiones</div>
+                    <p>Trámite <strong>no obligatorio</strong></p>
+                    <ul class="check-list">
+                        <li>Solo cuando lo soliciten las partes</li>
+                        <li>Permite exposición oral</li>
+                        <li>Complementa escritos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📝</div>
+                    <h3>Procedimiento Ordinario</h3>
+                    <p>Proceso escrito con múltiples fases</p>
+                    <p>• Para la mayoría de asuntos</p>
+                    <p>• Sin límite de cuantía general</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⚡</div>
+                    <h3>Procedimiento Abreviado</h3>
+                    <p>Proceso oral y más rápido</p>
+                    <p>• Personal de AAPP</p>
+                    <p>• Extranjería y asilo</p>
+                    <p>• Hasta 30.000 euros</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⭐</div>
+                    <h3>Procedimientos Especiales</h3>
+                    <p>Para materias específicas</p>
+                    <p>• Derechos fundamentales</p>
+                    <p>• Cuestión de ilegalidad</p>
+                    <p>• Suspensión administrativa previa</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏆 Modos de Terminación</h3>
+                <ul class="check-list">
+                    <li><strong>Sentencia</strong> (modo normal)</li>
+                    <li><strong>Desistimiento</strong> del demandante</li>
+                    <li><strong>Allanamiento</strong> del demandado</li>
+                    <li><strong>Satisfacción extraprocesal</strong> por la AAPP</li>
+                    <li><strong>Pacto o convenio</strong> (conciliación judicial)</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>⚖️ La Sentencia</h3>
+                <p><strong>Plazo:</strong> 10 días desde declaración de concluso</p>
+                <p><strong>Partes mínimas:</strong></p>
+                <ul class="check-list">
+                    <li>Hechos que resultan probados</li>
+                    <li>Fundamentos de derecho</li>
+                    <li>Fallo</li>
+                </ul>
+                <p><strong>Ejecución:</strong> Comunicación en 10 días, ejecución en 2 meses</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de aparición de elementos
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card, .stat-card, .info-card, .resource-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(20px)';
+                        entry.target.style.animation = 'fadeIn 0.6s ease forwards';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

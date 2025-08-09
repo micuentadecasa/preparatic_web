@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo Entidad-Relación - Análisis del Dominio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+        
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #f8f9fa;
+            opacity: 0.9;
+        }
+        
+        .tab-container {
+            background: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+        }
+        
+        .tabs {
+            display: flex;
+            min-width: max-content;
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .tab-button.active {
+            background: #3498db;
+            color: white;
+            border-bottom-color: #2980b9;
+        }
+        
+        .tab-content {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #3498db;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid rgb(88, 106, 95);
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .principle-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #e74c3c;
+        }
+        
+        .principle-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .diagram-text {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .warning-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .type-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #f39c12;
+        }
+        
+        .type-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .reference-links {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .reference-links a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+            margin: 5px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .reference-links a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .solid-principles {
+            background: linear-gradient(135deg, rgb(88, 106, 95), #58b368);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .solid-principles h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">📐 Modelo Entidad-Relación</h1>
+            <p class="subtitle">Análisis del Dominio de los Sistemas</p>
+        </header>
+        
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab(event, 'overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab(event, 'oop')">🔄 Orientación a Objetos</button>
+                <button class="tab-button" onclick="showTab(event, 'classes')">📦 Diagramas de Clases</button>
+                <button class="tab-button" onclick="showTab(event, 'er-model')">🗃️ Modelo E/R</button>
+                <button class="tab-button" onclick="showTab(event, 'er-extended')">⚡ E/R Extendido</button>
+                <button class="tab-button" onclick="showTab(event, 'resources')">📚 Recursos</button>
+            </div>
+        </div>
+        
+        <div id="overview" class="tab-content active">
+            <h2>📋 Visión General del Análisis y Modelado</h2>
+            
+            <div class="highlight-box">
+                <h3>🎯 Conceptos Fundamentales</h3>
+                <p>El análisis de un sistema de información representa el <strong>"qué"</strong> y el diseño el <strong>"cómo"</strong>. Para establecer las características que debe cumplir el sistema para cubrir las necesidades de los usuarios se describen requisitos.</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <div>Niveles de Análisis</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <div>Enfoques Principales</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">UML</span>
+                    <div>Lenguaje Estándar</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2.5.1</span>
+                    <div>Versión Actual UML</div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>⚖️ Enfoques de Análisis</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">📊 Estructurado</div>
+                        <p>Enfoque tradicional basado en procesos y datos por separado. Utiliza DFD, modelo E/R.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🔄 Orientado a Objetos</div>
+                        <p>Enfoque moderno que integra datos y procesos. Utiliza UML y diagramas de clases.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>📊 Niveles de Análisis del Sistema</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🏗️ Estático - Modelo de Datos</h4>
+                        <p><strong>Estructurado:</strong> Modelo E/R</p>
+                        <p><strong>OO:</strong> Diagrama de objetos/clases</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>⚙️ Funcional - Modelo de Procesos</h4>
+                        <p><strong>Estructurado:</strong> DFD y DFC</p>
+                        <p><strong>OO:</strong> Diagrama de casos de uso</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🔄 Dinámico - Comportamiento</h4>
+                        <p><strong>Estructurado:</strong> DTE y HVE</p>
+                        <p><strong>OO:</strong> Diagramas de transición de estados, secuencia y colaboración</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>📐 UML - Unified Modeling Language</h3>
+                <p>Lenguaje de modelado estandarizado por el OMG que permite modelar, construir y documentar software, independientemente del proceso de desarrollo.</p>
+                <ul class="feature-list">
+                    <li>Versión actual: 2.5.1 (diciembre 2017)</li>
+                    <li>Estándar de la industria para modelado OO</li>
+                    <li>Independiente del proceso de desarrollo</li>
+                    <li>Múltiples tipos de diagramas especializados</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🎨 Modelo de Dominio</h3>
+                <p>Modelo conceptual para describir un problema específico representando el vocabulario y los conceptos clave através de:</p>
+                <ul class="feature-list">
+                    <li>Entidades y atributos</li>
+                    <li>Papeles y relaciones</li>
+                    <li>Restricciones del dominio</li>
+                    <li>Clases conceptuales (sin métodos)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="oop" class="tab-content">
+            <h2>🔄 Orientación a Objetos</h2>
+            
+            <div class="highlight-box">
+                <h3>📝 Definiciones Clave</h3>
+                <p><strong>Análisis OO:</strong> Método de análisis que examina los requisitos desde la perspectiva de las clases y objetos encontrados en el vocabulario del dominio del problema.</p>
+                <p><strong>Programación OO:</strong> Método de implementación en el cual los programas son organizados como grupos cooperativos de objetos en jerarquías de clases unidas vía relaciones de herencia.</p>
+            </div>
+            
+            <div class="content-card">
+                <h3>✨ Ventajas de la Orientación a Objetos</h3>
+                <ul class="feature-list">
+                    <li>Suministra modelos similares a los del mundo real</li>
+                    <li>Facilita el desarrollo de sistemas complejos</li>
+                    <li>Facilita la reutilización de software y diseños</li>
+                    <li>Permite el desarrollo iterativo de aplicaciones</li>
+                    <li>Permite la interoperabilidad entre aplicaciones</li>
+                    <li>Sistemas generalmente más pequeños que equivalentes no OO</li>
+                    <li>Vale para aplicaciones de pequeño y gran tamaño</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🏗️ Características del Diseño OO</h3>
+                <div class="principles-grid">
+                    <div class="principle-card">
+                        <h4>📦 Modularidad</h4>
+                        <p>Descomposición del sistema en módulos cohesivos e independientes.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔧 Extensibilidad</h4>
+                        <p>Capacidad de añadir nuevas funcionalidades sin modificar código existente.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔒 Ocultación de Información</h4>
+                        <p>Separación entre interfaz pública e implementación interna.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔗 Acoplamiento Débil</h4>
+                        <p>Minimizar dependencias entre módulos del sistema.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="solid-principles">
+                <h3>🎯 Principios SOLID</h3>
+                <ul class="feature-list">
+                    <li><strong>S - Single Responsibility:</strong> Responsabilidad única contenida en la clase</li>
+                    <li><strong>O - Open/Closed:</strong> Clases abiertas para extensión, cerradas para modificación</li>
+                    <li><strong>L - Liskov Substitution:</strong> Objetos reemplazables por instancias de sus subtipos</li>
+                    <li><strong>I - Interface Segregation:</strong> Interfaces cliente específicas</li>
+                    <li><strong>D - Dependency Inversion:</strong> Depender de abstracciones, no implementaciones</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🏛️ Principios Fundamentales del Modelo OO</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🆔 Identidad</h4>
+                        <p>Cada objeto tiene su propia identidad inherente. Dos objetos con los mismos valores de atributos son objetos diferentes.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🎭 Abstracción</h4>
+                        <p>Generalización conceptual del comportamiento de un grupo de objetos y sus atributos, ocultando detalles de implementación.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>📦 Encapsulación</h4>
+                        <p>Proceso de ocultar detalles internos del objeto, separando el aspecto externo del interno.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🔄 Herencia</h4>
+                        <p>Mecanismo para extender clases, permitiendo reutilización de código y definiendo jerarquías.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🎨 Polimorfismo</h4>
+                        <p>Propiedad por la cual un mismo mensaje puede originar conductas diferentes en diferentes objetos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔍 Metodologías de Diseño OO</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Metodología</th>
+                                <th>Autor</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OOD</td>
+                                <td>Booch</td>
+                                <td>Object-Oriented Design</td>
+                            </tr>
+                            <tr>
+                                <td>OMT</td>
+                                <td>Rumbaugh</td>
+                                <td>Object Modeling Technique</td>
+                            </tr>
+                            <tr>
+                                <td>OOA</td>
+                                <td>Coad/Yourdon</td>
+                                <td>Object Oriented Analysis</td>
+                            </tr>
+                            <tr>
+                                <td>UML</td>
+                                <td>OMG</td>
+                                <td>Unified Modelling Language</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="classes" class="tab-content">
+            <h2>📦 Diagramas de Clases y Objetos</h2>
+            
+            <div class="highlight-box">
+                <h3>📋 Diagrama de Clases UML</h3>
+                <p>Tipo de diagrama de estructura estática que describe la estructura de un sistema mostrando las clases del sistema, sus atributos, operaciones, y las relaciones entre los objetos.</p>
+            </div>
+            
+            <div class="content-card">
+                <h3>🏗️ Elementos del Diagrama de Clases</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📦 Clases</h4>
+                        <p>Elemento principal del diagrama para representar conceptos o entidades. Incluyen nombre, atributos y métodos.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🔗 Relaciones</h4>
+                        <p>Identifican dependencias entre clases. Se representan con líneas que pueden llevar nombre y multiplicidad.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔗 Tipos de Relaciones</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">↔️ Asociación</div>
+                        <p>Relación más común, representa dependencia semántica. Se dibuja con línea simple.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">◇ Agregación</div>
+                        <p>Relación dinámica parte/todo. Diamante vacío en la clase "todo".</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">◆ Composición</div>
+                        <p>Relación estática parte/todo. Diamante sombreado, objeto base con multiplicidad 1.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">△ Herencia</div>
+                        <p>Se representa con flecha vacía que apunta a la clase padre.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">⇢ Dependencia</div>
+                        <p>Una clase requiere otra para ofrecer funcionalidades. Flecha discontinua.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🏷️ Niveles de Acceso</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Símbolo</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>+</strong></td>
+                                <td>Público</td>
+                                <td>Accesible desde cualquier clase</td>
+                            </tr>
+                            <tr>
+                                <td><strong>-</strong></td>
+                                <td>Privado</td>
+                                <td>Solo accesible desde operaciones de la misma clase</td>
+                            </tr>
+                            <tr>
+                                <td><strong>#</strong></td>
+                                <td>Protegido</td>
+                                <td>Accesible desde la clase o clases derivadas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🎯 Criterios para Definir una Clase</h3>
+                <ul class="feature-list">
+                    <li>Cuando aparezca un concepto nuevo del problema o de la solución</li>
+                    <li>Cada vez que se requiera un tipo de datos nuevo</li>
+                    <li>Para modelar entidades del dominio del problema</li>
+                    <li>Para encapsular comportamiento relacionado</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔍 Métodos de Identificación de Clases</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">📝 Análisis Léxico</div>
+                        <p>Partir de un enunciado preciso del problema. Los nombres son posibles clases, los verbos son operaciones candidatas.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🃏 Tarjetas CRC</div>
+                        <p>Collaboration Responsibilities Cards. Define responsabilidades de cada clase y sus colaboraciones.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h3>📊 Diagrama de Objetos</h3>
+                <p>Caso especial del Diagrama de Clases que muestra las instancias específicas de las clases involucradas en un instante determinado previamente decidido. Útil para validar el diseño con ejemplos concretos.</p>
+            </div>
+        </div>
+        
+        <div id="er-model" class="tab-content">
+            <h2>🗃️ Modelo Entidad-Relación (E/R)</h2>
+            
+            <div class="highlight-box">
+                <h3>🎯 Definición del Modelo E/R</h3>
+                <p>El Modelo Entidad-Relación representa el <strong>Modelo conceptual de datos</strong>. Es único para cada sistema de información y se corresponde con el nivel conceptual de la Arquitectura ANSI a tres niveles.</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <div>Componentes Principales</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">E/R</span>
+                    <div>Modelo Conceptual</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">DED</span>
+                    <div>Modelo Lógico</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">ANSI</span>
+                    <div>Arquitectura</div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🏗️ Componentes del Modelo E/R</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📦 Entidades</h4>
+                        <p>Objeto real o abstracto de interés en una organización del cual se quiere obtener información.</p>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Tipo de entidad:</strong> Estructura genérica</li>
+                            <li><strong>Ocurrencia:</strong> Realización concreta de una entidad</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🏷️ Atributos</h4>
+                        <p>Propiedades o características que tiene un tipo de entidad. Son atómicos y delimitan la entidad.</p>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Simple:</strong> Valor indivisible</li>
+                            <li><strong>Compuesto:</strong> Puede subdividirse en atributos más elementales</li>
+                            <li><strong>Multivaluado:</strong> Puede tomar más de un valor</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>🔗 Relaciones</h4>
+                        <p>Asociación entre entidades caracterizada por restricciones. Se representan a través de verbos de acción.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔑 Conceptos de Claves</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">🔓 Superclave</div>
+                        <p>Cualquier conjunto de atributos que permita distinguir todas las entidades de cualquier instancia válida.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🎯 Clave Candidata</div>
+                        <p>Superclave mínima que no contiene ningún subconjunto que también sea superclave.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🔐 Clave Primaria</div>
+                        <p>Clave candidata seleccionada por el diseñador para distinguir unívocamente cada entidad.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">📊 Dominio</div>
+                        <p>Conjunto nominado de valores homogéneos con independencia de cualquier entidad o atributo.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔗 Tipos de Relaciones por Grado</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Grado</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Unitarias</td>
+                                <td>1</td>
+                                <td>Una entidad se relaciona consigo misma</td>
+                            </tr>
+                            <tr>
+                                <td>Binarias</td>
+                                <td>2</td>
+                                <td>Entidades relacionadas dos a dos</td>
+                            </tr>
+                            <tr>
+                                <td>Ternarias</td>
+                                <td>3</td>
+                                <td>Relación entre tres entidades</td>
+                            </tr>
+                            <tr>
+                                <td>N-arias</td>
+                                <td>N</td>
+                                <td>Relación entre N entidades</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>📊 Tipos de Correspondencia</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">1:1</div>
+                        <p>Una ocurrencia de A se asocia como máximo con una de B y viceversa. Poca carga semántica.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">1:N</div>
+                        <p>Una ocurrencia de A se asocia con varias de B, pero una de B solo con una de A.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">N:M</div>
+                        <p>Una ocurrencia de A se asocia con varias de B y viceversa.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">Reflexivas</div>
+                        <p>Relaciones unarias donde participa un único tipo de entidad con diferentes roles.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h3>⚠️ Entidades Débiles</h3>
+                <p>Son siempre binarias con correspondencia 1:N. Existen dos tipos:</p>
+                <ul style="margin-top: 15px;">
+                    <li><strong>Dependencia por Identificador:</strong> No tiene suficientes atributos para formar su clave primaria</li>
+                    <li><strong>Dependencia por Existencia:</strong> Dispone de clave primaria suficiente pero depende de otra entidad para existir</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="er-extended" class="tab-content">
+            <h2>⚡ Modelo E/R Extendido</h2>
+            
+            <div class="highlight-box">
+                <h3>🎯 Cardinalidad</h3>
+                <p>La cardinalidad de un tipo de Entidad se define como el número mínimo y máximo de ocurrencias de un tipo de entidad que pueden estar relacionadas con una ocurrencia de otro tipo de entidad.</p>
+            </div>
+            
+            <div class="content-card">
+                <h3>🎭 Clase de Pertenencia</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">✅ Obligatoria</div>
+                        <p>Toda ocurrencia de la entidad A debe estar asociada con al menos una ocurrencia de la entidad B. Cardinalidad mínima = 1.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">❓ Opcional</div>
+                        <p>No toda ocurrencia de la entidad A necesita estar asociada con alguna ocurrencia de la entidad B. Cardinalidad mínima = 0.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🌳 Relaciones de Jerarquía</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>⬆️ Generalización</h4>
+                        <p>De lo concreto a lo abstracto (método inductivo). Va de lo particular a lo general. El supertipo incluye atributos de los subtipos.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>⬇️ Especialización</h4>
+                        <p>De lo general a lo particular (método deductivo). Se da cuando no se representan todos los subtipos posibles.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>📊 Tipos de Jerarquías</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2">Cobertura</td>
+                                <td>Total</td>
+                                <td>Cada elemento de la superentidad debe estar en al menos una subentidad</td>
+                            </tr>
+                            <tr>
+                                <td>Parcial</td>
+                                <td>Puede haber elementos que no estén en ninguna subentidad</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">Solapamiento</td>
+                                <td>Disjunta</td>
+                                <td>Cada elemento está a lo sumo en una subentidad</td>
+                            </tr>
+                            <tr>
+                                <td>Solapamiento</td>
+                                <td>Los elementos pueden estar en más de una subentidad</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔗 Conceptos Avanzados</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-title">📑 Categorías</div>
+                        <p>Subtipo resultado de la unión de varios tipos de entidad. Parecido a la herencia múltiple.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🤝 Asociaciones</div>
+                        <p>Relacionar dos tipos de entidades normalmente de dominios independientes que coyunturalmente se asocian.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">🏗️ Agregación</div>
+                        <p>Construir un nuevo tipo de entidad como composición de otros para manejarlo en un nivel mayor de abstracción.</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-title">⏰ Dimensión Temporal</div>
+                        <p>Incorporar el factor tiempo en las relaciones para modelar evolución temporal de los datos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h3>🔄 Transformación a Tablas</h3>
+                <p><strong>Reglas principales:</strong></p>
+                <ul style="margin-top: 15px;">
+                    <li><strong>1:N:</strong> Se propaga el ID de la entidad de cardinalidad máxima 1 a la que es N</li>
+                    <li><strong>1:1:</strong> Caso particular de 1:N, se propaga la clave en ambas direcciones</li>
+                    <li><strong>N:M:</strong> Se crea una tabla intermedia con las claves primarias de ambas entidades</li>
+                    <li><strong>Entidades débiles:</strong> La PK está formada por la concatenación de los IDs de ambas entidades</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>📋 Ejemplo de Transformación</h3>
+                <div class="diagram-container">
+                    <div class="diagram-text">
+SOCIO (Cod_socio, nombre, dirección...)
+LIBRO (Cod_libro, título, autor...)
+PRESTAMO (Cod_socio, Cod_libro, Fecha_ini, Fecha_fin)
+
+Donde:
+- Cod_socio y Cod_libro forman la PK compuesta de PRESTAMO
+- Cod_socio es FK que referencia a SOCIO
+- Cod_libro es FK que referencia a LIBRO</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resources" class="tab-content">
+            <h2>📚 Recursos y Referencias</h2>
+            
+            <div class="content-card">
+                <h3>📊 Ventajas del Modelo de Datos</h3>
+                <ul class="feature-list">
+                    <li>Comprensión de los datos de una organización y su funcionamiento</li>
+                    <li>Obtención de estructuras de datos independientes del entorno físico</li>
+                    <li>Control de posibles errores desde el principio</li>
+                    <li>Mejora del mantenimiento del sistema</li>
+                    <li>Independencia del procesamiento que transforma los datos</li>
+                    <li>Fiel representación del sistema de información objeto del estudio</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🔍 Estándares y Normativas</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Estándar</th>
+                                <th>Descripción</th>
+                                <th>Aplicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ISO/IEC/IEEE 29148</td>
+                                <td>Ingeniería de requisitos</td>
+                                <td>Análisis de sistemas</td>
+                            </tr>
+                            <tr>
+                                <td>ISO/IEC/IEEE 15288</td>
+                                <td>Procesos del ciclo de vida de sistemas</td>
+                                <td>Desarrollo de sistemas</td>
+                            </tr>
+                            <tr>
+                                <td>ISO/IEC 24766</td>
+                                <td>Modelado de sistemas</td>
+                                <td>Diseño y arquitectura</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="reference-links">
+                <h3>🔗 Enlaces de Referencia</h3>
+                <a href="#" onclick="return false;">📋 Técnicas MÉTRICA v3</a>
+                <a href="#" onclick="return false;">📘 Documento Adicional de Modelado</a>
+                <a href="#" onclick="return false;">🌐 OMG - Object Management Group</a>
+                <a href="#" onclick="return false;">📊 UML Specification 2.5.1</a>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>💡 Consejos para el Estudio</h3>
+                <ul class="feature-list">
+                    <li>Practica identificando entidades, atributos y relaciones en casos reales</li>
+                    <li>Comprende la diferencia entre modelo conceptual y lógico</li>
+                    <li>Domina las reglas de transformación de E/R a tablas relacionales</li>
+                    <li>Familiarízate con los diferentes tipos de cardinalidades</li>
+                    <li>Entiende cuándo usar cada tipo de relación en diagramas de clases</li>
+                    <li>Practica con herramientas de modelado UML</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>🎯 Puntos Clave para Recordar</h3>
+                <ul class="feature-list">
+                    <li>El análisis representa el "qué", el diseño representa el "cómo"</li>
+                    <li>UML es el estándar de facto para modelado orientado a objetos</li>
+                    <li>El modelo E/R se centra en los datos, independiente del procesamiento</li>
+                    <li>Las entidades débiles requieren otras entidades para ser identificadas</li>
+                    <li>La cardinalidad especifica restricciones de participación en relaciones</li>
+                    <li>La transformación a tablas sigue reglas específicas según el tipo de relación</li>
+                </ul>
+            </div>
+            
+            <div class="warning-box">
+                <h3>⚠️ Errores Comunes a Evitar</h3>
+                <ul style="margin-top: 15px;">
+                    <li>Confundir modelo conceptual con modelo lógico</li>
+                    <li>No identificar correctamente las entidades débiles</li>
+                    <li>Usar mal las cardinalidades en las relaciones</li>
+                    <li>No aplicar correctamente los principios SOLID en diseño OO</li>
+                    <li>Mezclar aspectos de datos con aspectos de procesamiento en E/R</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Show the selected tab and mark button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Add smooth scroll behavior and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.6s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Animate cards on hover
+            const cards = document.querySelectorAll('.content-card, .stat-item, .type-card, .principle-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

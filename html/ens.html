@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquema Nacional de Seguridad - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: #ecf0f1;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .tab:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 60px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .security-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .basic { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .high { background: #f8d7da; color: #721c24; }
+
+        .dimension-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .dimension-card {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .measure-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .measure-table th,
+        .measure-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .measure-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .measure-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .process-step {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 5px;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3498db;
+            font-size: 1.5em;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .framework-box {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .law-reference {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 10px;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                margin: 3px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Esquema Nacional de Seguridad (ENS)</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="tab" onclick="showTab(event, 'framework')">Marco ENS</button>
+            <button class="tab" onclick="showTab(event, 'categorization')">Categorización</button>
+            <button class="tab" onclick="showTab(event, 'measures')">Medidas de Seguridad</button>
+            <button class="tab" onclick="showTab(event, 'its')">ITS</button>
+            <button class="tab" onclick="showTab(event, 'strategy')">Estrategia Nacional</button>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <h2>🎯 Visión General del ENS</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">RD 311/2022</div>
+                    <div>Real Decreto Vigente</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div>Meses para Adecuación</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div>Dimensiones Seguridad</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div>Categorías de Sistema</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivos del ENS (RD 311/2022)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>1. Alineación Normativa</strong> - Alinear el ENS con el marco normativo y contexto estratégico para garantizar seguridad en administración digital
+                    </div>
+                    <div class="timeline-item">
+                        <strong>2. Perfil de Cumplimiento</strong> - Introducir "perfil de cumplimiento específico" para adaptación eficaz a colectivos y tipos de sistemas
+                    </div>
+                    <div class="timeline-item">
+                        <strong>3. Capacidad de Respuesta</strong> - Mejorar capacidad ante incidentes, reducir vulnerabilidades y promover vigilancia continua (Directiva NIS2)
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Ámbito Subjetivo del ENS</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>AGE</strong><br>
+                        Administración General del Estado
+                    </div>
+                    <div class="list-item">
+                        <strong>CCAA</strong><br>
+                        Comunidades Autónomas + Ceuta y Melilla
+                    </div>
+                    <div class="list-item">
+                        <strong>EELL</strong><br>
+                        Entidades Locales
+                    </div>
+                    <div class="list-item">
+                        <strong>Sector Público</strong><br>
+                        Organismos públicos + Universidades públicas
+                    </div>
+                    <div class="list-item">
+                        <strong>Información Clasificada</strong><br>
+                        Sistemas con medidas adicionales
+                    </div>
+                    <div class="list-item">
+                        <strong>Sector Privado</strong><br>
+                        Cuando presten servicios a entidades públicas
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Dimensiones de Seguridad ACIDT</h3>
+                <div class="dimension-grid">
+                    <div class="dimension-card">
+                        <strong>A</strong><br>Autenticidad
+                    </div>
+                    <div class="dimension-card">
+                        <strong>C</strong><br>Confidencialidad
+                    </div>
+                    <div class="dimension-card">
+                        <strong>I</strong><br>Integridad
+                    </div>
+                    <div class="dimension-card">
+                        <strong>D</strong><br>Disponibilidad
+                    </div>
+                    <div class="dimension-card">
+                        <strong>T</strong><br>Trazabilidad
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>Marco de Referencia:</strong> Plan Nacional de Recuperación, Transformación y Resiliencia + Agenda España Digital 2025 + Centro de Operaciones de Ciberseguridad AGE (COCS)
+            </div>
+        </div>
+
+        <div id="framework" class="tab-content">
+            <h2>⚖️ Marco del Esquema Nacional de Seguridad</h2>
+            
+            <div class="card">
+                <h3>📜 Principios Básicos del ENS</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Seguridad como proceso integral</div>
+                    <div class="list-item">• Gestión basada en riesgos</div>
+                    <div class="list-item">• Prevención, detección, respuesta y conservación</div>
+                    <div class="list-item">• Existencia de líneas de defensa</div>
+                    <div class="list-item">• <strong>Vigilancia continua</strong> (nuevo)</div>
+                    <div class="list-item">• Reevaluación periódica</div>
+                    <div class="list-item">• Diferenciación de responsabilidades</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Requisitos Mínimos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Organización</strong> - 4 responsables: información, servicio, seguridad y sistema
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Análisis de Riesgos</strong> - Herramienta PILAR del CCN-CERT
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Gestión de Personal</strong> - Profesionalidad y autorización
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Protección de Instalaciones</strong> - Seguridad física y lógica
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Mínimo Privilegio</strong> - Control de accesos
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Integridad del Sistema</strong> - Actualización continua
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Protección de Información</strong> - En almacenamiento y tránsito
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Detección Código Dañino</strong> - Nuevo requisito
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Gestión de Incidentes</strong> - Procedimientos y comunicación
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Continuidad</strong> - Planes de continuidad de negocio
+                    </div>
+                </div>
+            </div>
+
+            <div class="framework-box">
+                <h3>🏛️ Política de Seguridad</h3>
+                <p>Cada administración pública contará con una <strong>política de seguridad formalmente aprobada</strong>:</p>
+                <ul>
+                    <li>En AGE: cada ministerio + SGAD con política propia</li>
+                    <li>Según principios básicos y requisitos mínimos</li>
+                    <li>Proporcional a riesgos identificados</li>
+                    <li>Declaración de Aplicabilidad de medidas</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔧 Herramientas CCN Mencionadas</h3>
+                <div class="list-grid">
+                    <div class="list-item"><strong>PILAR</strong> - Análisis y gestión de riesgos</div>
+                    <div class="list-item"><strong>CARLA</strong> - Protección información en tránsito</div>
+                    <div class="list-item"><strong>REYES</strong> - Prevención ante sistemas interconectados</div>
+                    <div class="list-item"><strong>MONICA/GLORIA</strong> - Registro de actividad</div>
+                    <div class="list-item"><strong>ADA/MARTA/MARIA</strong> - Detección código dañino</div>
+                    <div class="list-item"><strong>LUCIA</strong> - Gestión de incidentes</div>
+                    <div class="list-item"><strong>IRIS</strong> - Mejora continua</div>
+                    <div class="list-item"><strong>INES</strong> - Informe Nacional Estado Seguridad</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="categorization" class="tab-content">
+            <h2>📊 Categorización de Sistemas</h2>
+            
+            <div class="card">
+                <h3>🎯 Criterios de Categorización</h3>
+                <p>Los sistemas se categorizan según el <strong>impacto que tendría un incidente</strong> de seguridad sobre la capacidad de la organización para:</p>
+                <div class="list-grid">
+                    <div class="list-item">✓ Alcanzar sus objetivos</div>
+                    <div class="list-item">✓ Proteger activos a su cargo</div>
+                    <div class="list-item">✓ Cumplir obligaciones de servicio</div>
+                    <div class="list-item">✓ Respetar legalidad vigente</div>
+                    <div class="list-item">✓ Respetar derechos de personas</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Niveles de Impacto</h3>
+                <table class="measure-table">
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Tipo de Perjuicio</th>
+                        <th>Servicio</th>
+                        <th>Activos</th>
+                        <th>Ley/Regulación</th>
+                        <th>Individuo</th>
+                    </tr>
+                    <tr>
+                        <td><span class="security-badge basic">BAJO</span></td>
+                        <td>LIMITADO</td>
+                        <td>Reducción apreciable sin interrupción</td>
+                        <td>Daño menor</td>
+                        <td>Incumplimiento formal subsanable</td>
+                        <td>Menor reparable</td>
+                    </tr>
+                    <tr>
+                        <td><span class="security-badge medium">MEDIO</span></td>
+                        <td>GRAVE</td>
+                        <td>Reducción significativa sin interrupción</td>
+                        <td>Daño significativo</td>
+                        <td>Incumplimiento material/formal no subsanable</td>
+                        <td>Significativo difícil reparación</td>
+                    </tr>
+                    <tr>
+                        <td><span class="security-badge high">ALTO</span></td>
+                        <td>MUY GRAVE</td>
+                        <td>Anulación de capacidad</td>
+                        <td>Daño muy grave/irreparable</td>
+                        <td>Incumplimiento grave</td>
+                        <td>Grave difícil/imposible reparar</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Proceso de Categorización</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <strong>1. Identificar Activos</strong><br>
+                        Información y Servicios
+                    </div>
+                    <div class="process-step">
+                        <strong>2. Valorar Impacto</strong><br>
+                        Por cada dimensión ACIDT
+                    </div>
+                    <div class="process-step">
+                        <strong>3. Asignar Nivel</strong><br>
+                        BAJO/MEDIO/ALTO
+                    </div>
+                    <div class="process-step">
+                        <strong>4. Categoría Final</strong><br>
+                        Mayor de todas dimensiones
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>Responsabilidades:</strong><br>
+                • <strong>Responsable Información:</strong> Valora activos tipo información<br>
+                • <strong>Responsable Servicio:</strong> Valora activos tipo servicio<br>
+                • <strong>Responsable Sistema:</strong> Realiza categorización final
+            </div>
+
+            <div class="card">
+                <h3>📋 Guía CCN-STIC-803 - Criterios Adicionales</h3>
+                <div class="framework-box">
+                    <h4>Disponibilidad según RTO</h4>
+                    <ul>
+                        <li><strong>ALTO:</strong> RTO < 4 horas</li>
+                        <li><strong>MEDIO:</strong> 4h ≤ RTO ≤ 24h</li>
+                        <li><strong>BAJO:</strong> 24h ≤ RTO ≤ 1 semana</li>
+                        <li><strong>SIN VALORACIÓN:</strong> RTO > 1 semana</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="law-reference">
+                <strong>Nota importante:</strong> Si un sistema maneja diferentes informaciones y servicios, el nivel en cada dimensión será el mayor establecido. La categoría del sistema será la mayor de todas sus dimensiones.
+            </div>
+        </div>
+
+        <div id="measures" class="tab-content">
+            <h2>🛡️ Medidas de Seguridad</h2>
+            
+            <div class="card">
+                <h3>📋 Clasificación de Medidas</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">Marco<br>Organizativo</div>
+                        <div>Organización global de seguridad</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Marco<br>Operacional</div>
+                        <div>Protección operación del sistema</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Medidas<br>Protección</div>
+                        <div>Protección activo concreto</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏢 Marco Organizativo</h3>
+                <p><strong>Aplicación:</strong> Desde categoría BÁSICA</p>
+                <div class="highlight">
+                    Implica existencia de:
+                    <ul>
+                        <li>✓ Política de Seguridad</li>
+                        <li>✓ Normativa y Procedimientos</li>
+                        <li>✓ Proceso de autorización para uso de aplicaciones, equipos e instalaciones</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Marco Operacional - Principales Medidas</h3>
+                <table class="measure-table">
+                    <tr>
+                        <th>Medida</th>
+                        <th>Básica</th>
+                        <th>Media</th>
+                        <th>Alta</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Análisis de riesgos</strong></td>
+                        <td>Informal</td>
+                        <td>Semiformal</td>
+                        <td>Formal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arquitectura de seguridad</strong></td>
+                        <td>Documentada + esquema líneas defensa</td>
+                        <td>+ SGSI</td>
+                        <td>+ Actualización periódica</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Componentes certificados</strong></td>
+                        <td>No aplica</td>
+                        <td>Según CPSTIC CCN</td>
+                        <td>+ medidas TEMPEST</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Identificación</strong></td>
+                        <td>Sistemas Ley 39/2015</td>
+                        <td>+ Identificación avanzada</td>
+                        <td>Refuerzo adicional</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Segregación funciones</strong></td>
+                        <td>No aplica</td>
+                        <td>Tarea crítica ≥ 2 personas</td>
+                        <td>Segregación rigurosa</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🔐 Control de Acceso</h3>
+                <div class="framework-box">
+                    <h4>Mecanismos de Autenticación</h4>
+                    <ul>
+                        <li><strong>R1:</strong> Contraseñas</li>
+                        <li><strong>R2:</strong> Contraseña + OTP</li>
+                        <li><strong>R3:</strong> Certificado + 2FA + Registro presencial/telemático</li>
+                        <li><strong>R4:</strong> Certificados en dispositivo físico</li>
+                        <li><strong>R5:</strong> Registro de accesos</li>
+                        <li><strong>R6:</strong> Ventana de acceso</li>
+                        <li><strong>R7:</strong> Suspensión por no utilización</li>
+                        <li><strong>R8:</strong> 2FA desde zona no controlada</li>
+                        <li><strong>R9:</strong> Acceso remoto</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🛡️ Medidas de Protección Destacadas</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>Instalaciones</strong><br>
+                        • Áreas CPD separadas<br>
+                        • Control de acceso<br>
+                        • Acondicionamiento
+                    </div>
+                    <div class="list-item">
+                        <strong>Personal</strong><br>
+                        • Caracterización puestos<br>
+                        • Formación continua<br>
+                        • Concienciación
+                    </div>
+                    <div class="list-item">
+                        <strong>Equipos</strong><br>
+                        • Bloqueo automático<br>
+                        • Cifrado dispositivos<br>
+                        • Protección portátiles
+                    </div>
+                    <div class="list-item">
+                        <strong>Comunicaciones</strong><br>
+                        • Perímetro seguro<br>
+                        • VPN autorizada<br>
+                        • Segregación flujos
+                    </div>
+                    <div class="list-item">
+                        <strong>Aplicaciones</strong><br>
+                        • Desarrollo seguro<br>
+                        • Entornos separados<br>
+                        • Pruebas preproducción
+                    </div>
+                    <div class="list-item">
+                        <strong>Servicios</strong><br>
+                        • Protección correo<br>
+                        • Seguridad web<br>
+                        • Anti-DDoS
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>Declaración de Aplicabilidad:</strong> Las medidas seleccionadas usando Anexo II constituyen la Declaración de Aplicabilidad, firmada por el Responsable de Seguridad.
+            </div>
+        </div>
+
+        <div id="its" class="tab-content">
+            <h2>📋 Instrucciones Técnicas de Seguridad (ITS)</h2>
+            
+            <div class="card">
+                <h3>📝 ITS Vigentes</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div>ITS Actuales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2020</div>
+                        <div>Última Actualización</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">SEDIA</div>
+                        <div>Órgano Aprobación</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">CCN</div>
+                        <div>Órgano Elaboración</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>1️⃣ ITS Informe del Estado de la Seguridad</h3>
+                <div class="framework-box">
+                    <p><strong>Objetivo:</strong> Recopilar información sobre estado de seguridad sistemas AAPP</p>
+                    <h4>Herramientas Asociadas:</h4>
+                    <ul>
+                        <li><strong>INES</strong> - Informe Nacional del Estado de Seguridad</li>
+                        <li><strong>CCN-STIC-815</strong> - Indicadores y métricas</li>
+                        <li><strong>CCN-STIC-824</strong> - Informe nacional (métricas anuales)</li>
+                        <li><strong>CCN-STIC-844</strong> - Manual de Usuario INES</li>
+                    </ul>
+                </div>
+                <p><strong>Responsable:</strong> CSAE elabora perfil general del estado ciberseguridad en AAPP</p>
+            </div>
+
+            <div class="card">
+                <h3>2️⃣ ITS Conformidad con el ENS</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <strong>BÁSICA</strong><br>
+                        Autoevaluación<br>
+                        (cada 2 años)
+                    </div>
+                    <div class="process-step">
+                        <strong>MEDIA/ALTA</strong><br>
+                        Auditoría Formal<br>
+                        (cada 2 años)
+                    </div>
+                    <div class="process-step">
+                        <strong>Publicidad</strong><br>
+                        Distintivos en<br>
+                        sede electrónica
+                    </div>
+                </div>
+                <div class="highlight">
+                    <strong>Entidades Certificadoras:</strong> Acreditadas por ENAC (Entidad Nacional de Acreditación)
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>3️⃣ ITS Notificación de Incidentes</h3>
+                <div class="law-reference">
+                    Resolución 13 abril 2018 - Establece criterios notificación incidentes al CCN
+                </div>
+                <div class="framework-box">
+                    <h4>Notificación Obligatoria:</h4>
+                    <ul>
+                        <li>✓ Incidentes nivel impacto <strong>Alto</strong></li>
+                        <li>✓ Incidentes nivel impacto <strong>Muy Alto</strong></li>
+                        <li>✓ Incidentes nivel impacto <strong>Crítico</strong></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🔧 Herramienta LUCIA</h3>
+                    <p><strong>Listado Unificado de Coordinación de Incidentes y Amenazas</strong></p>
+                    <ul>
+                        <li>Automatiza mecanismos de notificación</li>
+                        <li>Facilita comunicación e intercambio información</li>
+                        <li>Según Guía CCN-STIC-817</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <strong>Protección de Datos:</strong> Cuando incidente afecte datos personales, notificación a autoridad control independiente del nivel impacto ENS
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>4️⃣ ITS Auditoría de Seguridad</h3>
+                <div class="law-reference">
+                    Resolución 27 marzo 2018 - Condiciones auditorías ENS
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Auditoría Ordinaria:</strong> Mínimo cada 2 años
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Auditoría Extraordinaria:</strong> Modificaciones sustanciales
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Categoría BÁSICA:</strong> Solo autoevaluación
+                    </div>
+                    <div class="timeline-item">
+                        <strong>MEDIA/ALTA:</strong> Auditoría de seguridad + certificación
+                    </div>
+                </div>
+                <div class="framework-box">
+                    <h4>Normativa de Referencia:</h4>
+                    <ul>
+                        <li>CCN-STIC-802 - Auditoría del ENS</li>
+                        <li>CCN-STIC-804 - Guía de implantación</li>
+                        <li>CCN-STIC-808 - Verificación cumplimiento medidas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="strategy" class="tab-content">
+            <h2>🌍 Estrategia de Seguridad Nacional</h2>
+            
+            <div class="card">
+                <h3>📖 Estructura de la Estrategia 2021</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div>Capítulos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">33</div>
+                        <div>Líneas de Acción</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>Ejes Estratégicos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div>Años Revisión</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Vectores de Transformación</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>Contexto Geopolítico</strong><br>
+                        • Mayor rivalidad (EEUU, China, Rusia)<br>
+                        • Deterioro multilateralismo<br>
+                        • Estrategias híbridas<br>
+                        • Asertividad potencias regionales
+                    </div>
+                    <div class="list-item">
+                        <strong>Escenario Socio-económico</strong><br>
+                        • Aumento desigualdad<br>
+                        • Medidas proteccionistas<br>
+                        • Fragilidad cadena suministros<br>
+                        • Polarización social
+                    </div>
+                    <div class="list-item">
+                        <strong>Transformación Digital</strong><br>
+                        • Sociedades hiperconectadas<br>
+                        • Tecnologías disruptivas<br>
+                        • Dato como recurso estratégico<br>
+                        • Soberanía digital
+                    </div>
+                    <div class="list-item">
+                        <strong>Transformación Ecológica</strong><br>
+                        • Aceleración cambio climático<br>
+                        • Fenómenos adversos<br>
+                        • Cambio paradigma energético<br>
+                        • Competición tecnología renovable
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Tres Ejes Estratégicos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>EJE 1: PROTEGER</strong><br>
+                        España que protege vida de personas, derechos, libertades y orden constitucional
+                        <ul>
+                            <li>Disuasión y defensa</li>
+                            <li>Lucha contra terrorismo</li>
+                            <li>Actuación frente a crisis</li>
+                            <li>Contrainteligencia</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>EJE 2: PROMOVER</strong><br>
+                        España que promueve prosperidad y bienestar ciudadanos
+                        <ul>
+                            <li>Seguridad espacios comunes</li>
+                            <li>Estabilidad económica-financiera</li>
+                            <li>Lucha crimen organizado</li>
+                            <li>Ordenación flujos migratorios</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>EJE 3: PARTICIPAR</strong><br>
+                        España que participa en preservación paz y seguridad internacional
+                        <ul>
+                            <li>Multilateralismo reforzado</li>
+                            <li>Autonomía estratégica europea</li>
+                            <li>Protagonismo OTAN</li>
+                            <li>Lucha cambio climático</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Definición Seguridad Nacional</h3>
+                <div class="framework-box">
+                    <p><strong>Artículo 3 Ley 36/2015:</strong></p>
+                    <p>La Seguridad Nacional es la <strong>acción del Estado dirigida a</strong>:</p>
+                    <ul>
+                        <li>🛡️ Proteger libertad, derechos y bienestar ciudadanos</li>
+                        <li>🇪🇸 Garantizar defensa de España y principios constitucionales</li>
+                        <li>🌍 Contribuir con socios y aliados a la seguridad internacional</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Riesgos y Amenazas Principales</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Conflictividad armada y terrorismo</div>
+                    <div class="list-item">• Ciberamenazas y técnicas híbridas</div>
+                    <div class="list-item">• Proliferación armas destrucción masiva</div>
+                    <div class="list-item">• Amenazas infraestructuras críticas</div>
+                    <div class="list-item">• Emergencias y catástrofes</div>
+                    <div class="list-item">• Crimen organizado</div>
+                    <div class="list-item">• Campañas desinformación</div>
+                    <div class="list-item">• Vulnerabilidad del ciberespacio</div>
+                    <div class="list-item">• Vulnerabilidad espacio marítimo</div>
+                    <div class="list-item">• Vulnerabilidad aeroespacial</div>
+                    <div class="list-item">• Inestabilidad económica-financiera</div>
+                    <div class="list-item">• Flujos migratorios irregulares</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ Sistema de Seguridad Nacional</h3>
+                <div class="highlight">
+                    <strong>Definición:</strong> Conjunto de órganos, organismos, recursos y procedimientos que posibilitan la acción del Estado para proteger libertad y bienestar ciudadanos, garantizar defensa de España y contribuir a seguridad internacional.
+                </div>
+                <div class="framework-box">
+                    <h4>Integración del Sistema (6 actuaciones):</h4>
+                    <ol>
+                        <li>Catálogo de recursos Seguridad Nacional</li>
+                        <li>Planes de respuesta para escenarios</li>
+                        <li>Sistema alerta temprana y análisis</li>
+                        <li>Integración información mediante tecnología</li>
+                        <li>Mejora comunicaciones Presidencia Gobierno</li>
+                        <li>Integración CCAA y ciudades autónomas</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="law-reference">
+                <strong>Marco Normativo:</strong> Ley 36/2015 de Seguridad Nacional - Revisión cada 5 años (adelantada por pandemia y estrategias híbridas)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

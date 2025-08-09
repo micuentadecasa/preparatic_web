@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratos del Sector Público - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            background: #34495e;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: #ecf0f1;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: #3498db;
+            border-bottom-color: #2980b9;
+        }
+
+        .content-area {
+            background: #f8f9fa;
+            border: 4px solid #3498db;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .procedure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .procedure-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .procedure-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .procedure-card h4 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .amount-highlight {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2em; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .procedure-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Contratos del Sector Público</h1>
+            <p>Ley 9/2017 de Contratos del Sector Público</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('fundamentos')">📚 Fundamentos</div>
+                <div class="tab" onclick="showTab('principios')">⚖️ Principios</div>
+                <div class="tab" onclick="showTab('tipos')">📑 Tipos de Contratos</div>
+                <div class="tab" onclick="showTab('procedimientos')">🔄 Procedimientos</div>
+                <div class="tab" onclick="showTab('herramientas')">🛠️ Herramientas</div>
+                <div class="tab" onclick="showTab('facturacion')">💰 Facturación</div>
+            </div>
+
+            <div class="content-area">
+                <div id="fundamentos" class="tab-content active">
+                    <h2>📋 Fundamentos Legales</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">9/2017</span>
+                            <div>Ley de Contratos del Sector Público</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">3</span>
+                            <div>Directivas Europeas Transpuestas</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2014</span>
+                            <div>Año de las Directivas UE</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2020</span>
+                            <div>Estrategia Europa 2020</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🇪🇺 Directivas Europeas Transpuestas</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>Directiva 2014/24/UE</h4>
+                                <p><strong>Contratación pública:</strong> Deroga la Directiva 2004/18/CE. Marco general para la contratación en el sector público.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Directiva 2014/23/UE</h4>
+                                <p><strong>Contratos de concesión:</strong> Regula la adjudicación de contratos de concesión de obras y servicios.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Directiva 2014/25/UE</h4>
+                                <p><strong>Sectores especiales:</strong> Contratación en agua, energía, transportes y servicios postales.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🎯 Objetivos de la Ley 9/2017</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Mayor transparencia:</strong> En todos los procesos de contratación pública</li>
+                            <li><strong>Mejor relación calidad-precio:</strong> Criterios cualitativos, medioambientales y sociales</li>
+                            <li><strong>Simplificación de trámites:</strong> Menor burocracia y facilitar acceso a PYMEs</li>
+                            <li><strong>División en lotes:</strong> Norma general para facilitar participación de PYMEs</li>
+                            <li><strong>Ofertas anormalmente bajas:</strong> Endurecimiento de disposiciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📊 Contratos SARA vs No SARA</h3>
+                        <p>Los contratos se clasifican según su valor estimado en contratos sujetos a regulación armonizada (SARA) y contratos no SARA, con tratamientos diferentes.</p>
+                        
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Contrato</th>
+                                    <th>Umbral SARA (AGE)</th>
+                                    <th>Umbral SARA (otras AAPP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Suministros y servicios</td>
+                                    <td>143.000 €</td>
+                                    <td>221.000 €</td>
+                                </tr>
+                                <tr>
+                                    <td>Obras y concesiones</td>
+                                    <td colspan="2">5.538.000 €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="principios" class="tab-content">
+                    <h2>⚖️ Principios y Requisitos</h2>
+
+                    <div class="card">
+                        <h3>🏛️ Principios Fundamentales</h3>
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>🔓 Libertad de Acceso</h4>
+                                <p>Acceso libre a las licitaciones para favorecer la concurrencia</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>📢 Publicidad y Transparencia</h4>
+                                <p>Procedimientos transparentes para facilitar presentación de ofertas</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚖️ No Discriminación</h4>
+                                <p>Igualdad de trato entre todos los licitadores</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>💰 Eficiencia</h4>
+                                <p>Uso eficiente de fondos públicos y definición previa de necesidades</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Requisitos para la Celebración</h3>
+                        <div class="highlight-box">
+                            <h4>🎯 Necesidad e Idoneidad</h4>
+                            <ul class="list-checkmark">
+                                <li>Solo contratos necesarios para fines institucionales</li>
+                                <li>Programación de actividad de contratación</li>
+                                <li>Anuncio de información previa</li>
+                                <li>Plan de contratación anticipado</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>👥 Capacidad y Solvencia del Empresario</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Solvencia económica y financiera:</strong> Condiciones mínimas requeridas</li>
+                            <li><strong>Solvencia profesional o técnica:</strong> Determinada por el órgano de contratación</li>
+                            <li><strong>Clasificación empresarial:</strong> Registro ROLECE</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>📊 Clasificación Obligatoria</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Contratos de obras:</strong> ≥ 500.000 € - Clasificación obligatoria</li>
+                                <li><strong>Contratos de servicios:</strong> No exigible clasificación</li>
+                                <li><strong>Otros tipos:</strong> Sin clasificación exigible</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🌍 Criterios Transversales</h3>
+                        <p>En toda contratación pública se incorporarán de manera <strong>transversal y preceptiva</strong>:</p>
+                        <ul class="list-checkmark">
+                            <li>Criterios sociales y medioambientales</li>
+                            <li>Facilitación del acceso a PYMEs</li>
+                            <li>Aspectos cualitativos e innovadores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tipos" class="tab-content">
+                    <h2>📑 Tipos de Contratos</h2>
+
+                    <div class="card">
+                        <h3>📋 Clasificación de Contratos (Ley 9/2017)</h3>
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>🏗️ Contrato de Obras</h4>
+                                <p>Construcción, reparación, restauración, demolición o mantenimiento de bienes inmuebles</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🏛️ Concesión de Obras</h4>
+                                <p>Contrato por el que la Administración encomienda a un tercero la realización de una obra</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🛎️ Concesión de Servicios</h4>
+                                <p>Contrato por el que la Administración encomienda la gestión de un servicio público</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>📦 Contrato de Suministro</h4>
+                                <p>Adquisición, arrendamiento financiero o arrendamiento de productos o bienes muebles</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🛠️ Contrato de Servicios</h4>
+                                <p>Prestación de hacer consistente en el desarrollo de una actividad o dirigida a la obtención de un resultado</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🔄 Contratos Mixtos</h4>
+                                <p>Contemplan prestaciones de dos o más tipos diferentes. Se considera la prestación principal</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>💰 Umbrales por Valor Estimado</h3>
+                        <div class="amount-highlight">
+                            <h4>🏛️ Administración General del Estado (AGE)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Suministros y servicios:</strong> 143.000 € (SARA)</li>
+                                <li><strong>Obras:</strong> 5.538.000 € (SARA)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="amount-highlight">
+                            <h4>🏛️ Otras Administraciones Públicas</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Suministros y servicios:</strong> 221.000 € (SARA)</li>
+                                <li><strong>Obras:</strong> 5.538.000 € (SARA)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📊 Contratos Menores</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Límite</th>
+                                    <th>Requisito</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Obras</td>
+                                    <td>&lt; 40.000 €</td>
+                                    <td rowspan="2">Mínimo 3 presupuestos</td>
+                                </tr>
+                                <tr>
+                                    <td>Suministros y Servicios</td>
+                                    <td>&lt; 15.000 €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="procedimientos" class="tab-content">
+                    <h2>🔄 Procedimientos de Contratación</h2>
+
+                    <div class="card">
+                        <h3>⏱️ Tipos de Tramitación</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>📋 Tramitación Ordinaria</h4>
+                                <p>Procedimiento estándar que cumple todos los plazos y etapas definidos en la ley.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>⚡ Tramitación Urgente</h4>
+                                <p><strong>Requisitos:</strong> Necesidad inaplazable o razones de interés público. Reducción de plazos del procedimiento.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>🚨 Tramitación de Emergencia</h4>
+                                <p><strong>Supuestos:</strong> Acontecimientos catastróficos, grave peligro o defensa nacional. Sin expediente formal.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Procedimientos de Adjudicación</h3>
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>🔓 Procedimiento Abierto</h4>
+                                <p><strong>Plazo SARA:</strong> ≥35 días (reducible a 15)<br>
+                                <strong>No SARA:</strong> ≥15 días<br>
+                                <strong>Medios electrónicos:</strong> -5 días</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚡ Abierto Simplificado</h4>
+                                <p><strong>Obras:</strong> &lt;2.000.000 €<br>
+                                <strong>Suministros/Servicios:</strong> &lt;143.000 €<br>
+                                <strong>Plazo:</strong> ≥15 días (obras: 20 días)</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚡⚡ Supersimplificado</h4>
+                                <p><strong>Obras:</strong> &lt;80.000 €<br>
+                                <strong>Suministros/Servicios:</strong> &lt;60.000 €<br>
+                                <strong>Plazo:</strong> ≥10 días (5 días compras corrientes)</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🔒 Procedimiento Restringido</h4>
+                                <p>Dos fases: solicitud de participación y presentación de ofertas. Ideal para servicios intelectuales complejos.</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>💬 Procedimiento con Negociación</h4>
+                                <p>Permite negociar términos del contrato. Para prestaciones que requieren adaptación o innovación.</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🤝 Diálogo Competitivo</h4>
+                                <p>Desarrollo de soluciones mediante diálogo con candidatos seleccionados. Permite primas/compensaciones.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📑 Pliegos de Contratación</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>PCAG:</strong> Pliegos de Cláusulas Administrativas Generales (Consejo de Ministros)</li>
+                            <li><strong>PCAP:</strong> Pliegos de Cláusulas Administrativas Particulares</li>
+                            <li><strong>PPTG:</strong> Pliego de Prescripciones Técnicas Generales (Consejo de Ministros)</li>
+                            <li><strong>PPTP:</strong> Pliego de Prescripciones Técnicas Particulares</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>⚖️ Recurso Especial en Materia de Contratación</h3>
+                        <p><strong>Órgano competente AGE:</strong> Tribunal Administrativo Central de Recursos Contractuales</p>
+                        <ul class="list-checkmark">
+                            <li><strong>Contra pliegos:</strong> Desde publicación hasta fin plazo ofertas</li>
+                            <li><strong>Contra adjudicación:</strong> 15 días hábiles desde notificación</li>
+                            <li><strong>Otros actos:</strong> Que impidan continuar el procedimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="herramientas" class="tab-content">
+                    <h2>🛠️ Herramientas y Racionalización</h2>
+
+                    <div class="card">
+                        <h3>📋 Acuerdos Marco (AM)</h3>
+                        <div class="highlight-box">
+                            <h4>🔄 Conceptos Clave</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Acuerdo Marco:</strong> Preestablece condiciones comunes para contratos futuros</li>
+                                <li><strong>Contrato basado:</strong> Se celebra a partir del acuerdo marco</li>
+                                <li><strong>Segunda licitación:</strong> Cuando no todos los términos están fijados</li>
+                            </ul>
+                        </div>
+
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>💻 AM 02/2020</h4>
+                                <p>Suministro de ordenadores de mesa, portátiles, monitores y soluciones de puesto de trabajo (12 lotes)</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🖨️ AM 05/2023</h4>
+                                <p>Suministro de impresoras, equipos multifuncionales y escáneres</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔄 Sistemas Dinámicos de Adquisición (SDA)</h3>
+                        <p>Procesos totalmente electrónicos para adquisición de obras, servicios y suministros de uso corriente.</p>
+                        
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>💾 SDA 25/2022</h4>
+                                <p><strong>Software de sistema y aplicación</strong><br>
+                                6 lotes: Sistema, Infraestructura, Analítica, Ciberseguridad, Administración digital, Productividad</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚙️ SDA 26/2021</h4>
+                                <p><strong>Servicios de desarrollo</strong><br>
+                                Sistemas de administración electrónica</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>🖥️ SDA 24/2022</h4>
+                                <p><strong>Equipos TIC</strong><br>
+                                Comunicaciones, servidores y almacenamiento</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏛️ Gobierno de la Contratación en la AGE</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>🏛️ Ministerio de Hacienda</h4>
+                                <p>Declaración de contratación centralizada para suministros, obras y servicios homogéneos</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>🎯 DGRCC</h4>
+                                <p>Dirección General de Racionalización y Centralización de la Contratación - Impulso y gestión</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>⚖️ Junta de Contratación Centralizada</h4>
+                                <p>Órgano de contratación del sistema estatal, adscrito a DGRCC</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>🏛️ Junta Consultiva</h4>
+                                <p>Órgano consultivo en materia de contratación pública del sector público estatal</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>💻 Herramientas de Soporte</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Plataforma de Contratación del Sector Público:</strong> Portal web para publicación de licitaciones</li>
+                            <li><strong>Conecta-Centralización:</strong> Gestión de acuerdos marco y SDA</li>
+                            <li><strong>Registro de Contratos:</strong> Inscripción de datos básicos (Ministerio de Hacienda)</li>
+                            <li><strong>DEUC:</strong> Documento Europeo Único de Contratación</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="facturacion" class="tab-content">
+                    <h2>💰 Facturación y Pago</h2>
+
+                    <div class="card">
+                        <h3>📋 Marco Legal de la Facturación</h3>
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>📜 Ley 47/2003</h4>
+                                <p><strong>General Presupuestaria</strong><br>
+                                Regla general del "servicio hecho" - reconocimiento de obligaciones previa acreditación documental</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>📜 Ley 9/2017</h4>
+                                <p><strong>Contratos del Sector Público</strong><br>
+                                Cumplimiento, recepción y pago en 30 días</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚡ Ley 25/2013</h4>
+                                <p><strong>Factura Electrónica</strong><br>
+                                Impulso de facturación electrónica y registro contable</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>✅ Cumplimiento y Recepción</h3>
+                        <div class="highlight-box">
+                            <h4>📋 Proceso de Recepción</h4>
+                            <ol class="list-checkmark">
+                                <li><strong>Realización:</strong> Contratista ejecuta según términos del contrato</li>
+                                <li><strong>Recepción formal:</strong> Acto formal y positivo de la Administración</li>
+                                <li><strong>Plazo:</strong> Dentro del mes siguiente a entrega/realización</li>
+                                <li><strong>Intervención:</strong> Comunicación para comprobación de inversión</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>💳 Pago del Precio</h3>
+                        <div class="amount-highlight">
+                            <h4>⏰ Plazos de Pago</h4>
+                            <p><strong>30 días</strong> siguientes a la fecha de aprobación de:</p>
+                            <ul class="list-checkmark">
+                                <li>Certificaciones de obra</li>
+                                <li>Documentos que acrediten conformidad con el contrato</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚡ Factura Electrónica</h3>
+                        <div class="warning-box">
+                            <h4>📧 FACe - Punto General de Entrada</h4>
+                            <p>Permite a las empresas la presentación de facturas electrónicas a la AGE y otras AAPP adheridas.</p>
+                            
+                            <h5>🔄 Proceso:</h5>
+                            <ul class="list-checkmark">
+                                <li>Recepción a través del Punto general de entrada</li>
+                                <li>Entrada automática en registro electrónico</li>
+                                <li>Acuse de recibo con fecha y hora</li>
+                                <li>Admisión de facturas que cumplan requisitos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🚀 Plan de Recuperación y Resiliencia</h3>
+                        <div class="highlight-box">
+                            <h4>📋 RD-ley 36/2020</h4>
+                            <p>Medidas para modernización y ejecución del Plan de Recuperación, Transformación y Resiliencia</p>
+                            
+                            <h5>💰 Excepciones de Autorización (Consejo de Ministros):</h5>
+                            <ul class="list-checkmark">
+                                <li>Contratos > 12 millones de euros</li>
+                                <li>Arrendamiento financiero > 4 años</li>
+                                <li>AM y SDA > 12 millones de euros</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>✨ Buenas Prácticas</h3>
+                        <div class="procedure-grid">
+                            <div class="procedure-card">
+                                <h4>🎯 Objeto del Contrato</h4>
+                                <p>Debe ser la <strong>prestación integral de un servicio</strong></p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>👥 Coordinador Técnico</h4>
+                                <p>Designado por la empresa adjudicataria, perteneciente a su plantilla</p>
+                            </div>
+                            <div class="procedure-card">
+                                <h4>⚖️ Evitar Cesión Ilegal</h4>
+                                <p>Instrucciones para evitar cesión ilegal de trabajadores</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

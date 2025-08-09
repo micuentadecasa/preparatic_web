@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Auditoría Informática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tab-system {
+            background-color: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+
+        .tabs {
+            display: flex;
+            min-width: 600px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 1rem 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f6f3, #d5f4e6);
+            border: 1px solid rgb(88, 106, 95);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef9e7, #fcf3cd);
+            border: 1px solid #f39c12;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fdebea, #f8d7da);
+            border: 1px solid #e74c3c;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3em;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: rgb(88, 106, 95);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgb(68, 86, 75);
+            transform: translateY(-1px);
+        }
+
+        .definition-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .definition-list dt {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 1rem;
+        }
+
+        .definition-list dt:first-child {
+            margin-top: 0;
+        }
+
+        .definition-list dd {
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .process-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .process-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 Auditoría Informática</h1>
+        <p>Guía Completa de Conceptos, Administración y Prácticas Operativas</p>
+    </div>
+
+    <div class="container">
+        <div class="tab-system">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(event, 'conceptos')">📋 Conceptos</button>
+                <button class="tab" onclick="showTab(event, 'administracion')">🏛️ Administración</button>
+                <button class="tab" onclick="showTab(event, 'planeamiento')">📊 Planeamiento</button>
+                <button class="tab" onclick="showTab(event, 'organizacion')">🏢 Organización</button>
+                <button class="tab" onclick="showTab(event, 'infraestructura')">⚙️ Infraestructura</button>
+                <button class="tab" onclick="showTab(event, 'practicas')">🔧 Prácticas</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Conceptos -->
+        <div id="conceptos" class="tab-content active">
+            <h2>📋 Conceptos y Contenidos de Auditoría Informática</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Funciones Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <div class="stat-label">Tipos de Auditoría</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Tipos de Controles</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Tipos de Pruebas</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Definición de Auditoría Informática</h3>
+                <p><strong>Según Ron Weber:</strong> Proceso de recoger, agrupar y evaluar evidencias para determinar si un Sistema de Información:</p>
+                <ul class="checklist">
+                    <li>Salvaguarda los activos</li>
+                    <li>Mantiene la integridad de los datos</li>
+                    <li>Lleva a cabo los fines de la organización</li>
+                    <li>Utiliza eficientemente los recursos</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📌 Cinco Funciones Principales</h3>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">1. Eficacia y Eficiencia</div>
+                        <p>Velar por la eficacia y eficiencia del sistema informático para alcanzar objetivos con el menor coste posible.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">2. Cumplimiento Normativo</div>
+                        <p>Verificar el cumplimiento de las normas y estándares vigentes en la organización.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">3. Calidad de Sistemas</div>
+                        <p>Verificar la calidad de los sistemas de información y proponer mejoras.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">4. Control Interno</div>
+                        <p>Supervisar los mecanismos de control interno para proteger recursos y mantener integridad.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">5. Seguridad</div>
+                        <p>Comprobar e impulsar la seguridad de los sistemas de información.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🔍 Tipos de Controles</h3>
+                <div class="definition-list">
+                    <dt>Por momento de actuación:</dt>
+                    <dd>• Preventivos (a priori) • Reactivos (a posteriori) • Concurrentes</dd>
+                    
+                    <dt>Por frecuencia:</dt>
+                    <dd>• Continuo • Periódico • Esporádico</dd>
+                    
+                    <dt>Por naturaleza:</dt>
+                    <dd>• Generales (organizativos, operativos, hardware, software) • De aplicación (entrada, proceso, salida)</dd>
+                    
+                    <dt>Por función:</dt>
+                    <dd>• Detectivos (reportan errores) • Correctivos (vuelta a normalidad) • Compensatorios</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Características de Buenos Controles</h3>
+                <ul class="checklist">
+                    <li>Simples y fiables (mínima complejidad necesaria)</li>
+                    <li>Revisables (procedimientos y fechas establecidas)</li>
+                    <li>Adecuados (proporcionados al riesgo)</li>
+                    <li>Rentables (coste menor que el beneficio)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 2: Administración -->
+        <div id="administracion" class="tab-content">
+            <h2>🏛️ Administración y Control Público</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Ámbitos de Control</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Órganos Especializados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Series CCN-STIC</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">1984</span>
+                    <div class="stat-label">Plan Auditorías IGAE</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Tres Ámbitos de Control</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Control Político</div>
+                            <p>Ejercido por el Parlamento para supervisión democrática</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Control Judicial</div>
+                            <p>Ejercido por Tribunales de Justicia para garantías legales</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Control Administrativo</div>
+                            <p>Ejercido por órganos administrativos especializados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">📊 Tribunal de Cuentas</div>
+                    <p><strong>Órgano supremo fiscalizador</strong> - Externo, controla actividad económica y presupuestaria. Destinatario principal: Parlamento.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🏛️ IGAE</div>
+                    <p><strong>Intervención General del Estado</strong> - Órgano interno que examina gestión del gasto público. Plan anual de auditorías desde 1984.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔍 Inspecciones Generales</div>
+                    <p><strong>Control interno especializado</strong> - Supervisan funcionamiento de órganos administrativos, objetivos y análisis de riesgos.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔐 Agencia Protección Datos</div>
+                    <p><strong>Control de privacidad</strong> - Supervisa cumplimiento de normativa de protección de datos personales.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📚 Series del Centro Criptográfico Nacional (CCN-STIC)</h3>
+                <div class="definition-list">
+                    <dt>000 - Políticas:</dt>
+                    <dd>Directrices y marcos generales de seguridad</dd>
+                    
+                    <dt>100 - Procedimientos:</dt>
+                    <dd>Procesos operativos y metodologías</dd>
+                    
+                    <dt>200 - Normas:</dt>
+                    <dd>Estándares técnicos y regulaciones</dd>
+                    
+                    <dt>300 - Instrucciones Técnicas:</dt>
+                    <dd>Guías detalladas de implementación</dd>
+                    
+                    <dt>400 - Guías Generales:</dt>
+                    <dd>Recomendaciones y buenas prácticas</dd>
+                    
+                    <dt>500 - Entornos Windows:</dt>
+                    <dd>Configuraciones específicas para sistemas Microsoft</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚖️ Marco Normativo Clave</h3>
+                <ul class="checklist">
+                    <li>Ley General Presupuestaria 47/2003 - Papel de IGAE</li>
+                    <li>Real Decreto 4/2010 - Esquema Nacional de Seguridad</li>
+                    <li>Reglamento UE 2016/679 - RGPD</li>
+                    <li>Ley Orgánica 3/2018 - Protección de Datos</li>
+                    <li>MAGERIT v3 - Gestión de riesgos</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 3: Planeamiento -->
+        <div id="planeamiento" class="tab-content">
+            <h2>📊 Planeamiento y Estructura Documental</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Niveles Documentales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Elementos Estratégicos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Normas Internacionales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">ITIL</span>
+                    <div class="stat-label">Mejores Prácticas</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🏗️ Pirámide Documental de la Organización</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Nivel Estratégico</div>
+                            <p><strong>Políticas de alto nivel:</strong> Política de Seguridad, Política de Calidad, Manual de Calidad</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Nivel Táctico</div>
+                            <p><strong>Planes y normas:</strong> Plan de Seguridad, Plan de Calidad, Normas, Especificaciones y Estándares</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Nivel Operativo</div>
+                            <p><strong>Ejecución:</strong> Procedimientos de Seguridad y Calidad, Instrucciones Técnicas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">📋 Políticas</div>
+                    <p><strong>Qué y Por Qué</strong> - Declaración de intenciones de alto nivel que refleja objetivos organizacionales. Perdurables en el tiempo.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📜 Normativas</div>
+                    <p><strong>Reglas Generales</strong> - Desarrollan políticas de alto nivel. Obligada aplicación. Ajustadas al despliegue tecnológico.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">⚙️ Procedimientos</div>
+                    <p><strong>Cómo Actuar</strong> - Marco de actuación para resolver situaciones concretas. Documentados y actualizados.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔧 Instrucciones</div>
+                    <p><strong>Pasos Específicos</strong> - Detallan técnicamente la forma precisa de implementar un procedimiento.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🌍 Recomendaciones Internacionales</h3>
+                <div class="definition-list">
+                    <dt>COBIT (ISACA):</dt>
+                    <dd>Control Objectives for Information and Related Technologies - Estándares para gestión y control de SI</dd>
+                    
+                    <dt>ITIL (Reino Unido):</dt>
+                    <dd>Information Technology Infrastructure Library - Mejores prácticas para gestión de procesos TI</dd>
+                    
+                    <dt>NIST (EE.UU.):</dt>
+                    <dd>Publicaciones Especiales del Instituto Nacional de Estándares y Tecnología</dd>
+                    
+                    <dt>Instituto SANS:</dt>
+                    <dd>SysAdmin, Audit, Network, Security - Formación y certificación en seguridad</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📄 Normas ISO/IEC Relevantes</h3>
+                <ul class="checklist">
+                    <li>ISO/IEC 27001 - Sistemas de gestión de seguridad de la información</li>
+                    <li>ISO/IEC 27002 - Código de buenas prácticas para gestión de seguridad</li>
+                    <li>ISO/IEC 15408 - Criterios comunes de evaluación de seguridad TIC</li>
+                    <li>ISO/IEC 13335 - Gestión de la seguridad de las TIC</li>
+                    <li>ISO/IEC 18045 - Metodología para evaluación de seguridad SSII</li>
+                </ul>
+            </div>
+
+            <div class="danger-box">
+                <h3>🎯 Características de Políticas Efectivas</h3>
+                <ul class="checklist">
+                    <li>Aprobadas por la alta dirección</li>
+                    <li>Perdurables en el tiempo</li>
+                    <li>Conocidas por toda la organización</li>
+                    <li>Con criterios de medición de resultados</li>
+                    <li>Mantenerse al margen de la tecnología empleada</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 4: Organización -->
+        <div id="organizacion" class="tab-content">
+            <h2>🏢 Organización del Departamento de Auditoría</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">0.5-1%</span>
+                    <div class="stat-label">Personal Recomendado</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Certificaciones ISACA</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Funciones Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Ubicaciones Posibles</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🏗️ Estructura Organizativa</h3>
+                <p>El Departamento de Auditoría Interna debe estar:</p>
+                <ul class="checklist">
+                    <li>Separado y dependiente de la alta dirección</li>
+                    <li>Constituir un órgano especializado de control</li>
+                    <li>Contar con 0,5 a 1% del personal de la organización (AEAT)</li>
+                    <li>Ubicado en departamento separado o en centros informáticos</li>
+                </ul>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">🛡️ Establecer Controles</div>
+                    <p>Establecer, mantener y mejorar controles efectivos evaluando su eficacia y eficiencia.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">⚠️ Gestión de Riesgos</div>
+                    <p>Contribuir al establecimiento, mantenimiento y mejora del sistema de gestión de riesgos.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔐 Seguridad</div>
+                    <p>Velar por el mantenimiento de la seguridad en la organización sugiriendo mejoras.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📋 Normas de Conducta</div>
+                    <p>Pueden dedicarse a cuestiones relativas a la regulación de normas de conducta.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🎯 Asesoría</div>
+                    <p>Pueden ejercer como órgano de asesoría y consultoría al servicio de la dirección.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏆 Certificaciones ISACA</h3>
+                <div class="definition-list">
+                    <dt>CISA - Certified Information Systems Auditor:</dt>
+                    <dd>Auditor Certificado de Sistemas de Información</dd>
+                    
+                    <dt>CISM - Certified Information Security Manager:</dt>
+                    <dd>Gestor Certificado de Seguridad de la Información</dd>
+                    
+                    <dt>CGEIT - Certified in the Governance of Enterprise IT:</dt>
+                    <dd>Certificado en Gobernanza de TI Empresarial</dd>
+                    
+                    <dt>CRISC - Certified in Risk and Information Systems Control:</dt>
+                    <dd>Certificado en Riesgo y Control de Sistemas de Información</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📜 Código de Ética Profesional ISACA</h3>
+                <p>ISACA establece un Código de Ética Profesional para guiar la conducta profesional y personal de los miembros de la asociación y/o portadores de las certificaciones.</p>
+                
+                <h4>Principios Fundamentales:</h4>
+                <ul class="checklist">
+                    <li>Integridad profesional y personal</li>
+                    <li>Objetividad en juicios profesionales</li>
+                    <li>Competencia profesional y diligencia debida</li>
+                    <li>Confidencialidad de la información</li>
+                    <li>Cumplimiento de estándares profesionales</li>
+                </ul>
+            </div>
+
+            <div class="danger-box">
+                <h3>⚡ Consideraciones de Implementación</h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary">Dependencia Directa</button>
+                    <button class="btn btn-success">Personal Especializado</button>
+                </div>
+                <p><strong>Factores críticos para el éxito:</strong></p>
+                <ul class="checklist">
+                    <li>Independencia operativa del departamento auditado</li>
+                    <li>Acceso directo a la alta dirección</li>
+                    <li>Personal con certificaciones reconocidas</li>
+                    <li>Recursos técnicos adecuados</li>
+                    <li>Formación continua del equipo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 5: Infraestructura Técnica -->
+        <div id="infraestructura" class="tab-content">
+            <h2>⚙️ Infraestructura Técnica y Herramientas</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Técnicas Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CAAT</span>
+                    <div class="stat-label">Computer Assisted</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">ACL</span>
+                    <div class="stat-label">Herramienta Líder</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Herramientas CAAT</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🔧 Técnicas de Análisis de Programas</h3>
+                <p>Existen diferentes técnicas para analizar programas que ayudan al auditor en el trabajo de campo:</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">🔍 Traceo</div>
+                    <p><strong>Seguimiento de ejecución</strong> - Indica por dónde paso el programa cada vez que se ejecuta una instrucción. Imprime o muestra el valor de variables.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🗺️ Mapeo</div>
+                    <p><strong>Características del programa</strong> - Tamaño en bytes, localización en memoria, fecha de última modificación, etc.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">⚖️ Comparación de Código</div>
+                    <p><strong>Verificación de integridad</strong> - Involucra los códigos fuentes y códigos objetos para detectar modificaciones.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📊 Job Accounting Software</div>
+                    <p><strong>Informe del Sistema</strong> - Utilitario que acumula y registra información para facturar usuarios y evaluar uso del sistema.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🛠️ Herramientas CAAT</h3>
+                <p><strong>Computed Audit Assisted Techniques</strong> - Técnicas de Auditoría Asistida por Computadora</p>
+                
+                <div class="definition-list">
+                    <dt>ACL (Audit Command Language):</dt>
+                    <dd>Herramienta líder para análisis y extracción de datos de auditoría</dd>
+                    
+                    <dt>Auto Audit:</dt>
+                    <dd>Software automatizado para procesos de auditoría continua</dd>
+                    
+                    <dt>AuditMaster:</dt>
+                    <dd>Suite completa de herramientas de auditoría informática</dd>
+                    
+                    <dt>Delos:</dt>
+                    <dd>Plataforma integrada para gestión de auditorías</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📋 Ventajas de las Herramientas CAAT</h3>
+                <ul class="checklist">
+                    <li>Análisis de grandes volúmenes de datos</li>
+                    <li>Detección automatizada de excepciones</li>
+                    <li>Reducción de tiempo de auditoría</li>
+                    <li>Mayor precisión en los resultados</li>
+                    <li>Capacidad de muestreo estadístico</li>
+                    <li>Generación automática de informes</li>
+                </ul>
+            </div>
+
+            <div class="danger-box">
+                <h3>⚡ Consideraciones Técnicas</h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary">Capacitación</button>
+                    <button class="btn btn-success">Licencias</button>
+                </div>
+                
+                <h4>Factores de Implementación:</h4>
+                <ul class="checklist">
+                    <li>Formación del personal en uso de herramientas</li>
+                    <li>Compatibilidad con sistemas auditados</li>
+                    <li>Licenciamiento y costes asociados</li>
+                    <li>Mantenimiento y actualizaciones</li>
+                    <li>Seguridad en el manejo de datos</li>
+                </ul>
+                
+                <h4>Aplicaciones Típicas:</h4>
+                <ul class="checklist">
+                    <li>Verificación de cálculos complejos</li>
+                    <li>Análisis de tendencias y patrones</li>
+                    <li>Detección de duplicados y anomalías</li>
+                    <li>Muestreo estadístico automatizado</li>
+                    <li>Conciliaciones automáticas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 6: Prácticas Operativas -->
+        <div id="practicas" class="tab-content">
+            <h2>🔧 Prácticas Operativas y Metodología</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Pasos del Proceso</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Tipos de Evidencia</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Niveles de Impacto</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CCN-STIC</span>
+                    <div class="stat-label">Guía 802</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📋 Proceso de Auditoría - 6 Pasos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">1. Planificación</div>
+                            <p>Objetivos, alcance, procedimientos. Finaliza en plan de trabajo con puntos de control y directrices.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">2. Formalización</div>
+                            <p>Inicio de actuación mediante notificación al responsable de la unidad auditada.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">3. Trabajo de Campo</div>
+                            <p>Recopilación de evidencias suficientes, relevantes y competentes.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">4. Ejecución</div>
+                            <p>Examen y evaluación de la información obtenida en la fase previa.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">5. Comunicación</div>
+                            <p>Resultados mediante informes de auditoría con estructura definida.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">6. Seguimiento</div>
+                            <p>De recomendaciones y soluciones en período determinado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">🔍 Evidencias Físicas</div>
+                    <p>Obtenidas mediante inspección directa u observación de activos tangibles y procesos.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📄 Evidencias Documentales</div>
+                    <p>Obtenidas a partir de documentos como cartas, informes, registros y archivos.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">👥 Evidencias Testimoniales</div>
+                    <p>Obtenidas como resultado de entrevistas, cuestionarios y declaraciones.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📊 Evidencias Analíticas</div>
+                    <p>Obtenidas por medio de comparaciones, cálculos y análisis de datos.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📝 Estructura del Informe de Auditoría</h3>
+                <ul class="checklist">
+                    <li>Título, índice, introducción</li>
+                    <li>Objetivo y alcance, metodología</li>
+                    <li>Resultados de la actuación (criterio, condición, efecto, causa)</li>
+                    <li>Conclusiones y recomendaciones</li>
+                </ul>
+                
+                <h4>Proceso de Comunicación:</h4>
+                <div class="definition-list">
+                    <dt>Reunión de cierre:</dt>
+                    <dd>Presentación inicial de hallazgos al auditado</dd>
+                    
+                    <dt>Borrador de informe:</dt>
+                    <dd>Versión preliminar para revisión y comentarios</dd>
+                    
+                    <dt>Procedimiento de tramitación:</dt>
+                    <dd>Período de respuesta para observaciones y alegaciones</dd>
+                    
+                    <dt>Informe definitivo:</dt>
+                    <dd>Versión final con anexos correspondientes</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚖️ Impacto de Hallazgos según Materialidad</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">🟢 Bajo</div>
+                        <p>Descripción del hallazgo como vulnerabilidad a la que se expone el sistema.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">🟡 Medio</div>
+                        <p>Se refleja en el informe como posible debilidad del sistema de control.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">🔴 Alto</div>
+                        <p>Se identifica como debilidad que debe compensarse o anularse con más controles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🔐 Guía CCN-STIC 802 - Auditoría ENS</h3>
+                <p><strong>Categorías de Sistemas:</strong></p>
+                
+                <div class="definition-list">
+                    <dt>BÁSICA o inferior:</dt>
+                    <dd>• No necesita auditoría externa • Bastará autoevaluación • Documentación de medidas</dd>
+                    
+                    <dt>MEDIA o ALTA:</dt>
+                    <dd>• Auditoría requerida cada 2 años • Extraordinaria si hay modificaciones • Informe favorable/desfavorable</dd>
+                </div>
+                
+                <h4>Criterios de Informes:</h4>
+                <ul class="checklist">
+                    <li><strong>Favorable con no conformidades:</strong> Resolver en 1 mes</li>
+                    <li><strong>Desfavorable:</strong> Resolver no conformidades en 6 meses</li>
+                    <li><strong>Categoría ALTA:</strong> Posible retirada de operación hasta corrección</li>
+                </ul>
+                
+                <h4>Documentación Mínima Requerida:</h4>
+                <ul class="checklist">
+                    <li>Política de Seguridad aprobada</li>
+                    <li>Organigrama con responsabilidades</li>
+                    <li>Análisis de riesgos</li>
+                    <li>Declaración de Aplicabilidad</li>
+                    <li>Sistema de gestión de seguridad</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tabs
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content and mark the tab as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add some interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.stat-card, .process-card, .content-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click handlers to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

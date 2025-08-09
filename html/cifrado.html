@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cifrado y Criptografía - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: max-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .tab-button.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #2c3e50;
+        }
+
+        .tab-content {
+            background: white;
+            min-height: 500px;
+            padding: 30px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 80px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 4px solid white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .algorithm-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .algorithm-table th,
+        .algorithm-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .algorithm-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+
+        .algorithm-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .recommended {
+            background: rgb(88, 106, 95);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .not-recommended {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .check-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-card:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .comparison-card h4 {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .process-steps {
+            counter-reset: step-counter;
+        }
+
+        .process-step {
+            counter-increment: step-counter;
+            background: white;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .process-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: #3498db;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cifrado y Criptografía</h1>
+            <p>Guía completa sobre algoritmos de cifrado simétricos, asimétricos y funciones hash</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">Visión General</button>
+                <button class="tab-button" onclick="showTab('symmetric')">Cifrado Simétrico</button>
+                <button class="tab-button" onclick="showTab('asymmetric')">Cifrado Asimétrico</button>
+                <button class="tab-button" onclick="showTab('hash')">Funciones Hash</button>
+                <button class="tab-button" onclick="showTab('hybrid')">Esquemas Híbridos</button>
+                <button class="tab-button" onclick="showTab('comparison')">Comparación y Recursos</button>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-pane active">
+                <h2>Introducción a la Criptografía</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <div>Tipos principales de cifrado</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <div>Esquemas híbridos fundamentales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Propiedades de seguridad</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">256</span>
+                        <div>Bits de seguridad recomendados</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>📋 Conceptos Fundamentales</h3>
+                    <p>La criptografía es la ciencia que estudia las técnicas para proteger información mediante su transformación en formatos ilegibles para personas no autorizadas. Su objetivo principal es garantizar la seguridad de los datos en términos de:</p>
+                    
+                    <ul class="check-list">
+                        <li><strong>Confidencialidad:</strong> Solo las personas autorizadas pueden acceder a la información</li>
+                        <li><strong>Integridad:</strong> Los datos no han sido alterados durante su transmisión o almacenamiento</li>
+                        <li><strong>Autenticidad:</strong> Se puede verificar la identidad del emisor del mensaje</li>
+                        <li><strong>No repudio:</strong> El emisor no puede negar haber enviado el mensaje</li>
+                        <li><strong>Control de acceso:</strong> Restricción del acceso a recursos específicos</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Escenario Básico de Cifrado</h3>
+                    <p>En un sistema criptográfico básico, tenemos un <strong>texto en claro (m)</strong> que se transforma mediante un <strong>algoritmo de cifrado E()</strong> usando una <strong>clave de cifrado (Ka)</strong> para producir un <strong>texto cifrado c=E(Ka, m)</strong>. Para recuperar el mensaje original, se aplica un <strong>algoritmo de descifrado D()</strong> con una <strong>clave de descifrado (Kb)</strong>: <strong>D(Kb, c) = m</strong>.</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Cifrado Simétrico</h4>
+                            <p>Utiliza la misma clave para cifrar y descifrar (Ka = Kb). Es rápido pero requiere compartir la clave de forma segura.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Cifrado Asimétrico</h4>
+                            <p>Emplea dos claves complementarias: una pública y una privada. Más lento pero resuelve el problema de distribución de claves.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Funciones Hash</h4>
+                            <p>Generan un resumen de longitud fija independientemente del tamaño del mensaje original. Esenciales para verificar integridad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Symmetric Tab -->
+            <div id="symmetric" class="tab-pane">
+                <h2>Algoritmos de Cifrado Simétrico</h2>
+                
+                <div class="content-card">
+                    <h3>⚡ Características Principales</h3>
+                    <p>Los algoritmos simétricos emplean una única clave tanto para cifrar como para descifrar (KA=KB). Esta clave debe ser secreta y conocida únicamente por el emisor y el receptor.</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>🌊 Cifradores de Flujo</h4>
+                        <p>Combinan dígito a dígito el flujo de datos con un keystream generado pseudo-aleatoriamente.</p>
+                        <ul class="check-list">
+                            <li>Aplicaciones con requisitos estrictos de velocidad</li>
+                            <li>Hardware con capacidad limitada de cómputo</li>
+                            <li>Ideal para comunicaciones en tiempo real</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>🧱 Cifradores de Bloque</h4>
+                        <p>Dividen el texto en claro en bloques de tamaño fijo para su cifrado.</p>
+                        <ul class="check-list">
+                            <li>Mayor seguridad para archivos</li>
+                            <li>Múltiples modos de operación</li>
+                            <li>Ampliamente utilizados en sistemas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>📊 Algoritmos de Cifrado de Flujo</h3>
+                <table class="algorithm-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Uso Recomendado</th>
+                            <th>Aplicación Original</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A5/1 y A5/2</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>GSM</td>
+                            <td>Algoritmos débiles, vulnerabilidades conocidas</td>
+                        </tr>
+                        <tr>
+                            <td>RC4</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>WEP, WPA, SSL</td>
+                            <td>Múltiples vulnerabilidades descubiertas</td>
+                        </tr>
+                        <tr>
+                            <td>E0</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>Bluetooth</td>
+                            <td>Inseguro para aplicaciones críticas</td>
+                        </tr>
+                        <tr>
+                            <td>Rabbit</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>Aplicaciones modernas</td>
+                            <td>Clave de 128 bits, alta velocidad</td>
+                        </tr>
+                        <tr>
+                            <td>SNOW3G</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>UMTS</td>
+                            <td>Clave de 128 bits, estándar 3GPP</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔐 Algoritmos de Cifrado de Bloque</h3>
+                <table class="algorithm-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Uso Recomendado</th>
+                            <th>Tamaño de Clave</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DES</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>56 bits + 8 paridad</td>
+                            <td>Basado en cifrado Feistel, inseguro</td>
+                        </tr>
+                        <tr>
+                            <td>TripleDES</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>112 bits</td>
+                            <td>Aplica DES en cascada, lento</td>
+                        </tr>
+                        <tr>
+                            <td>AES</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>128, 192, 256 bits</td>
+                            <td>Basado en Rijndael, estándar actual</td>
+                        </tr>
+                        <tr>
+                            <td>Camellia</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>128, 192, 256 bits</td>
+                            <td>Alternativa segura a AES</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="content-card">
+                    <h3>🔄 Modos de Operación para Bloques</h3>
+                    <ul>
+                        <li><strong>ECB (Electronic Code Book):</strong> Cifra bloques independientemente</li>
+                        <li><strong>CBC (Cipher Block Chaining):</strong> El cifrado depende del bloque anterior</li>
+                        <li><strong>CTR (Counter):</strong> Emplea el cifrador para obtener un keystream</li>
+                        <li><strong>OFB (Output Feedback):</strong> Genera secuencia pseudoaleatoria</li>
+                        <li><strong>CFB (Cipher Feedback):</strong> Combina características de flujo y bloque</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Asymmetric Tab -->
+            <div id="asymmetric" class="tab-pane">
+                <h2>Algoritmos de Cifrado Asimétrico</h2>
+                
+                <div class="content-card">
+                    <h3>🔑 Principio Fundamental</h3>
+                    <p>Los algoritmos asimétricos emplean dos claves diferentes pero complementarias (KA y KB). Una es secreta (clave privada) y la otra es pública, conocida por todos.</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>🔒 Cifrado (Confidencialidad)</h4>
+                        <p>El emisor cifra con la clave pública del receptor. Solo el receptor puede descifrar con su clave privada.</p>
+                        <div class="process-steps">
+                            <div class="process-step">Obtener clave pública del destinatario</div>
+                            <div class="process-step">Cifrar mensaje con clave pública</div>
+                            <div class="process-step">Enviar mensaje cifrado</div>
+                            <div class="process-step">Destinatario descifra con su clave privada</div>
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>✍️ Firma (Autenticidad)</h4>
+                        <p>El emisor cifra con su clave privada. Cualquiera puede verificar con la clave pública del emisor.</p>
+                        <div class="process-steps">
+                            <div class="process-step">Emisor cifra con su clave privada</div>
+                            <div class="process-step">Enviar mensaje y firma</div>
+                            <div class="process-step">Receptor obtiene clave pública del emisor</div>
+                            <div class="process-step">Verificar firma con clave pública</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📊 Familias de Algoritmos Asimétricos</h3>
+                <table class="algorithm-table">
+                    <thead>
+                        <tr>
+                            <th>Base Matemática</th>
+                            <th>Algoritmos</th>
+                            <th>Aplicaciones</th>
+                            <th>Fortaleza</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Factorización de números enteros</td>
+                            <td>RSA</td>
+                            <td>Cifrado, firma digital</td>
+                            <td>Muy establecido</td>
+                        </tr>
+                        <tr>
+                            <td>Logaritmo discreto</td>
+                            <td>Diffie-Hellman, DSA, ElGamal</td>
+                            <td>Intercambio de claves, firmas</td>
+                            <td>Matemática sólida</td>
+                        </tr>
+                        <tr>
+                            <td>Curvas elípticas</td>
+                            <td>ECDH, ECDSA</td>
+                            <td>Cifrado, firma, IoT</td>
+                            <td>Claves más cortas, eficiente</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h3>⚡ Consideraciones de Rendimiento</h3>
+                    <p>Debido al coste computacional de la criptografía asimétrica, <strong>no se cifra todo el mensaje</strong> directamente. En su lugar, se utilizan esquemas híbridos que combinan las ventajas de ambos sistemas: se genera una clave simétrica aleatoria para cifrar el mensaje, y luego se cifra esa clave con el algoritmo asimétrico.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">1000x</span>
+                        <div>Más lento que simétrico</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2048</span>
+                        <div>Bits RSA recomendados</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">256</span>
+                        <div>Bits curva elíptica equivalente</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">∞</span>
+                        <div>Tiempo de vida claves asimétricas</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hash Tab -->
+            <div id="hash" class="tab-pane">
+                <h2>Funciones Hash Criptográficas</h2>
+                
+                <div class="content-card">
+                    <h3>🧩 Características de las Funciones Hash</h3>
+                    <p>Las funciones hash son algoritmos matemáticos que transforman datos de cualquier tamaño en una cadena de longitud fija, conocida como hash, digest o huella digital.</p>
+                    
+                    <ul class="check-list">
+                        <li><strong>Compresión:</strong> Salida de longitud fija independiente del mensaje</li>
+                        <li><strong>Difusión:</strong> Salida aleatoria función de todos los bits de entrada</li>
+                        <li><strong>Resistencia a la preimagen:</strong> Imposible obtener el mensaje del hash</li>
+                        <li><strong>Resistencia débil a colisión:</strong> Difícil encontrar otro mensaje con el mismo hash</li>
+                        <li><strong>Resistencia fuerte a colisión:</strong> Imposible encontrar dos mensajes con mismo hash</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>📋 MDC (Message Detection Code)</h4>
+                        <p>El cálculo del hash de un mensaje permite detectar si ha sido modificado durante la transmisión o almacenamiento.</p>
+                        <ul>
+                            <li>Verificación de integridad</li>
+                            <li>Detección de corrupción</li>
+                            <li>No requiere clave secreta</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>🔐 MAC (Message Authentication Code)</h4>
+                        <p>Hash calculado junto con una clave compartida. Proporciona integridad y autenticación del origen.</p>
+                        <ul>
+                            <li>Requiere clave secreta</li>
+                            <li>Verifica autenticidad</li>
+                            <li>Protege contra modificaciones maliciosas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>📊 Algoritmos Hash por Generación</h3>
+                <table class="algorithm-table">
+                    <thead>
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Uso Recomendado</th>
+                            <th>Longitud Hash</th>
+                            <th>Estado de Seguridad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MD5</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>128 bits</td>
+                            <td>Vulnerable a colisiones</td>
+                        </tr>
+                        <tr>
+                            <td>RIPEMD-128</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>128 bits</td>
+                            <td>Insuficiente para aplicaciones críticas</td>
+                        </tr>
+                        <tr>
+                            <td>RIPEMD-160</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>160 bits</td>
+                            <td>Menos usado, sin ventajas sobre SHA</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-1</td>
+                            <td><span class="not-recommended">No</span></td>
+                            <td>160 bits</td>
+                            <td>Vulnerabilidades prácticas encontradas</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-2</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>224, 256, 384, 512 bits</td>
+                            <td>Estándar actual, muy seguro</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-3</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>Longitud configurable</td>
+                            <td>Último estándar NIST</td>
+                        </tr>
+                        <tr>
+                            <td>Whirlpool</td>
+                            <td><span class="recommended">Sí</span></td>
+                            <td>512 bits</td>
+                            <td>Alternativa robusta</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Evolución de SHA (1995-2015)</h4>
+                            <p><strong>SHA-1 (1995):</strong> 160 bits, ahora obsoleto por vulnerabilidades<br>
+                            <strong>SHA-2 (2001):</strong> Familia con múltiples tamaños, estándar actual<br>
+                            <strong>SHA-3 (2015):</strong> Basado en construcción esponja, backup para SHA-2</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Casos de Uso Modernos</h4>
+                            <p><strong>Blockchain:</strong> SHA-256 para proof-of-work<br>
+                            <strong>Certificados digitales:</strong> SHA-256 como mínimo<br>
+                            <strong>Verificación de archivos:</strong> SHA-256 o SHA-3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>⚠️ Importante: Migración de Algoritmos</h3>
+                    <p>Los algoritmos hash pueden quedar obsoletos cuando se descubren vulnerabilidades. Es crucial mantenerse actualizado con las recomendaciones de organismos como NIST, ENISA y el CCN-CERT. <strong>SHA-256 es actualmente el mínimo recomendado</strong> para nuevos desarrollos.</p>
+                </div>
+            </div>
+
+            <!-- Hybrid Tab -->
+            <div id="hybrid" class="tab-pane">
+                <h2>Esquemas Híbridos</h2>
+                
+                <div class="content-card">
+                    <h3>🎯 Necesidad de los Esquemas Híbridos</h3>
+                    <p>Los esquemas híbridos combinan las ventajas del cifrado simétrico (velocidad) con las del asimétrico (distribución segura de claves), eliminando las desventajas de cada uno por separado.</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>📨 Sobre Digital (Digital Envelope)</h4>
+                        <p><strong>Objetivo:</strong> Cifrar mensajes grandes de forma eficiente y segura</p>
+                        
+                        <h5>Proceso del Emisor:</h5>
+                        <div class="process-steps">
+                            <div class="process-step">Generar clave simétrica aleatoria</div>
+                            <div class="process-step">Cifrar mensaje con algoritmo simétrico</div>
+                            <div class="process-step">Cifrar clave con algoritmo asimétrico y clave pública del receptor</div>
+                            <div class="process-step">Enviar mensaje cifrado + clave cifrada</div>
+                        </div>
+                        
+                        <h5>Proceso del Receptor:</h5>
+                        <div class="process-steps">
+                            <div class="process-step">Descifrar clave con su clave privada</div>
+                            <div class="process-step">Descifrar mensaje con la clave simétrica</div>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <strong>Ventaja especial:</strong> Ideal para envíos multidestino, el mensaje se cifra una sola vez
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h4>✍️ Firma Digital</h4>
+                        <p><strong>Objetivo:</strong> Garantizar autenticidad, integridad y no repudio</p>
+                        
+                        <h5>Proceso del Emisor:</h5>
+                        <div class="process-steps">
+                            <div class="process-step">Calcular hash del mensaje</div>
+                            <div class="process-step">Cifrar hash con su clave privada</div>
+                            <div class="process-step">Enviar mensaje + hash cifrado (firma)</div>
+                        </div>
+                        
+                        <h5>Proceso del Receptor:</h5>
+                        <div class="process-steps">
+                            <div class="process-step">Calcular hash del mensaje recibido</div>
+                            <div class="process-step">Descifrar firma con clave pública del emisor</div>
+                            <div class="process-step">Comparar ambos hashes</div>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <strong>Resultado:</strong> Si los hashes coinciden, se garantiza autenticidad e integridad
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">99%</span>
+                        <div>De sistemas usan esquemas híbridos</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1000x</span>
+                        <div>Más rápido que solo asimétrico</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">256</span>
+                        <div>Bits típicos de clave simétrica</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2048</span>
+                        <div>Bits típicos de clave asimétrica</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🔗 Implementaciones Reales</h3>
+                    <ul class="check-list">
+                        <li><strong>TLS/SSL:</strong> Usa Diffie-Hellman + AES + SHA-256</li>
+                        <li><strong>PGP/GPG:</strong> RSA + AES + SHA-2 para email cifrado</li>
+                        <li><strong>S/MIME:</strong> Estándar para email corporativo seguro</li>
+                        <li><strong>IPSec:</strong> VPNs con esquemas híbridos</li>
+                        <li><strong>Signal Protocol:</strong> Mensajería con perfect forward secrecy</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Flujo Completo de Comunicación Segura</h4>
+                            <p><strong>1. Intercambio de claves:</strong> Diffie-Hellman o RSA key exchange<br>
+                            <strong>2. Cifrado simétrico:</strong> AES-256 para datos<br>
+                            <strong>3. Integridad:</strong> HMAC-SHA256 para cada mensaje<br>
+                            <strong>4. Autenticación:</strong> Certificados digitales X.509</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Tab -->
+            <div id="comparison" class="tab-pane">
+                <h2>Comparación y Recursos</h2>
+                
+                <div class="content-card">
+                    <h3>⚖️ Comparación de Tecnologías</h3>
+                    <table class="algorithm-table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Simétrico</th>
+                                <th>Asimétrico</th>
+                                <th>Hash</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Velocidad</strong></td>
+                                <td>Muy rápida</td>
+                                <td>Lenta</td>
+                                <td>Rápida</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gestión de claves</strong></td>
+                                <td>Compleja</td>
+                                <td>Simple</td>
+                                <td>No aplica</td>
+                            </tr>
+                            <tr>
+                                <td><strong>No repudio</strong></td>
+                                <td>No</td>
+                                <td>Sí</td>
+                                <td>No</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tamaño de clave</strong></td>
+                                <td>Corta (256 bits)</td>
+                                <td>Larga (2048+ bits)</td>
+                                <td>Variable</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Uso típico</strong></td>
+                                <td>Datos grandes</td>
+                                <td>Claves, firmas</td>
+                                <td>Integridad</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>✅ Cuándo usar Cifrado Simétrico</h4>
+                        <ul class="check-list">
+                            <li>Cifrado de archivos grandes</li>
+                            <li>Comunicación entre sistemas conocidos</li>
+                            <li>Almacenamiento local seguro</li>
+                            <li>Aplicaciones de alta velocidad</li>
+                            <li>Sistemas con recursos limitados</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>✅ Cuándo usar Cifrado Asimétrico</h4>
+                        <ul class="check-list">
+                            <li>Comunicación con desconocidos</li>
+                            <li>Intercambio inicial de claves</li>
+                            <li>Firmas digitales</li>
+                            <li>Certificados de identidad</li>
+                            <li>Sistemas sin canal seguro previo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🏆 Recomendaciones Actuales (2024)</h3>
+                    <ul class="check-list">
+                        <li><strong>Cifrado Simétrico:</strong> AES-256 con modo GCM</li>
+                        <li><strong>Cifrado Asimétrico:</strong> RSA-3072 o ECDSA P-256</li>
+                        <li><strong>Hash:</strong> SHA-256 como mínimo, SHA-3 recomendado</li>
+                        <li><strong>MAC:</strong> HMAC-SHA256 o POLY1305</li>
+                        <li><strong>Intercambio de claves:</strong> ECDH P-256 o X25519</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul>
+                        <li><strong>CCN-STIC:</strong> Guías del Centro Criptológico Nacional</li>
+                        <li><strong>NIST SP 800-57:</strong> Recomendaciones para gestión de claves</li>
+                        <li><strong>RFC 8446:</strong> TLS 1.3 Specification</li>
+                        <li><strong>ENISA:</strong> Algorithms, Key Size and Protocols Report</li>
+                        <li><strong>BSI TR-02102:</strong> Recomendaciones criptográficas alemanas</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎓 Puntos Clave para Examen</h3>
+                    <ul class="check-list">
+                        <li>Diferencias entre cifrado simétrico y asimétrico</li>
+                        <li>Propiedades de las funciones hash criptográficas</li>
+                        <li>Funcionamiento del sobre digital y firma digital</li>
+                        <li>Algoritmos recomendados vs obsoletos</li>
+                        <li>Aplicaciones de cada tipo de criptografía</li>
+                        <li>Ventajas e inconvenientes de cada esquema</li>
+                    </ul>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">2048</span>
+                        <div>Bits mínimo RSA actual</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">256</span>
+                        <div>Bits recomendado AES</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">256</span>
+                        <div>Bits mínimo SHA actual</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2030</span>
+                        <div>Año límite algoritmos actuales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab panes
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab pane
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Add smooth scrolling to timeline items
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = `all 0.6s ease ${index * 0.2}s`;
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>

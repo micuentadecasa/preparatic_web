@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Computing - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            background: #34495e;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: #ecf0f1;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: #3498db;
+            border-bottom-color: #2980b9;
+        }
+
+        .content-area {
+            background: #f8f9fa;
+            border: 4px solid #3498db;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .service-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .service-card h4 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .provider-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .provider-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .provider-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .provider-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+
+        .aws-logo { background: #ff9900; color: white; }
+        .azure-logo { background: #0078d4; color: white; }
+        .gcp-logo { background: #4285f4; color: white; }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2em; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .comparison-table { font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☁️ Cloud Computing</h1>
+            <p>IaaS, PaaS, SaaS - Nubes Públicas, Privadas e Híbridas</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('introduccion')">📚 Introducción</div>
+                <div class="tab" onclick="showTab('tipos-infra')">🏗️ Infraestructura</div>
+                <div class="tab" onclick="showTab('servicios')">⚙️ Servicios</div>
+                <div class="tab" onclick="showTab('proveedores')">🏢 Proveedores</div>
+                <div class="tab" onclick="showTab('seguridad')">🔒 Seguridad</div>
+                <div class="tab" onclick="showTab('normativa')">⚖️ Marco Legal</div>
+            </div>
+
+            <div class="content-area">
+                <div id="introduccion" class="tab-content active">
+                    <h2>📚 Introducción al Cloud Computing</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">33%</span>
+                            <div>AWS - Líder del mercado</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">21%</span>
+                            <div>Microsoft Azure</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">10%</span>
+                            <div>Google Cloud Platform</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">5</span>
+                            <div>Características Esenciales</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔬 Definición (NIST)</h3>
+                        <p><strong>"Cloud Computing es un modelo que permite el acceso bajo demanda y a través de la red a un conjunto de recursos compartidos y configurables (como redes, servidores, capacidad de almacenamiento, aplicaciones y servicios) que pueden ser rápidamente asignados y liberados con una mínima gestión por parte del proveedor del servicio"</strong></p>
+                    </div>
+
+                    <div class="card">
+                        <h3>⭐ Características Esenciales del Cloud Computing</h3>
+                        <div class="service-grid">
+                            <div class="service-card">
+                                <h4>🔄 Autoservicio bajo demanda</h4>
+                                <p>El cliente puede solicitar recursos sin interacción personal con el proveedor</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>🌐 Amplio acceso a través de redes</h4>
+                                <p>Acceso estándar a través de la red para todo tipo de dispositivos</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>🤝 Agrupación de recursos</h4>
+                                <p>Los recursos se agrupan para múltiples clientes con asignación dinámica</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>⚡ Elasticidad rápida</h4>
+                                <p>La capacidad es escalable rápidamente de acuerdo con la demanda</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>📊 Servicio medido</h4>
+                                <p>El uso de recursos puede ser medido, monitorizado y controlado transparentemente</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>💡 Ventajas del Cloud Computing</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Facilidad y rapidez:</strong> No requiere instalación, accesible desde cualquier lugar</li>
+                            <li><strong>Ahorro y eficiencia:</strong> Reducción de costos en hardware y licencias</li>
+                            <li><strong>Oferta de servicios:</strong> Más sencillo encontrar un servicio que desarrollarlo</li>
+                            <li><strong>Escalabilidad:</strong> Ajuste dinámico de capacidad según necesidades</li>
+                            <li><strong>Flexibilidad:</strong> Adaptación rápida a cambios del negocio</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>⚠️ Desventajas del Cloud Computing</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Dependencia de Internet:</strong> Requiere conexión estable</li>
+                            <li><strong>Vendor Lock-In:</strong> Dependencia de proveedores específicos</li>
+                            <li><strong>Seguridad y privacidad:</strong> Datos fuera del control directo</li>
+                            <li><strong>Personalización limitada:</strong> Menor control sobre infraestructura</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tipos-infra" class="tab-content">
+                    <h2>🏗️ Tipos de Infraestructura Cloud</h2>
+
+                    <div class="card">
+                        <h3>☁️ Nube Pública</h3>
+                        <p>Infraestructura y recursos disponibles para el público en general a través de Internet.</p>
+                        
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Ventajas</th>
+                                    <th>Inconvenientes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Escalabilidad y flexibilidad</td>
+                                    <td>Limitaciones en personalización</td>
+                                </tr>
+                                <tr>
+                                    <td>Reducción de costos y pagos por uso</td>
+                                    <td>Dependencia del proveedor</td>
+                                </tr>
+                                <tr>
+                                    <td>Actualizaciones automáticas</td>
+                                    <td>Riesgo de interrupciones</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏢 Nube Privada</h3>
+                        <p>Infraestructura creada con recursos propios de una empresa, controlada exclusivamente por la organización.</p>
+                        
+                        <div class="highlight-box">
+                            <h4>🏛️ NubeSARA</h4>
+                            <p>La administración promueve NubeSARA como cloud privada, disponible para los servicios de la SGAD.</p>
+                        </div>
+
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Ventajas</th>
+                                    <th>Inconvenientes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mejor seguridad y privacidad</td>
+                                    <td>Mayor costo y personal especializado</td>
+                                </tr>
+                                <tr>
+                                    <td>Mayor control y personalización</td>
+                                    <td>Menor flexibilidad y escalabilidad</td>
+                                </tr>
+                                <tr>
+                                    <td>Facilidad para trabajo colaborativo</td>
+                                    <td>Mantenimiento y actualizaciones manuales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>👥 Nube Comunitaria</h3>
+                        <p>Alianza entre dos o más organizaciones con objetivos similares y marco de seguridad común.</p>
+                        
+                        <div class="highlight-box">
+                            <h4>🇪🇺 GAIA-X - Ejemplo Europeo</h4>
+                            <p>Proyecto impulsado por Alemania y Francia para establecer una alternativa europea a los proveedores estadounidenses. Más de 300 organizaciones participan.</p>
+                            
+                            <h5>Principios de GAIA-X:</h5>
+                            <ul class="list-checkmark">
+                                <li><strong>Apertura:</strong> Especificaciones y código disponibles</li>
+                                <li><strong>Transparencia:</strong> Entorno de confianza</li>
+                                <li><strong>Soberanía:</strong> Autodeterminación digital</li>
+                                <li><strong>Principios FAIR:</strong> Encontrabilidad, accesibilidad, interoperabilidad</li>
+                                <li><strong>Federado:</strong> Modelo de nube distribuida</li>
+                                <li><strong>Innovador:</strong> Arquitecturas descentralizadas y consenso distribuido</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔗 Nube Híbrida</h3>
+                        <p>Combinación de al menos una nube privada y una nube pública, mantenidas como entidades separadas pero unidas por tecnología estandarizada.</p>
+                        
+                        <div class="service-grid">
+                            <div class="service-card">
+                                <h4>Modelo 1</h4>
+                                <p>Proveedor con nube privada forma alianza con proveedor de nube pública</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>Modelo 2</h4>
+                                <p>Proveedor de nube pública forma alianza con proveedor de plataformas privadas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="servicios" class="tab-content">
+                    <h2>⚙️ Modelos de Servicio Cloud</h2>
+
+                    <div class="card">
+                        <h3>🏗️ Servicios Principales</h3>
+                        <div class="service-grid">
+                            <div class="service-card">
+                                <h4>🖥️ IaaS</h4>
+                                <strong>Infrastructure as a Service</strong>
+                                <p>Recursos informáticos como servidores, almacenamiento y redes a través de internet</p>
+                                <br>
+                                <em>Ejemplos:</em> AWS EC2, Azure VMs, Google Compute Engine
+                            </div>
+                            <div class="service-card">
+                                <h4>⚙️ PaaS</h4>
+                                <strong>Platform as a Service</strong>
+                                <p>Plataforma completa de desarrollo y despliegue de aplicaciones</p>
+                                <br>
+                                <em>Ejemplos:</em> AWS Elastic Beanstalk, Azure App Service, Google App Engine
+                            </div>
+                            <div class="service-card">
+                                <h4>📱 SaaS</h4>
+                                <strong>Software as a Service</strong>
+                                <p>Aplicaciones de software entregadas a través de internet</p>
+                                <br>
+                                <em>Ejemplos:</em> Google Workspace, Microsoft 365, Salesforce
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔒 Responsabilidades de Seguridad</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Responsabilidad del Proveedor</th>
+                                    <th>Responsabilidad del Cliente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>IaaS</strong></td>
+                                    <td>Seguridad física de la infraestructura</td>
+                                    <td>Sistema operativo, aplicaciones y datos</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PaaS</strong></td>
+                                    <td>Seguridad de plataforma y entorno de ejecución</td>
+                                    <td>Aplicaciones y datos desarrollados</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SaaS</strong></td>
+                                    <td>Seguridad del software y datos en la nube</td>
+                                    <td>Uso del software y protección de datos personales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 Otros Modelos de Servicio</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>BpaaS - Business Process as a Service</h4>
+                                <p>Externalización de procesos de negocio (RRHH, contabilidad, atención al cliente)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>FaaS - Functions as a Service</h4>
+                                <p>Serverless computing - ejecutar funciones sin contenedores dedicados</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>SECaaS - Security as a Service</h4>
+                                <p>Servicios de seguridad gestionados a través de Internet</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>DaaS - Desktop as a Service</h4>
+                                <p>Escritorios virtuales accesibles desde la nube</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>DBaaS - Database as a Service</h4>
+                                <p>Bases de datos como servicio gestionado</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>💼 Modelos de Negocio</h3>
+                        <div class="service-grid">
+                            <div class="service-card">
+                                <h4>🏢 Proveedor</h4>
+                                <p>Prestación directa de servicios en la nube al cliente</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>🤝 Intermediario</h4>
+                                <p>Actúa entre cliente y proveedores, ofreciendo agregación e integración</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>🛠️ Habilitador</h4>
+                                <p>Venta de software y hardware a terceros para desarrollar servicios cloud</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>📋 Auditor</h4>
+                                <p>Evaluaciones independientes de servicios cloud y su seguridad</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="proveedores" class="tab-content">
+                    <h2>🏢 Principales Proveedores Cloud</h2>
+
+                    <div class="provider-grid">
+                        <div class="provider-card">
+                            <div class="provider-header">
+                                <div class="provider-logo aws-logo">AWS</div>
+                                <div>
+                                    <h3>Amazon Web Services</h3>
+                                    <p>Líder del mercado (33%)</p>
+                                </div>
+                            </div>
+                            <h4>Servicios principales:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>EC2:</strong> Computación escalable</li>
+                                <li><strong>S3:</strong> Almacenamiento de objetos</li>
+                                <li><strong>Lambda:</strong> Computación serverless</li>
+                                <li><strong>RDS:</strong> Bases de datos relacionales</li>
+                                <li><strong>CloudFront:</strong> CDN global</li>
+                                <li><strong>SageMaker:</strong> Machine Learning</li>
+                            </ul>
+                        </div>
+
+                        <div class="provider-card">
+                            <div class="provider-header">
+                                <div class="provider-logo azure-logo">AZ</div>
+                                <div>
+                                    <h3>Microsoft Azure</h3>
+                                    <p>Segundo en el mercado (21%)</p>
+                                </div>
+                            </div>
+                            <h4>Servicios principales:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Virtual Machines:</strong> Máquinas virtuales</li>
+                                <li><strong>App Service:</strong> Aplicaciones web y móviles</li>
+                                <li><strong>Azure Functions:</strong> Serverless</li>
+                                <li><strong>SQL Database:</strong> Base de datos relacional</li>
+                                <li><strong>Active Directory:</strong> Gestión de identidades</li>
+                                <li><strong>AI Services:</strong> Inteligencia artificial</li>
+                            </ul>
+                        </div>
+
+                        <div class="provider-card">
+                            <div class="provider-header">
+                                <div class="provider-logo gcp-logo">GCP</div>
+                                <div>
+                                    <h3>Google Cloud Platform</h3>
+                                    <p>Tercero en el mercado (10%)</p>
+                                </div>
+                            </div>
+                            <h4>Servicios principales:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Compute Engine:</strong> Máquinas virtuales</li>
+                                <li><strong>App Engine:</strong> PaaS para aplicaciones</li>
+                                <li><strong>Cloud Functions:</strong> Serverless</li>
+                                <li><strong>BigQuery:</strong> Analytics de big data</li>
+                                <li><strong>Kubernetes Engine:</strong> Orquestación de contenedores</li>
+                                <li><strong>AutoML:</strong> Machine Learning automático</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔄 Comparativa de Servicios Equivalentes</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Categoría</th>
+                                    <th>AWS</th>
+                                    <th>Azure</th>
+                                    <th>Google Cloud</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Máquinas Virtuales</strong></td>
+                                    <td>EC2</td>
+                                    <td>Virtual Machines</td>
+                                    <td>Compute Engine</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Almacenamiento</strong></td>
+                                    <td>S3</td>
+                                    <td>Blob Storage</td>
+                                    <td>Cloud Storage</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Base de Datos</strong></td>
+                                    <td>RDS</td>
+                                    <td>SQL Database</td>
+                                    <td>Cloud SQL</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Serverless</strong></td>
+                                    <td>Lambda</td>
+                                    <td>Azure Functions</td>
+                                    <td>Cloud Functions</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Contenedores</strong></td>
+                                    <td>ECS/EKS</td>
+                                    <td>AKS</td>
+                                    <td>GKE</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Machine Learning</strong></td>
+                                    <td>SageMaker</td>
+                                    <td>Azure ML</td>
+                                    <td>AutoML</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔓 Soluciones Open Source</h3>
+                        <div class="service-grid">
+                            <div class="service-card">
+                                <h4>OpenStack</h4>
+                                <p>Plataforma de nube privada más popular. Módulos: Nova, Cinder, Neutron, Swift, Horizon</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>CloudStack</h4>
+                                <p>Infraestructura de nube escalable y de alta disponibilidad</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>Eucalyptus</h4>
+                                <p>Compatible con AWS, permite crear nubes privadas</p>
+                            </div>
+                            <div class="service-card">
+                                <h4>Nextcloud</h4>
+                                <p>Plataforma de colaboración y almacenamiento en la nube</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="seguridad" class="tab-content">
+                    <h2>🔒 Seguridad en Cloud Computing</h2>
+
+                    <div class="card">
+                        <h3>🛡️ Esquema Nacional de Seguridad (ENS)</h3>
+                        <p>El nuevo RD 311/2022 incluye medidas específicas de "Protección de servicios en la nube" aplicables desde nivel básico.</p>
+                        
+                        <div class="highlight-box">
+                            <h4>📋 Requisitos ENS para Cloud</h4>
+                            <ul class="list-checkmark">
+                                <li>Conformidad con ENS o medidas CCN-STIC</li>
+                                <li>Auditorías de pruebas de penetración (pentesting)</li>
+                                <li>Transparencia en la gestión de datos</li>
+                                <li>Implementación de cifrado y gestión de claves</li>
+                                <li>Definición de jurisdicción de los datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Niveles de Seguridad Recomendados (CCN-STIC 823)</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Infraestructura</th>
+                                    <th>Básico</th>
+                                    <th>Medio</th>
+                                    <th>Alto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Nube pública</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>Nube comunitaria externalizada</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Nube comunitaria interna</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Nube privada externalizada</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Nube privada interna</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏆 Certificaciones de Seguridad</h3>
+                        <div class="highlight-box">
+                            <p><strong>Los 3 principales proveedores (AWS, Azure y Google Cloud) cuentan con certificación de categoría Alta del Esquema Nacional de Seguridad.</strong></p>
+                        </div>
+                        
+                        <h4>📚 Guías CCN-STIC disponibles:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>CCN-STIC 823:</strong> Uso y contratación de servicios en la nube</li>
+                            <li><strong>CCN-STIC 887A:</strong> Configuración segura AWS</li>
+                            <li><strong>CCN-STIC 884A:</strong> Configuración segura Azure</li>
+                            <li><strong>CCN-STIC 888B:</strong> Configuración segura Google Cloud</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚠️ Riesgos y Consideraciones</h3>
+                        <div class="warning-box">
+                            <h4>🚨 Principales Riesgos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Falta de transparencia:</strong> Dificultad para evaluar riesgos y controles</li>
+                                <li><strong>Ubicación de datos:</strong> Desconocimiento de dónde se almacenan</li>
+                                <li><strong>Subencargados:</strong> Terceros involucrados en el tratamiento</li>
+                                <li><strong>Controles de acceso:</strong> Limitado control sobre quién accede</li>
+                                <li><strong>Medidas de seguridad:</strong> Dependencia de las medidas del proveedor</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="normativa" class="tab-content">
+                    <h2>⚖️ Marco Normativo</h2>
+
+                    <div class="card">
+                        <h3>📋 Normativas Principales</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Norma</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>REGLAMENTO (UE) 2016/679 (RGPD)</strong></td>
+                                    <td>Protección de datos personales. Incluye guías específicas de la AEPD sobre cloud</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>LEY 9/2017 DE CONTRATOS SECTOR PÚBLICO</strong></td>
+                                    <td>Contratación cloud tipificada como servicio. Requiere empresa intermediaria para facturación</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESQUEMA NACIONAL DE SEGURIDAD (RD 311/2022)</strong></td>
+                                    <td>Incluye medidas específicas para "Servicios en la nube"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESQUEMA NACIONAL DE INTEROPERABILIDAD</strong></td>
+                                    <td>Asociado a la portabilidad - obligación de entregar información al cliente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>LEY 7/2023 ARAGÓN</strong></td>
+                                    <td>Primera ley cloud de España - regula uso en sector público y privado</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>📄 Contratación Pública</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>Acuerdo Marco AM 27/2023</h4>
+                                <p>La DGRCC propone contratación mediante procedimiento abierto con técnica de acuerdo marco</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Calificación Jurídica (2021)</h4>
+                                <p>La Junta Consultiva indica que los contratos de software en la nube son contratos de suministro</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Recomendaciones Actuales</h4>
+                                <p>Hasta vigencia del acuerdo marco: licitación abierta. Contrato separado con proveedor e intermediario</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔒 Guía CCN-STIC 823</h3>
+                        <p><strong>Recomendaciones para el uso, contratación y auditoría de Servicios en la Nube</strong></p>
+                        
+                        <div class="highlight-box">
+                            <h4>📋 Decálogo de Recomendaciones</h4>
+                            <ul class="list-checkmark">
+                                <li>Evaluar riesgos antes de la migración</li>
+                                <li>Clasificar la información según su nivel de seguridad</li>
+                                <li>Elegir el modelo de servicio apropiado</li>
+                                <li>Verificar medidas de seguridad del proveedor</li>
+                                <li>Establecer acuerdos de nivel de servicio (SLA)</li>
+                                <li>Definir procedimientos de respuesta a incidentes</li>
+                                <li>Implementar cifrado de datos sensibles</li>
+                                <li>Asegurar la portabilidad de datos</li>
+                                <li>Realizar auditorías periódicas</li>
+                                <li>Mantener un plan de continuidad de negocio</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🌍 Soberanía Digital</h3>
+                        <div class="warning-box">
+                            <h4>🇪🇺 Iniciativas Europeas</h4>
+                            <p><strong>GAIA-X</strong> representa el esfuerzo europeo por crear una alternativa soberana a los proveedores estadounidenses, garantizando:</p>
+                            <ul class="list-checkmark">
+                                <li>Control sobre los datos europeos</li>
+                                <li>Cumplimiento de normativas europeas</li>
+                                <li>Independencia tecnológica</li>
+                                <li>Interoperabilidad entre servicios</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚡ Cloud vs On-Premise</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Cloud</th>
+                                    <th>On-Premise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Costos iniciales</strong></td>
+                                    <td>Bajos</td>
+                                    <td>Altos</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Escalabilidad</strong></td>
+                                    <td>Alta y rápida</td>
+                                    <td>Limitada por hardware</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Control</strong></td>
+                                    <td>Limitado</td>
+                                    <td>Total</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mantenimiento</strong></td>
+                                    <td>Por el proveedor</td>
+                                    <td>Por la organización</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Seguridad</strong></td>
+                                    <td>Compartida</td>
+                                    <td>Totalmente propia</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Personalización</strong></td>
+                                    <td>Limitada</td>
+                                    <td>Completa</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

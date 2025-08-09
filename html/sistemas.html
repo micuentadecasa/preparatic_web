@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Operativos - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: fit-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .tab-button.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ecf0f1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #3498db;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .check-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .check-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .os-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .os-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-list {
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            margin: 5px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .mobile-os-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .mobile-os-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-os-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mobile-os-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💻 Sistemas Operativos</h1>
+            <p>Conceptos y Fundamentos de Sistemas Operativos</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Conceptos</button>
+                <button class="tab-button" onclick="showTab('components')">⚙️ Componentes</button>
+                <button class="tab-button" onclick="showTab('filesystems')">📁 Sistemas de Archivos</button>
+                <button class="tab-button" onclick="showTab('types')">🏗️ Tipos de SO</button>
+                <button class="tab-button" onclick="showTab('evolution')">⏰ Evolución</button>
+                <button class="tab-button" onclick="showTab('mobile')">📱 SO Móviles</button>
+            </div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="content-card">
+                <h2>🎯 ¿Qué es un Sistema Operativo?</h2>
+                <p>El sistema operativo (SO) es el <strong>componente software más importante</strong> de un ordenador, que actúa como intermediario entre el hardware y las aplicaciones.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Componentes Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Generaciones Históricas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">SO Móviles Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">80%</div>
+                    <div class="stat-label">Cuota de Android</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Funciones Principales</h3>
+                <ul class="check-list">
+                    <li><strong>Gestionar recursos</strong> de la máquina (CPU, memoria, dispositivos)</li>
+                    <li><strong>Interfaz hardware-usuario</strong> proporcionando abstracción</li>
+                    <li><strong>Administrar procesos</strong> y su ejecución</li>
+                    <li><strong>Controlar acceso</strong> a archivos y datos</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Concepto Clave: Multiprogramación</h3>
+                <p>Técnica de multiplexación que proporciona la <strong>ilusión de ejecución paralela</strong> de varios procesos en un único procesador mediante la asignación de tiempo.</p>
+            </div>
+        </div>
+
+        <div id="components" class="tab-content">
+            <div class="content-card">
+                <h2>⚙️ Componentes de un Sistema Operativo</h2>
+                <p>Un sistema operativo se compone de cuatro módulos principales que trabajan coordinadamente.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="os-card">
+                    <div class="os-title">🔄 Gestión de Procesos</div>
+                    <p><strong>Proceso:</strong> Programa en ejecución caracterizado por instrucciones, estado actual y recursos asociados.</p>
+                    <ul class="feature-list">
+                        <li><strong>Estados:</strong> Activo, Preparado, Bloqueado</li>
+                        <li><strong>Planificadores:</strong> Round-robin, FIFO, LIFO, SJF</li>
+                        <li><strong>Sincronización:</strong> Control de recursos compartidos</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">💾 Administración de Memoria</div>
+                    <p>Gestiona el almacenamiento de datos de programas que utiliza la CPU.</p>
+                    <ul class="feature-list">
+                        <li><strong>Algoritmos:</strong> FIFO, NRU, LRU, NFU, LFU</li>
+                        <li><strong>Segmentación:</strong> División en partes reutilizables</li>
+                        <li><strong>Control:</strong> Partes ocupadas y libres</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">🖥️ Sistema de E/S</div>
+                    <p>Gestiona la comunicación con dispositivos de entrada y salida.</p>
+                    <ul class="feature-list">
+                        <li><strong>Orientados a bloque:</strong> Direccionables</li>
+                        <li><strong>Orientados a carácter:</strong> Secuencias de bytes</li>
+                        <li><strong>Drivers:</strong> Control de dispositivos específicos</li>
+                        <li><strong>DMA:</strong> Acceso directo a memoria</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">📁 Gestión de Archivos</div>
+                    <p>Organización para almacenar ficheros del sistema y usuario.</p>
+                    <ul class="feature-list">
+                        <li><strong>Asignación de espacio</strong> a archivos</li>
+                        <li><strong>Gestión de espacio libre</strong></li>
+                        <li><strong>Control de acceso</strong> a datos</li>
+                        <li><strong>Operaciones:</strong> Crear, mover, renombrar, eliminar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Importante:</strong> El <strong>scheduler o planificador</strong> es crucial para repartir el tiempo del microprocesador entre todos los procesos disponibles.
+            </div>
+        </div>
+
+        <div id="filesystems" class="tab-content">
+            <div class="content-card">
+                <h2>📁 Sistemas de Archivos</h2>
+                <p>Los sistemas de archivos organizan y gestionan el almacenamiento de datos en dispositivos de almacenamiento.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="os-card">
+                    <div class="os-title">🏢 Windows</div>
+                    <ul class="feature-list">
+                        <li><strong>FAT:</strong> Sistema original MS-DOS, medios extraíbles</li>
+                        <li><strong>HPFS:</strong> Alto rendimiento, nombres largos, metadatos</li>
+                        <li><strong>NTFS:</strong> Windows NT, clúster desde 512 bytes, versión 5.1</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">🐧 Linux/Unix</div>
+                    <ul class="feature-list">
+                        <li><strong>EXT2:</strong> Fragmentación baja, hasta 4TB/2GB</li>
+                        <li><strong>EXT3:</strong> Compatible EXT2 + journaling</li>
+                        <li><strong>EXT4:</strong> Hasta 1024PB/16TB, mayor eficiencia</li>
+                        <li><strong>ReiserFS:</strong> Journaling, eficiente archivos <4k</li>
+                        <li><strong>SWAP:</strong> Particiones de intercambio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💾 Conceptos Clave</h3>
+                <ul class="check-list">
+                    <li><strong>Sectores:</strong> Bloques de mismo tamaño para acceso a datos</li>
+                    <li><strong>Journaling:</strong> Recuperación frente a fallos del disco</li>
+                    <li><strong>Metadatos:</strong> Información sobre archivos y directorios</li>
+                    <li><strong>Fragmentación:</strong> División del espacio de almacenamiento</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🔧 Características Técnicas</h3>
+                <p><strong>PnP (Plug and Play):</strong> Permite conectar periféricos sin configuración manual de jumpers.</p>
+                <p><strong>DMA (Direct Memory Access):</strong> Transferencia directa de datos entre memoria y dispositivos E/S.</p>
+            </div>
+        </div>
+
+        <div id="types" class="tab-content">
+            <div class="content-card">
+                <h2>🏗️ Tipos de Sistemas Operativos</h2>
+                <p>Los sistemas operativos se clasifican según diferentes criterios funcionales y estructurales.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Tipos de Usuarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Tipos de Tareas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Estructuras</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Formas de Servicio</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="os-card">
+                    <div class="os-title">👥 Por Número de Usuarios</div>
+                    <ul class="feature-list">
+                        <li><strong>Monousuario:</strong> Un usuario simultáneo</li>
+                        <li><strong>Multiusuario:</strong> Múltiples usuarios simultáneos</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">⚡ Por Número de Tareas</div>
+                    <ul class="feature-list">
+                        <li><strong>Monotarea:</strong> Una tarea por vez</li>
+                        <li><strong>Multitarea:</strong> Múltiples tareas simultáneas</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">🖥️ Por Número de Procesadores</div>
+                    <ul class="feature-list">
+                        <li><strong>Uniprocesador:</strong> Un solo procesador</li>
+                        <li><strong>Multiprocesador:</strong> Múltiples procesadores</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">🏛️ Por Estructura</div>
+                    <ul class="feature-list">
+                        <li><strong>Monolítica:</strong> Núcleo único</li>
+                        <li><strong>Jerárquica:</strong> Capas organizadas</li>
+                        <li><strong>Máquina Virtual:</strong> Virtualización de recursos</li>
+                    </ul>
+                </div>
+
+                <div class="os-card">
+                    <div class="os-title">🌐 Por Servicios</div>
+                    <ul class="feature-list">
+                        <li><strong>SO de Red:</strong> Servicios de red centralizados</li>
+                        <li><strong>SO Distribuidos:</strong> Procesamiento distribuido</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>💡 Nota:</strong> La <strong>multiprogramación</strong> permite que un SO multitarea ejecute varios procesos mediante asignación temporal del procesador.
+            </div>
+        </div>
+
+        <div id="evolution" class="tab-content">
+            <div class="content-card">
+                <h2>⏰ Evolución de los Sistemas Operativos</h2>
+                <p>La evolución de los sistemas operativos ha estado marcada por los avances tecnológicos del hardware.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1945 - 1955: Primera Generación</div>
+                    <p><strong>Características:</strong> Tubos de vacío, salas enormes, programación en lenguaje máquina.</p>
+                    <ul class="check-list">
+                        <li>Introducción de tarjetas perforadas (años 50)</li>
+                        <li>Sin sistemas operativos propiamente dichos</li>
+                        <li>Programación directa del hardware</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">1955 - 1965: Segunda Generación</div>
+                    <p><strong>Características:</strong> Uso masivo del transistor, explotación comercial.</p>
+                    <ul class="check-list">
+                        <li>Gran coste, solo grandes corporaciones</li>
+                        <li>Uso de tarjetas perforadas</li>
+                        <li>Primeros sistemas batch</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">1965 - 1980: Tercera Generación</div>
+                    <p><strong>Características:</strong> Circuitos integrados y multiprogramación.</p>
+                    <ul class="check-list">
+                        <li>Varios transistores en un solo chip</li>
+                        <li>Menor consumo y espacio</li>
+                        <li>Mayor fiabilidad</li>
+                        <li>Introducción de la multiprogramación</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">1980 - Actualidad: Cuarta Generación</div>
+                    <p><strong>Características:</strong> Microprocesador y computadoras personales.</p>
+                    <ul class="check-list">
+                        <li>LSI y VLSI (integración a gran escala)</li>
+                        <li>Creación de las PC</li>
+                        <li>Sistemas operativos modernos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🖥️ Microprocesadores Históricos</h3>
+                <div class="info-grid">
+                    <div class="os-card">
+                        <div class="os-title">Intel 4004</div>
+                        <p>4 bits, desarrollado para calculadora</p>
+                    </div>
+                    <div class="os-card">
+                        <div class="os-title">Intel 8008</div>
+                        <p>~3,300 transistores</p>
+                    </div>
+                    <div class="os-card">
+                        <div class="os-title">Intel 8080</div>
+                        <p>Primer microprocesador de uso general<br>4,500 transistores, 200,000 instrucciones/seg</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏛️ Computadoras Históricas</h3>
+                <p><strong>Cuarta Generación:</strong> PDP-10, PDP-11, Cray-1, Cray X-MP</p>
+            </div>
+        </div>
+
+        <div id="mobile" class="tab-content">
+            <div class="content-card">
+                <h2>📱 Sistemas Operativos Móviles</h2>
+                <p>El auge de los dispositivos móviles ha revolucionado el desarrollo de sistemas operativos especializados.</p>
+            </div>
+
+            <div class="mobile-os-grid">
+                <div class="mobile-os-card">
+                    <div class="mobile-os-icon">🤖</div>
+                    <h3>Android</h3>
+                    <p><strong>Desarrollador:</strong> Google</p>
+                    <p><strong>Basado en:</strong> Núcleo Linux</p>
+                    <p><strong>Cuota de mercado:</strong> ~80%</p>
+                    <p><strong>Licencia:</strong> Apache (AOSP)</p>
+                    <p><strong>Extensión:</strong> .apk, .xapk</p>
+                    <p><strong>Última versión:</strong> Android 13 (2022)</p>
+                </div>
+
+                <div class="mobile-os-card">
+                    <div class="mobile-os-icon">🍎</div>
+                    <h3>iOS</h3>
+                    <p><strong>Desarrollador:</strong> Apple Inc.</p>
+                    <p><strong>Basado en:</strong> Darwin BSD</p>
+                    <p><strong>Dispositivos:</strong> iPhone, iPad, iPod touch</p>
+                    <p><strong>Extensión:</strong> .ipa</p>
+                    <p><strong>Última versión:</strong> iOS 16 (abril 2023)</p>
+                    <p><strong>Capas:</strong> Servicios principales, Medios, Cocoa Touch</p>
+                </div>
+
+                <div class="mobile-os-card">
+                    <div class="mobile-os-icon">🪟</div>
+                    <h3>Windows Phone</h3>
+                    <p><strong>Desarrollador:</strong> Microsoft</p>
+                    <p><strong>Estado:</strong> Discontinuado</p>
+                    <p><strong>Sucesor de:</strong> Windows Mobile</p>
+                    <p><strong>Última versión:</strong> Windows Phone 8.1</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📊 Datos Clave del Mercado Móvil</h3>
+                <ul class="check-list">
+                    <li><strong>Android:</strong> Domina con ~80% del mercado mundial</li>
+                    <li><strong>iOS:</strong> Segundo lugar, principalmente en mercados premium</li>
+                    <li><strong>Evolución:</strong> Versiones anuales con mejoras significativas</li>
+                    <li><strong>Tendencia:</strong> Mayor integración con servicios en la nube</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🔄 Tendencias Actuales</h3>
+                <p>El gran auge de los dispositivos móviles ha supuesto <strong>grandes avances</strong> en el desarrollo de sistemas operativos especializados para móviles, con características como:</p>
+                <ul class="check-list">
+                    <li>Optimización para pantallas táctiles</li>
+                    <li>Gestión eficiente de batería</li>
+                    <li>Conectividad móvil avanzada</li>
+                    <li>Integración con servicios cloud</li>
+                    <li>Seguridad y privacidad mejoradas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de aparición de elementos
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card, .stat-card, .os-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(20px)';
+                        entry.target.style.animation = 'fadeIn 0.6s ease forwards';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

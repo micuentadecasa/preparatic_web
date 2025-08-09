@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologías Ágiles - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: fit-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .tab-button.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ecf0f1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .value-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .principle-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .principle-icon {
+            font-size: 2em;
+            color: #3498db;
+            min-width: 50px;
+        }
+
+        .check-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .check-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .methodology-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .methodology-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lean-principles {
+            counter-reset: principle-counter;
+        }
+
+        .lean-principle {
+            counter-increment: principle-counter;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #27ae60;
+            position: relative;
+        }
+
+        .lean-principle::before {
+            content: counter(principle-counter);
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            background: #27ae60;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .triangle-diagram {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .pdca-cycle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            background: conic-gradient(from 0deg, #3498db 0deg 90deg, #27ae60 90deg 180deg, #f39c12 180deg 270deg, #e74c3c 270deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdca-center {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .stats-grid, .values-grid, .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Metodologías Ágiles</h1>
+            <p>Gestión de Proyectos y Metodologías Lean</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('manifesto')">📋 Manifiesto</button>
+                <button class="tab-button" onclick="showTab('concepts')">💡 Conceptos</button>
+                <button class="tab-button" onclick="showTab('methodologies')">⚙️ Metodologías</button>
+                <button class="tab-button" onclick="showTab('scale')">📈 Gran Escala</button>
+                <button class="tab-button" onclick="showTab('lean')">🔧 Lean</button>
+                <button class="tab-button" onclick="showTab('practices')">🛠️ Prácticas</button>
+            </div>
+        </div>
+
+        <div id="manifesto" class="tab-content active">
+            <div class="content-card">
+                <h2>📋 Manifiesto Ágil (2001)</h2>
+                <p>La filosofía ágil propone <strong>valores y principios</strong> que priorizan la satisfacción del cliente y la adaptabilidad al cambio.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Valores Fundamentales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Principios Ágiles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2001</div>
+                    <div class="stat-label">Año del Manifiesto</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Metodologías Derivadas</div>
+                </div>
+            </div>
+
+            <h3>🎯 Valores del Manifiesto Ágil</h3>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">👥</div>
+                    <h3>Individuos e Interacciones</h3>
+                    <p><strong>por encima de</strong></p>
+                    <p>Procesos y Herramientas</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">💻</div>
+                    <h3>Software que Funciona</h3>
+                    <p><strong>por encima de</strong></p>
+                    <p>Documentación Exhaustiva</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3>Colaboración con el Cliente</h3>
+                    <p><strong>por encima de</strong></p>
+                    <p>Negociación de Contratos</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🔄</div>
+                    <h3>Responder ante el Cambio</h3>
+                    <p><strong>por encima de</strong></p>
+                    <p>Seguimiento del Plan</p>
+                </div>
+            </div>
+
+            <h3>📝 Los 12 Principios Ágiles</h3>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <div class="principle-icon">👍</div>
+                    <div>
+                        <strong>Satisfacer al CLIENTE</strong><br>
+                        <small>Nuestra mayor prioridad</small>
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <div class="principle-icon">🔄</div>
+                    <div>
+                        <strong>Aceptar CAMBIOS</strong><br>
+                        <small>Incluso en etapas tardías</small>
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <div class="principle-icon">⚡</div>
+                    <div>
+                        <strong>Entrega FRECUENTE</strong><br>
+                        <small>Software funcionando</small>
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <div class="principle-icon">🤝</div>
+                    <div>
+                        <strong>Colaboración NEGOCIO-DESARROLLADORES</strong><br>
+                        <small>Trabajo conjunto diario</small>
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <div class="principle-icon">🌟</div>
+                    <div>
+                        <strong>Personas MOTIVADAS</strong><br>
+                        <small>Confianza y apoyo</small>
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <div class="principle-icon">💬</div>
+                    <div>
+                        <strong>Conversación CARA a CARA</strong><br>
+                        <small>Comunicación más eficiente</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔑 Diferencia Clave con Waterfall</h3>
+                <p>El principio <strong>"se aceptan los cambios"</strong> es una gran diferencia con el modelo Waterfall, que tiene una estructura muy rígida donde hay poca tolerancia a la incertidumbre.</p>
+            </div>
+        </div>
+
+        <div id="concepts" class="tab-content">
+            <div class="content-card">
+                <h2>💡 Conceptos Fundamentales</h2>
+                <p>Conceptos clave que fundamentan las metodologías ágiles y su diferenciación con enfoques tradicionales.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🔄 Ciclo de Deming (PDCA)</div>
+                    <p><strong>Edward Deming</strong> - Modelo de aprendizaje empírico</p>
+                    <ul class="check-list">
+                        <li><strong>Plan:</strong> Planificar</li>
+                        <li><strong>Do:</strong> Hacer</li>
+                        <li><strong>Check:</strong> Verificar resultados</li>
+                        <li><strong>Act:</strong> Actuar según resultados</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">📐 Triángulo de Hierro</div>
+                    <p><strong>Waterfall:</strong> Alcance fijo, tiempo y recursos variables</p>
+                    <p><strong>Ágil:</strong> Tiempo y recursos fijos, alcance variable</p>
+                    <ul class="check-list">
+                        <li>TIEMPO (planificación)</li>
+                        <li>ALCANCE (requerimientos)</li>
+                        <li>COSTE (personas y recursos)</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">📊 Cono de Incertidumbre</div>
+                    <p>Al inicio del proyecto existe <strong>mayor probabilidad de error</strong> en estimaciones</p>
+                    <ul class="check-list">
+                        <li>Menos información inicial</li>
+                        <li>Mayor incertidumbre</li>
+                        <li>Ágil promueve empezar "hacer" pronto</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔄 Iterativo e Incremental</div>
+                    <p><strong>Iterativo:</strong> Pequeñas fases con entregables</p>
+                    <p><strong>Incremental:</strong> De lo sencillo a lo complejo</p>
+                    <ul class="check-list">
+                        <li>Feedback temprano del cliente</li>
+                        <li>Reducir incertidumbre</li>
+                        <li>Adaptación al cambio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="triangle-diagram">
+                <h3>📐 Comparación: Waterfall vs Ágil</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                    <div>
+                        <h4 style="color: #e74c3c;">🌊 Waterfall</h4>
+                        <ul class="check-list">
+                            <li>Alcance <strong>fijo</strong></li>
+                            <li>Tiempo y recursos <strong>variables</strong></li>
+                            <li>Validación al final</li>
+                            <li>Poca tolerancia al cambio</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #27ae60;">🚀 Ágil</h4>
+                        <ul class="check-list">
+                            <li>Tiempo y recursos <strong>fijos</strong></li>
+                            <li>Alcance <strong>variable</strong></li>
+                            <li>Validación continua</li>
+                            <li>Abraza el cambio</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pdca-cycle">
+                <div class="pdca-center">PDCA</div>
+            </div>
+            <p style="text-align: center; margin-top: 10px;">
+                <strong>Plan → Do → Check → Act</strong><br>
+                <small>La metodología ágil da especial importancia a <strong>Check (feedback)</strong> y <strong>Act (actuar)</strong></small>
+            </p>
+        </div>
+
+        <div id="methodologies" class="tab-content">
+            <div class="content-card">
+                <h2>⚙️ Metodologías Ágiles Populares</h2>
+                <p>Las metodologías ágiles más utilizadas en la gestión de proyectos de software.</p>
+            </div>
+
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🏃‍♂️ SCRUM
+                    </div>
+                    <p>Proceso iterativo e incremental que promueve comunicación y feedback rápido</p>
+                    <h4>Objetivos:</h4>
+                    <ul class="check-list">
+                        <li>Feedback temprano del usuario</li>
+                        <li>Equipos de alto rendimiento</li>
+                        <li>Producto de calidad</li>
+                    </ul>
+                    <h4>Roles:</h4>
+                    <ul class="check-list">
+                        <li><strong>Product Owner</strong></li>
+                        <li><strong>Scrum Master</strong></li>
+                        <li><strong>Scrum Team</strong></li>
+                    </ul>
+                    <h4>Reuniones:</h4>
+                    <ul class="check-list">
+                        <li>Sprint Planning</li>
+                        <li>Daily Scrum</li>
+                        <li>Sprint Review</li>
+                        <li>Sprint Retrospective</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        📋 KANBAN
+                    </div>
+                    <p>Gestión visual del flujo de trabajo con entrega continuada</p>
+                    <h4>3 Principios:</h4>
+                    <ul class="check-list">
+                        <li><strong>Visualizar</strong> lo que se hace</li>
+                        <li><strong>Limitar</strong> trabajo en curso (WIP)</li>
+                        <li><strong>Mejorar</strong> el flujo de trabajo</li>
+                    </ul>
+                    <h4>Características:</h4>
+                    <ul class="check-list">
+                        <li>Tablero Kanban público</li>
+                        <li>Sin sobrecargar al equipo</li>
+                        <li>Eliminar cuellos de botella</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        ⚡ Extreme Programming (XP)
+                    </div>
+                    <p>Software de mayor calidad y mejor eficiencia del equipo</p>
+                    <h4>Características:</h4>
+                    <ul class="check-list">
+                        <li>Pruebas unitarias continuas</li>
+                        <li>Planificación flexible</li>
+                        <li>Respuesta rápida a cambios</li>
+                        <li>Interacción continua con cliente</li>
+                        <li>Refactorización del código</li>
+                        <li>Código compartido</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🎯 Feature Driven Development (FDD)
+                    </div>
+                    <p>Desarrollo basado en funcionalidades con iteraciones cortas</p>
+                    <ul class="check-list">
+                        <li>Lista de funcionalidades (features)</li>
+                        <li>Planifica por funcionalidad</li>
+                        <li>Construye funcionalidades tangibles</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🧪 Test Driven Development (TDD)
+                    </div>
+                    <p>Programación que comienza escribiendo las pruebas primero</p>
+                    <ul class="check-list">
+                        <li>Escribir pruebas primero</li>
+                        <li>Escribir código fuente</li>
+                        <li>Refactorizar código</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        📝 Behavior Driven Development (BDD)
+                    </div>
+                    <p>Extensión de TDD enfocada en el comportamiento de la aplicación</p>
+                    <h4>Formato de Historias:</h4>
+                    <p><em>"Como [rol] quiero [característica] para que [beneficios]"</em></p>
+                    <h4>Ciclo:</h4>
+                    <ul class="check-list">
+                        <li>Escribir historias de usuario</li>
+                        <li>Realizar implementación</li>
+                        <li>Automatizar pruebas de aceptación</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">💎 Crystal</div>
+                    <p>Familia de metodologías sencillas y adaptables</p>
+                    <ul class="check-list">
+                        <li>Crystal Clear, Yellow, Orange</li>
+                        <li>Trabajo en equipo</li>
+                        <li>Comunicación y reflexión</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🏗️ DSDM</div>
+                    <p>Dynamic Systems Development Method - Marco para entrega rápida (RAD)</p>
+                    <ul class="check-list">
+                        <li>Centrarse en valor para el negocio</li>
+                        <li>Involucración del usuario</li>
+                        <li>Entregas frecuentes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="scale" class="tab-content">
+            <div class="content-card">
+                <h2>📈 Agile a Gran Escala</h2>
+                <p>Metodologías para coordinar múltiples equipos ágiles trabajando en el mismo producto o programa.</p>
+            </div>
+
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🏢 SAFe (Scaled Agile Framework)
+                    </div>
+                    <p>Estructurado en <strong>cuatro niveles</strong></p>
+                    <h4>Niveles:</h4>
+                    <ul class="check-list">
+                        <li><strong>Equipo:</strong> Scrum, XP, Kanban, Lean</li>
+                        <li><strong>Programa:</strong> Program Increment, Release Train</li>
+                        <li><strong>Gran Solución:</strong> Múltiples programas</li>
+                        <li><strong>Portfolio:</strong> Estrategia empresarial</li>
+                    </ul>
+                    <h4>Conceptos Clave:</h4>
+                    <ul class="check-list">
+                        <li><strong>Program Increment (PI):</strong> ~10 semanas</li>
+                        <li><strong>Agile Release Train:</strong> 5-12 equipos</li>
+                        <li>50-120 personas coordinadas</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🔄 Scrum de Scrums
+                    </div>
+                    <p>Escalado puro de la metodología Scrum</p>
+                    <ul class="check-list">
+                        <li>Mantiene principios Scrum originales</li>
+                        <li>Coordinación entre equipos</li>
+                        <li>Escalado más simple</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        📏 LeSS (Large-Scale Scrum)
+                    </div>
+                    <p>Scrum a gran escala manteniendo simplicidad</p>
+                    <ul class="check-list">
+                        <li>Un equipo de equipos ágiles</li>
+                        <li>Entrega incremental frecuente</li>
+                        <li>Visión y arquitectura común</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>LeSS</th>
+                            <th>SAFe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Scrum Masters</strong></td>
+                            <td>1 full time por cada 2-3 proyectos</td>
+                            <td>No especifica número</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scrum Master "Supremo"</strong></td>
+                            <td>No existe, todos iguales</td>
+                            <td>Release Train Engineer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Master "Supremo"</strong></td>
+                            <td>Product Owner</td>
+                            <td>Product Manager</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Metodología a nivel equipo</strong></td>
+                            <td>Scrum</td>
+                            <td>Scrum, XP o Kanban</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Backlogs</strong></td>
+                            <td>1 por grupo de equipo</td>
+                            <td>1 por equipo + Programa</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Principios de Organización a Gran Escala</h3>
+                <ul class="check-list">
+                    <li><strong>Equipos autoorganizados</strong> y autogestionados</li>
+                    <li><strong>Entrega incremental</strong> frecuente</li>
+                    <li><strong>Visión común</strong> y arquitectura compartida</li>
+                    <li><strong>Duración común</strong> de iteraciones</li>
+                    <li><strong>Colaboración cara a cara</strong></li>
+                    <li><strong>Valor incremental</strong> continuo</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🏗️ Recomendaciones SAFe</h3>
+                <p><strong>División por área de funcionalidad</strong> (no por capa tecnológica)</p>
+                <p><strong>Program Increment:</strong> Período de tiempo predefinido donde las iteraciones de cada equipo se acomodan</p>
+                <p><strong>Program Backlog:</strong> Misión común desarrollada coordinadamente</p>
+            </div>
+        </div>
+
+        <div id="lean" class="tab-content">
+            <div class="content-card">
+                <h2>🔧 Metodologías Lean</h2>
+                <p>Originada en Toyota, busca <strong>eliminar desperdicios</strong> y entregar productos de mayor calidad más rápidamente.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Principios Lean</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Elementos 5S</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Desperdicios Objetivo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Mejora Continua</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Relación Lean - Agile</h3>
+                <p><strong>Lean es el paraguas</strong> bajo el que se instala Agile, con parte de sus aprendizajes y prácticas integradas en su ADN.</p>
+            </div>
+
+            <div class="lean-principles">
+                <h3>📋 Principios Lean</h3>
+                
+                <div class="lean-principle">
+                    <h4>Eliminar Desperdicios</h4>
+                    <p>Cualquier cosa que <strong>no añade valor</strong> desde el punto de vista del cliente</p>
+                    <p><em>Ejemplo: Hacer más cosas de lo necesario o que no aportan valor al producto final</em></p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Amplificar el Aprendizaje</h4>
+                    <p>No se obtiene una <strong>versión perfecta</strong> a la primera, se llevan a cabo varias versiones como parte del proceso de aprendizaje</p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Decidir lo Más Tarde Posible</h4>
+                    <p>Retrasar decisiones hasta tener <strong>suficiente información</strong></p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Entregar tan Rápido como sea Posible</h4>
+                    <p><strong>Pequeñas entregas</strong> desde el inicio, recogiendo feedback del cliente</p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Empoderar al Equipo</h4>
+                    <p>Involucrar a los <strong>desarrolladores en la toma de decisiones</strong></p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Embeber la Calidad</h4>
+                    <p>Adquirir <strong>prácticas que aseguren la calidad</strong> lo antes posible</p>
+                </div>
+
+                <div class="lean-principle">
+                    <h4>Ver el Todo</h4>
+                    <p>Evitar maximizar la importancia de una parte específica, <strong>ver el sistema como un todo</strong></p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🎯 Objetivo Lean</h3>
+                <p>Proceso sistemático para <strong>eliminar desperdicios</strong>, reducir costes y aumentar la calidad del producto o servicio para entregar productos <strong>más rápido y con mejor calidad</strong>.</p>
+            </div>
+        </div>
+
+        <div id="practices" class="tab-content">
+            <div class="content-card">
+                <h2>🛠️ Prácticas y Técnicas Lean</h2>
+                <p>Técnicas específicas adoptadas habitualmente dentro del ámbito lean para el desarrollo de software.</p>
+            </div>
+
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🗺️ Value Stream Mapping (VSM)
+                    </div>
+                    <p>Representa la secuencia de actividades, duración y tiempos de espera</p>
+                    <ul class="check-list">
+                        <li>Analizar flujo de recursos e información</li>
+                        <li>Representar posición actual</li>
+                        <li>Localizar puntos de mejora</li>
+                        <li>Desde solicitud hasta entrega</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        📁 5S
+                    </div>
+                    <p>Herramienta para organizar el lugar de trabajo y conseguir procesos eficientes</p>
+                    <ul class="check-list">
+                        <li><strong>Sort:</strong> Clasificar</li>
+                        <li><strong>Set in Order:</strong> Ordenar lógicamente</li>
+                        <li><strong>Shine:</strong> Limpiar código innecesario</li>
+                        <li><strong>Standardize:</strong> Procedimientos formales</li>
+                        <li><strong>Sustain:</strong> Mantener el proceso</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        ⚡ Evento KAIZEN
+                    </div>
+                    <p>Evento de mejora continua con modificaciones al proceso</p>
+                    <ul class="check-list">
+                        <li>Representantes de áreas involucradas</li>
+                        <li>Decidir qué mejora afrontar</li>
+                        <li>Máximo una semana de trabajo</li>
+                        <li>Implementar mejoras pactadas</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        📋 Método Kanban
+                    </div>
+                    <p>Control visual simple del flujo de estados de las tareas</p>
+                    <ul class="check-list">
+                        <li>Limitar trabajo sin terminar</li>
+                        <li>Control visual de estados</li>
+                        <li>Flujo de trabajo optimizado</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🛡️ Poka-yoke
+                    </div>
+                    <p>Técnica "a prueba de errores" para evitar errores en operaciones</p>
+                    <ul class="check-list">
+                        <li>Eliminar errores humanos y automatizados</li>
+                        <li>Sistemas de prevención</li>
+                        <li><em>Ejemplo:</em> Impedir modificar tareas de otros</li>
+                    </ul>
+                </div>
+
+                <div class="methodology-card">
+                    <div class="methodology-title">
+                        🔧 Jidoka
+                    </div>
+                    <p>Procesos automáticos con autocontrol de calidad</p>
+                    <ul class="check-list">
+                        <li>Detención automática ante anomalías</li>
+                        <li>Impedir afectación al resto</li>
+                        <li>Control de calidad integrado</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Beneficios de las Prácticas Lean</h3>
+                <ul class="check-list">
+                    <li><strong>Eliminación de desperdicios:</strong> Solo actividades que aportan valor</li>
+                    <li><strong>Mejora continua:</strong> Proceso constante de optimización</li>
+                    <li><strong>Calidad integrada:</strong> Control de calidad desde el origen</li>
+                    <li><strong>Flujo optimizado:</strong> Reducción de cuellos de botella</li>
+                    <li><strong>Visibilidad:</strong> Estado claro del trabajo en progreso</li>
+                    <li><strong>Prevención de errores:</strong> Sistemas a prueba de fallos</li>
+                </ul>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">📊 Métricas Lean</div>
+                    <ul class="check-list">
+                        <li><strong>Lead Time:</strong> Tiempo total del proceso</li>
+                        <li><strong>Cycle Time:</strong> Tiempo de trabajo activo</li>
+                        <li><strong>WIP Limits:</strong> Límites de trabajo en progreso</li>
+                        <li><strong>Throughput:</strong> Elementos completados por período</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔄 Mejora Continua</div>
+                    <ul class="check-list">
+                        <li><strong>Retrospectivas regulares:</strong> Análisis de mejoras</li>
+                        <li><strong>Experimentos:</strong> Pequeños cambios controlados</li>
+                        <li><strong>Feedback loops:</strong> Ciclos de retroalimentación</li>
+                        <li><strong>Kaizen events:</strong> Sesiones de mejora enfocada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de aparición de elementos
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card, .stat-card, .value-card, .methodology-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(20px)';
+                        entry.target.style.animation = 'fadeIn 0.6s ease forwards';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

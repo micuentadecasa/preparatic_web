@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologías Ágiles - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+        }
+        
+        .tabs {
+            background: #34495e;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 30px;
+            display: flex;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tab.active {
+            background: #3498db;
+            box-shadow: inset 0 -3px 0 rgba(255,255,255,0.3);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 30px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .methodology-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .methodology-card h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px;
+        }
+        
+        .badge.success { background: rgb(88, 106, 95); }
+        .badge.warning { background: #f39c12; }
+        .badge.danger { background: #e74c3c; }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Metodologías Ágiles</h1>
+            <p class="subtitle">Análisis Funcional, Casos de Uso e Historias de Usuario</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Visión General</button>
+            <button class="tab" onclick="showTab('analysis')">Análisis Funcional</button>
+            <button class="tab" onclick="showTab('scrum')">SCRUM</button>
+            <button class="tab" onclick="showTab('methodologies')">Otras Metodologías</button>
+            <button class="tab" onclick="showTab('practices')">Prácticas Ágiles</button>
+            <button class="tab" onclick="showTab('resources')">Recursos</button>
+        </div>
+        
+        <div id="overview" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Valores del Manifiesto Ágil</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Principios Ágiles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2001</div>
+                    <div class="stat-label">Año del Manifiesto Ágil</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8+</div>
+                    <div class="stat-label">Metodologías Principales</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎯 ¿Qué son las Metodologías Ágiles?</h2>
+                <p>Las metodologías ágiles son un conjunto de prácticas y valores para el desarrollo de software que priorizan:</p>
+                <ul class="checklist">
+                    <li>Individuos e interacciones sobre procesos y herramientas</li>
+                    <li>Software funcionando sobre documentación exhaustiva</li>
+                    <li>Colaboración con el cliente sobre negociación contractual</li>
+                    <li>Respuesta al cambio sobre seguimiento de un plan</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>💡 Concepto Clave</h3>
+                <p>El análisis funcional consiste en identificar los requisitos del sistema, describiendo QUÉ se va a desarrollar (sin indicar CÓMO). Es fundamental para el éxito de cualquier proyecto de software.</p>
+            </div>
+            
+            <div class="card">
+                <h2>📊 Elementos del Análisis</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Educción de Requisitos</h3>
+                        <p>Identificación y extracción de requisitos del sistema</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Análisis de Requisitos</h3>
+                        <p>Estudio y refinamiento de los requisitos identificados</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Representación</h3>
+                        <p>Documentación formal de los requisitos</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Validación</h3>
+                        <p>Verificación de que los requisitos son correctos y completos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="analysis" class="tab-content">
+            <div class="card">
+                <h2>📋 Casos de Uso</h2>
+                <p>Los casos de uso son una técnica de obtención de requisitos adecuada para sistemas dominados por requisitos funcionales. Elementos principales:</p>
+                <ul class="checklist">
+                    <li><strong>Actores:</strong> Entidades externas que interactúan con el sistema</li>
+                    <li><strong>Casos de Uso:</strong> Secuencias de acciones que produce un resultado</li>
+                    <li><strong>Relaciones:</strong> Include, Extend y Generalización</li>
+                    <li><strong>Contexto:</strong> Límites y alcance del sistema</li>
+                </ul>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>📝 Historias de Usuario</h3>
+                <p>Las historias de usuario siguen el formato:</p>
+                <div class="highlight-box">
+                    <p><strong>COMO</strong> &lt;rol&gt; <strong>QUIERO</strong> &lt;funcionalidad&gt; <strong>PARA PODER</strong> &lt;beneficio&gt;</p>
+                </div>
+                <p>Características INVEST:</p>
+                <div style="display: flex; flex-wrap: wrap;">
+                    <span class="badge">Independent</span>
+                    <span class="badge success">Negociable</span>
+                    <span class="badge">Valuable</span>
+                    <span class="badge warning">Estimable</span>
+                    <span class="badge">Small</span>
+                    <span class="badge danger">Testable</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🔄 Comparación: Historias vs Casos de Uso</h2>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <thead>
+                        <tr style="background: #3498db; color: white;">
+                            <th style="padding: 10px; text-align: left;">Historias de Usuario</th>
+                            <th style="padding: 10px; text-align: left;">Casos de Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: white;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">Más cortas (10h - 2 semanas)</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Más largos y detallados</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">Se refinan iterativamente</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Completos desde el principio</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">Incluyen criterios de aceptación</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Incluyen flujos alternativos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="scrum" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Roles Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15-30</div>
+                    <div class="stat-label">Días por Sprint</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5-9</div>
+                    <div class="stat-label">Miembros del Equipo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Ceremonias Principales</div>
+                </div>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>👥 Roles en SCRUM</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Product Owner</h4>
+                        <p>Representa la voz del cliente y define las prioridades del producto</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Scrum Master</h4>
+                        <p>Facilitador que asegura el cumplimiento del proceso Scrum</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Development Team</h4>
+                        <p>Equipo multifuncional responsable de construir el producto</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📅 Ceremonias SCRUM</h2>
+                <ul class="checklist">
+                    <li><strong>Sprint Planning:</strong> Planificación del sprint (2h por semana de sprint)</li>
+                    <li><strong>Daily Scrum:</strong> Reunión diaria de sincronización (15 min)</li>
+                    <li><strong>Sprint Review:</strong> Demostración del incremento (1h por semana)</li>
+                    <li><strong>Sprint Retrospective:</strong> Mejora continua del equipo (1h por semana)</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>🔥 Artefactos SCRUM</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li>📋 <strong>Product Backlog:</strong> Lista priorizada de requisitos</li>
+                    <li>📝 <strong>Sprint Backlog:</strong> Trabajo seleccionado para el sprint</li>
+                    <li>📊 <strong>Burn Down Chart:</strong> Gráfico de progreso del trabajo</li>
+                    <li>✅ <strong>Definition of Done:</strong> Criterios de completitud</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="methodologies" class="tab-content">
+            <div class="methodology-card">
+                <h3>📌 Kanban</h3>
+                <p>Sistema pull basado en la visualización del flujo de trabajo con límites WIP.</p>
+                <p><strong>Principios:</strong></p>
+                <ul class="checklist">
+                    <li>Comenzar con lo que se hace ahora</li>
+                    <li>Cambio incremental y evolutivo</li>
+                    <li>Respetar roles y responsabilidades actuales</li>
+                    <li>Liderazgo en todos los niveles</li>
+                </ul>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>⚡ XP (Extreme Programming)</h3>
+                <p>Metodología que lleva al extremo las buenas prácticas de desarrollo.</p>
+                <p><strong>Prácticas principales:</strong></p>
+                <ul class="checklist">
+                    <li>Programación en parejas</li>
+                    <li>Integración continua</li>
+                    <li>Refactoring constante</li>
+                    <li>Test-Driven Development</li>
+                    <li>Diseño simple</li>
+                </ul>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>🎯 FDD (Feature Driven Development)</h3>
+                <p>Desarrollo basado en funcionalidades con iteraciones cortas.</p>
+                <p><strong>Fases:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Desarrollo del modelo</li>
+                    <li>Lista de funcionalidades</li>
+                    <li>Planificación por funcionalidad</li>
+                    <li>Diseño por funcionalidad</li>
+                    <li>Construcción por funcionalidad</li>
+                </ol>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>🔄 Lean Software Development</h3>
+                <p>Enfoque en la entrega continua de valor eliminando desperdicios.</p>
+                <div style="display: flex; flex-wrap: wrap;">
+                    <span class="badge">Eliminar desperdicio</span>
+                    <span class="badge success">Aumentar aprendizaje</span>
+                    <span class="badge warning">Decidir tarde</span>
+                    <span class="badge">Entregar rápido</span>
+                    <span class="badge danger">Empoderar al equipo</span>
+                    <span class="badge">Ver el todo</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="practices" class="tab-content">
+            <div class="card">
+                <h2>🛠️ Test Driven Development (TDD)</h2>
+                <p>Ciclo de desarrollo guiado por pruebas:</p>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🔴 Red</h4>
+                        <p>Escribir una prueba que falle</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🟢 Green</h4>
+                        <p>Escribir el código mínimo para pasar la prueba</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🔵 Refactor</h4>
+                        <p>Mejorar el código manteniendo las pruebas en verde</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎭 Behavior Driven Development (BDD)</h2>
+                <p>Desarrollo guiado por el comportamiento esperado del sistema.</p>
+                <div class="highlight-box">
+                    <p><strong>Formato Gherkin:</strong></p>
+                    <p>DADO &lt;condiciones&gt;<br>
+                    CUANDO &lt;evento&gt;<br>
+                    ENTONCES &lt;resultado&gt;</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🏗️ Domain Driven Design (DDD)</h2>
+                <p>Enfoque en el dominio del negocio como núcleo del desarrollo.</p>
+                <ul class="checklist">
+                    <li>Foco en el núcleo y lógica del dominio</li>
+                    <li>Diseños basados en modelos del negocio</li>
+                    <li>Colaboración entre técnicos y expertos del dominio</li>
+                    <li>Lenguaje ubicuo compartido</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>📚 Recursos de Aprendizaje</h2>
+                <ul class="checklist">
+                    <li>Manifiesto Ágil: agilemanifesto.org</li>
+                    <li>Guía SCRUM oficial: scrumguides.org</li>
+                    <li>SWEBOK - Software Engineering Body of Knowledge</li>
+                    <li>Libro: "Extreme Programming Explained" - Kent Beck</li>
+                    <li>Libro: "User Stories Applied" - Mike Cohn</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>🎓 Certificaciones Recomendadas</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li>✅ Certified Scrum Master (CSM)</li>
+                    <li>✅ Professional Scrum Master (PSM)</li>
+                    <li>✅ SAFe Agilist</li>
+                    <li>✅ PMI-ACP (Agile Certified Practitioner)</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>🔧 Herramientas Populares</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>JIRA</h4>
+                        <p>Gestión de proyectos ágiles</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Trello</h4>
+                        <p>Tableros Kanban visuales</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Azure DevOps</h4>
+                        <p>Suite completa DevOps</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Slack</h4>
+                        <p>Comunicación de equipo</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>💡 Tips para Implementación</h3>
+                <ul class="checklist">
+                    <li>Comenzar con un proyecto piloto pequeño</li>
+                    <li>Formar al equipo en los principios ágiles</li>
+                    <li>Establecer métricas claras de éxito</li>
+                    <li>Iterar y mejorar continuamente el proceso</li>
+                    <li>Mantener comunicación constante con stakeholders</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+    </script>
+</body>
+</html>

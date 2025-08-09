@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo OSI - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: max-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .tab-button.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #2c3e50;
+        }
+
+        .tab-content {
+            background: white;
+            min-height: 500px;
+            padding: 30px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .layers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .layer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: var(--layer-color, #3498db);
+        }
+
+        .layer-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .layer-7 { --layer-color: #e74c3c; }
+        .layer-6 { --layer-color: #f39c12; }
+        .layer-5 { --layer-color: #f1c40f; }
+        .layer-4 { --layer-color: rgb(88, 106, 95); }
+        .layer-3 { --layer-color: #3498db; }
+        .layer-2 { --layer-color: #9b59b6; }
+        .layer-1 { --layer-color: #2c3e50; }
+
+        .layer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .layer-number {
+            background: var(--layer-color, #3498db);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .layer-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .protocol-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .protocol-tag {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            border: 1px solid #bdc3c7;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 80px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 4px solid white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .data-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .flow-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #3498db;
+        }
+
+        .flow-icon {
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .pdu-card {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .pdu-card:hover {
+            transform: scale(1.02);
+        }
+
+        .pdu-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .pdu-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .check-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            
+            .data-flow {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .flow-step:not(:last-child)::after {
+                content: '↓';
+                right: auto;
+                bottom: -30px;
+                top: auto;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Modelo OSI</h1>
+            <p>Guía completa del Modelo de Referencia de Interconexión de Sistemas Abiertos</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">Introducción</button>
+                <button class="tab-button" onclick="showTab('layers')">Las 7 Capas</button>
+                <button class="tab-button" onclick="showTab('communication')">Comunicación</button>
+                <button class="tab-button" onclick="showTab('protocols')">Protocolos</button>
+                <button class="tab-button" onclick="showTab('comparison')">Comparación</button>
+                <button class="tab-button" onclick="showTab('practical')">Aplicación Práctica</button>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-pane active">
+                <h2>El Modelo OSI: Fundamentos</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <div>Capas del modelo OSI</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1980</span>
+                        <div>Año de creación por ISO</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1984</span>
+                        <div>Publicación como estándar ISO</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">∞</span>
+                        <div>Protocolos que pueden clasificarse</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>📋 ¿Qué es el Modelo OSI?</h3>
+                    <p>El <strong>Modelo de Interconexión de Sistemas Abiertos (OSI)</strong> es un modelo de referencia para los protocolos de red de arquitectura en capas, creado por la Organización Internacional de Normalización (ISO) en 1980. Se publicó como estándar en 1984 y proporciona un marco conceptual para entender cómo funcionan las comunicaciones de red.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Objetivos del Modelo OSI</h3>
+                    <ul class="check-list">
+                        <li>Estandarizar protocolos de red para permitir interoperabilidad</li>
+                        <li>Dividir la comunicación en capas manejables</li>
+                        <li>Facilitar el desarrollo y mantenimiento de protocolos</li>
+                        <li>Permitir que cada capa se desarrolle independientemente</li>
+                        <li>Proporcionar un lenguaje común para fabricantes</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>1977: Inicio del desarrollo</h4>
+                            <p>ISO comienza el trabajo en un modelo de referencia para interconexión de sistemas.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>1983: Primera publicación por UIT</h4>
+                            <p>La Unión Internacional de Telecomunicaciones publica el primer estándar.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>1984: Estándar ISO oficial</h4>
+                            <p>ISO publica oficialmente el modelo como estándar ISO/IEC 7498-1.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🔗 Conceptos Fundamentales</h3>
+                    <ul>
+                        <li><strong>Protocolo:</strong> Conjunto de reglas entre participantes en una comunicación</li>
+                        <li><strong>Capa o Nivel:</strong> Reparte e independiza las diferentes funciones de comunicación</li>
+                        <li><strong>Servicios:</strong> Prestados por capas al nivel superior para facilitar comunicación</li>
+                        <li><strong>Interfaz:</strong> Conjunto de reglas e información para invocar un servicio</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Modelos Alternativos</h4>
+                    <p>Además del modelo OSI, existen otros modelos de referencia:</p>
+                    <ul>
+                        <li><strong>SNA</strong> (de IBM)</li>
+                        <li><strong>IPX/SPX</strong> (en redes Novell Netware)</li>
+                        <li><strong>TCP/IP</strong> (modelo de Internet, más utilizado en la práctica)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Layers Tab -->
+            <div id="layers" class="tab-pane">
+                <h2>Las 7 Capas del Modelo OSI</h2>
+                
+                <div class="layers-container">
+                    <div class="layer-card layer-7">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 7</div>
+                            <div class="layer-title">Aplicación</div>
+                        </div>
+                        <p><strong>Función:</strong> Proporciona servicios de red a aplicaciones de usuario. Define protocolos que utilizan las aplicaciones para intercambiar datos.</p>
+                        <p><strong>Características:</strong> El usuario normalmente no interactúa directamente con este nivel, sino a través de programas que ocultan la complejidad subyacente.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">HTTP/HTTPS</span>
+                            <span class="protocol-tag">FTP</span>
+                            <span class="protocol-tag">SMTP</span>
+                            <span class="protocol-tag">POP3</span>
+                            <span class="protocol-tag">DNS</span>
+                            <span class="protocol-tag">DHCP</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-6">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 6</div>
+                            <div class="layer-title">Presentación</div>
+                        </div>
+                        <p><strong>Función:</strong> Define el formato de los datos, proporciona servicios de transformación, codificación, compresión y cifrado.</p>
+                        <p><strong>Responsabilidades:</strong> Traducción entre formatos, compresión de datos, cifrado/descifrado, conversión de caracteres.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">SSL/TLS</span>
+                            <span class="protocol-tag">JPEG</span>
+                            <span class="protocol-tag">GIF</span>
+                            <span class="protocol-tag">ASCII</span>
+                            <span class="protocol-tag">MPEG</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-5">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 5</div>
+                            <div class="layer-title">Sesión</div>
+                        </div>
+                        <p><strong>Función:</strong> Mantiene y controla el enlace entre dos computadores que transmiten datos. Gestiona sesiones de comunicación.</p>
+                        <p><strong>Servicios:</strong> Control de diálogo (full-duplex/half-duplex), recuperación de sesiones, puntos de sincronización.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">NetBIOS</span>
+                            <span class="protocol-tag">SQL</span>
+                            <span class="protocol-tag">RPC</span>
+                            <span class="protocol-tag">PPTP</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-4">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 4</div>
+                            <div class="layer-title">Transporte</div>
+                        </div>
+                        <p><strong>Función:</strong> Proporciona transporte fiable de datos entre extremos, incluyendo segmentación, confirmación y multiplexación.</p>
+                        <p><strong>Características:</strong> A partir de aquí la comunicación es <strong>extremo a extremo</strong>. Maneja puertos lógicos y crea sockets (IP:Puerto).</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">TCP</span>
+                            <span class="protocol-tag">UDP</span>
+                            <span class="protocol-tag">SPX</span>
+                            <span class="protocol-tag">SCTP</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-3">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 3</div>
+                            <div class="layer-title">Red</div>
+                        </div>
+                        <p><strong>Función:</strong> Identifica el enrutamiento entre una o más redes. Proporciona direccionamiento lógico y encaminamiento de paquetes.</p>
+                        <p><strong>Dispositivos:</strong> Los routers y firewalls trabajan en este nivel. Maneja direcciones IP y rutas.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">IP</span>
+                            <span class="protocol-tag">ICMP</span>
+                            <span class="protocol-tag">OSPF</span>
+                            <span class="protocol-tag">BGP</span>
+                            <span class="protocol-tag">IPX</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-2">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 2</div>
+                            <div class="layer-title">Enlace de Datos</div>
+                        </div>
+                        <p><strong>Función:</strong> Maneja direccionamiento físico, acceso al medio, detección de errores, distribución de tramas y control de flujo.</p>
+                        <p><strong>Subniveles:</strong> LLC (Logical Link Control) y MAC (Media Access Control). Los switches trabajan en este nivel.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">Ethernet</span>
+                            <span class="protocol-tag">Wi-Fi</span>
+                            <span class="protocol-tag">PPP</span>
+                            <span class="protocol-tag">Frame Relay</span>
+                        </div>
+                    </div>
+
+                    <div class="layer-card layer-1">
+                        <div class="layer-header">
+                            <div class="layer-number">Capa 1</div>
+                            <div class="layer-title">Físico</div>
+                        </div>
+                        <p><strong>Función:</strong> Se encarga de la topología de red y conexiones físicas. Maneja especificaciones mecánicas, eléctricas y de procedimientos.</p>
+                        <p><strong>Elementos:</strong> Señales eléctricas, codificación, modulación, cables, conectores, repetidores, hubs.</p>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">Cable UTP</span>
+                            <span class="protocol-tag">Fibra Óptica</span>
+                            <span class="protocol-tag">RS-232</span>
+                            <span class="protocol-tag">USB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Importante</h4>
+                    <p>Cada capa solo puede comunicarse directamente con las capas adyacentes (superior e inferior). La comunicación horizontal entre capas del mismo nivel en diferentes sistemas se realiza a través de protocolos específicos.</p>
+                </div>
+            </div>
+
+            <!-- Communication Tab -->
+            <div id="communication" class="tab-pane">
+                <h2>Servicios e Interfaces</h2>
+                
+                <div class="content-card">
+                    <h3>🔄 Comunicación entre Capas</h3>
+                    <p>Cada capa se comunica de dos formas diferentes:</p>
+                    <ul>
+                        <li><strong>Horizontal:</strong> Con la misma capa del otro extremo mediante protocolos</li>
+                        <li><strong>Vertical:</strong> Con la capa inferior mediante interfaces y servicios</li>
+                    </ul>
+                </div>
+
+                <div class="data-flow">
+                    <div class="flow-step">
+                        <div class="flow-icon">📤</div>
+                        <div><strong>Emisor</strong><br>Encapsulación</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🌐</div>
+                        <div><strong>Red</strong><br>Transmisión</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📥</div>
+                        <div><strong>Receptor</strong><br>Desencapsulación</div>
+                    </div>
+                </div>
+
+                <h3>📦 Unidades de Datos de Protocolo (PDU)</h3>
+                <div class="stats-grid">
+                    <div class="pdu-card">
+                        <div class="pdu-name">APDU</div>
+                        <div class="pdu-description">Capa 7 - Aplicación</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">PPDU</div>
+                        <div class="pdu-description">Capa 6 - Presentación</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">SPDU</div>
+                        <div class="pdu-description">Capa 5 - Sesión</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">Segmento/Datagrama</div>
+                        <div class="pdu-description">Capa 4 - Transporte</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">Paquete</div>
+                        <div class="pdu-description">Capa 3 - Red</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">Trama</div>
+                        <div class="pdu-description">Capa 2 - Enlace</div>
+                    </div>
+                    <div class="pdu-card">
+                        <div class="pdu-name">Bit</div>
+                        <div class="pdu-description">Capa 1 - Físico</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🏗️ Estructura de Datos</h3>
+                    <ul>
+                        <li><strong>PDU (n):</strong> Datos + cabecera del protocolo de nivel n</li>
+                        <li><strong>SDU (n):</strong> Datos + cabecera del nivel n+1 que recibe el servicio</li>
+                        <li><strong>ICI (n):</strong> Información adicional para invocar el servicio</li>
+                        <li><strong>IDU (n):</strong> ICI (n-1) + SDU (n-1)</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>📋 Primitivas de Servicio</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div>
+                            <h4>Protocolos No Confirmados</h4>
+                            <ul class="check-list">
+                                <li><strong>Request:</strong> Solicitud de servicio</li>
+                                <li><strong>Indication:</strong> Notificación de evento</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Protocolos Confirmados</h4>
+                            <ul class="check-list">
+                                <li><strong>Request:</strong> Solicitud de servicio</li>
+                                <li><strong>Indication:</strong> Notificación de evento</li>
+                                <li><strong>Response:</strong> Respuesta a indicación</li>
+                                <li><strong>Confirm:</strong> Confirmación de respuesta</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>🔍 Relación Lógica</h4>
+                    <p><strong>SDU (n-1) = PDU (n)</strong></p>
+                    <p>Esto significa que lo que una capa trata como datos (SDU) incluye tanto los datos reales como toda la información de control (cabeceras) añadida por las capas superiores.</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Proceso de Encapsulación</h4>
+                            <p>Cada capa añade su propia cabecera a los datos recibidos de la capa superior, creando su PDU correspondiente.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Transmisión por el Medio</h4>
+                            <p>Los datos completamente encapsulados se transmiten bit a bit por el medio físico.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Proceso de Desencapsulación</h4>
+                            <p>En el receptor, cada capa retira su cabecera y pasa los datos a la capa superior.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Protocols Tab -->
+            <div id="protocols" class="tab-pane">
+                <h2>Protocolos por Capas</h2>
+                
+                <div class="content-card">
+                    <h3>🌐 Ejemplos de Protocolos en Cada Capa</h3>
+                    <p>Aunque OSI es un modelo teórico, muchos protocolos reales pueden clasificarse dentro de sus capas:</p>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Capa</th>
+                            <th>Nombre</th>
+                            <th>Protocolos Principales</th>
+                            <th>Función Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background-color: rgba(231, 76, 60, 0.1);">
+                            <td><strong>7</strong></td>
+                            <td>Aplicación</td>
+                            <td>HTTP, HTTPS, FTP, SMTP, DNS, DHCP</td>
+                            <td>Servicios de red para aplicaciones</td>
+                        </tr>
+                        <tr style="background-color: rgba(243, 156, 18, 0.1);">
+                            <td><strong>6</strong></td>
+                            <td>Presentación</td>
+                            <td>SSL/TLS, JPEG, ASCII, MPEG</td>
+                            <td>Formato, cifrado, compresión</td>
+                        </tr>
+                        <tr style="background-color: rgba(241, 196, 15, 0.1);">
+                            <td><strong>5</strong></td>
+                            <td>Sesión</td>
+                            <td>NetBIOS, SQL, RPC, PPTP</td>
+                            <td>Gestión de sesiones</td>
+                        </tr>
+                        <tr style="background-color: rgba(88, 106, 95, 0.1);">
+                            <td><strong>4</strong></td>
+                            <td>Transporte</td>
+                            <td>TCP, UDP</td>
+                            <td>Transporte fiable extremo a extremo</td>
+                        </tr>
+                        <tr style="background-color: rgba(52, 152, 219, 0.1);">
+                            <td><strong>3</strong></td>
+                            <td>Red</td>
+                            <td>IP, ICMP, OSPF, BGP</td>
+                            <td>Enrutamiento y direccionamiento</td>
+                        </tr>
+                        <tr style="background-color: rgba(155, 89, 182, 0.1);">
+                            <td><strong>2</strong></td>
+                            <td>Enlace</td>
+                            <td>Ethernet, Wi-Fi, PPP</td>
+                            <td>Control de acceso al medio</td>
+                        </tr>
+                        <tr style="background-color: rgba(44, 62, 80, 0.1);">
+                            <td><strong>1</strong></td>
+                            <td>Físico</td>
+                            <td>Cable UTP, Fibra, Radio</td>
+                            <td>Transmisión de bits</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">TCP</span>
+                        <div>Protocolo confiable de transporte</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">IP</span>
+                        <div>Protocolo de red más usado</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">Ethernet</span>
+                        <div>Estándar de enlace dominante</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">HTTP</span>
+                        <div>Protocolo web fundamental</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🔧 Dispositivos por Capa</h3>
+                    <ul class="check-list">
+                        <li><strong>Capa 1 (Físico):</strong> Repetidores, Hubs, Cables</li>
+                        <li><strong>Capa 2 (Enlace):</strong> Switches, Bridges</li>
+                        <li><strong>Capa 3 (Red):</strong> Routers, Firewalls Layer 3</li>
+                        <li><strong>Capa 4 (Transporte):</strong> Firewalls, Load Balancers</li>
+                        <li><strong>Capas 5-7:</strong> Proxies, Gateways de aplicación</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>📊 Estadísticas de Uso</h3>
+                    <p>En la práctica, la suite TCP/IP domina las comunicaciones:</p>
+                    <ul class="check-list">
+                        <li>IP maneja el ~95% del tráfico de capa 3</li>
+                        <li>TCP transporta el ~80% del tráfico web</li>
+                        <li>HTTP/HTTPS representan el ~70% del tráfico de aplicación</li>
+                        <li>Ethernet domina el ~90% de las redes LAN</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Limitaciones del Modelo OSI</h4>
+                    <p>Aunque útil para enseñanza, el modelo OSI tiene limitaciones:</p>
+                    <ul>
+                        <li>No todos los protocolos encajan perfectamente en una capa</li>
+                        <li>Algunas capas (5-7) se superponen en implementaciones reales</li>
+                        <li>TCP/IP es más práctico y ampliamente implementado</li>
+                        <li>La separación estricta no siempre es eficiente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Comparison Tab -->
+            <div id="comparison" class="tab-pane">
+                <h2>Comparación con Otros Modelos</h2>
+                
+                <h3>🆚 OSI vs TCP/IP</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Modelo OSI</th>
+                            <th>Modelo TCP/IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Número de capas</strong></td>
+                            <td>7 capas</td>
+                            <td>4 capas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enfoque</strong></td>
+                            <td>Teórico/Educativo</td>
+                            <td>Práctico/Implementación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Adopción</strong></td>
+                            <td>Referencia estándar</td>
+                            <td>Uso real en Internet</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexibilidad</strong></td>
+                            <td>Estructura rígida</td>
+                            <td>Más flexible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desarrollo</strong></td>
+                            <td>Modelo antes de implementación</td>
+                            <td>Implementación antes de modelo</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="content-card">
+                    <h3>🔄 Correspondencia entre Modelos</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>OSI</th>
+                                <th>TCP/IP</th>
+                                <th>Protocolos Comunes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>7. Aplicación<br>6. Presentación<br>5. Sesión</td>
+                                <td>4. Aplicación</td>
+                                <td>HTTP, FTP, SMTP, DNS</td>
+                            </tr>
+                            <tr>
+                                <td>4. Transporte</td>
+                                <td>3. Transporte</td>
+                                <td>TCP, UDP</td>
+                            </tr>
+                            <tr>
+                                <td>3. Red</td>
+                                <td>2. Internet</td>
+                                <td>IP, ICMP, OSPF</td>
+                            </tr>
+                            <tr>
+                                <td>2. Enlace<br>1. Físico</td>
+                                <td>1. Acceso a Red</td>
+                                <td>Ethernet, Wi-Fi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">1980</span>
+                        <div>Año modelo OSI</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1974</span>
+                        <div>Año protocolo TCP</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">95%</span>
+                        <div>Internet usa TCP/IP</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <div>Educación usa OSI</div>
+                    </div>
+                </div>
+
+                <h3>📱 Comparación con VoIP</h3>
+                <div class="content-card">
+                    <p>El modelo OSI también se aplica a tecnologías como VoIP (Voz sobre IP):</p>
+                    <ul class="check-list">
+                        <li><strong>Aplicación:</strong> Softphone, Call Manager, Human Speech</li>
+                        <li><strong>Presentación:</strong> Codecs (G.711, G.729, etc.)</li>
+                        <li><strong>Sesión:</strong> H.323/SIP/MGCP</li>
+                        <li><strong>Transporte:</strong> RTP/UDP (medios), TCP/UDP (señal)</li>
+                        <li><strong>Red:</strong> IP</li>
+                        <li><strong>Enlace:</strong> Ethernet, PPP, Frame Relay</li>
+                        <li><strong>Físico:</strong> Medios de transmisión</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Ventajas del Modelo OSI</h3>
+                    <ul class="check-list">
+                        <li>Excelente herramienta educativa y de referencia</li>
+                        <li>Facilita el troubleshooting estructurado</li>
+                        <li>Permite clasificar cualquier protocolo de red</li>
+                        <li>Independiente de tecnología específica</li>
+                        <li>Estándar internacional reconocido</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Uso Práctico Actual</h4>
+                    <p>Aunque TCP/IP domina las implementaciones, OSI sigue siendo fundamental para:</p>
+                    <ul>
+                        <li>Educación en redes y certificaciones</li>
+                        <li>Troubleshooting sistemático de problemas</li>
+                        <li>Diseño de nuevos protocolos</li>
+                        <li>Comunicación entre profesionales de TI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Practical Tab -->
+            <div id="practical" class="tab-pane">
+                <h2>Aplicación Práctica</h2>
+                
+                <div class="content-card">
+                    <h3>🔧 Troubleshooting con el Modelo OSI</h3>
+                    <p>El modelo OSI proporciona una metodología sistemática para resolver problemas de red, trabajando capa por capa:</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #2c3e50;"></div>
+                        <div class="timeline-content">
+                            <h4>Capa 1 - Verificación Física</h4>
+                            <ul class="check-list">
+                                <li>¿Están conectados todos los cables?</li>
+                                <li>¿Funcionan las luces de enlace?</li>
+                                <li>¿Hay alimentación en los dispositivos?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #9b59b6;"></div>
+                        <div class="timeline-content">
+                            <h4>Capa 2 - Verificación de Enlace</h4>
+                            <ul class="check-list">
+                                <li>¿Son correctas las direcciones MAC?</li>
+                                <li>¿Funcionan los switches correctamente?</li>
+                                <li>¿Hay bucles en la red?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #3498db;"></div>
+                        <div class="timeline-content">
+                            <h4>Capa 3 - Verificación de Red</h4>
+                            <ul class="check-list">
+                                <li>¿Son correctas las direcciones IP?</li>
+                                <li>¿Funcionan las rutas?</li>
+                                <li>¿Responde el ping?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: rgb(88, 106, 95);"></div>
+                        <div class="timeline-content">
+                            <h4>Capa 4 - Verificación de Transporte</h4>
+                            <ul class="check-list">
+                                <li>¿Están abiertos los puertos necesarios?</li>
+                                <li>¿Funcionan los firewalls correctamente?</li>
+                                <li>¿Se establecen las conexiones TCP?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">80%</span>
+                        <div>Problemas en capas 1-3</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">15%</span>
+                        <div>Problemas en capa 4</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5%</span>
+                        <div>Problemas en capas 5-7</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">90%</span>
+                        <div>Problemas resueltos con OSI</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>🛠️ Herramientas por Capa</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Capa</th>
+                                <th>Herramientas</th>
+                                <th>Comandos Útiles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1-2</strong></td>
+                                <td>Multímetro, Tester de cables, Wireshark</td>
+                                <td>ifconfig, ethtool, iwconfig</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>Ping, Traceroute, Wireshark</td>
+                                <td>ping, tracert, route, arp</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4</strong></td>
+                                <td>Netstat, Nmap, Tcpdump</td>
+                                <td>netstat, ss, lsof, nmap</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5-7</strong></td>
+                                <td>Curl, Browser tools, Application logs</td>
+                                <td>curl, wget, telnet, nc</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>📋 Ejemplo Práctico: No puedo acceder a una web</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div>
+                            <h4>1. Verificación Física</h4>
+                            <p>• Cable conectado ✓<br>• LED del puerto activo ✓<br>• Switch encendido ✓</p>
+                        </div>
+                        <div>
+                            <h4>2. Verificación IP</h4>
+                            <p>• ipconfig/ifconfig<br>• ping gateway<br>• ping 8.8.8.8</p>
+                        </div>
+                        <div>
+                            <h4>3. Verificación DNS</h4>
+                            <p>• nslookup google.com<br>• ping google.com<br>• Verificar DNS settings</p>
+                        </div>
+                        <div>
+                            <h4>4. Verificación Aplicación</h4>
+                            <p>• telnet google.com 80<br>• curl http://google.com<br>• Verificar browser</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>📚 Casos de Uso en Certificaciones</h3>
+                    <ul class="check-list">
+                        <li><strong>CCNA:</strong> Clasificación de protocolos y troubleshooting</li>
+                        <li><strong>Network+:</strong> Comprensión de arquitecturas de red</li>
+                        <li><strong>CISSP:</strong> Seguridad en diferentes capas</li>
+                        <li><strong>CCIE:</strong> Diseño avanzado y troubleshooting complejo</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🎯 Tips para Exámenes</h4>
+                    <ul>
+                        <li>Memoriza qué dispositivos operan en cada capa</li>
+                        <li>Conoce las PDUs de cada capa</li>
+                        <li>Entiende el flujo de datos (encapsulación/desencapsulación)</li>
+                        <li>Practica troubleshooting sistemático</li>
+                        <li>Relaciona protocolos reales con cada capa</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>🔮 Evolución Futura</h4>
+                    <p>Aunque el modelo OSI tiene décadas, sigue siendo relevante para tecnologías emergentes:</p>
+                    <ul>
+                        <li><strong>SDN:</strong> Separación de planos de control y datos</li>
+                        <li><strong>Cloud:</strong> Virtualización en todas las capas</li>
+                        <li><strong>IoT:</strong> Optimización de protocolos ligeros</li>
+                        <li><strong>5G:</strong> Network slicing y edge computing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab panes
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab pane
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Add animation to layer cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            const layerCards = document.querySelectorAll('.layer-card');
+            layerCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = `all 0.6s ease ${index * 0.2}s`;
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>

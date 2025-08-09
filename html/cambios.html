@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Gestión de Cambios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tab-system {
+            background-color: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+
+        .tabs {
+            display: flex;
+            min-width: 600px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 1rem 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+        .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f6f3, #d5f4e6);
+            border: 1px solid rgb(88, 106, 95);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef9e7, #fcf3cd);
+            border: 1px solid #f39c12;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fdebea, #f8d7da);
+            border: 1px solid #e74c3c;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3em;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: rgb(88, 106, 95);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgb(68, 86, 75);
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        .definition-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .definition-list dt {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 1rem;
+        }
+
+        .definition-list dt:first-child {
+            margin-top: 0;
+        }
+
+        .definition-list dd {
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .process-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .process-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1em;
+        }
+
+        .environment-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid #3498db;
+            margin: 0.5rem 0;
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .environment-card:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tool-category {
+            background: #ecf0f1;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .tool-category h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tool-tag {
+            background: #3498db;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔄 Gestión de Cambios</h1>
+        <p>Proyectos de Software, Configuración, Versiones y Entornos</p>
+    </div>
+
+    <div class="container">
+        <div class="tab-system">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(event, 'cambios')">📝 Cambios</button>
+                <button class="tab" onclick="showTab(event, 'configuracion')">⚙️ Configuración</button>
+                <button class="tab" onclick="showTab(event, 'versiones')">📦 Versiones</button>
+                <button class="tab" onclick="showTab(event, 'despliegues')">🚀 Despliegues</button>
+                <button class="tab" onclick="showTab(event, 'entornos')">🌐 Entornos</button>
+                <button class="tab" onclick="showTab(event, 'herramientas')">🛠️ Herramientas</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Gestión de Cambios -->
+        <div id="cambios" class="tab-content active">
+            <h2>📝 Gestión de Cambios en Proyectos de Software</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Tipos de Cambios ITIL</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">GPS</span>
+                    <div class="stat-label">Seguimiento MÉTRICA</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CAB</span>
+                    <div class="stat-label">Comité Asesor</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">ECAB</span>
+                    <div class="stat-label">Emergencias</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Definición de Gestión de Cambios</h3>
+                <p><strong>Es la forma de dar respuesta a nuevas necesidades y modificaciones al software actual, suponiendo un proceso de mejora del software.</strong></p>
+                
+                <h4>Motivaciones para los Cambios:</h4>
+                <ul class="checklist">
+                    <li>Modificación de requisitos y limitaciones iniciales</li>
+                    <li>Errores operacionales o funcionales detectados</li>
+                    <li>Adecuación del software a normativa legal</li>
+                    <li>Necesidades de mejora o optimización</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📋 MÉTRICA V3 - Gestión de Cambios</h3>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">🎯 Interfaz Gestión Proyectos</div>
+                        <p><strong>Actividad:</strong> Seguimiento y Control (GPS)</p>
+                        <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                            <li>GPS 5 - Petición Cambio Requisito</li>
+                            <li>GPS 6 - Análisis Petición Cambio</li>
+                            <li>GPS 9 - Registro Cambio Requisito</li>
+                        </ul>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🔧 Proceso Mantenimiento</div>
+                        <p><strong>Actividad:</strong> MS1 - Registro de Petición</p>
+                        <p>Sistema estandarizado de registro de información para peticiones de mantenimiento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🏗️ ITIL 4 - Control de Cambios</h3>
+                <p><strong>Objetivo:</strong> Conseguir el máximo número de cambios exitosos en servicios, asegurando la gestión adecuada de los riesgos.</p>
+                
+                <h4>Componentes Clave:</h4>
+                <ul class="checklist">
+                    <li>Autoridad de cambio que analiza y valida</li>
+                    <li>Gestión de planificación con recursos necesarios</li>
+                    <li>Información a partes implicadas</li>
+                    <li>Análisis de riesgos para cada cambio</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3>🔄 Tipos de Cambios ITIL 4</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">⚡ Cambios Estándar</div>
+                        <p><strong>Bajo riesgo</strong> - Pre-autorizados, documentados y ejecutados sin necesidad de autorización adicional.</p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Operacionales</li>
+                            <li>Peticiones rutinarias</li>
+                        </ul>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">📊 Cambios Normales</div>
+                        <p><strong>Planificados y analizados</strong> - Autorizados por el CAB (Comité Asesor del Cambio).</p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Iniciados por peticiones de cambio</li>
+                            <li>Análisis completo de impacto</li>
+                        </ul>
+                    </div>
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">🚨 Cambios de Emergencia</div>
+                        <p><strong>Implementación urgente</strong> - Priorizados, autorizados por ECAB con análisis de riesgos.</p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Autorización más ágil</li>
+                            <li>Autoridad diferente (ECAB)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Gestión de Configuración -->
+        <div id="configuracion" class="tab-content">
+            <h2>⚙️ Gestión de la Configuración</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">CI</span>
+                    <div class="stat-label">Configuration Items</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CMS</span>
+                    <div class="stat-label">Config Management</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CMDB</span>
+                    <div class="stat-label">Config Database</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Elementos SW</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📊 Definición de Gestión de Configuración</h3>
+                <p><strong>Conjunto de procesos destinados a asegurar la calidad de todo producto obtenido durante cualquiera de las etapas del desarrollo de un sistema de información.</strong></p>
+                
+                <h4>Objetivos principales:</h4>
+                <ul class="checklist">
+                    <li>Estricto control de cambios realizados</li>
+                    <li>Disponibilidad constante de versiones estables</li>
+                    <li>Verificar componentes correctamente identificados</li>
+                    <li>Control de almacenamiento y versionado</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏗️ Elementos de Configuración del Software</h3>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">💻 Ejecutables</div>
+                        <p>Archivos binarios listos para ejecución en el sistema objetivo.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📝 Código Fuente</div>
+                        <p>Archivos de programación en lenguajes de alto nivel.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🗄️ Modelos de Datos</div>
+                        <p>Estructuras y esquemas de bases de datos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🔄 Modelos de Procesos</div>
+                        <p>Diagramas y flujos de trabajo del sistema.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📋 Especificaciones Requisitos</div>
+                        <p>Documentación de requerimientos funcionales y no funcionales.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🧪 Especificaciones Pruebas</div>
+                        <p>Casos de prueba, planes de testing y validación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📚 MÉTRICA V3 - Actividades de Configuración</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">EVS - Estudio Viabilidad</div>
+                            <p>EVS-GC1: Definición requisitos Gestión Configuración<br>
+                            EVS-GC2: Establecimiento plan Gestión Configuración</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">ASI, DSI, CSI, IAS</div>
+                            <p>GC 1: Identificación y Registro de Productos<br>
+                            GC 2: Identificación y Registro del Producto Global</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">MSI - Mantenimiento</div>
+                            <p>MSI-GC 1: Registro del Cambio en el Sistema de Gestión de la Configuración</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🔧 ITIL 4 - Gestión Configuración del Servicio</h3>
+                <p><strong>Garantizar información necesaria y confiable de la configuración de servicios, sus relaciones y elementos CI.</strong></p>
+                
+                <h4>Procesos incluidos:</h4>
+                <ul class="checklist">
+                    <li>Identificar nuevos CI y agregarlos al CMS y CMDB</li>
+                    <li>Actualizar datos cuando se implementan cambios</li>
+                    <li>Verificar correctitud de registros de configuración</li>
+                    <li>Auditoría para identificar elementos no documentados</li>
+                </ul>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">CMS - Config Management System</button>
+                    <button class="btn btn-warning">CMDB - Config Management Database</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Versiones -->
+        <div id="versiones" class="tab-content">
+            <h2>📦 Gestión de Versiones y Liberaciones</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">Release</span>
+                    <div class="stat-label">Versión Publicada</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">SW+HW</span>
+                    <div class="stat-label">Cambios Validados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">DevOps</span>
+                    <div class="stat-label">Integración Continua</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Enfoques Gestión</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📋 Definición de Versión según ITIL 4</h3>
+                <p><strong>Una versión es una publicación de un servicio u otro elemento de configuración, o una colección de elementos de configuración, que está disponible para su uso.</strong></p>
+                
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <h4>Características de una Versión:</h4>
+                    <ul class="checklist">
+                        <li>Incluye todos los cambios SW y HW validados</li>
+                        <li>Preparada para instalación en entorno de producción</li>
+                        <li>Colección coherente de elementos de configuración</li>
+                        <li>Disponible para uso por usuarios finales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card" style="border-left-color: #f39c12;">
+                    <div class="process-title">🏗️ Enfoque Tradicional</div>
+                    <p><strong>Liberaciones planificadas</strong> - Versiones grandes con ciclos de desarrollo largos.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>Plan de liberación detallado</li>
+                        <li>Pruebas exhaustivas pre-release</li>
+                        <li>Documentación completa</li>
+                        <li>Aprobación formal</li>
+                    </ul>
+                </div>
+                <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                    <div class="process-title">⚡ Enfoque Ágil</div>
+                    <p><strong>Despliegue en pequeños incrementos</strong> - Liberaciones frecuentes y rápidas.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>Iteraciones cortas</li>
+                        <li>Feedback continuo</li>
+                        <li>Mejora incremental</li>
+                        <li>Adaptabilidad alta</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🔄 Entorno DevOps</h3>
+                <p><strong>La gestión de versiones está integrada con la integración continua y las herramientas para la entrega continua.</strong></p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Integración Continua</div>
+                            <p>Automatización del proceso de construcción y pruebas cada vez que se realizan cambios en el código.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Entrega Continua</div>
+                            <p>Capacidad de desplegar cambios de forma rápida y confiable en cualquier momento.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Despliegue Continuo</div>
+                            <p>Automatización completa del pipeline desde el código hasta producción.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🎯 Beneficios de la Gestión de Versiones</h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary">Control</button>
+                    <button class="btn btn-success">Trazabilidad</button>
+                    <button class="btn btn-warning">Calidad</button>
+                </div>
+                
+                <ul class="checklist">
+                    <li><strong>Control de cambios:</strong> Seguimiento preciso de modificaciones</li>
+                    <li><strong>Trazabilidad:</strong> Historia completa de evolución del software</li>
+                    <li><strong>Recuperación:</strong> Capacidad de volver a versiones anteriores</li>
+                    <li><strong>Colaboración:</strong> Trabajo en equipo coordinado</li>
+                    <li><strong>Calidad:</strong> Validación y testing sistemático</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 4: Despliegues -->
+        <div id="despliegues" class="tab-content">
+            <h2>🚀 Gestión de Despliegues</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Tipos Despliegue</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Tendencias Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Pull/Push</span>
+                    <div class="stat-label">Entrega Continua</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">IaC</span>
+                    <div class="stat-label">Infraestructura Código</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📊 Definición de Despliegue</h3>
+                <p><strong>Un despliegue incluye los componentes de infraestructura y aplicaciones que posibilitan la entrega de desarrollo o mantenimiento SW, incorporando nuevas funcionalidades o correcciones.</strong></p>
+                
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <p><strong>La release posibilita la activación de las nuevas funcionalidades para los usuarios finales.</strong></p>
+                </div>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">💥 Big Bang</div>
+                    <p><strong>Todo de una vez</strong> - La administración e implementación se ejecuta como un solo proceso una única vez.</p>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; color: #e74c3c;">
+                        ⚠️ Alto riesgo, difícil rollback
+                    </div>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔄 Por Fases</div>
+                    <p><strong>Implementación gradual</strong> - Se fragmenta por módulos o funcionalidades implementadas y probadas.</p>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; color: rgb(88, 106, 95);">
+                        ✓ Riesgo controlado, feedback temprano
+                    </div>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">⚡ Entrega Continua</div>
+                    <p><strong>Automatización completa</strong> - En cualquier momento de manera automatizada.</p>
+                    <div style="margin-top: 0.5rem;">
+                        <span style="color: #3498db;">🔄 Pull:</span> Proceso detecta nueva versión<br>
+                        <span style="color: #f39c12;">📤 Push:</span> Servidor CI realiza despliegue
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🎨 Estrategias Avanzadas de Despliegue</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">🔵🟢 Blue/Green Deployment</div>
+                        <p><strong>Dos entornos idénticos:</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li><span style="color: #3498db;">Blue:</span> Se despliega nueva versión</li>
+                            <li><span style="color: rgb(88, 106, 95);">Green:</span> Se libera para usuarios</li>
+                            <li>Cambio instantáneo entre entornos</li>
+                        </ul>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">🐤 Canary Release</div>
+                        <p><strong>Liberación gradual:</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Se despliega para pocos usuarios</li>
+                            <li>Incremento gradual de audiencia</li>
+                            <li>Monitoreo continuo de métricas</li>
+                            <li>Rollback rápido si hay problemas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🏗️ Tendencias de Despliegue</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🗂️ Tradicional con Plan</div>
+                            <p>Despliegue manual con documentación detallada, validaciones y aprobaciones formales.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">📋 Infraestructura como Código (IaC)</div>
+                            <p>Gestión automatizada de infraestructura mediante código versionado y controlado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">Terraform</button>
+                    <button class="btn btn-success">CloudFormation</button>
+                    <button class="btn btn-warning">Ansible</button>
+                </div>
+                
+                <h4>Ventajas de IaC:</h4>
+                <ul class="checklist">
+                    <li>Consistencia entre entornos</li>
+                    <li>Versionado de infraestructura</li>
+                    <li>Automatización completa</li>
+                    <li>Recuperación rápida ante fallos</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 5: Entornos -->
+        <div id="entornos" class="tab-content">
+            <h2>🌐 Gestión de Entornos</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Tipos de Entornos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Responsabilidades</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Virtual</span>
+                    <div class="stat-label">Tecnología Clave</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Real</span>
+                    <div class="stat-label">Hardware Físico</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Objetivos de la Gestión de Entornos</h3>
+                <ul class="checklist">
+                    <li>Definir y normalizar los distintos entornos necesarios</li>
+                    <li>Establecer procedimiento de despliegue y configuración</li>
+                    <li>Mantener entornos con SW y HW necesario</li>
+                    <li>Promocionar y desplegar versiones en cada entorno</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏗️ Pipeline de Entornos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">💻 Entorno Local</div>
+                            <p>Desarrollo individual del programador en su máquina personal.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🔨 Entorno Desarrollo</div>
+                            <p>Integración del trabajo del equipo de desarrollo.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🔗 Entorno Integración</div>
+                            <p>Pruebas de integración entre diferentes componentes.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🧪 Entorno Pruebas</div>
+                            <p>Testing formal y validación de funcionalidades.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🎭 Entorno Preproducción</div>
+                            <p>Staging - Réplica exacta del entorno de producción.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🚀 Entorno Producción</div>
+                            <p>Sistema en vivo utilizado por usuarios finales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚖️ Clasificación de Entornos</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">🖥️ Entornos Virtuales</div>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Rápida creación y destrucción</li>
+                            <li>Consistencia garantizada</li>
+                            <li>Menor coste de infraestructura</li>
+                            <li>Fácil clonación y backup</li>
+                        </ul>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">🏭 Entornos Reales</div>
+                        <p><strong>Características:</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Hardware físico dedicado</li>
+                            <li>Rendimiento nativo completo</li>
+                            <li>Mayor fidelidad para producción</li>
+                            <li>Coste más elevado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🔧 Mejores Prácticas</h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary">Automatización</button>
+                    <button class="btn btn-success">Consistencia</button>
+                    <button class="btn btn-warning">Monitoreo</button>
+                </div>
+                
+                <h4>Principios Fundamentales:</h4>
+                <ul class="checklist">
+                    <li><strong>Paridad:</strong> Entornos lo más similares posible</li>
+                    <li><strong>Inmutabilidad:</strong> Entornos no se modifican, se recrean</li>
+                    <li><strong>Versionado:</strong> Configuración de entornos versionada</li>
+                    <li><strong>Automatización:</strong> Despliegues y configuración automatizados</li>
+                    <li><strong>Monitoreo:</strong> Observabilidad en todos los entornos</li>
+                    <li><strong>Seguridad:</strong> Aislamiento y control de acceso</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 6: Herramientas -->
+        <div id="herramientas" class="tab-content">
+            <h2>🛠️ Herramientas y Tecnologías</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Modelos Control Versiones</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Git</span>
+                    <div class="stat-label">Herramienta Líder</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Docker</span>
+                    <div class="stat-label">Contenedores</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">IaC</span>
+                    <div class="stat-label">Infraestructura</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📦 Gestión de Versiones</h3>
+                
+                <div class="tool-category">
+                    <h4>🔄 Control de Versiones</h4>
+                    <p><strong>Permite guardar registro histórico de modificaciones, gestionar líneas de base, recuperar versiones específicas y almacenar código fuente.</strong></p>
+                </div>
+
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">🏢 Modelo Cliente-Servidor</div>
+                        <div class="tool-list">
+                            <span class="tool-tag">Apache Subversion (SVN)</span>
+                            <span class="tool-tag">CVS</span>
+                            <span class="tool-tag">Visual SourceSafe</span>
+                            <span class="tool-tag">IBM Rational Rose</span>
+                            <span class="tool-tag">Perforce Helix</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.9em;">Repositorio centralizado, control de acceso estricto.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">🌐 Modelo Distribuido</div>
+                        <div class="tool-list">
+                            <span class="tool-tag">Git</span>
+                            <span class="tool-tag">GitLab</span>
+                            <span class="tool-tag">Github</span>
+                            <span class="tool-tag">BitBucket</span>
+                            <span class="tool-tag">Mercurial</span>
+                            <span class="tool-tag">Fossil</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.9em;">Cada desarrollador tiene copia completa del historial.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📚 Repositorio de Artefactos</h3>
+                <p><strong>Almacenamiento de archivos binarios, librerías y paquetes compilados:</strong></p>
+                
+                <div class="tool-category">
+                    <div class="tool-list">
+                        <span class="tool-tag">Nexus</span>
+                        <span class="tool-tag">JFrog Artifactory</span>
+                        <span class="tool-tag">Apache Archiva</span>
+                        <span class="tool-tag">npm Registry</span>
+                        <span class="tool-tag">Docker Registry</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>⚙️ Gestión de Configuración</h3>
+                
+                <div class="tool-category">
+                    <h4>🔧 De Servicios</h4>
+                    <div class="tool-list">
+                        <span class="tool-tag">BCM Remedy</span>
+                        <span class="tool-tag">EasyVista</span>
+                        <span class="tool-tag">ServiceNow</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🚀 Gestión de Despliegues</h3>
+                
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">🖥️ Sistemas Virtuales</div>
+                        <div class="tool-list">
+                            <span class="tool-tag">VirtualBox</span>
+                            <span class="tool-tag">Vagrant</span>
+                            <span class="tool-tag">Docker</span>
+                        </div>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">☁️ Sistemas en la Nube (PaaS)</div>
+                        <div class="tool-list">
+                            <span class="tool-tag">OpenShift</span>
+                            <span class="tool-tag">Heroku</span>
+                            <span class="tool-tag">AWS ECS</span>
+                        </div>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🏗️ De Infraestructura</div>
+                        <div class="tool-list">
+                            <span class="tool-tag">Ansible</span>
+                            <span class="tool-tag">Chef</span>
+                            <span class="tool-tag">Puppet</span>
+                            <span class="tool-tag">SaltStack</span>
+                            <span class="tool-tag">Terraform</span>
+                            <span class="tool-tag">CloudFormation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Selección de Herramientas</h3>
+                
+                <div class="definition-list">
+                    <dt>Factores a considerar:</dt>
+                    <dd>• Tamaño del equipo y organización</dd>
+                    <dd>• Complejidad del proyecto</dd>
+                    <dd>• Presupuesto disponible</dd>
+                    <dd>• Nivel de automatización deseado</dd>
+                    <dd>• Integración con herramientas existentes</dd>
+                    <dd>• Curva de aprendizaje del equipo</dd>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">Evaluación</button>
+                    <button class="btn btn-success">Prueba Piloto</button>
+                    <button class="btn btn-warning">Formación</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tabs
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content and mark the tab as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add some interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.stat-card, .process-card, .content-card, .environment-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click handlers to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+
+            // Interactive tool tags
+            const toolTags = document.querySelectorAll('.tool-tag');
+            toolTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Centro de Sistemas de Información</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tab-system {
+            background-color: #34495e;
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+
+        .tabs {
+            display: flex;
+            min-width: 600px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 1rem 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f6f3, #d5f4e6);
+            border: 1px solid rgb(88, 106, 95);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef9e7, #fcf3cd);
+            border: 1px solid #f39c12;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fdebea, #f8d7da);
+            border: 1px solid #e74c3c;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3em;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: rgb(88, 106, 95);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgb(68, 86, 75);
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        .definition-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .definition-list dt {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 1rem;
+        }
+
+        .definition-list dt:first-child {
+            margin-top: 0;
+        }
+
+        .definition-list dd {
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .process-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .process-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1em;
+        }
+
+        .function-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid #3498db;
+            margin: 0.5rem 0;
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .function-card:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .maintenance-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .maintenance-type {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .maintenance-type:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .maintenance-type.correctivo {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .maintenance-type.evolutivo {
+            border-left: 4px solid #3498db;
+        }
+
+        .maintenance-type.adaptativo {
+            border-left: 4px solid #f39c12;
+        }
+
+        .maintenance-type.perfectivo {
+            border-left: 4px solid rgb(88, 106, 95);
+        }
+
+        .age-structure {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .age-structure h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 Centro de Sistemas de Información</h1>
+        <p>Organización, Funciones y Gestión Integral de TIC</p>
+    </div>
+
+    <div class="container">
+        <div class="tab-system">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(event, 'organizacion')">🏗️ Organización</button>
+                <button class="tab" onclick="showTab(event, 'desarrollo')">💻 Desarrollo</button>
+                <button class="tab" onclick="showTab(event, 'sistemas')">⚙️ Sistemas</button>
+                <button class="tab" onclick="showTab(event, 'comunicaciones')">🌐 Comunicaciones</button>
+                <button class="tab" onclick="showTab(event, 'cau-seguridad')">🛡️ CAU y Seguridad</button>
+                <button class="tab" onclick="showTab(event, 'age')">🏛️ AGE</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Organización -->
+        <div id="organizacion" class="tab-content active">
+            <h2>🏗️ Modelos de Organización de una Unidad TIC</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">SI</span>
+                    <div class="stat-label">Sistema Información</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Elementos SI</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Modelos Organizativos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">9</span>
+                    <div class="stat-label">Estructuras Totales</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📊 Definición de Sistema de Información</h3>
+                <p><strong>Un Sistema de Información (SI) es un conjunto de elementos con la misión de tratar, almacenar, administrar y comunicar datos entre sí.</strong></p>
+                
+                <h4>Componentes del Sistema de Información:</h4>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">👥 Personas</div>
+                        <p>Recursos humanos que operan, gestionan y utilizan el sistema de información.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🖥️ Recursos Materiales</div>
+                        <p>Máquinas, equipos y elementos de comunicación en general.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">💿 Recursos Inmateriales</div>
+                        <p>Software en general, aplicaciones y sistemas operativos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📋 Técnicas y Procedimientos</div>
+                        <p>Órdenes, procedimientos de trabajo y metodologías.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📊 Datos</div>
+                        <p>Información procesada, almacenada y comunicada por el sistema.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏛️ Modelo Organizativo "Clásico"</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Estructura Simple</div>
+                            <p>También conocida como "en peine". Organización lineal y jerárquica.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Estructura Funcional</div>
+                            <p>Modelo de Taylor. Especialización por funciones específicas.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Estructura Divisional</div>
+                            <p>Organización por proyectos o productos específicos.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Estructura Matricial</div>
+                            <p>Combinación de estructuras funcional y divisional.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Estructura Virtual</div>
+                            <p>Organización flexible basada en tecnologías de comunicación.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🚀 Modelo Organizativo "Nuevo"</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">🕸️ En Red</div>
+                        <p>Estructura interconectada y descentralizada con múltiples nodos de decisión.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">↔️ Horizontal</div>
+                        <p>Organización por macroprocesos transversales a toda la organización.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">🏛️ Federal</div>
+                        <p>Autonomía local con coordinación central y estándares comunes.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">🍀 En Trébol</div>
+                        <p>Núcleo central con hojas especializadas en diferentes servicios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🎯 Tendencias Organizacionales Modernas</h3>
+                <ul class="checklist">
+                    <li>Mayor flexibilidad y adaptabilidad</li>
+                    <li>Descentralización de la toma de decisiones</li>
+                    <li>Equipos multidisciplinarios</li>
+                    <li>Colaboración transversal entre departamentos</li>
+                    <li>Orientación a procesos más que a funciones</li>
+                    <li>Aprovechamiento de tecnologías emergentes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 2: Desarrollo -->
+        <div id="desarrollo" class="tab-content">
+            <h2>💻 Funciones de Desarrollo y Mantenimiento</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Fases MÉTRICA v3</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Tipos Mantenimiento</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">DevOps</span>
+                    <div class="stat-label">Metodología Puente</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">CI/CD</span>
+                    <div class="stat-label">Integración Continua</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📊 Funciones de Desarrollo</h3>
+                <p><strong>Normalmente se agrupan en los conceptos de desarrollo, sistemas y CAU. Se añade Seguridad de forma independiente debido a la relevancia que está cobrando este aspecto en las organizaciones.</strong></p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏗️ MÉTRICA v3 - Proceso de Desarrollo</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">PSI - Planificación de Sistemas</div>
+                            <p>Definición del alcance, objetivos y planificación general del proyecto.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">EVS - Estudio de Viabilidad</div>
+                            <p>Análisis de la viabilidad técnica, económica y operativa del sistema.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">ASI - Análisis del Sistema</div>
+                            <p>Definición detallada de requisitos funcionales y no funcionales.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">DSI - Diseño del Sistema</div>
+                            <p>Especificación técnica de la arquitectura y componentes del sistema.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">IAS - Implantación y Aceptación</div>
+                            <p>Despliegue del sistema y pruebas de aceptación por parte del usuario.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🔧 Mantenimiento de Sistemas</h3>
+                <p><strong>Objetivo:</strong> Obtención de un nuevo sistema de información a partir de peticiones de usuarios por problemas detectados o necesidades de mejora.</p>
+                
+                <div class="maintenance-types">
+                    <div class="maintenance-type correctivo">
+                        <h4>🚨 Correctivo</h4>
+                        <p>Cambios necesarios para corregir errores detectados en el sistema.</p>
+                    </div>
+                    <div class="maintenance-type evolutivo">
+                        <h4>📈 Evolutivo</h4>
+                        <p>Cambios para cubrir expansión o cambios en necesidades de usuarios.</p>
+                    </div>
+                    <div class="maintenance-type adaptativo">
+                        <h4>⚙️ Adaptativo</h4>
+                        <p>Cambios en entornos operativos, configuración, SGBD, comunicaciones.</p>
+                    </div>
+                    <div class="maintenance-type perfectivo">
+                        <h4>✨ Perfectivo</h4>
+                        <p>Acciones para mejorar la calidad interna del sistema sin cambiar funcionalidad.</p>
+                    </div>
+                </div>
+
+                <div class="content-card" style="margin-top: 1rem;">
+                    <h4>📊 Control de Peticiones</h4>
+                    <p>Es recomendable llevar un catálogo con información de:</p>
+                    <ul class="checklist">
+                        <li>Peticiones recibidas y atendidas</li>
+                        <li>Tiempo empleado en resolución</li>
+                        <li>Tipo de mantenimiento aplicado</li>
+                        <li>Recursos utilizados</li>
+                        <li>Estado y prioridad de cada petición</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🔄 DevOps - Development + Operations</h3>
+                <p><strong>DevOps es un conjunto de prácticas que agrupan el desarrollo de Software (Dev) y de las operaciones TI (Ops).</strong></p>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary">Integración Continua</button>
+                    <button class="btn btn-success">Entrega Continua</button>
+                    <button class="btn btn-warning">Alta Calidad</button>
+                </div>
+
+                <h4>🎯 Objetivos de DevOps:</h4>
+                <ul class="checklist">
+                    <li>Hacer más rápido el ciclo de vida del desarrollo</li>
+                    <li>Proporcionar entrega continua de alta calidad</li>
+                    <li>Reducir tiempo entre desarrollo y producción</li>
+                    <li>Mejorar colaboración entre equipos</li>
+                </ul>
+
+                <h4>🔧 Funciones como "Puente":</h4>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">⚙️ Configuración</div>
+                        <p>Gestión de configuraciones y parametrización de sistemas.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📦 Paquetizado</div>
+                        <p>Empaquetado y versionado de aplicaciones para despliegue.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🧪 Pruebas</div>
+                        <p>Automatización de pruebas en diferentes entornos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🚀 Despliegue</div>
+                        <p>Pasos a producción y gestión de releases.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <p><strong>Ubicación Organizacional:</strong> Por su rol de puente, DevOps puede estar encuadrado en equipos de desarrollo, sistemas, o como equipo independiente similar a una "Oficina de Calidad".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Sistemas -->
+        <div id="sistemas" class="tab-content">
+            <h2>⚙️ Departamento de Sistemas</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">8</span>
+                    <div class="stat-label">Tareas Administración</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Funciones BBDD</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Áreas Comunicaciones</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <div class="stat-label">Monitorización</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Objetivo del Departamento de Sistemas</h3>
+                <p><strong>El departamento de sistemas se encarga de garantizar el correcto funcionamiento de los sistemas informáticos y tecnológicos.</strong></p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🖥️ Administración de Sistemas</h3>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">🔧 Implantación Hardware</div>
+                        <p>Instalación, configuración y puesta en marcha de equipos físicos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">💿 Implantación Software</div>
+                        <p>Instalación y configuración de sistemas operativos y aplicaciones.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📊 Inventariado</div>
+                        <p>Control y registro de todos los activos tecnológicos de la organización.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">⚡ Optimización</div>
+                        <p>Mejora del rendimiento y eficiencia de los sistemas.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📈 Monitorización</div>
+                        <p>Supervisión continua del estado y rendimiento de los sistemas.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🎛️ Gestión del Software</div>
+                        <p>Administración de licencias, actualizaciones y parches.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🚀 Rendimiento</div>
+                        <p>Análisis y mejora del rendimiento de aplicaciones y sistemas.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">💾 Copias de Seguridad</div>
+                        <p>Planificación y ejecución de estrategias de backup y recovery.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🗄️ Gestión de Bases de Datos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🏗️ Diseño y Administración</div>
+                            <p>Diseñar y administrar la estructura de bases de datos optimizada.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">🛡️ Integridad</div>
+                            <p>Velar por la integridad, consistencia y calidad de los datos.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">📊 Gestión de Espacios</div>
+                            <p>Control y optimización de la ocupación de espacios de BBDD.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">📋 Definición de Esquemas</div>
+                            <p>Creación y mantenimiento de esquemas de bases de datos.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">📚 Diccionario de Datos</div>
+                            <p>Mantenimiento del catálogo de metadatos y documentación.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🌐 Gestión de Comunicaciones</h3>
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">🏗️ Diseño e Instalación</div>
+                        <p>Diseño, instalación y optimización de redes de comunicaciones.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">👥 Gestión de Usuarios</div>
+                        <p>Administración de usuarios, perfiles y permisos en red.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">⚙️ Electrónica de Red</div>
+                        <p>Gestión de switches, routers y equipamiento de red.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">🔐 Control de Accesos</div>
+                        <p>Implementación de políticas de seguridad y acceso a recursos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Comunicaciones (expandido) -->
+        <div id="comunicaciones" class="tab-content">
+            <h2>🌐 Comunicaciones y Redes</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">OSI</span>
+                    <div class="stat-label">Modelo Referencia</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">TCP/IP</span>
+                    <div class="stat-label">Suite Protocolos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">LAN/WAN</span>
+                    <div class="stat-label">Tipos de Red</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">VPN</span>
+                    <div class="stat-label">Redes Privadas</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🏗️ Arquitectura de Red</h3>
+                <p><strong>La gestión de comunicaciones abarca desde el diseño de la topología hasta la administración de servicios de red.</strong></p>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-title">🎯 Planificación de Red</div>
+                    <p>Análisis de necesidades, dimensionamiento y diseño de topología de red.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>Análisis de tráfico y ancho de banda</li>
+                        <li>Selección de tecnologías apropiadas</li>
+                        <li>Diseño de topología física y lógica</li>
+                    </ul>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔧 Implementación</div>
+                    <p>Instalación física y configuración lógica de equipos de comunicaciones.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>Cableado estructurado</li>
+                        <li>Configuración de equipos activos</li>
+                        <li>Pruebas de conectividad</li>
+                    </ul>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">📊 Monitorización</div>
+                    <p>Supervisión continua del rendimiento y disponibilidad de la red.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>SNMP y herramientas de monitoreo</li>
+                        <li>Análisis de tráfico y latencia</li>
+                        <li>Alertas y notificaciones</li>
+                    </ul>
+                </div>
+                <div class="process-card">
+                    <div class="process-title">🔒 Seguridad de Red</div>
+                    <p>Implementación de medidas de protección y control de acceso.</p>
+                    <ul style="font-size: 0.9em; margin-top: 0.5rem;">
+                        <li>Firewalls y sistemas IDS/IPS</li>
+                        <li>VLANs y segmentación</li>
+                        <li>Autenticación 802.1X</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🛠️ Tecnologías de Comunicación</h3>
+                <div class="definition-list">
+                    <dt>Redes LAN (Local Area Network):</dt>
+                    <dd>• Ethernet, Wi-Fi 6/6E • Switches gestionados • VLANs y QoS</dd>
+                    
+                    <dt>Redes WAN (Wide Area Network):</dt>
+                    <dd>• MPLS, SD-WAN • Líneas dedicadas • Conexiones satelitales</dd>
+                    
+                    <dt>Redes Inalámbricas:</dt>
+                    <dd>• Wi-Fi empresarial • Controladores centralizados • Roaming seamless</dd>
+                    
+                    <dt>Telecomunicaciones:</dt>
+                    <dd>• VoIP y telefonía IP • SIP Trunks • Sistemas unificados de comunicaciones</dd>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📈 Tendencias en Comunicaciones</h3>
+                <ul class="checklist">
+                    <li>SD-WAN (Software-Defined WAN) para optimización de tráfico</li>
+                    <li>5G para conectividad móvil empresarial</li>
+                    <li>IPv6 para expansión de direccionamiento</li>
+                    <li>IoT (Internet of Things) para dispositivos conectados</li>
+                    <li>Edge Computing para procesamiento distribuido</li>
+                    <li>Zero Trust Architecture para seguridad perimetral</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 5: CAU y Seguridad -->
+        <div id="cau-seguridad" class="tab-content">
+            <h2>🛡️ Centro de Atención a Usuarios y Seguridad</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">ITIL 4</span>
+                    <div class="stat-label">Estándar CAU</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Help Desk</span>
+                    <div class="stat-label">Servicio Integral</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <div class="stat-label">Funciones Seguridad</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <div class="stat-label">Disponibilidad</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🎯 Centro de Atención a Usuarios (CAU)</h3>
+                <p><strong>En ocasiones también denominado "Help Desk", es el servicio integral de resolución de solicitudes y problemas de usuarios, sean simples o complejos.</strong></p>
+                
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <h4>📋 Características del CAU:</h4>
+                    <ul class="checklist">
+                        <li>Punto único de contacto para usuarios</li>
+                        <li>Resolución en primer nivel o escalado a especialistas</li>
+                        <li>Gestión de incidentes y peticiones de servicio</li>
+                        <li>Soporte tanto para problemas simples como complejos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📚 ITIL 4 - Estándar de Gestión</h3>
+                <p><strong>ITIL (Information Technology Infrastructure Library) está actualmente en su versión 4. Es un conjunto de conceptos y buenas prácticas para la gestión de servicios TI.</strong></p>
+                
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-title">🎯 Service Desk</div>
+                        <p>Punto central de comunicación entre usuarios y proveedores de servicios TI.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🔧 Gestión de Incidentes</div>
+                        <p>Restauración del servicio normal lo más rápido posible.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">📋 Gestión de Peticiones</div>
+                        <p>Cumplimiento de solicitudes de servicio de los usuarios.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-title">🔍 Gestión de Problemas</div>
+                        <p>Identificación y eliminación de las causas raíz de incidentes.</p>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">Desarrollo TI</button>
+                    <button class="btn btn-success">Operaciones TI</button>
+                    <button class="btn btn-warning">Buenas Prácticas</button>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🔐 Funciones de Seguridad</h3>
+                <p><strong>La función de seguridad está encuadrada dentro de Sistemas, pero dada la importancia que está tomando, suele tener estatus propio con perfiles especializados.</strong></p>
+                
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">📋 Definición de Parámetros</div>
+                        <p>Establecimiento de políticas y procedimientos de seguridad organizacional.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">⚠️ Análisis de Riesgos</div>
+                        <p>Identificación, evaluación y tratamiento de riesgos de seguridad.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">👥 Gestión de Usuarios</div>
+                        <p>Administración de identidades, accesos y privilegios de usuario.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">🚨 Gestión de Incidencias</div>
+                        <p>Respuesta y gestión de incidentes de seguridad informática.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #9b59b6;">
+                        <div class="process-title">📜 Definición de Normativas</div>
+                        <p>Elaboración de políticas, estándares y procedimientos de seguridad.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #1abc9c;">
+                        <div class="process-title">🛡️ Administración de Elementos</div>
+                        <p>Gestión de IPS, firewalls, antivirus y otros elementos de seguridad.</p>
+                    </div>
+                    <div class="process-card" style="border-left-color: #34495e;">
+                        <div class="process-title">🔍 Auditorías de Seguridad</div>
+                        <p>Evaluaciones periódicas del estado de seguridad de la organización.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Tendencias en Seguridad</h3>
+                <ul class="checklist">
+                    <li>Zero Trust Security Model</li>
+                    <li>Security Operations Center (SOC)</li>
+                    <li>Threat Intelligence y análisis predictivo</li>
+                    <li>Cybersecurity Mesh Architecture</li>
+                    <li>DevSecOps - Seguridad integrada en desarrollo</li>
+                    <li>Privacy by Design en cumplimiento RGPD</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 6: AGE -->
+        <div id="age" class="tab-content">
+            <h2>🏛️ Unidades TIC en la Administración General del Estado</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">RD 1125</span>
+                    <div class="stat-label">2024 Normativa</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Ejes Fundamentales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">PRTR</span>
+                    <div class="stat-label">Plan Recuperación</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">AEAD</span>
+                    <div class="stat-label">Agencia Estatal</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📜 Marco Normativo Actual</h3>
+                <p><strong>El RD 806/2014, queda derogado por el Real Decreto 1125/2024, de 5 de noviembre, que regula la organización y los instrumentos operativos para la Administración Digital del Estado.</strong></p>
+                
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <h4>🎯 Objetivos de la Nueva Normativa:</h4>
+                    <ul class="checklist">
+                        <li>Dotar a la Administración de arquitectura organizativa TIC</li>
+                        <li>Afrontar la transformación digital de las AAPP</li>
+                        <li>Mejorar eficiencia y eficacia de actuaciones digitales</li>
+                        <li>Agilizar toma de decisiones</li>
+                        <li>Favorecer generación de sinergias y colaboración</li>
+                        <li>Garantizar sostenibilidad de inversiones PRTR</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="age-structure">
+                <h3>🏗️ Tres Ejes Fundamentales del Sistema</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">1️⃣ CETIC - Comisión de Estrategia</div>
+                            <p><strong>Comisión de Estrategia Sobre Tecnologías de la Información y las Comunicaciones</strong> - Órgano colegiado superior para la Administración del Estado en este ámbito.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">2️⃣ AEAD - Agencia Estatal</div>
+                            <p><strong>Agencia Estatal de Administración Digital</strong> - Ejerce funciones del artículo 7 de su Estatuto a través de la presidencia del CDTIC y las Comisiones de Trabajo.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">3️⃣ Ámbito Departamental</div>
+                            <p><strong>Comisiones Ministeriales de Administración Digital (CMAD)</strong> y las Unidades TIC ministeriales y de organismos y entidades de Derecho público.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🔗 Estructura Organizativa Detallada</h3>
+                
+                <div class="process-grid">
+                    <div class="process-card" style="border-left-color: #3498db;">
+                        <div class="process-title">🏛️ CETIC</div>
+                        <p><strong>Órgano Colegiado Superior</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Máximo nivel de coordinación TIC</li>
+                            <li>Definición de estrategias nacionales</li>
+                            <li>Supervisión de políticas digitales</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="process-card" style="border-left-color: #f39c12;">
+                        <div class="process-title">🏢 AEAD</div>
+                        <p><strong>Agencia de Ejecución</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Presidencia del CDTIC</li>
+                            <li>Coordinación de Comisiones de Trabajo</li>
+                            <li>Implementación de políticas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="process-card" style="border-left-color: rgb(88, 106, 95);">
+                        <div class="process-title">🏛️ CDTIC</div>
+                        <p><strong>Comité de Dirección TIC</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Coordinación operativa</li>
+                            <li>Seguimiento de proyectos</li>
+                            <li>Resolución de conflictos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="process-card" style="border-left-color: #e74c3c;">
+                        <div class="process-title">🏢 CMAD</div>
+                        <p><strong>Comisiones Ministeriales</strong></p>
+                        <ul style="font-size: 0.9em;">
+                            <li>Coordinación departamental</li>
+                            <li>Implementación sectorial</li>
+                            <li>Gestión de recursos TIC</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>📚 Referencias Relacionadas</h3>
+                <p><strong>Se recomienda consultar el tema 30:</strong></p>
+                <div class="content-card">
+                    <h4>📖 Tema 30 - Modelos de Gobernanza TIC</h4>
+                    <ul class="checklist">
+                        <li>Organización e instrumentos operativos TIC</li>
+                        <li>Tecnologías de información y comunicaciones en AGE</li>
+                        <li>Organismos públicos de la AGE</li>
+                        <li>Transformación digital de la AGE</li>
+                    </ul>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary">Gobernanza TIC</button>
+                    <button class="btn btn-success">Transformación Digital</button>
+                    <button class="btn btn-warning">Coordinación</button>
+                </div>
+
+                <h4>🎯 Beneficios del Nuevo Modelo:</h4>
+                <ul class="checklist">
+                    <li>Mayor coordinación entre administraciones</li>
+                    <li>Optimización de recursos y evitación de duplicidades</li>
+                    <li>Aceleración de la transformación digital</li>
+                    <li>Mejor aprovechamiento de fondos europeos</li>
+                    <li>Estandarización de procesos y tecnologías</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tabs
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content and mark the tab as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add some interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.stat-card, .process-card, .content-card, .function-card, .maintenance-type');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click handlers to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+
+            // Add click animation to maintenance types
+            const maintenanceTypes = document.querySelectorAll('.maintenance-type');
+            maintenanceTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

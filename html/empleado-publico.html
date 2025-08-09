@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleado Público - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: #ecf0f1;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .tab:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 60px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 5px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .process-step {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 5px;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3498db;
+            font-size: 1.5em;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                margin: 3px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step::after {
+                display: none;
+            }
+        }
+
+        .law-reference {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 10px;
+            margin: 10px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Empleado Público en España</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="tab" onclick="showTab(event, 'trebep')">TREBEP</button>
+            <button class="tab" onclick="showTab(event, 'tipos')">Tipos de Empleados</button>
+            <button class="tab" onclick="showTab(event, 'planificacion')">Planificación RRHH</button>
+            <button class="tab" onclick="showTab(event, 'incompatibilidades')">Incompatibilidades</button>
+            <button class="tab" onclick="showTab(event, 'retos')">Retos Actuales</button>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <h2>📊 Visión General del Empleo Público</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div>Tipos de Empleados Públicos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">30%</div>
+                    <div>Temporalidad Actual</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8%</div>
+                    <div>Objetivo UE Temporalidad</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">55+</div>
+                    <div>Edad Media AGE</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Principios Fundamentales del Empleo Público</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Servicio a ciudadanos e intereses generales</div>
+                    <div class="list-item">• Igualdad, mérito y capacidad</div>
+                    <div class="list-item">• Sometimiento pleno a la ley</div>
+                    <div class="list-item">• Objetividad e imparcialidad</div>
+                    <div class="list-item">• Eficacia en planificación RRHH</div>
+                    <div class="list-item">• Transparencia y evaluación</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📚 Marco Legislativo Principal</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Ley 30/1984</strong> - Medidas para la reforma de la Función Pública
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ley 53/1984</strong> - Incompatibilidades del Personal
+                    </div>
+                    <div class="timeline-item">
+                        <strong>RD 364/1995</strong> - Reglamento General de Ingreso
+                    </div>
+                    <div class="timeline-item">
+                        <strong>RDL 5/2015</strong> - TREBEP (Estatuto Básico del Empleado Público)
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ley 20/2021</strong> - Reducción de la temporalidad
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>Ámbito de Aplicación TREBEP:</strong> AGE, CCAA, EELL, Organismos públicos, Universidades públicas y carácter supletorio para el resto de personal de las AAPP.
+            </div>
+        </div>
+
+        <div id="trebep" class="tab-content">
+            <h2>📖 Estatuto Básico del Empleado Público (TREBEP)</h2>
+            
+            <div class="card">
+                <h3>🎯 Objetivos del TREBEP</h3>
+                <p>El TREBEP busca <strong>unificar, actualizar, aclarar y armonizar</strong> las distintas leyes del estatuto básico del empleado público en un texto completo y sistemático.</p>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Derechos de los Empleados Públicos</h3>
+                <div class="list-grid">
+                    <div class="list-item"><strong>Individuales:</strong>
+                        • Inamovilidad (funcionarios carrera)<br>
+                        • Desempeño efectivo funciones<br>
+                        • Progresión carrera profesional<br>
+                        • Formación continua<br>
+                        • Respeto intimidad y dignidad
+                    </div>
+                    <div class="list-item"><strong>Colectivos:</strong>
+                        • Libertad sindical<br>
+                        • Negociación colectiva<br>
+                        • Derecho de huelga<br>
+                        • Conflictos colectivos<br>
+                        • Reunión
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💰 Sistema Retributivo</h3>
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th>Retribuciones Básicas</th>
+                            <th>Retribuciones Complementarias</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                • Sueldo (por grupo clasificación)<br>
+                                • Trienios (cada 3 años servicio)<br>
+                                • Pagas extraordinarias (Junio/Diciembre)
+                            </td>
+                            <td>
+                                • Complemento destino (nivel puesto)<br>
+                                • Complemento específico (condiciones especiales)<br>
+                                • Complemento productividad<br>
+                                • Gratificaciones servicios extraordinarios
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Deberes y Código de Conducta</h3>
+                <div class="highlight">
+                    Los empleados públicos deben actuar con: objetividad, integridad, neutralidad, responsabilidad, imparcialidad, confidencialidad, transparencia, ejemplaridad, austeridad y honradez.
+                </div>
+                <div class="list-grid">
+                    <div class="list-item">• Respetar Constitución y ordenamiento jurídico</div>
+                    <div class="list-item">• Satisfacer intereses generales ciudadanos</div>
+                    <div class="list-item">• Actuar con buena fe</div>
+                    <div class="list-item">• Evitar conflictos de intereses</div>
+                    <div class="list-item">• Guardar secreto materias clasificadas</div>
+                    <div class="list-item">• Cumplir con diligencia tareas asignadas</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tipos" class="tab-content">
+            <h2>👥 Tipos de Empleados Públicos</h2>
+            
+            <div class="card">
+                <h3>🏛️ Funcionarios de Carrera</h3>
+                <p>Vinculados por <strong>nombramiento legal</strong> y <strong>relación estatutaria</strong> regulada por el Derecho Administrativo.</p>
+                
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Titulación Requerida</th>
+                            <th>Nivel Mínimo</th>
+                            <th>Nivel Máximo</th>
+                        </tr>
+                        <tr>
+                            <td>A1</td>
+                            <td>Título universitario de Grado</td>
+                            <td>24</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>A2</td>
+                            <td>Título universitario de Grado</td>
+                            <td>20</td>
+                            <td>26</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td>Técnico Grado Superior FP</td>
+                            <td>18</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>C1</td>
+                            <td>Bachiller o Técnico</td>
+                            <td>16</td>
+                            <td>22</td>
+                        </tr>
+                        <tr>
+                            <td>C2</td>
+                            <td>Graduado ESO</td>
+                            <td>14</td>
+                            <td>18</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="highlight">
+                    <strong>Modalidades de Carrera Profesional:</strong><br>
+                    • <strong>Horizontal:</strong> Progresión sin cambio de puesto<br>
+                    • <strong>Vertical:</strong> Ascenso en estructura de puestos
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⏰ Funcionarios Interinos</h3>
+                <p>Nombrados por <strong>necesidad y urgencia</strong> en las siguientes circunstancias:</p>
+                <div class="list-grid">
+                    <div class="list-item">• Plazas vacantes no cubiertas (&lt; 3 años)</div>
+                    <div class="list-item">• Sustitución transitoria titulares</div>
+                    <div class="list-item">• Programas temporales (&lt; 3 años + 1 ampliable)</div>
+                    <div class="list-item">• Exceso tareas (máx. 9 meses en 18 meses)</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Personal Laboral</h3>
+                <p>Vinculado por <strong>contrato laboral</strong>, regido por Estatuto de los Trabajadores y Convenios Colectivos.</p>
+                <div class="list-grid">
+                    <div class="list-item">• Puestos no permanentes</div>
+                    <div class="list-item">• Oficios (porteo, vigilancia, custodia)</div>
+                    <div class="list-item">• Mantenimiento y conservación</div>
+                    <div class="list-item">• Conocimientos técnicos especializados</div>
+                    <div class="list-item">• Funciones auxiliares apoyo administrativo</div>
+                    <div class="list-item">• OPIS (Organismos Públicos Investigación)</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Personal Eventual</h3>
+                <p><strong>Carácter no permanente</strong> para funciones de confianza y asesoramiento especial.</p>
+                <div class="highlight">
+                    • Nombramiento y cese libre<br>
+                    • Retribuido con cargo a Presupuestos Generales<br>
+                    • No constituye mérito para acceso función pública
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👔 Personal Directivo</h3>
+                <div class="law-reference">
+                    Artículo 13 TREBEP: Personal que desarrolla funciones directivas profesionales
+                </div>
+                <p><strong>Requisitos (RDL 6/2023, art. 126):</strong></p>
+                <div class="list-grid">
+                    <div class="list-item">• Funcionario carrera subgrupo A1</div>
+                    <div class="list-item">• Experiencia y antigüedad suficientes</div>
+                    <div class="list-item">• Formación requerida según perfil</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="planificacion" class="tab-content">
+            <h2>📊 Planificación de Recursos Humanos</h2>
+            
+            <div class="card">
+                <h3>🎯 Objetivos de la Planificación de RRHH</h3>
+                <div class="highlight">
+                    Contribuir a la <strong>eficacia en prestación de servicios</strong> y <strong>eficiencia en utilización de recursos económicos</strong> mediante dimensión adecuada de efectivos, mejor distribución, formación, promoción profesional y movilidad.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Instrumentos de Planificación</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>Análisis necesidades personal</strong><br>
+                        Planes de Empleo (Integrales o Operativos de RRHH)
+                    </div>
+                    <div class="list-item">
+                        <strong>Sistemas organización trabajo</strong><br>
+                        Relaciones de Puestos de Trabajo (RPT)
+                    </div>
+                    <div class="list-item">
+                        <strong>Medidas de movilidad</strong><br>
+                        Concursos traslados, redistribución, comisiones
+                    </div>
+                    <div class="list-item">
+                        <strong>Promoción y formación</strong><br>
+                        Cualificación académica y técnica
+                    </div>
+                    <div class="list-item">
+                        <strong>Oferta Empleo Público</strong><br>
+                        Captación nuevos efectivos (último recurso)
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Oferta de Empleo Público (OEP)</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">34.151</div>
+                        <div>Plazas 2022</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">39.574</div>
+                        <div>Plazas 2023</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">40.146</div>
+                        <div>Plazas 2024</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>Años máx. ejecución</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Características de la OEP</h3>
+                    <div class="list-grid">
+                        <div class="list-item">• Carácter anual</div>
+                        <div class="list-item">• Aprobada por el Gobierno</div>
+                        <div class="list-item">• Publicación BOE (1er trimestre)</div>
+                        <div class="list-item">• Posibles ofertas complementarias</div>
+                        <div class="list-item">• Ejecución máximo 3 años improrrogables</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Sistemas Selectivos</h3>
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th>Sistema</th>
+                            <th>Descripción</th>
+                            <th>Uso</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Oposición</strong></td>
+                            <td>Pruebas de capacidad</td>
+                            <td>Sistema ordinario</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Concurso-Oposición</strong></td>
+                            <td>Oposición + valoración méritos</td>
+                            <td>Por naturaleza funciones</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Concurso</strong></td>
+                            <td>Solo valoración méritos</td>
+                            <td>Excepcional (autorización ley)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ Órganos de Selección</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>Tribunales</strong><br>
+                        • Mínimo 5 miembros impares<br>
+                        • Funcionarios de carrera<br>
+                        • Titulación igual/superior al cuerpo
+                    </div>
+                    <div class="list-item">
+                        <strong>Comisiones Permanentes</strong><br>
+                        • Para cuerpos elevado nº aspirantes<br>
+                        • Mismas reglas que tribunales<br>
+                        • Especialización requerida
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="incompatibilidades" class="tab-content">
+            <h2>⚖️ Régimen de Incompatibilidades</h2>
+            
+            <div class="card">
+                <h3>📋 Ley 53/1984 - Incompatibilidades Personal AAPP</h3>
+                <div class="highlight">
+                    <strong>Principio general:</strong> No se podrá compatibilizar con ejercicio de cargo, profesión o actividad que pueda impedir o menoscabar el estricto cumplimiento de deberes o comprometer imparcialidad e independencia.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🚫 Incompatibilidades Principales</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Segundo puesto trabajo sector público</div>
+                    <div class="list-item">• Más de una remuneración presupuestos públicos</div>
+                    <div class="list-item">• Actividades privadas en asuntos interviniendo</div>
+                    <div class="list-item">• Consejos administración empresas relacionadas</div>
+                    <div class="list-item">• Cargos empresas concesionarias/contratistas</div>
+                    <div class="list-item">• Participación >10% capital empresas citadas</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>✅ Excepciones Permitidas</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Administración patrimonio personal/familiar</div>
+                    <div class="list-item">• Dirección seminarios/cursos (<75h/año)</div>
+                    <div class="list-item">• Tribunales calificadores pruebas selectivas</div>
+                    <div class="list-item">• Cargos Juntas Mutualidades (no retribuidos)</div>
+                    <div class="list-item">• Producción literaria, artística, científica</div>
+                    <div class="list-item">• Colaboración medios comunicación</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👔 Ley 3/2015 - Alto Cargo AGE</h3>
+                <div class="highlight">
+                    <strong>Altos cargos:</strong> Miembros Gobierno, Secretarios Estado, Subsecretarios, Secretarios Generales, Delegados Gobierno, Directores Generales, etc.
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Conflicto de Intereses - Alto Cargo</h3>
+                    <p>Un alto cargo está en <strong>conflicto de intereses</strong> cuando su decisión pueda afectar a:</p>
+                    <div class="list-grid">
+                        <div class="list-item">• Intereses propios</div>
+                        <div class="list-item">• Familiares (cónyuge, 4º grado consanguinidad, 2º afinidad)</div>
+                        <div class="list-item">• Personas en litigio</div>
+                        <div class="list-item">• Amigos íntimos/enemistad manifiesta</div>
+                        <div class="list-item">• Entidades trabajo 2 años previos</div>
+                        <div class="list-item">• Entidades familiares directivos</div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th>Infracciones</th>
+                            <th>Sanciones</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Muy Graves:</strong><br>
+                            • Incumplir incompatibilidades<br>
+                            • Declaraciones falsas<br>
+                            • Incumplir gestión acciones/participaciones
+                            </td>
+                            <td>• Destitución<br>
+                            • Pérdida compensación cese<br>
+                            • Restitución cantidades<br>
+                            • Inhabilitación 5-10 años
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Graves:</strong><br>
+                            • No declarar actividades/bienes<br>
+                            • Omitir datos deliberadamente<br>
+                            • Incumplir abstención reiterado
+                            </td>
+                            <td>• Declaración incumplimiento<br>
+                            • Publicación BOE<br>
+                            • Inhabilitación 5-10 años
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Leves:</strong><br>
+                            • Declaración extemporánea
+                            </td>
+                            <td>• Amonestación</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ Oficina de Conflictos de Intereses</h3>
+                <p><strong>Adscrita a:</strong> Ministerio Transformación Digital y Función Pública</p>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <strong>Personal AAPP:</strong><br>
+                        • Gestión compatibilidades<br>
+                        • Opciones puestos incompatibles
+                    </div>
+                    <div class="list-item">
+                        <strong>Altos Cargos:</strong><br>
+                        • Informes control Ley 3/2015<br>
+                        • Registros actividades y bienes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="retos" class="tab-content">
+            <h2>🚀 Retos Actuales del Empleo Público</h2>
+            
+            <div class="card">
+                <h3>⏰ Reducción de la Temporalidad</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">30%</div>
+                        <div>Temporalidad Actual España</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8%</div>
+                        <div>Objetivo Unión Europea</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div>Fecha límite pacto Bruselas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>Años máximo personal eventual</div>
+                    </div>
+                </div>
+
+                <div class="law-reference">
+                    <strong>Ley 20/2021</strong> - Medidas urgentes para reducción temporalidad empleo público
+                </div>
+
+                <div class="card">
+                    <h3>📋 Procesos de Estabilización</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <strong>Concurso-Oposición</strong><br>
+                            60% Oposición + 40% Méritos
+                        </div>
+                        <div class="process-step">
+                            <strong>Parte Teórica</strong><br>
+                            Carácter eliminatorio
+                        </div>
+                        <div class="process-step">
+                            <strong>Concurso Méritos</strong><br>
+                            Experiencia valorada
+                        </div>
+                        <div class="process-step">
+                            <strong>No superan</strong><br>
+                            Indemnización 20 días/año
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💻 Teletrabajo</h3>
+                <div class="highlight">
+                    <strong>Definición:</strong> Modalidad prestación servicios a distancia mediante tecnologías información y comunicación, fuera dependencias administrativas.
+                </div>
+
+                <div class="law-reference">
+                    • RDL 29/2020 - Teletrabajo AAPP durante COVID-19<br>
+                    • Ley 10/2021 - Trabajo a distancia<br>
+                    • Orden PCM/466/2022 - Hasta 3 días teletrabajo (eficiencia energética)
+                </div>
+
+                <div class="card">
+                    <h3>📋 Características del Teletrabajo Público</h3>
+                    <div class="list-grid">
+                        <div class="list-item">• Expresamente autorizado</div>
+                        <div class="list-item">• Compatible modalidad presencial</div>
+                        <div class="list-item">• Voluntario y reversible</div>
+                        <div class="list-item">• Identificación objetivos</div>
+                        <div class="list-item">• Mismos derechos y deberes</div>
+                        <div class="list-item">• AP proporciona medios tecnológicos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📜 Anteproyecto Ley Función Pública AGE (2024)</h3>
+                <p><strong>Aprobado por Consejo de Ministros (julio 2024)</strong> - Desarrolla disposiciones TREBEP para Administración del Estado.</p>
+
+                <div class="card">
+                    <h3>🎯 Cuatro Ejes Principales</h3>
+                    <div class="list-grid">
+                        <div class="list-item">
+                            <strong>Estructura y acceso</strong><br>
+                            • Delimita funciones personal<br>
+                            • Sistematización cuerpos/escalas<br>
+                            • Requisitos acceso/pérdida
+                        </div>
+                        <div class="list-item">
+                            <strong>Carrera y retribuciones</strong><br>
+                            • Carrera horizontal/vertical<br>
+                            • Nuevos complementos<br>
+                            • Régimen teletrabajo
+                        </div>
+                        <div class="list-item">
+                            <strong>Formación continua</strong><br>
+                            • Itinerarios formativos<br>
+                            • Gestión competencial<br>
+                            • Actualización permanente
+                        </div>
+                        <div class="list-item">
+                            <strong>Ética e integridad</strong><br>
+                            • Derechos y deberes<br>
+                            • Régimen disciplinario<br>
+                            • Código conducta
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>Novedad:</strong> Creación del <strong>Cuerpo Técnico Informático</strong> (Grupo B) - Carácter interdepartamental, adscrito al Ministerio Transformación Digital y Función Pública.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Otros Retos Contemporáneos</h3>
+                <div class="list-grid">
+                    <div class="list-item">• Métodos selección y atracción talento</div>
+                    <div class="list-item">• Profesionalización órganos selección</div>
+                    <div class="list-item">• Modelo cooperativo aprendizaje</div>
+                    <div class="list-item">• Desarrollo competencias digitales</div>
+                    <div class="list-item">• Colaboración intergeneracional</div>
+                    <div class="list-item">• Conciliación vida laboral-personal</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
