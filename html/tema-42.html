@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 42 - Modelo TCP/IP y OSI</title>
+    <style>
+        :root {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+        }
+
+        .dark-mode {
+            /* Dark theme colors */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .dark-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .exercise-container h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--success-box-bg);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--danger-box-bg);
+            display: block;
+        }
+
+        .layers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .layer-card {
+            background: var(--stat-card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: var(--layer-color, #3498db);
+        }
+
+        .layer-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .layer-7 { --layer-color: #e74c3c; }
+        .layer-6 { --layer-color: #f39c12; }
+        .layer-5 { --layer-color: #f1c40f; }
+        .layer-4 { --layer-color: rgb(88, 106, 95); }
+        .layer-3 { --layer-color: #3498db; }
+        .layer-2 { --layer-color: #9b59b6; }
+        .layer-1 { --layer-color: #2c3e50; }
+
+        .layer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .layer-number {
+            background: var(--layer-color, #3498db);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .layer-title {
+            color: var(--card-text);
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .protocol-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .protocol-tag {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        
+        <div class="header">
+            <h1>Tema 42: Modelo TCP/IP y OSI</h1>
+            <p>Arquitectura, capas, interfaces, protocolos, direccionamiento y encaminamiento. Principales protocolos de la arquitectura de comunicaciones TCP/IP.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Modelo OSI</div>
+                <div class="tab" onclick="showTab('content2')">📘 Modelo TCP/IP</div>
+                <div class="tab" onclick="showTab('content3')">📘 Protocolos y Direccionamiento</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <div>Capas del modelo OSI</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <div>Capas del modelo TCP/IP</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Clases de direcciones IP</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción a los Modelos de Red</h3>
+                    <p>Los modelos de referencia OSI y TCP/IP son marcos conceptuales que describen cómo se comunican los sistemas en red. El modelo OSI (Open Systems Interconnection) es un modelo teórico de 7 capas, mientras que el modelo TCP/IP es una implementación práctica de 4 capas que forma la base de Internet.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Clave</h3>
+                    <ul class="list-checkmark">
+                        <li>Modelo OSI: 7 capas teóricas para estandarizar la comunicación de red</li>
+                        <li>Modelo TCP/IP: 4 capas prácticas que forman la base de Internet</li>
+                        <li>Protocolos fundamentales: TCP, UDP, IP, HTTP, FTP, SMTP, etc.</li>
+                        <li>Direccionamiento IP: IPv4 e IPv6 con sus respectivas notaciones</li>
+                        <li>Enrutamiento: Proceso de determinar la mejor ruta para los paquetes de datos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Modelo OSI (Open Systems Interconnection)</h3>
+                    <p>El modelo OSI fue desarrollado por la ISO (International Organization for Standardization) como un marco de referencia para estandarizar las funciones de las comunicaciones de red. Divide la comunicación en 7 capas abstractas, cada una con funciones específicas.</p>
+                    
+                    <div class="layers-container">
+                        <div class="layer-card layer-7">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 7 - Aplicación</div>
+                                <div class="layer-number">7</div>
+                            </div>
+                            <p>Interfaz entre aplicaciones de red y el usuario. Protocolos: HTTP, FTP, SMTP, DNS.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">HTTP</span>
+                                <span class="protocol-tag">FTP</span>
+                                <span class="protocol-tag">SMTP</span>
+                                <span class="protocol-tag">DNS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-card layer-6">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 6 - Presentación</div>
+                                <div class="layer-number">6</div>
+                            </div>
+                            <p>Traducción, cifrado y compresión de datos. Garantiza que la información esté en un formato utilizable por la capa de aplicación.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">JPEG</span>
+                                <span class="protocol-tag">MPEG</span>
+                                <span class="protocol-tag">SSL/TLS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-card layer-5">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 5 - Sesión</div>
+                                <div class="layer-number">5</div>
+                            </div>
+                            <p>Establece, gestiona y termina sesiones de comunicación entre aplicaciones. Control de diálogo y sincronización.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">RPC</span>
+                                <span class="protocol-tag">NetBIOS</span>
+                                <span class="protocol-tag">SQL</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Origen del Modelo OSI</h4>
+                            <p>Desarrollado en la década de 1980 por la ISO para estandarizar las comunicaciones de red. Aunque es un modelo teórico, proporciona una base para comprender cómo funcionan las redes.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Implementación</h4>
+                            <p>El modelo OSI no es una implementación específica, sino un marco de referencia. Las implementaciones reales suelen seguir el modelo TCP/IP.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Relevancia Actual</h4>
+                            <p>Aunque Internet usa el modelo TCP/IP, el modelo OSI sigue siendo importante como herramienta de enseñanza y para comprender conceptos de red.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Capas Inferiores del Modelo OSI</h3>
+                    <p>Las capas inferiores del modelo OSI se centran en la transmisión física de datos y el control del acceso al medio:</p>
+                    
+                    <div class="layers-container">
+                        <div class="layer-card layer-4">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 4 - Transporte</div>
+                                <div class="layer-number">4</div>
+                            </div>
+                            <p>Transmite datos entre extremos con control de errores y flujo. Protocolos: TCP (orientado a conexión) y UDP (sin conexión).</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">TCP</span>
+                                <span class="protocol-tag">UDP</span>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-card layer-3">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 3 - Red</div>
+                                <div class="layer-number">3</div>
+                            </div>
+                            <p>Determina la mejor ruta para los paquetes a través de la red. Protocolos: IP, ICMP, RIP, OSPF.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">IP</span>
+                                <span class="protocol-tag">ICMP</span>
+                                <span class="protocol-tag">RIP</span>
+                                <span class="protocol-tag">OSPF</span>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-card layer-2">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 2 - Enlace de Datos</div>
+                                <div class="layer-number">2</div>
+                            </div>
+                            <p>Proporciona transferencia de datos nodo a nodo y detección de errores. Protocolos: Ethernet, PPP, Frame Relay.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">Ethernet</span>
+                                <span class="protocol-tag">PPP</span>
+                                <span class="protocol-tag">WiFi</span>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-card layer-1">
+                            <div class="layer-header">
+                                <div class="layer-title">Capa 1 - Física</div>
+                                <div class="layer-number">1</div>
+                            </div>
+                            <p>Transmite datos en forma de bits a través del medio físico. Define características eléctricas, mecánicas y funcionales.</p>
+                            <div class="protocol-tags">
+                                <span class="protocol-tag">Ethernet</span>
+                                <span class="protocol-tag">USB</span>
+                                <span class="protocol-tag">Bluetooth</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes</h4>
+                        <ul class="list-checkmark">
+                            <li>Cada capa proporciona servicios a la capa superior y utiliza servicios de la capa inferior</li>
+                            <li>Los datos se encapsulan a medida que descienden por las capas y se desencapsulan al ascender</li>
+                            <li>La comunicación entre capas del mismo nivel se denomina comunicación horizontal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📘 Modelo TCP/IP (Protocol Suite)</h3>
+                    <p>El modelo TCP/IP es una implementación práctica desarrollada por el Departamento de Defensa de EE.UU. que forma la base de Internet. Tiene 4 capas que corresponden aproximadamente a las 7 capas del modelo OSI.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Comparativa de Modelos</h3>
+                    <p>El modelo TCP/IP es más simple y práctico que el modelo OSI, con menos capas pero funciones equivalentes:</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Capa TCP/IP</th>
+                                <th>Función</th>
+                                <th>Equivalente OSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Aplicación</strong></td>
+                                <td>Acceso a la red para aplicaciones</td>
+                                <td>Capas 5, 6 y 7 del OSI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Transporte</strong></td>
+                                <td>Control de flujo y errores</td>
+                                <td>Capa 4 del OSI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Internet</strong></td>
+                                <td>Direccionamiento y enrutamiento</td>
+                                <td>Capa 3 del OSI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Acceso a Red</strong></td>
+                                <td>Transmisión física</td>
+                                <td>Capas 1 y 2 del OSI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Protocolos y Direccionamiento</h3>
+                    <p>Los protocolos definen las reglas para la comunicación de red, mientras que el direccionamiento IP identifica de manera única cada dispositivo en la red.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Protocolos Fundamentales</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Consideraciones Importantes</h4>
+                        <p>La elección del protocolo adecuado depende de los requisitos específicos de la aplicación, como la confiabilidad, latencia, seguridad y eficiencia del ancho de banda.</p>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Protocolos Principales</h4>
+                        <ul class="list-checkmark">
+                            <li>TCP (Transmission Control Protocol): Orientado a conexión, confiable, con control de flujo</li>
+                            <li>UDP (User Datagram Protocol): Sin conexión, más rápido pero no confiable</li>
+                            <li>IP (Internet Protocol): Responsable del direccionamiento y enrutamiento de paquetes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>RFC 791:</strong> Especificación del Protocolo Internet (IP)</li>
+                        <li><strong>RFC 793:</strong> Especificación del Protocolo de Control de Transmisión (TCP)</li>
+                        <li><strong>ISO/IEC 7498-1:</strong> Modelo de Referencia OSI</li>
+                        <li><strong>Libro "TCP/IP Illustrated" de W. Richard Stevens:</strong> Referencia técnica detallada</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Modelo_OSI" target="_blank">Wikipedia - Modelo OSI</a></li>
+                        <li><a href="https://es.wikipedia.org/wiki/TCP/IP" target="_blank">Wikipedia - TCP/IP</a></li>
+                        <li><a href="https://www.iana.org/" target="_blank">Internet Assigned Numbers Authority (IANA)</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Por qué se usa TCP/IP en lugar del modelo OSI?</h4>
+                            <p>TCP/IP es una implementación práctica que se desarrolló junto con Internet, mientras que OSI es un modelo teórico. TCP/IP es más simple y eficiente para la comunicación real en redes.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre TCP y UDP?</h4>
+                            <p>TCP es orientado a conexión y garantiza la entrega de datos en orden, mientras que UDP es sin conexión y más rápido pero no garantiza la entrega ni el orden de los datos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica</h3>
+                    <p>Practica tus conocimientos sobre los modelos de red con estos ejercicios interactivos. Pon a prueba tu comprensión de capas, protocolos y direccionamiento IP.</p>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Capas del Modelo OSI</h3>
+                    <div class="exercise-question">
+                        ¿En qué capa del modelo OSI se encuentra el protocolo TCP?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Capa de Enlace</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Capa de Red</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Capa de Transporte</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">Capa de Aplicación</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'c', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Modelo TCP/IP</h3>
+                    <div class="exercise-question">
+                        ¿Cuántas capas tiene el modelo TCP/IP?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', '4', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Direccionamiento IP</h3>
+                    <div class="exercise-question">
+                        ¿Qué clase de dirección IP comienza con 110 en binario?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', 'Clase C', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                toggleButton.textContent = '☀️';
+            } else {
+                toggleButton.textContent = '🌙';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.textContent = '¡Correcto! ✅';
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.textContent = 'Incorrecto. Inténtalo de nuevo. ❌';
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.textContent = '¡Correcto! ✅';
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.textContent = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌`;
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

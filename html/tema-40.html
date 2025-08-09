@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 40 - Redes Locales</title>
+    <style>
+        :root {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+        }
+
+        .dark-mode {
+            /* Dark theme colors */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .dark-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .exercise-container h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--success-box-bg);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--danger-box-bg);
+            display: block;
+        }
+
+        .topology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .topology-card {
+            background: var(--stat-card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .topology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .topology-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        
+        <div class="header">
+            <h1>Tema 40: Redes Locales</h1>
+            <p>Tipología. Técnicas de transmisión. Métodos de acceso. Dispositivos de interconexión.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Topologías de Red</div>
+                <div class="tab" onclick="showTab('content2')">📘 Técnicas de Transmisión</div>
+                <div class="tab" onclick="showTab('content3')">📘 Métodos de Acceso</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Topologías principales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <div>Tipos de transmisión</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <div>Métodos de acceso</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción a las Redes Locales</h3>
+                    <p>Una red local (LAN - Local Area Network) es una red de computadoras que interconecta dispositivos en un área geográfica limitada como una oficina, edificio o campus. Las LAN permiten compartir recursos como impresoras, archivos, conexiones a Internet y otros servicios entre los dispositivos conectados.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Clave</h3>
+                    <ul class="list-checkmark">
+                        <li>Topologías de red: Estrella, Bus, Anillo, Malla y Árbol</li>
+                        <li>Técnicas de transmisión: Unicast, Multicast y Broadcast</li>
+                        <li>Métodos de acceso: CSMA/CD, CSMA/CA y Token Passing</li>
+                        <li>Dispositivos de interconexión: Switches, Routers, Hubs y Bridges</li>
+                        <li>Estándares IEEE 802.x para redes locales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Topologías de Red</h3>
+                    <p>La topología de red define la estructura física o lógica de cómo se conectan los dispositivos en una red. Cada topología tiene sus ventajas y desventajas en términos de rendimiento, confiabilidad y costos.</p>
+                    
+                    <div class="topology-grid">
+                        <div class="topology-card">
+                            <div class="topology-icon">⭐</div>
+                            <h4>Estrella</h4>
+                            <p>Todos los dispositivos se conectan a un punto central</p>
+                        </div>
+                        <div class="topology-card">
+                            <div class="topology-icon">🚌</div>
+                            <h4>Bus</h4>
+                            <p>Todos los dispositivos comparten un único cable</p>
+                        </div>
+                        <div class="topology-card">
+                            <div class="topology-icon">⭕</div>
+                            <h4>Anillo</h4>
+                            <p>Los dispositivos forman un círculo cerrado</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Topología en Estrella</h4>
+                            <p>La más utilizada en redes modernas. Todos los dispositivos se conectan a un switch central. Ventajas: fácil diagnóstico de fallos, escalable. Desventajas: punto único de fallo en el switch central.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Topología en Bus</h4>
+                            <p>Utilizada en las primeras redes Ethernet. Todos los dispositivos comparten un único cable coaxial. Ventajas: bajo costo. Desventajas: difícil diagnóstico, un corte en el cable afecta toda la red.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Topología en Anillo</h4>
+                            <p>Los datos viajan en una dirección alrededor del anillo. Utilizada en redes Token Ring. Ventajas: rendimiento predecible. Desventajas: un fallo rompe toda la red.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Comparativa de Topologías</h3>
+                    <p>Cada topología tiene características específicas que la hacen adecuada para diferentes entornos:</p>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes</h4>
+                        <ul class="list-checkmark">
+                            <li>La topología en estrella es la más común en redes Ethernet modernas</li>
+                            <li>Las topologías híbridas combinan múltiples tipos para optimizar el rendimiento</li>
+                            <li>La elección de topología afecta el rendimiento, confiabilidad y costos de la red</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📘 Técnicas de Transmisión</h3>
+                    <p>Las técnicas de transmisión definen cómo se envían los datos a través de la red. La elección de técnica afecta el rendimiento y la eficiencia de la red.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Tipos de Transmisión</h3>
+                    <p>Existen diferentes métodos para transmitir datos en una red local:</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Uso Común</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Unicast</strong></td>
+                                <td>Transmisión punto a punto entre dos dispositivos</td>
+                                <td>Comunicación cliente-servidor típica</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Multicast</strong></td>
+                                <td>Transmisión a un grupo específico de dispositivos</td>
+                                <td>Streaming de video, servicios de descubrimiento</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Broadcast</strong></td>
+                                <td>Transmisión a todos los dispositivos en la red</td>
+                                <td>Direcciones ARP, descubrimiento de servicios</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Métodos de Acceso al Medio</h3>
+                    <p>Los métodos de acceso al medio determinan cómo los dispositivos compiten por el uso del canal de comunicación compartido en una red local.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Protocolos de Acceso</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Consideraciones Importantes</h4>
+                        <p>La elección del método de acceso es crítica para evitar colisiones y garantizar un uso eficiente del medio de transmisión. En redes modernas, los switches han reemplazado en gran medida la necesidad de métodos de acceso complejos al crear dominios de colisión separados para cada puerto.</p>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Métodos Principales</h4>
+                        <ul class="list-checkmark">
+                            <li>CSMA/CD (Carrier Sense Multiple Access with Collision Detection): Usado en Ethernet compartida</li>
+                            <li>CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance): Usado en redes inalámbricas</li>
+                            <li>Token Passing: Cada dispositivo debe obtener un token antes de transmitir</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>IEEE 802.3:</strong> Estándar Ethernet para redes locales cableadas</li>
+                        <li><strong>IEEE 802.11:</strong> Estándar para redes inalámbricas Wi-Fi</li>
+                        <li><strong>RFC 1042:</strong> Protocolo para encapsular tramas IEEE 802.2 en Ethernet</li>
+                        <li><strong>Libro "Redes de Computadoras" de Andrew Tanenbaum:</strong> Referencia clásica sobre redes</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Red_local" target="_blank">Wikipedia - Red local</a></li>
+                        <li><a href="https://www.ieee802.org/" target="_blank">IEEE 802 Standards</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/solutions/enterprise-networks/lan-switching/index.html" target="_blank">Cisco LAN Switching</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre hub y switch?</h4>
+                            <p>Un hub repite todas las tramas a todos los puertos (creando un dominio de colisión único), mientras que un switch crea dominios de colisión separados para cada puerto y puede tomar decisiones inteligentes sobre el reenvío de tramas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Por qué se prefiere la topología en estrella?</h4>
+                            <p>Ofrece mejor rendimiento, facilidad de diagnóstico, escalabilidad y confiabilidad. Un fallo en un dispositivo no afecta a los demás, y el diagnóstico se limita al segmento entre el dispositivo y el switch.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica</h3>
+                    <p>Practica tus conocimientos sobre redes locales con estos ejercicios interactivos. Pon a prueba tu comprensión de topologías, subredes y protocolos de acceso.</p>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Cálculo de Subredes</h3>
+                    <div class="exercise-question">
+                        ¿Cuántas subredes se pueden crear con una máscara de subred /26?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">2</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">4</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">6</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">8</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'b', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Identificación de Topologías</h3>
+                    <div class="exercise-question">
+                        ¿Qué topología de red tiene un punto de fallo único?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', 'Estrella', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Cálculo de Direcciones</h3>
+                    <div class="exercise-question">
+                        ¿Cuántos hosts se pueden direccionar en una red /28?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', '14', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                toggleButton.textContent = '☀️';
+            } else {
+                toggleButton.textContent = '🌙';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.textContent = '¡Correcto! ✅';
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.textContent = 'Incorrecto. Inténtalo de nuevo. ❌';
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.textContent = '¡Correcto! ✅';
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.textContent = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌`;
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+TEMA 059. CONCEPTOS Y FUNDAMENTOS
+      DE SISTEMAS OPERATIVOS
+            Actualizado a 18/04/2023
+
+
+
+
+                                       Página1 | 6
+1 DEFINICIONES
+El sistema operativo (SO) es el componente software más importante de un ordenador, ya que se ocupa
+principalmente de:
+      • Gestionar el conjunto de recursos de la máquina.
+      • Ejercer de interfaz entre los componentes hardware y el propio usuario.
+
+
+2 COMPONENTES DE UN SISTEMA OPERATIVO
+Esencialmente, un sistema operativo se ocupa de la gestión de procesos, la administración de memoria
+principal, la administración del sistema de E/S, la gestión de archivos.
+
+
+    2.1 GESTIÓN DE PROCESOS
+
+El sistema operativo debe asignar los recursos a los procesos, permitir que compartan información,
+proteger los recursos asignados y permitir la sincronización entre procesos. Para ello, el SO debe mantener
+una estructura de datos para procesos, que permite describir el estado y propiedad de los recursos y así
+permitir que el SO ejerza su actividad de control.
+
+Proceso. Programa en ejecución que se caracteriza por un conjunto de instrucciones, un estado actual y
+conjunto de recursos del sistema asociados.
+
+Multiprogramación. Es una técnica de multiplexación que proporciona la ilusión de la ejecución paralela
+de varios procesos en un único procesador.
+
+Un SO multitarea es aquel que es capaz de ejecutar varios procesos al mismo tiempo, mientras que la
+multiprogramación requiere que el procesador asigne a cada proceso durante un periodo de tiempo y se
+desasigne en el momento adecuado.
+
+Existen dos formas posibles para que el SO realice el proceso de asignación/desasignación:
+     • Mediante una llamada al sistema o interrupción software.
+     • A través de una interrupción hardware.
+
+El scheduler o planificador es el elemento del SO encargado de repartir el tiempo disponible de un
+microprocesador entre todos los procesos que están disponibles para su ejecución. Puede adoptar
+distintas políticas de planificación: round-robin, FIFO, LIFO, Shortest Job First, Shortest Remaining Time.
+
+Un proceso puede estar, como mínimo, en los estados Activo, Preparado o Bloqueado.
+
+Diagrama de estados de un proceso ampliado:
+
+
+
+
+                                                                                             Página2 | 6
+    2.2 ADMINISTRACIÓN DE MEMORIA PRINCIPAL
+
+La memoria constituye el recurso que utiliza el ordenador y gestión el SO para almacenar los datos de los
+programas que la CPU. Es responsabilidad del SO saber qué partes de la memoria está ocupadas, cuales
+libres y la gestión del conjunto de las mismas.
+
+Existen distintos algoritmos para implementar la gestión de memoria: FIFO, NRU (no usada
+recientemente), LRU (la usada menos recientemente), NFU (la no usada frecuentemente), LFU (la menos
+frecuentemente usada), aleatoria.
+
+Segmentación. Técnica que utiliza la circunstancia de que los programas se dividen en partes para asignar
+segmentos de memoria a cada parte de un programa. Es más eficiente, ya que de esta forma hay
+segmentos que pueden ser utilizados por varios programas, como por ejemplo los que alojan librerías
+compartidas.
+
+
+    2.3 ADMINISTRACIÓN DEL SISTEMA DE E/S
+
+El SO se ocupa de gestionar la comunicación con los dispositivos de E/S. Tipos de dispositivos de E/S:
+     • Orientados a bloque. Se pueden direccionar.
+     • Orientados a carácter. No se pueden direccionar y trabajan con secuencias de bytes.
+
+Driver. Parte del SO que se encarga de gobernar cierto dispositivo o un conjunto de naturaleza similar. Se
+trata de un componente software que conoce los detalles de bajo nivel del dispositivo.
+
+DMA (Direct Memory Access). Gracias a esta característica, un dispositivo es capaz de transferir datos
+entre la memoria principal y el dispositivo de E/S.
+
+PnP (Plug and play). Especificación que permite a un periférico ser conectado a un ordenador sin tener
+que configurar jumpers u otro elemento específico.
+
+
+    2.4 GESTIÓN DE ARCHIVOS
+
+El sistema de archivos es la organización que permite almacenar el conjunto de ficheros integrantes del
+sistema y aquellos pertenecientes al usuario. Su principal función es la asignación de espacio a los
+archivos, la gestión del espacio libre y el acceso a los mismos.
+
+Normalmente, los dispositivos de almacenamiento permiten el acceso a los datos como una cadena de
+bloques del mismo tamaño llamados sectores.
+
+Los sistemas de archivos proporcionan métodos para crear, mover, renombrar y eliminar tanto archivos
+como directorios.
+
+
+SISTEMAS DE FICHEROS EN WINDOWS
+
+FAT (File Allocation Table). Desarrollado originalmente para MS-DOS y utilizado como sistema de ficheros
+de las ediciones no empresariales de Windows hasta Windows Me. Se trata del formato habitual en los
+medios de almacenamiento extraíbles.
+
+HPFS (High Performance File System). Creado para superar las limitaciones de FAT. Se caracteriza por
+permitir nombres largos, metadatos e información de seguridad, así como de autocomprobación e
+información estructural.
+
+
+                                                                                            Página3 | 6
+NTFS (New Technology File system). Sistema de ficheros de Windows NT. Está basado en el sistema de
+archivos HPFS. Permite definir el tamaño del clúster a partir de 512 bytes de forma independiente al
+tamaño de la partición. La última versión (septiembre 2020) es 5.1.
+
+
+SISTEMAS DE FICHEROS EN LINUX/UNIX
+
+EXT2. Fragmentación muy baja, compatible con sistemas de ficheros grandes (admite particiones hasta
+4TB y ficheros de hasta 2GB), nombres de hasta 255 caracteres.
+
+EXT3. Mejora de ext2 y compatible con él. Con capacidades de journaling para posibilitar la recuperación
+frente a fallos del disco o apagones.
+
+EXT4. Mayor eficiencia que ext3 (menor uso de cpu y mayor velocidad de escritura y lectura) y ampliación
+de los límites de las particiones (1024PB) y ficheros (16TB).
+
+ReiserFS. Con capacidades de journaling, resulta más eficiente que ext2 y ext3 en el uso de archivos
+menores de 4k.
+
+SWAP. Sistema de ficheros para las particiones de intercambio.
+
+
+3 TIPOS DE SISTEMAS OPERATIVOS
+Según número de usuarios:
+    • Monousuario.
+    • Multiusuario.
+
+Según el número de tareas en ejecución:
+    • Multitarea.
+    • Monotarea.
+
+Según el número de procesadores:
+    • Uniprocesador.
+    • Multiprocesador.
+
+Según su estructura:
+    • Monolítica.
+    • Jerárquica.
+    • Máquina virtual.
+
+Según la forma que ofrecen sus servicios:
+    • Sistemas operativos de red.
+    • Sistemas distribuidos.
+
+
+4 EVOLUCIÓN Y TENDENCIAS
+
+
+4.1      PRIMERA GENERACIÓN (1945 – 1955)
+
+A mediados de los años 40 se comenzaron a construir los primeros computadores, que estaban basados
+en sistemas de tubos de vacío. Se caracterizaban por ocupar salas enormes y toda programación se
+realizaba en lenguaje máquina, que mejoró a principio de los años 50 con la introducción de las tarjetas
+perforadas.
+
+                                                                                          Página4 | 6
+4.2       SEGUNDA GENERACIÓN (1955 – 1965)
+
+Esta segunda generación se caracteriza por el uso masivo del transistor en la construcción de los
+ordenadores y por la explotación comercial de los mismos. De gran coste, solo las grandes corporaciones
+o instituciones gubernamentales podían permitirse su adquisición. Se utilizaba para su uso las tarjetas
+perforadas.
+
+
+4.3       TERCERA GENERACIÓN (1965 – 1980)
+
+Esta generación se caracteriza por la introducción de los circuitos integrados y la multiprogramación. A
+partir de ahí se empezaron a empaquetar varios transistores en un solo chip que contenía en su interior
+un circuito completo. Esta circunstancia hacía que fuera mucho más sencillo montar los equipos.
+Esta generación tiene una serie de ventajas frente a las anteriores: menor consumo de energía, menor
+espacio, más fiabilidad, multiprogramación.
+
+
+4.4       CUARTA GENERACIÓN (1980 - ACTUALIDAD)
+
+En esta generación se introdujo el microprocesador. Su tamaño reducido hizo posible la creación de las
+computadoras personales (PC). Tecnologías como LSI (integración a gran escala) y VLSI (integración a muy
+gran escala) permiten que gran cantidad de componentes electrónicos se almacenen en un microchip.
+
+Microprocesadores:
+    • Intel 4004. De 4 bits y desarrollado para una calculadora.
+    • Intel 8008. Contenía del orden de 3300 transistores.
+    • Intel 8080. Primer microprocesador diseñado para uso general. Con 4500 transistores y capaz de
+        ejecutar 200000 instrucciones por segundo.
+
+Computadoras de cuarta generación: PDP-10, PDP-11, Cray-1, Cray X-MP.
+
+
+4.5       TENDENCIAS
+
+El gran auge de los dispositivos móviles ha supuesto grandes avances en el desarrollo de los sistemas
+operativos para móviles.
+
+
+ANDROID
+
+Sistema operativo móvil desarrollado por Google y basado en núcleo Linux. Inicialmente fue
+implementado por Android In, compañía que Google adquirió en 2005.
+
+El código fuente del sistema se conoce como Android Open Source Project y se licencia principalmente
+bajo la licencia Apache.
+
+Posee una cuota de mercado de aproximadamente el 80%.
+
+Última versión (agosto 2022): 13 (a partir de la versión 10 se frenó la práctica de nombrar las versiones
+con nombres de postres). Se espera Andorid 14 para mayo 2023.
+
+Extensión de aplicación: .apk (variante del formato jar de java), .xapk (formato no oficial que contiene un
+.apk más los archivos de datos adicionales para que funcione el juego o la aplicación).
+
+
+
+
+                                                                                             Página5 | 6
+IOS
+
+Sistema operativo móvil de la compañía Apple Inc. Originalmente desarrollado para el iPhone (iPhone OS),
+posteriormente se adoptó para otros dispositivos como el iPod touch y el iPad.
+
+IOS se deriva de macOS, que a su vez está basado en Darwin BSD.
+
+Capas:
+    • Servicios principales.
+    • Medios.
+    • Cocoa Touch.
+
+Última versión (abril 2023): iOS 16.
+
+Extensión de aplicación: .ipa
+
+
+WINDOWS PHONE
+
+Sistema operativo móvil discontinuado y desarrollado originalmente por Microsoft como sucesor de
+Windows Mobile.
+
+Última versión: Windows Phone 8.1
+
+
+
+
+                                                                                          Página6 | 6
+

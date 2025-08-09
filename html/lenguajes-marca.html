@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lenguajes de Marca - Guía de Estudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            background: #34495e;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .tab-buttons {
+            display: flex;
+            min-width: fit-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .tab-button.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ecf0f1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #3498db;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        .check-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .check-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgb(88, 106, 95);
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .danger-box {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        .process-step {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .process-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .law-reference {
+            background: #ecf0f1;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-left: 3px solid #3498db;
+        }
+
+        .exercise-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #9b59b6;
+        }
+
+        .exercise-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+
+        .exercise-content {
+            margin-bottom: 15px;
+        }
+
+        .exercise-solution {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 3px solid #9b59b6;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ Lenguajes de Marca o Etiqueta</h1>
+            <p>Características, Funcionalidades, SGML, HTML, XML y sus Derivaciones</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab('sgml')">📜 SGML</button>
+                <button class="tab-button" onclick="showTab('html')">🌐 HTML</button>
+                <button class="tab-button" onclick="showTab('xml')">📊 XML</button>
+                <button class="tab-button" onclick="showTab('derivations')">🔄 Derivaciones</button>
+                <button class="tab-button" onclick="showTab('script')">💻 Lenguajes de Script</button>
+                <button class="tab-button" onclick="showTab('exercises')">✏️ Ejercicios</button>
+            </div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="content-card">
+                <h2>📋 Visión General de Lenguajes de Marca</h2>
+                <p>Los lenguajes de marca o etiqueta son sistemas de anotación que se utilizan para definir la estructura, presentación y significado de documentos electrónicos. Permiten separar el contenido de la presentación y ofrecen una forma estándar de intercambiar información entre diferentes sistemas.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Generaciones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label">Lenguajes Principales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Ventajas Clave</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Tipos de Marcas</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🎯 Características Principales</div>
+                    <ul class="check-list">
+                        <li><strong>Estructuración</strong> - Definición jerárquica del contenido</li>
+                        <li><strong>Separación</strong> - Contenido independiente de presentación</li>
+                        <li><strong>Interoperabilidad</strong> - Intercambio entre sistemas heterogéneos</li>
+                        <li><strong>Extensibilidad</strong> - Capacidad de definir nuevas etiquetas</li>
+                        <li><strong>Validación</strong> - Verificación de estructura y sintaxis</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔄 Evolución de los Lenguajes de Marca</div>
+                    <div class="process-step">
+                        <span class="process-number">1</span>
+                        <strong>Texto Plano</strong> - Sin estructura ni formato
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">2</span>
+                        <strong>SGML</strong> - Estándar para documentos estructurados
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">3</span>
+                        <strong>HTML</strong> - Lenguaje para hipertexto web
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">4</span>
+                        <strong>XML</strong> - Lenguaje extensible para datos
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Tipos de Marcas</h3>
+                <ul class="check-list">
+                    <li><strong>Marcas de Procedimiento</strong> - Indican cómo procesar el texto (ej: .bold, .italic)</li>
+                    <li><strong>Marcas Descriptivas</strong> - Describen qué es el texto (ej: &lt;title&gt;, &lt;paragraph&gt;)</li>
+                    <li><strong>Marcas de Presentación</strong> - Indican cómo mostrar el texto (ej: &lt;center&gt;, &lt;font&gt;)</li>
+                </ul>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔧 Componentes de un Lenguaje de Marca</h4>
+                    <ul class="check-list">
+                        <li><strong>Etiquetas</strong> - Elementos que marcan el inicio y fin de secciones</li>
+                        <li><strong>Atributos</strong> - Propiedades adicionales de las etiquetas</li>
+                        <li><strong>Elementos</strong> - Combinación de etiquetas y contenido</li>
+                        <li><strong>Documento</strong> - Estructura completa con jerarquía</li>
+                        <li><strong>DTD/Schema</strong> - Definición de estructura válida</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="sgml" class="tab-content">
+            <div class="content-card">
+                <h2>📜 SGML (Standard Generalized Markup Language)</h2>
+                <p>SGML es el estándar ISO 8879:1986 que define cómo crear lenguajes de marcado para documentos estructurados. Es el ancestro de HTML y XML.</p>
+                <div class="law-reference">Estándar ISO 8879:1986</div>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🏛️</div>
+                    <h3>Estándar</h3>
+                    <p><strong>ISO 8879:1986</strong></p>
+                    <p>• Publicado en 1986</p>
+                    <p>• Base para HTML y XML</p>
+                    <p>• Complejo pero potente</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⚙️</div>
+                    <h3>Características</h3>
+                    <p><strong>Metalinguaje</strong></p>
+                    <p>• Define otros lenguajes</p>
+                    <p>• Validación estructural</p>
+                    <p>• Separación de contenido</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">📋</div>
+                    <h3>Componentes</h3>
+                    <p><strong>Elementos básicos</strong></p>
+                    <p>• DTD (Document Type Definition)</p>
+                    <p>• SGML Declaration</p>
+                    <p>• Document Instance</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">✅ Ventajas de SGML</div>
+                    <ul class="check-list">
+                        <li><strong>Independencia</strong> - Contenido separado de presentación</li>
+                        <li><strong>Reusabilidad</strong> - Mismo contenido múltiples presentaciones</li>
+                        <li><strong>Validación</strong> - Verificación automática de estructura</li>
+                        <li><strong>Intercambio</strong> - Compatibilidad entre sistemas</li>
+                        <li><strong>Longevidad</strong> - Formato independiente de tecnología</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">❌ Desventajas de SGML</div>
+                    <ul class="check-list">
+                        <li><strong>Complejidad</strong> - Difícil de aprender y usar</li>
+                        <li><strong>Pesadez</strong> - Requiere procesadores especializados</li>
+                        <li><strong>Coste</strong> - Herramientas caras y especializadas</li>
+                        <li><strong>Sobredocumentación</strong> - Muchas etiquetas innecesarias</li>
+                        <li><strong>Poca adopción</strong> - Preferencia por alternativas más simples</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔧 Componentes de SGML</h4>
+                    <div class="process-step">
+                        <span class="process-number">1</span>
+                        <strong>SGML Declaration</strong> - Caracteres, capacidades y reglas
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">2</span>
+                        <strong>DTD (Document Type Definition)</strong> - Estructura permitida
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">3</span>
+                        <strong>Document Instance</strong> - Documento que sigue la DTD
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🔄 Lenguajes Derivados de SGML</h4>
+                    <ul class="check-list">
+                        <li><strong>HTML</strong> - Para documentos hipertexto en la web</li>
+                        <li><strong>XML</strong> - Para intercambio de datos estructurados</li>
+                        <li><strong>DocBook</strong> - Para documentación técnica</li>
+                        <li><strong>TEI</strong> - Para textos literarios y académicos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>📌 Importante: SGML vs HTML vs XML</h3>
+                <ul class="check-list">
+                    <li><strong>SGML</strong> - Metalinguaje para crear otros lenguajes de marca</li>
+                    <li><strong>HTML</strong> - Aplicación fija de SGML para web (menos estricto)</li>
+                    <li><strong>XML</strong> - Simplificación de SGML para intercambio de datos (más estricto)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="html" class="tab-content">
+            <div class="content-card">
+                <h2>🌐 HTML (HyperText Markup Language)</h2>
+                <p>HTML es el lenguaje de marcado estándar para crear páginas web. Define la estructura y presentación del contenido en la World Wide Web.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🌐</div>
+                    <h3>Versiones</h3>
+                    <p><strong>Evolución histórica</strong></p>
+                    <p>• HTML 1.0 (1991)</p>
+                    <p>• HTML 2.0 (1995)</p>
+                    <p>• HTML 4.01 (1999)</p>
+                    <p>• HTML5 (2014)</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">🏷️</div>
+                    <h3>Tipos de Etiquetas</h3>
+                    <p><strong>Categorías principales</strong></p>
+                    <p>• Estructurales (&lt;div&gt;, &lt;section&gt;)</p>
+                    <p>• Texto (&lt;p&gt;, &lt;h1&gt;-&lt;h6&gt;)</p>
+                    <p>• Multimedia (&lt;img&gt;, &lt;video&gt;)</p>
+                    <p>• Formularios (&lt;form&gt;, &lt;input&gt;)</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">📱</div>
+                    <h3>HTML5</h3>
+                    <p><strong>Nuevas características</strong></p>
+                    <p>• Semántica (&lt;header&gt;, &lt;nav&gt;)</p>
+                    <p>• APIs JavaScript</p>
+                    <p>• Elementos multimedia</p>
+                    <p>• Formularios avanzados</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🎯 Estructura de un Documento HTML</div>
+                    <div class="code-block">
+&lt;!DOCTYPE html&gt;<br>
+&lt;html lang="es"&gt;<br>
+&nbsp;&nbsp;&lt;head&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Título&lt;/title&gt;<br>
+&nbsp;&nbsp;&lt;/head&gt;<br>
+&nbsp;&nbsp;&lt;body&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Encabezado&lt;/h1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Párrafo&lt;/p&gt;<br>
+&nbsp;&nbsp;&lt;/body&gt;<br>
+&lt;/html&gt;
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔧 Elementos Semánticos HTML5</div>
+                    <ul class="check-list">
+                        <li><strong>&lt;header&gt;</strong> - Encabezado de página o sección</li>
+                        <li><strong>&lt;nav&gt;</strong> - Navegación principal</li>
+                        <li><strong>&lt;main&gt;</strong> - Contenido principal</li>
+                        <li><strong>&lt;article&gt;</strong> - Contenido independiente</li>
+                        <li><strong>&lt;section&gt;</strong> - Sección temática</li>
+                        <li><strong>&lt;aside&gt;</strong> - Contenido relacionado</li>
+                        <li><strong>&lt;footer&gt;</strong> - Pie de página o sección</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔄 Evolución de HTML</h4>
+                    <div class="process-step">
+                        <span class="process-number">1</span>
+                        <strong>HTML 1.0-2.0</strong> - Elementos básicos de texto y enlaces
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">2</span>
+                        <strong>HTML 3.2</strong> - Tablas, applets y scripts
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">3</span>
+                        <strong>HTML 4.01</strong> - Hojas de estilo y mejoras estructurales
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">4</span>
+                        <strong>HTML5</strong> - Semántica, multimedia y APIs
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>✅ Buenas Prácticas en HTML</h4>
+                    <ul class="check-list">
+                        <li><strong>Validación</strong> - Comprobar sintaxis con validadores</li>
+                        <li><strong>Accesibilidad</strong> - Atributos alt, etiquetas semánticas</li>
+                        <li><strong>SEO</strong> - Estructura correcta, meta etiquetas</li>
+                        <li><strong>Compatibilidad</strong> - Funcionamiento en diferentes navegadores</li>
+                        <li><strong>Rendimiento</strong> - Minimización y compresión</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Diferencias entre Versiones</h3>
+                <ul class="check-list">
+                    <li><strong>HTML 4.01</strong> - Tres DOCTYPES (Strict, Transitional, Frameset)</li>
+                    <li><strong>XHTML</strong> - HTML que sigue reglas XML (etiquetas cerradas, minúsculas)</li>
+                    <li><strong>HTML5</strong> - DOCTYPE simplificado, elementos semánticos, APIs JavaScript</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="xml" class="tab-content">
+            <div class="content-card">
+                <h2>📊 XML (eXtensible Markup Language)</h2>
+                <p>XML es un lenguaje de marcado extensible diseñado para almacenar y transportar datos. Es una simplificación de SGML enfocada en el intercambio de información entre sistemas.</p>
+                <div class="law-reference">Estándar W3C desde 1998</div>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📊</div>
+                    <h3>Características</h3>
+                    <p><strong>Principios básicos</strong></p>
+                    <p>• Extensible</p>
+                    <p>• Auto-descriptivo</p>
+                    <p>• Validable</p>
+                    <p>• Plataforma independiente</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">📋</div>
+                    <h3>Reglas Sintácticas</h3>
+                    <p><strong>Requisitos XML</strong></p>
+                    <p>• Etiquetas cerradas</p>
+                    <p>• Sensible a mayúsculas</p>
+                    <p>• Bien anidado</p>
+                    <p>• Un solo elemento raíz</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⚙️</div>
+                    <h3>Validación</h3>
+                    <p><strong>Métodos de validación</strong></p>
+                    <p>• DTD (Document Type Definition)</p>
+                    <p>• XSD (XML Schema Definition)</p>
+                    <p>• Relax NG</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🎯 Sintaxis Básica de XML</div>
+                    <div class="code-block">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;catalogo&gt;<br>
+&nbsp;&nbsp;&lt;producto id="1"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;nombre&gt;Portátil&lt;/nombre&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;precio moneda="EUR"&gt;899.99&lt;/precio&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;categoría&gt;Electrónica&lt;/categoría&gt;<br>
+&nbsp;&nbsp;&lt;/producto&gt;<br>
+&lt;/catalogo&gt;
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔧 Componentes de XML</div>
+                    <ul class="check-list">
+                        <li><strong>Declaración XML</strong> - &lt;?xml version="1.0"?&gt;</li>
+                        <li><strong>Elementos</strong> - Etiquetas que contienen datos</li>
+                        <li><strong>Atributos</strong> - Propiedades de los elementos</li>
+                        <li><strong>Entidades</strong> - Referencias a caracteres especiales</li>
+                        <li><strong>Namespaces</strong> - Evitar conflictos de nombres</li>
+                        <li><strong>CDATA</strong> - Secciones de texto sin procesar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔄 Tecnologías Relacionadas con XML</h4>
+                    <ul class="check-list">
+                        <li><strong>XSLT</strong> - Transformación de documentos XML</li>
+                        <li><strong>XPath</strong> - Navegación y selección de nodos</li>
+                        <li><strong>XQuery</strong> - Consulta de datos XML</li>
+                        <li><strong>XSD/DTD</strong> - Validación de estructura</li>
+                        <li><strong>SOAP</strong> - Protocolo de comunicación web</li>
+                        <li><strong>SVG</strong> - Gráficos vectoriales escalables</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>✅ Ventajas de XML</h4>
+                    <ul class="check-list">
+                        <li><strong>Interoperabilidad</strong> - Intercambio entre sistemas heterogéneos</li>
+                        <li><strong>Auto-descriptivo</strong> - Estructura y datos en un solo documento</li>
+                        <li><strong>Validable</strong> - Verificación de estructura con DTD/XSD</li>
+                        <li><strong>Extensible</strong> - Definición de nuevas etiquetas</li>
+                        <li><strong>Plataforma independiente</strong> - Funciona en cualquier sistema</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Consideraciones Importantes</h3>
+                <ul class="check-list">
+                    <li><strong>Verbosidad</strong> - Documentos más grandes que formatos binarios</li>
+                    <li><strong>Procesamiento</strong> - Requiere parsers especializados</li>
+                    <li><strong>Rendimiento</strong> - Más lento que formatos binarios</li>
+                    <li><strong>Validación</strong> - Necesidad de DTD/XSD para asegurar calidad</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="derivations" class="tab-content">
+            <div class="content-card">
+                <h2>🔄 Derivaciones de Lenguajes de Marca</h2>
+                <p>Las derivaciones de lenguajes de marca son aplicaciones específicas de SGML o XML diseñadas para dominios particulares, como MathML para matemáticas o SVG para gráficos vectoriales.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📐</div>
+                    <h3>MathML</h3>
+                    <p><strong>Matemáticas en web</strong></p>
+                    <p>• Ecuaciones matemáticas</p>
+                    <p>• Notación estructurada</p>
+                    <p>• Integración HTML5</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">🎨</div>
+                    <h3>SVG</h3>
+                    <p><strong>Gráficos vectoriales</strong></p>
+                    <p>• Imágenes escalables</p>
+                    <p>• Animaciones</p>
+                    <p>• Interactividad</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">📱</div>
+                    <h3>WML</h3>
+                    <p><strong>Wireless Markup</strong></p>
+                    <p>• Dispositivos móviles</p>
+                    <p>• Banda ancha limitada</p>
+                    <p>• Pantallas pequeñas</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🎯 MathML (Mathematical Markup Language)</div>
+                    <ul class="check-list">
+                        <li><strong>Propósito</strong> - Representar notación matemática en web</li>
+                        <li><strong>Estándar</strong> - Recomendación W3C</li>
+                        <li><strong>Componentes</strong> - Presentation Markup y Content Markup</li>
+                        <li><strong>Integración</strong> - Incluido directamente en HTML5</li>
+                        <li><strong>Renderizado</strong> - Soportado por navegadores modernos</li>
+                    </ul>
+                    <div class="code-block">
+&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;<br>
+&nbsp;&nbsp;&lt;mrow&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;msup&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mi&gt;x&lt;/mi&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mn&gt;2&lt;/mn&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/msup&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;mo&gt;+&lt;/mo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;mrow&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mn&gt;4&lt;/mn&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mi&gt;x&lt;/mi&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/mrow&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;mo&gt;+&lt;/mo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;mn&gt;4&lt;/mn&gt;<br>
+&nbsp;&nbsp;&lt;/mrow&gt;<br>
+&lt;/math&gt;
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">📊 SVG (Scalable Vector Graphics)</div>
+                    <ul class="check-list">
+                        <li><strong>Propósito</strong> - Gráficos vectoriales bidimensionales</li>
+                        <li><strong>Formato</strong> - Basado en XML</li>
+                        <li><strong>Características</strong> - Escalable, animable, interactiva</li>
+                        <li><strong>Integración</strong> - Incluido en HTML5</li>
+                        <li><strong>Ventajas</strong> - Resolución independiente, editable</li>
+                    </ul>
+                    <div class="code-block">
+&lt;svg width="100" height="100"&gt;<br>
+&nbsp;&nbsp;&lt;circle cx="50" cy="50" r="40"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stroke="green" stroke-width="4" fill="yellow" /&gt;<br>
+&lt;/svg&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔄 Otras Derivaciones Importantes</h4>
+                    <ul class="check-list">
+                        <li><strong>DocBook</strong> - Documentación técnica y libros</li>
+                        <li><strong>TEI</strong> - Textos literarios y académicos</li>
+                        <li><strong>RSS/Atom</strong> - Sindicación de contenido web</li>
+                        <li><strong>KML</strong> - Visualización geográfica (Google Earth)</li>
+                        <li><strong>OPML</strong> - Contornos y listas de suscripción</li>
+                        <li><strong>MusicXML</strong> - Notación musical digital</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>✅ Beneficios de las Derivaciones</h4>
+                    <ul class="check-list">
+                        <li><strong>Especialización</strong> - Soluciones específicas para dominios</li>
+                        <li><strong>Estándares</strong> - Basadas en SGML/XML probados</li>
+                        <li><strong>Interoperabilidad</strong> - Compatibles con herramientas XML</li>
+                        <li><strong>Extensibilidad</strong> - Capacidad de ampliación</li>
+                        <li><strong>Mantenimiento</strong> - Estructura clara y documentada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Tendencias Actuales</h3>
+                <ul class="check-list">
+                    <li><strong>JSON</strong> - Alternativa ligera a XML para APIs</li>
+                    <li><strong>YAML</strong> - Formato más legible para configuración</li>
+                    <li><strong>Markdown</strong> - Lenguaje de marcado ligero para documentación</li>
+                    <li><strong>Web Components</strong> - Componentes reutilizables en HTML</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="script" class="tab-content">
+            <div class="content-card">
+                <h2>💻 Lenguajes de Script</h2>
+                <p>Los lenguajes de script son lenguajes de programación interpretados que se utilizan para automatizar tareas, añadir interactividad a páginas web y procesar documentos marcados.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🌐</div>
+                    <h3>JavaScript</h3>
+                    <p><strong>Cliente y servidor</strong></p>
+                    <p>• Dinamismo web</p>
+                    <p>• Manipulación DOM</p>
+                    <p>• Frameworks modernos</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">🔧</div>
+                    <h3>Python</h3>
+                    <p><strong>Automatización</strong></p>
+                    <p>• Procesamiento XML</p>
+                    <p>• Scripts del sistema</p>
+                    <p>• Inteligencia artificial</p>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">⚙️</div>
+                    <h3>PHP</h3>
+                    <p><strong>Servidor web</strong></p>
+                    <p>• Generación dinámica</p>
+                    <p>• Procesamiento formularios</p>
+                    <p>• Conexión bases datos</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">🎯 JavaScript en el Contexto Web</div>
+                    <ul class="check-list">
+                        <li><strong>Cliente</strong> - Ejecución en navegador (front-end)</li>
+                        <li><strong>Servidor</strong> - Node.js (back-end)</li>
+                        <li><strong>Manipulación DOM</strong> - Modificación dinámica de HTML/XML</li>
+                        <li><strong>Eventos</strong> - Respuesta a acciones del usuario</li>
+                        <li><strong>APIs</strong> - Comunicación con servicios web</li>
+                        <li><strong>Frameworks</strong> - React, Angular, Vue.js</li>
+                    </ul>
+                    <div class="code-block">
+// Ejemplo de manipulación de DOM<br>
+document.getElementById("demo").innerHTML =<br>
+&nbsp;&nbsp;"¡Hola Mundo!";
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">🔧 Procesamiento de Documentos con Scripts</div>
+                    <ul class="check-list">
+                        <li><strong>Transformación</strong> - Conversión entre formatos (XSLT)</li>
+                        <li><strong>Validación</strong> - Comprobación de estructura y contenido</li>
+                        <li><strong>Extracción</strong> - Obtención de datos específicos</li>
+                        <li><strong>Generación</strong> - Creación automática de documentos</li>
+                        <li><strong>Automatización</strong> - Tareas repetitivas y procesamiento por lotes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔄 Lenguajes de Script Comunes</h4>
+                    <div class="process-step">
+                        <span class="process-number">1</span>
+                        <strong>JavaScript</strong> - Principal lenguaje web
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">2</span>
+                        <strong>Python</strong> - Multipropósito, fácil de aprender
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">3</span>
+                        <strong>PHP</strong> - Especializado en desarrollo web
+                    </div>
+                    <div class="process-step">
+                        <span class="process-number">4</span>
+                        <strong>Perl</strong> - Procesamiento de texto avanzado
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>✅ Casos de Uso en Procesamiento de Marcas</h4>
+                    <ul class="check-list">
+                        <li><strong>Web Scraping</strong> - Extracción de datos de sitios web</li>
+                        <li><strong>Transformación de formatos</strong> - XML a JSON, HTML a PDF</li>
+                        <li><strong>Generación de informes</strong> - A partir de datos estructurados</li>
+                        <li><strong>Validación automatizada</strong> - Comprobación de documentos</li>
+                        <li><strong>Integración de sistemas</strong> - Conexión entre aplicaciones</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>⚠️ Consideraciones de Seguridad</h3>
+                <ul class="check-list">
+                    <li><strong>Sanitización</strong> - Validación de entradas para evitar inyecciones</li>
+                    <li><strong>Cross-Site Scripting</strong> - Protección contra scripts maliciosos</li>
+                    <li><strong>Acceso a archivos</strong> - Control de permisos y ubicaciones</li>
+                    <li><strong>Ejecución remota</strong> - Precaución con código de fuentes externas</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="content-card">
+                <h2>✏️ Ejercicios de Lenguajes de Marca</h2>
+                <p>Practica con estos ejercicios para reforzar tu conocimiento sobre lenguajes de marca y sus derivaciones.</p>
+            </div>
+
+            <div class="exercise-card">
+                <div class="exercise-title">Ejercicio 1: Identificación de Lenguajes de Marca</div>
+                <div class="exercise-content">
+                    <p><strong>Enunciado:</strong> Identifica qué tipo de lenguaje de marca se está utilizando en cada uno de los siguientes casos:</p>
+                    <ol>
+                        <li>Documento que define la estructura de un libro técnico con capítulos, secciones y ejemplos de código.</li>
+                        <li>Página web que muestra información de productos con imágenes, descripciones y precios.</li>
+                        <li>Archivo que contiene información de empleados con campos como nombre, departamento, salario y fecha de contratación.</li>
+                        <li>Documento matemático que representa ecuaciones complejas con símbolos y notación especial.</li>
+                    </ol>
+                </div>
+                <div class="exercise-solution">
+                    <p><strong>Solución:</strong></p>
+                    <ol>
+                        <li><strong>DocBook</strong> - Lenguaje derivado de SGML/XML para documentación técnica.</li>
+                        <li><strong>HTML</strong> - Lenguaje para páginas web con contenido multimedia.</li>
+                        <li><strong>XML</strong> - Lenguaje extensible para estructurar datos de empleados.</li>
+                        <li><strong>MathML</strong> - Derivación de XML para representación matemática.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="exercise-title">Ejercicio 2: Creación de Documento XML</div>
+                <div class="exercise-content">
+                    <p><strong>Enunciado:</strong> Crea un documento XML bien formado que represente la siguiente información de una biblioteca:</p>
+                    <ul>
+                        <li>Biblioteca "Miguel de Cervantes"</li>
+                        <li>Libros:
+                            <ul>
+                                <li>"Don Quijote de la Mancha" por Miguel de Cervantes, 1605, ISBN: 978-84-9759-566-9</li>
+                                <li>"La Celestina" por Fernando de Rojas, 1499, ISBN: 978-84-9759-567-6</li>
+                                <li>"La Regenta" por Leopoldo Alas "Clarín", 1884-1885, ISBN: 978-84-9759-568-3</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="exercise-solution">
+                    <p><strong>Solución:</strong></p>
+                    <div class="code-block">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;biblioteca nombre="Miguel de Cervantes"&gt;<br>
+&nbsp;&nbsp;&lt;libros&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;libro isbn="978-84-9759-566-9"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;Don Quijote de la Mancha&lt;/titulo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Miguel de Cervantes&lt;/autor&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;anio&gt;1605&lt;/anio&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/libro&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;libro isbn="978-84-9759-567-6"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;La Celestina&lt;/titulo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Fernando de Rojas&lt;/autor&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;anio&gt;1499&lt;/anio&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/libro&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;libro isbn="978-84-9759-568-3"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;La Regenta&lt;/titulo&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Leopoldo Alas "Clarín"&lt;/autor&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;anio&gt;1884-1885&lt;/anio&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/libro&gt;<br>
+&nbsp;&nbsp;&lt;/libros&gt;<br>
+&lt;/biblioteca&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="exercise-title">Ejercicio 3: Validación de Documentos</div>
+                <div class="exercise-content">
+                    <p><strong>Enunciado:</strong> Identifica los errores en el siguiente documento XML y corrígelos:</p>
+                    <div class="code-block">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;catalogo&gt;<br>
+&nbsp;&nbsp;&lt;producto id="1"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;nombre&gt;Teclado&lt;/nombre&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;precio moneda="EUR"&gt;29.99&lt;/precio&gt;<br>
+&nbsp;&nbsp;&lt;producto id="2"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;nombre&gt;Ratón&lt;/nombre&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;precio moneda="EUR"&gt;15.50&lt;/precio&gt;<br>
+&nbsp;&nbsp;&lt;/producto&gt;<br>
+&lt;/catalogo&gt;
+                    </div>
+                </div>
+                <div class="exercise-solution">
+                    <p><strong>Solución:</strong></p>
+                    <p><strong>Errores identificados:</strong></p>
+                    <ul>
+                        <li>El primer elemento &lt;producto&gt; no está cerrado correctamente (falta &lt;/producto&gt;).</li>
+                    </ul>
+                    <p><strong>Documento corregido:</strong></p>
+                    <div class="code-block">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;catalogo&gt;<br>
+&nbsp;&nbsp;&lt;producto id="1"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;nombre&gt;Teclado&lt;/nombre&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;precio moneda="EUR"&gt;29.99&lt;/precio&gt;<br>
+&nbsp;&nbsp;&lt;/producto&gt;<br>
+&nbsp;&nbsp;&lt;producto id="2"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;nombre&gt;Ratón&lt;/nombre&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;precio moneda="EUR"&gt;15.50&lt;/precio&gt;<br>
+&nbsp;&nbsp;&lt;/producto&gt;<br>
+&lt;/catalogo&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="exercise-title">Ejercicio 4: Comparación de Lenguajes</div>
+                <div class="exercise-content">
+                    <p><strong>Enunciado:</strong> Compara HTML, XML y JSON en términos de:</p>
+                    <ul>
+                        <li>Propósito principal</li>
+                        <li>Sintaxis</li>
+                        <li>Uso común</li>
+                        <li>Extensibilidad</li>
+                        <li>Validación</li>
+                    </ul>
+                </div>
+                <div class="exercise-solution">
+                    <p><strong>Solución:</strong></p>
+                    <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                        <tr>
+                            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Característica</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">HTML</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">XML</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">JSON</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Propósito</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Páginas web</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Intercambio de datos</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Intercambio de datos</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Sintaxis</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Etiquetas predefinidas</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Etiquetas personalizadas</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Formato clave-valor</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Uso común</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Web browsers</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Configuración, APIs</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">APIs web, configuración</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Extensibilidad</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Limitada</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Alta</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Moderada</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Validación</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">DTD, Schema</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">DTD, XSD, Relax NG</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Schema (JSON Schema)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Animación de aparición de elementos
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card, .stat-card, .info-card, .resource-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(20px)';
+                        entry.target.style.animation = 'fadeIn 0.6s ease forwards';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
