@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 10: Gestión de Atención a Clientes y Usuarios - Preparatic</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --background-color: #1a1a1a;
+            --surface-color: #2d2d2d;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --hover-color: #3a3a3a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --hover-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,0 1000,100 0,20"/></svg>') repeat-x;
+            background-size: 100px 100px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: var(--surface-color);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+            border: 2px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .content-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: var(--text-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.4em;
+            position: relative;
+        }
+
+        .content-section h3::before {
+            content: "▶";
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--secondary-color)10, var(--secondary-color)20);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)10, var(--warning-color)20);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)10, var(--info-color)20);
+            border-left: 4px solid var(--info-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--hover-color);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .list-checkmark li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .metric-card h3 {
+            font-size: 2em;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .metric-card h3::before {
+            content: "";
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 150px;
+            padding: 1rem;
+            background: var(--surface-color);
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .process-step::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 1.5em;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .hot-tip {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .hot-tip::before {
+            content: "🔥 TIP CALIENTE: ";
+            font-weight: bold;
+        }
+
+        .exam-alert {
+            background: linear-gradient(135deg, var(--warning-color), #d35400);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .exam-alert::before {
+            content: "⚠️ IMPORTANTE PARA EXAMEN: ";
+            font-weight: bold;
+        }
+
+        .sla-meter {
+            width: 100%;
+            height: 30px;
+            background: #ddd;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .sla-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="header-content">
+            <h1>🎧 Gestión de Atención a Clientes y Usuarios</h1>
+            <p>Service Desk, ITIL, CRM y Experiencia de Usuario</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab('service-desk')">🎯 Service Desk</button>
+                <button class="tab-button" onclick="showTab('itil')">📚 ITIL Service Management</button>
+                <button class="tab-button" onclick="showTab('tools')">🛠️ Herramientas</button>
+                <button class="tab-button" onclick="showTab('metrics')">📊 Métricas y KPIs</button>
+                <button class="tab-button" onclick="showTab('best-practices')">✨ Mejores Prácticas</button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="content-section">
+                    <h2>📋 Visión General - Gestión de Atención a Clientes</h2>
+
+                    <div class="highlight-box">
+                        <h3>📊 Estadísticas Clave para Examen</h3>
+                        <div class="grid-container">
+                            <div class="metric-card">
+                                <h3>70%</h3>
+                                <p>De incidencias resueltas en primer nivel</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>20 seg</h3>
+                                <p>Tiempo medio de respuesta objetivo</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>95%</h3>
+                                <p>SLA típico de disponibilidad</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>15-20€</h3>
+                                <p>Coste medio por ticket resuelto</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        En exámenes preguntan sobre: diferencia entre Service Desk y Help Desk, niveles de soporte, SLAs típicos, procesos ITIL de gestión de incidencias y problemas.
+                    </div>
+
+                    <h3>🏛️ Evolución del Soporte TI</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4><strong>1980s:</strong> Help Desk Tradicional</h4>
+                            <p>Soporte reactivo, telefónico, sin herramientas especializadas. Foco en resolver problemas técnicos básicos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1990s:</strong> Call Center</h4>
+                            <p>Centralización de llamadas, primeros sistemas de tickets, métricas básicas como tiempo de respuesta.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2000s:</strong> Service Desk ITIL</h4>
+                            <p>Adopción de ITIL v2, procesos estructurados, SLAs formales, gestión de incidencias y problemas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2010s:</strong> Service Desk Multicanal</h4>
+                            <p>Email, chat, portal web, apps móviles. Autoservicio, base de conocimiento, ITIL v3.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2020s:</strong> Service Desk Inteligente</h4>
+                            <p>IA/ML, chatbots, predicción de incidencias, automatización, ITIL 4, experiencia de empleado (EX).</p>
+                        </div>
+                    </div>
+
+                    <h3>🎯 Conceptos Fundamentales</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Definición</th>
+                                <th>Características</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Help Desk</strong></td>
+                                <td>Soporte técnico básico</td>
+                                <td>Reactivo, un solo canal, técnico</td>
+                                <td>Reset de contraseñas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Desk</strong></td>
+                                <td>Punto único de contacto (SPOC)</td>
+                                <td>Proactivo, multicanal, procesos ITIL</td>
+                                <td>Gestión integral de servicios TI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contact Center</strong></td>
+                                <td>Centro de contacto multicanal</td>
+                                <td>Omnicanal, orientado a cliente</td>
+                                <td>Ventas + soporte + retención</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NOC</strong></td>
+                                <td>Network Operations Center</td>
+                                <td>Monitorización 24x7, infraestructura</td>
+                                <td>Supervisión de red y servidores</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOC</strong></td>
+                                <td>Security Operations Center</td>
+                                <td>Seguridad, respuesta a incidentes</td>
+                                <td>Detección y respuesta a ciberataques</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        DIFERENCIA CLAVE: Help Desk es reactivo y técnico. Service Desk es proactivo y orientado a servicios de negocio. Esta distinción es pregunta frecuente en exámenes.
+                    </div>
+
+                    <h3>📐 Modelos de Service Desk</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🏢 Centralizado</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Un único punto</strong> de contacto</li>
+                                <li><strong>Economías de escala</strong></li>
+                                <li><strong>Consistencia</strong> en el servicio</li>
+                                <li><strong>Mejor control</strong> y métricas</li>
+                            </ul>
+                            <p><strong>Ideal para:</strong> Organizaciones medianas con ubicación única.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🌍 Distribuido</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Múltiples ubicaciones</strong></li>
+                                <li><strong>Conocimiento local</strong></li>
+                                <li><strong>Idiomas y culturas</strong> diferentes</li>
+                                <li><strong>Horarios extendidos</strong></li>
+                            </ul>
+                            <p><strong>Ideal para:</strong> Multinacionales con presencia global.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔄 Virtual</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Agentes remotos</strong></li>
+                                <li><strong>Tecnología cloud</strong></li>
+                                <li><strong>Flexibilidad horaria</strong></li>
+                                <li><strong>Reducción de costes</strong></li>
+                            </ul>
+                            <p><strong>Ideal para:</strong> Empresas digitales, startups.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🤝 Externalizado</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Outsourcing completo</strong></li>
+                                <li><strong>SLAs contractuales</strong></li>
+                                <li><strong>Expertise especializado</strong></li>
+                                <li><strong>Costes variables</strong></li>
+                            </ul>
+                            <p><strong>Ideal para:</strong> Empresas sin core TI.</p>
+                        </div>
+                    </div>
+
+                    <h3>🔄 Niveles de Soporte</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <h4>Nivel 0</h4>
+                            <p>Autoservicio</p>
+                            <small>Portal, FAQ, KB</small>
+                        </div>
+                        <div class="process-step">
+                            <h4>Nivel 1</h4>
+                            <p>First Line</p>
+                            <small>70% resolución</small>
+                        </div>
+                        <div class="process-step">
+                            <h4>Nivel 2</h4>
+                            <p>Especialistas</p>
+                            <small>25% resolución</small>
+                        </div>
+                        <div class="process-step">
+                            <h4>Nivel 3</h4>
+                            <p>Expertos/Vendors</p>
+                            <small>5% resolución</small>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        REGLA 70-20-10: El 70% de incidencias debe resolverse en Nivel 1, 20% en Nivel 2, y 10% en Nivel 3. Si no se cumple, revisar formación y procedimientos.
+                    </div>
+                </div>
+            </div>
+
+            <div id="service-desk" class="tab-content">
+                <div class="content-section">
+                    <h2>🎯 Service Desk - Punto Único de Contacto</h2>
+
+                    <h3>🏗️ Funciones del Service Desk</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Funciones Principales según ITIL</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Punto Único de Contacto (SPOC)</strong> entre usuarios y TI</li>
+                            <li><strong>Registro y clasificación</strong> de todas las solicitudes</li>
+                            <li><strong>Resolución en primer nivel</strong> cuando sea posible</li>
+                            <li><strong>Escalado</strong> a grupos especializados</li>
+                            <li><strong>Seguimiento</strong> hasta cierre</li>
+                            <li><strong>Comunicación</strong> con usuarios</li>
+                            <li><strong>Reporting</strong> y métricas de servicio</li>
+                        </ul>
+                    </div>
+
+                    <h3>📞 Canales de Atención</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>☎️ Teléfono</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> Inmediato, personal</li>
+                                <li><strong>Desventajas:</strong> Costoso, no escalable</li>
+                                <li><strong>Uso:</strong> Urgencias, usuarios VIP</li>
+                                <li><strong>Métricas:</strong> ASA, FCR, AHT</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📧 Email</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> Asíncrono, documentado</li>
+                                <li><strong>Desventajas:</strong> Lento, malentendidos</li>
+                                <li><strong>Uso:</strong> Solicitudes no urgentes</li>
+                                <li><strong>Métricas:</strong> Tiempo respuesta, backlog</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>💬 Chat/Mensajería</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> Rápido, multitarea</li>
+                                <li><strong>Desventajas:</strong> Requiere disponibilidad</li>
+                                <li><strong>Uso:</strong> Consultas rápidas</li>
+                                <li><strong>Métricas:</strong> Chats simultáneos, CSAT</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🌐 Portal Web</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> 24x7, autoservicio</li>
+                                <li><strong>Desventajas:</strong> Requiere formación</li>
+                                <li><strong>Uso:</strong> Tickets, consulta estado</li>
+                                <li><strong>Métricas:</strong> Adopción, deflection rate</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📱 App Móvil</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> Accesible, notificaciones</li>
+                                <li><strong>Desventajas:</strong> Desarrollo costoso</li>
+                                <li><strong>Uso:</strong> Usuarios móviles</li>
+                                <li><strong>Métricas:</strong> MAU, engagement</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🤖 Chatbot/IA</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ventajas:</strong> 24x7, escalable</li>
+                                <li><strong>Desventajas:</strong> Limitado, impersonal</li>
+                                <li><strong>Uso:</strong> FAQ, reset passwords</li>
+                                <li><strong>Métricas:</strong> Containment rate</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>📋 Gestión de Tickets</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Descripción</th>
+                                <th>Responsable</th>
+                                <th>SLA Timer</th>
+                                <th>Acciones</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Nuevo</strong></td>
+                                <td>Ticket recién creado</td>
+                                <td>Sistema</td>
+                                <td>Iniciado</td>
+                                <td>Asignar agente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Asignado</strong></td>
+                                <td>Ticket con responsable</td>
+                                <td>Agente L1</td>
+                                <td>Corriendo</td>
+                                <td>Analizar, resolver o escalar</td>
+                            </tr>
+                            <tr>
+                                <td><strong>En Progreso</strong></td>
+                                <td>Siendo trabajado</td>
+                                <td>Agente asignado</td>
+                                <td>Corriendo</td>
+                                <td>Investigar, documentar</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Escalado</strong></td>
+                                <td>Transferido a L2/L3</td>
+                                <td>Grupo especialista</td>
+                                <td>Corriendo</td>
+                                <td>Resolver técnicamente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>En Espera</strong></td>
+                                <td>Esperando info/acción</td>
+                                <td>Usuario/Tercero</td>
+                                <td>Pausado</td>
+                                <td>Seguimiento</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resuelto</strong></td>
+                                <td>Solución aplicada</td>
+                                <td>Agente</td>
+                                <td>Detenido</td>
+                                <td>Confirmar con usuario</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cerrado</strong></td>
+                                <td>Confirmado y finalizado</td>
+                                <td>Sistema/Usuario</td>
+                                <td>Finalizado</td>
+                                <td>Encuesta satisfacción</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Reabierto</strong></td>
+                                <td>No resuelto correctamente</td>
+                                <td>Agente original</td>
+                                <td>Reiniciado</td>
+                                <td>Nueva investigación</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        Estados críticos para SLA: "En Espera" pausa el reloj SLA (esperando al usuario). "Escalado" NO pausa el SLA (sigue siendo responsabilidad de TI).
+                    </div>
+
+                    <h3>🎯 Categorización y Priorización</h3>
+                    <div class="highlight-box">
+                        <h4>📊 Matriz de Prioridad</h4>
+                        <p><strong>Prioridad = Impacto × Urgencia</strong></p>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Impacto\Urgencia</th>
+                                <th>Alta</th>
+                                <th>Media</th>
+                                <th>Baja</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Alto</strong></td>
+                                <td style="background: #c0392b; color: white;">P1 - Crítica</td>
+                                <td style="background: #e74c3c; color: white;">P2 - Alta</td>
+                                <td style="background: #f39c12; color: white;">P3 - Media</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Medio</strong></td>
+                                <td style="background: #e74c3c; color: white;">P2 - Alta</td>
+                                <td style="background: #f39c12; color: white;">P3 - Media</td>
+                                <td style="background: #3498db; color: white;">P4 - Baja</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bajo</strong></td>
+                                <td style="background: #f39c12; color: white;">P3 - Media</td>
+                                <td style="background: #3498db; color: white;">P4 - Baja</td>
+                                <td style="background: #27ae60; color: white;">P5 - Muy Baja</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📈 Definición de Impacto</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Alto:</strong> Servicio crítico caído, múltiples usuarios</li>
+                                <li><strong>Medio:</strong> Degradación de servicio, grupo usuarios</li>
+                                <li><strong>Bajo:</strong> Sin impacto en servicio, usuario individual</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>⏰ Definición de Urgencia</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Alta:</strong> Necesita resolución inmediata</li>
+                                <li><strong>Media:</strong> Puede esperar horas/días</li>
+                                <li><strong>Baja:</strong> Puede planificarse</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🔄 Proceso de Escalado</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>⬆️ Escalado Funcional</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Transferencia a especialistas</strong></li>
+                                <li><strong>Por complejidad técnica</strong></li>
+                                <li><strong>Mantiene prioridad</strong></li>
+                                <li><strong>L1 → L2 → L3</strong></li>
+                            </ul>
+                            <div class="code-block">
+Ejemplo: Usuario no puede imprimir
+L1: Verifica drivers, cola → No resuelve
+L2: Revisa servidor de impresión → No resuelve  
+L3: Contacta fabricante impresora → Firmware bug
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>📈 Escalado Jerárquico</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Elevación a management</strong></li>
+                                <li><strong>Por impacto o insatisfacción</strong></li>
+                                <li><strong>Aumenta prioridad</strong></li>
+                                <li><strong>Agente → Supervisor → Manager</strong></li>
+                            </ul>
+                            <div class="code-block">
+Ejemplo: CEO no puede acceder a email
+- Escalado directo a CIO
+- Prioridad máxima P1
+- Todos los recursos disponibles
+- Comunicación ejecutiva
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        DIFERENCIA CLAVE EXAMEN: Escalado funcional = más expertise técnico. Escalado jerárquico = más autoridad/recursos. Ambos pueden ocurrir simultáneamente.
+                    </div>
+
+                    <h3>📚 Base de Conocimiento (KB)</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Componentes de una KB Efectiva</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Artículos de solución:</strong> How-to, guías paso a paso</li>
+                            <li><strong>FAQs:</strong> Preguntas frecuentes categorizadas</li>
+                            <li><strong>Known Errors:</strong> Errores conocidos y workarounds</li>
+                            <li><strong>Políticas y procedimientos:</strong> Documentación oficial</li>
+                            <li><strong>Videos y tutoriales:</strong> Contenido multimedia</li>
+                            <li><strong>Scripts y herramientas:</strong> Automatización L1</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Métrica KB</th>
+                                <th>Objetivo</th>
+                                <th>Cálculo</th>
+                                <th>Benchmark</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Cobertura</strong></td>
+                                <td>% incidencias con KB</td>
+                                <td>Artículos KB / Total tipos incidencias</td>
+                                <td>&gt; 80%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Utilización</strong></td>
+                                <td>Uso de KB por agentes</td>
+                                <td>Consultas KB / Total tickets</td>
+                                <td>&gt; 60%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efectividad</strong></td>
+                                <td>Resolución con KB</td>
+                                <td>Tickets resueltos con KB / Total uso KB</td>
+                                <td>&gt; 70%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actualización</strong></td>
+                                <td>Frecuencia de update</td>
+                                <td>Artículos actualizados / mes</td>
+                                <td>&gt; 10%</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        REGLA DE ORO KB: Si el mismo problema ocurre 3 veces, debe documentarse en la KB. Revisar artículos no usados en 6 meses para actualizar o retirar.
+                    </div>
+                </div>
+            </div>
+
+            <div id="itil" class="tab-content">
+                <div class="content-section">
+                    <h2>📚 ITIL Service Management</h2>
+
+                    <h3>🔄 Gestión de Incidencias (Incident Management)</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Definición ITIL</h4>
+                        <p><strong>Incidencia:</strong> Interrupción no planificada de un servicio de TI o reducción en la calidad de un servicio de TI.</p>
+                        <p><strong>Objetivo:</strong> Restaurar el servicio normal lo antes posible y minimizar el impacto adverso en las operaciones del negocio.</p>
+                    </div>
+
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <h4>1. Identificación</h4>
+                            <p>Detección</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>2. Registro</h4>
+                            <p>Logging</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>3. Categorización</h4>
+                            <p>Clasificación</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>4. Priorización</h4>
+                            <p>Impacto×Urgencia</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>5. Diagnóstico</h4>
+                            <p>Investigación</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>6. Resolución</h4>
+                            <p>Fix/Workaround</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>7. Cierre</h4>
+                            <p>Verificación</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>✅ Buenas Prácticas</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Registrar TODO</strong> desde el inicio</li>
+                                <li><strong>No cambiar prioridad</strong> sin justificación</li>
+                                <li><strong>Documentar acciones</strong> tomadas</li>
+                                <li><strong>Comunicar proactivamente</strong></li>
+                                <li><strong>Verificar con usuario</strong> antes de cerrar</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>❌ Errores Comunes</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Resolver sin registrar</strong></li>
+                                <li><strong>Cerrar sin confirmación</strong></li>
+                                <li><strong>Escalar prematuramente</strong></li>
+                                <li><strong>No actualizar al usuario</strong></li>
+                                <li><strong>Confundir con problema</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        DIFERENCIA CRÍTICA: Incidencia = restaurar servicio RÁPIDO (workaround OK). Problema = encontrar causa raíz (solución definitiva). Una incidencia puede no tener problema asociado.
+                    </div>
+
+                    <h3>🔍 Gestión de Problemas (Problem Management)</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Gestión de Incidencias</th>
+                                <th>Gestión de Problemas</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Objetivo</strong></td>
+                                <td>Restaurar servicio rápidamente</td>
+                                <td>Prevenir incidencias futuras</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enfoque</strong></td>
+                                <td>Reactivo (cuando ocurre)</td>
+                                <td>Proactivo (antes que ocurra)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Solución</strong></td>
+                                <td>Workaround temporal OK</td>
+                                <td>Solución definitiva requerida</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiempo</strong></td>
+                                <td>ASAP (minutos/horas)</td>
+                                <td>El necesario (días/semanas)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Análisis</strong></td>
+                                <td>Superficial, síntomas</td>
+                                <td>Profundo, causa raíz (RCA)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resultado</strong></td>
+                                <td>Ticket cerrado</td>
+                                <td>Known Error + RFC</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🔬 Técnicas de Análisis Causa Raíz (RCA)</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>5 Porqués:</strong> Preguntar "¿por qué?" 5 veces consecutivas</li>
+                            <li><strong>Ishikawa (Espina de Pescado):</strong> Diagrama causa-efecto</li>
+                            <li><strong>Análisis de Pareto:</strong> 80% problemas vienen del 20% causas</li>
+                            <li><strong>Kepner-Tregoe:</strong> Análisis sistemático de problemas</li>
+                            <li><strong>Análisis de Cronología:</strong> Timeline de eventos</li>
+                        </ul>
+                    </div>
+
+                    <h3>📝 Gestión de Peticiones (Request Fulfillment)</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📋 Peticiones Estándar</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Reset de contraseña</strong></li>
+                                <li><strong>Alta de usuario</strong></li>
+                                <li><strong>Instalación software estándar</strong></li>
+                                <li><strong>Acceso a carpetas</strong></li>
+                                <li><strong>Nuevo equipo</strong></li>
+                            </ul>
+                            <p><strong>Características:</strong> Pre-aprobadas, bajo riesgo, procedimiento definido</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎯 Catálogo de Servicios</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Servicios disponibles</strong></li>
+                                <li><strong>SLAs asociados</strong></li>
+                                <li><strong>Costes (si aplica)</strong></li>
+                                <li><strong>Proceso de solicitud</strong></li>
+                                <li><strong>Aprobaciones necesarias</strong></li>
+                            </ul>
+                            <p><strong>Portal:</strong> Autoservicio 24x7</p>
+                        </div>
+                    </div>
+
+                    <h3>🔄 Gestión de Cambios (Change Management)</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Tipo de Cambio</th>
+                                <th>Riesgo</th>
+                                <th>Aprobación</th>
+                                <th>CAB Required</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Estándar</strong></td>
+                                <td>Bajo</td>
+                                <td>Pre-aprobado</td>
+                                <td>No</td>
+                                <td>Instalación Office</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Normal</strong></td>
+                                <td>Medio</td>
+                                <td>CAB</td>
+                                <td>Sí</td>
+                                <td>Actualización servidor</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Emergencia</strong></td>
+                                <td>Alto</td>
+                                <td>ECAB</td>
+                                <td>Emergencia</td>
+                                <td>Parche seguridad crítico</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        CAB = Change Advisory Board. Se reúne semanalmente. ECAB = Emergency CAB, disponible 24x7. Cambios estándar no necesitan CAB (ya pre-aprobados).
+                    </div>
+
+                    <h3>📊 Gestión del Conocimiento (Knowledge Management)</h3>
+                    <div class="highlight-box">
+                        <h4>📚 Modelo DIKW</h4>
+                        <ol>
+                            <li><strong>Data (Datos):</strong> Hechos discretos sin contexto</li>
+                            <li><strong>Information (Información):</strong> Datos con contexto</li>
+                            <li><strong>Knowledge (Conocimiento):</strong> Información con experiencia</li>
+                            <li><strong>Wisdom (Sabiduría):</strong> Conocimiento con juicio</li>
+                        </ol>
+                    </div>
+
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <h4>Capturar</h4>
+                            <p>Documentar</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>Procesar</h4>
+                            <p>Estructurar</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>Publicar</h4>
+                            <p>Disponible</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>Mantener</h4>
+                            <p>Actualizar</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>Retirar</h4>
+                            <p>Obsoleto</p>
+                        </div>
+                    </div>
+
+                    <h3>🎯 Gestión de Niveles de Servicio (SLM)</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📋 Tipos de SLA</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>SLA basado en Cliente:</strong> Un cliente, todos los servicios</li>
+                                <li><strong>SLA basado en Servicio:</strong> Un servicio, todos los clientes</li>
+                                <li><strong>SLA Multi-nivel:</strong> Corporativo + Cliente + Servicio</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>⏱️ Métricas SLA Típicas</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Disponibilidad:</strong> 99.9% (8.76h/año downtime)</li>
+                                <li><strong>Tiempo respuesta P1:</strong> 15 minutos</li>
+                                <li><strong>Tiempo resolución P1:</strong> 4 horas</li>
+                                <li><strong>First Call Resolution:</strong> &gt;70%</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 OLA y UC</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>OLA:</strong> Operational Level Agreement (interno)</li>
+                                <li><strong>UC:</strong> Underpinning Contract (proveedor externo)</li>
+                                <li><strong>Relación:</strong> SLA depende de OLAs y UCs</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        JERARQUÍA: UC (proveedores) → OLA (equipos internos) → SLA (cliente). Si UC falla, OLA falla, y SLA se incumple. Cascada de responsabilidades.
+                    </div>
+                </div>
+            </div>
+
+            <div id="tools" class="tab-content">
+                <div class="content-section">
+                    <h2>🛠️ Herramientas de Service Desk</h2>
+
+                    <h3>💼 Plataformas ITSM Líderes</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Vendor</th>
+                                <th>Fortalezas</th>
+                                <th>Modelo</th>
+                                <th>Precio</th>
+                            </tr>
+                            <tr>
+                                <td><strong>ServiceNow</strong></td>
+                                <td>ServiceNow Inc.</td>
+                                <td>Líder mercado, ITOM integrado, IA</td>
+                                <td>SaaS</td>
+                                <td>$100/agente/mes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jira Service Management</strong></td>
+                                <td>Atlassian</td>
+                                <td>Integración DevOps, ágil, flexible</td>
+                                <td>Cloud/On-premise</td>
+                                <td>$20-80/agente/mes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>BMC Helix</strong></td>
+                                <td>BMC Software</td>
+                                <td>Enterprise, CMDB robusta, AIOps</td>
+                                <td>SaaS/On-premise</td>
+                                <td>$75/agente/mes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Freshservice</strong></td>
+                                <td>Freshworks</td>
+                                <td>Fácil uso, buen precio, moderno</td>
+                                <td>SaaS</td>
+                                <td>$19-95/agente/mes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ManageEngine</strong></td>
+                                <td>Zoho Corp</td>
+                                <td>Suite completa, on-premise fuerte</td>
+                                <td>Cloud/On-premise</td>
+                                <td>$10-120/técnico/mes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GLPI</strong></td>
+                                <td>Open Source</td>
+                                <td>Gratuito, personalizable, ITIL</td>
+                                <td>On-premise</td>
+                                <td>Gratis (soporte pagado)</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        ServiceNow domina grandes empresas (Fortune 500). Jira popular en empresas tech/ágiles. GLPI excelente para presupuestos limitados con expertise interno.
+                    </div>
+
+                    <h3>🤖 Herramientas de Automatización</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🔄 RPA (Robotic Process Automation)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>UiPath:</strong> Líder RPA, visual workflows</li>
+                                <li><strong>Automation Anywhere:</strong> Cloud-native RPA</li>
+                                <li><strong>Blue Prism:</strong> Enterprise RPA</li>
+                                <li><strong>Power Automate:</strong> Microsoft ecosystem</li>
+                            </ul>
+                            <p><strong>Uso:</strong> Reset passwords, provisioning usuarios, reportes</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🤖 Chatbots e IA</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>IBM Watson:</strong> IA conversacional avanzada</li>
+                                <li><strong>Dialogflow:</strong> Google NLP</li>
+                                <li><strong>Amazon Lex:</strong> AWS integrated</li>
+                                <li><strong>Microsoft Bot Framework:</strong> Azure AI</li>
+                            </ul>
+                            <p><strong>Uso:</strong> L0 support, FAQs, routing inteligente</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 AIOps Platforms</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Splunk IT Service Intelligence</strong></li>
+                                <li><strong>Moogsoft:</strong> Reducción ruido alertas</li>
+                                <li><strong>BigPanda:</strong> Correlación eventos</li>
+                                <li><strong>PagerDuty:</strong> Incident response</li>
+                            </ul>
+                            <p><strong>Uso:</strong> Predicción incidencias, root cause automático</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔧 Orquestación</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Ansible:</strong> Automation agentless</li>
+                                <li><strong>Puppet:</strong> Configuration management</li>
+                                <li><strong>Jenkins:</strong> CI/CD integration</li>
+                                <li><strong>Terraform:</strong> Infrastructure as Code</li>
+                            </ul>
+                            <p><strong>Uso:</strong> Deployment automático, remediación</p>
+                        </div>
+                    </div>
+
+                    <h3>📞 Herramientas de Contact Center</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Herramienta</th>
+                                <th>Características</th>
+                                <th>Integración ITSM</th>
+                            </tr>
+                            <tr>
+                                <td><strong>ACD/PBX</strong></td>
+                                <td>Genesys, Avaya, Cisco</td>
+                                <td>Routing inteligente, IVR, CTI</td>
+                                <td>APIs, webhooks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Omnicanal</strong></td>
+                                <td>Zendesk, Intercom</td>
+                                <td>Email, chat, social, voz</td>
+                                <td>Nativo o conectores</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WFM</strong></td>
+                                <td>Verint, NICE</td>
+                                <td>Forecasting, scheduling</td>
+                                <td>Datos históricos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quality</strong></td>
+                                <td>Calabrio, NICE</td>
+                                <td>Recording, scoring, coaching</td>
+                                <td>Metadata tickets</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🔗 Integraciones Críticas</h3>
+                    <div class="highlight-box">
+                        <h4>🔌 Ecosistema de Integraciones Service Desk</h4>
+                        <div class="process-flow">
+                            <div class="process-step">
+                                <h4>Monitoring</h4>
+                                <p>Nagios, Zabbix, PRTG</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>CMDB</h4>
+                                <p>ServiceNow, Device42</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Service Desk</h4>
+                                <p>Centro de todo</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Knowledge</h4>
+                                <p>Confluence, SharePoint</p>
+                            </div>
+                            <div class="process-step">
+                                <h4>Chat/Collab</h4>
+                                <p>Teams, Slack</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 Integración con Monitoring</h4>
+                            <div class="code-block">
+# Webhook de Zabbix a ServiceNow
+{
+  "event": "trigger.fired",
+  "severity": "high",
+  "host": "srv-prod-01",
+  "trigger": "CPU > 90%",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+→ Auto-crear ticket P2
+→ Asignar a grupo infraestructura
+→ Adjuntar métricas
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>💬 Integración con Chat</h4>
+                            <div class="code-block">
+# Bot en Microsoft Teams
+@servicedesk status INC0012345
+→ "Incidencia INC0012345:
+   Estado: En Progreso
+   Asignado: Juan Pérez
+   Prioridad: P2
+   Última actualización: hace 10 min"
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>📱 Tendencias y Futuro</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🤖 IA Generativa</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Auto-resolución L1</strong> con LLMs</li>
+                                <li><strong>Generación automática</strong> de KB</li>
+                                <li><strong>Sentiment analysis</strong> en tiempo real</li>
+                                <li><strong>Predictive routing</strong> inteligente</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔮 Experience Management</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>XLA</strong> vs SLA (experience level)</li>
+                                <li><strong>Employee Experience (EX)</strong></li>
+                                <li><strong>Digital Experience Monitoring</strong></li>
+                                <li><strong>Sentiment-driven metrics</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🚀 Shift-Left</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Self-service</strong> avanzado</li>
+                                <li><strong>Virtual agents</strong> 24x7</li>
+                                <li><strong>Crowdsourcing</strong> soluciones</li>
+                                <li><strong>Peer-to-peer</strong> support</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>☁️ Everything as a Service</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>ITSM as a Service</strong></li>
+                                <li><strong>Support as a Service</strong></li>
+                                <li><strong>Consumption-based</strong> pricing</li>
+                                <li><strong>Serverless</strong> service desk</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        TENDENCIA CLAVE EXAMEN: Shift-Left = mover resolución hacia la izquierda (usuario). L0 (autoservicio) cada vez más importante. IA no reemplaza agentes, los potencia.
+                    </div>
+                </div>
+            </div>
+
+            <div id="metrics" class="tab-content">
+                <div class="content-section">
+                    <h2>📊 Métricas y KPIs de Service Desk</h2>
+
+                    <h3>📈 KPIs Operacionales</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>KPI</th>
+                                <th>Fórmula</th>
+                                <th>Objetivo</th>
+                                <th>Benchmark</th>
+                                <th>Importancia</th>
+                            </tr>
+                            <tr>
+                                <td><strong>First Call Resolution (FCR)</strong></td>
+                                <td>Resueltos L1 / Total tickets</td>
+                                <td>Maximizar resolución L1</td>
+                                <td>70-75%</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Average Handle Time (AHT)</strong></td>
+                                <td>Tiempo total / Nº llamadas</td>
+                                <td>Optimizar eficiencia</td>
+                                <td>6-8 minutos</td>
+                                <td>⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Average Speed Answer (ASA)</strong></td>
+                                <td>Tiempo espera total / Llamadas</td>
+                                <td>Minimizar espera</td>
+                                <td>&lt; 20 segundos</td>
+                                <td>⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abandonment Rate</strong></td>
+                                <td>Llamadas abandonadas / Total</td>
+                                <td>Reducir abandonos</td>
+                                <td>&lt; 5%</td>
+                                <td>⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ticket Backlog</strong></td>
+                                <td>Tickets abiertos &gt; SLA</td>
+                                <td>Minimizar retrasos</td>
+                                <td>&lt; 10%</td>
+                                <td>⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cost per Ticket</strong></td>
+                                <td>Coste total / Tickets resueltos</td>
+                                <td>Optimizar coste</td>
+                                <td>$15-25</td>
+                                <td>⭐⭐⭐</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        FCR es el KPI más importante: mejora satisfacción del cliente, reduce costes (L1 es más barato), y libera recursos especializados.
+                    </div>
+
+                    <h3>😊 KPIs de Satisfacción</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>⭐ CSAT (Customer Satisfaction)</h4>
+                            <p><strong>Pregunta:</strong> "¿Qué tan satisfecho está con el servicio?"</p>
+                            <p><strong>Escala:</strong> 1-5 o 1-10</p>
+                            <p><strong>Cálculo:</strong> (Satisfechos / Total respuestas) × 100</p>
+                            <p><strong>Benchmark:</strong> &gt; 85%</p>
+                            <p><strong>Cuándo:</strong> Inmediatamente tras cierre</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 NPS (Net Promoter Score)</h4>
+                            <p><strong>Pregunta:</strong> "¿Recomendaría nuestro servicio?"</p>
+                            <p><strong>Escala:</strong> 0-10</p>
+                            <p><strong>Cálculo:</strong> % Promotores - % Detractores</p>
+                            <p><strong>Benchmark:</strong> &gt; 30</p>
+                            <p><strong>Cuándo:</strong> Trimestral o anual</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>💪 CES (Customer Effort Score)</h4>
+                            <p><strong>Pregunta:</strong> "¿Qué tan fácil fue resolver su problema?"</p>
+                            <p><strong>Escala:</strong> 1-7</p>
+                            <p><strong>Cálculo:</strong> Promedio de puntuaciones</p>
+                            <p><strong>Benchmark:</strong> &lt; 2.5 (menos esfuerzo mejor)</p>
+                            <p><strong>Cuándo:</strong> Tras interacciones complejas</p>
+                        </div>
+                    </div>
+
+                    <h3>📊 Dashboard de Service Desk</h3>
+                    <div class="highlight-box">
+                        <h4>📈 Métricas en Tiempo Real</h4>
+                        <div class="grid-container">
+                            <div class="metric-card">
+                                <h3>156</h3>
+                                <p>Tickets Abiertos Hoy</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>73%</h3>
+                                <p>FCR Rate</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>4.2/5</h3>
+                                <p>CSAT Score</p>
+                            </div>
+                            <div class="metric-card">
+                                <h3>95.3%</h3>
+                                <p>SLA Cumplimiento</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>📊 SLA Compliance Metrics</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Prioridad</th>
+                                <th>Tiempo Respuesta</th>
+                                <th>Tiempo Resolución</th>
+                                <th>Escalado a L2</th>
+                                <th>Cumplimiento Target</th>
+                            </tr>
+                            <tr>
+                                <td><strong>P1 - Crítica</strong></td>
+                                <td>15 minutos</td>
+                                <td>4 horas</td>
+                                <td>30 minutos</td>
+                                <td>95%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P2 - Alta</strong></td>
+                                <td>30 minutos</td>
+                                <td>8 horas</td>
+                                <td>2 horas</td>
+                                <td>90%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P3 - Media</strong></td>
+                                <td>4 horas</td>
+                                <td>24 horas</td>
+                                <td>8 horas</td>
+                                <td>85%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P4 - Baja</strong></td>
+                                <td>8 horas</td>
+                                <td>72 horas</td>
+                                <td>24 horas</td>
+                                <td>80%</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="sla-meter">
+                        <div class="sla-fill" style="width: 95.3%;">
+                            SLA Cumplimiento: 95.3%
+                        </div>
+                    </div>
+
+                    <h3>👥 Métricas de Agentes</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 Productividad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Tickets/día:</strong> 25-30 objetivo</li>
+                                <li><strong>Utilización:</strong> 75-80% tiempo productivo</li>
+                                <li><strong>Adherencia:</strong> 90% schedule adherence</li>
+                                <li><strong>After Call Work:</strong> &lt; 2 minutos</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎯 Calidad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Quality Score:</strong> &gt; 85%</li>
+                                <li><strong>Reopen Rate:</strong> &lt; 5%</li>
+                                <li><strong>Escalation Rate:</strong> &lt; 30%</li>
+                                <li><strong>Knowledge Usage:</strong> &gt; 60%</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📈 Desarrollo</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Training Hours:</strong> 40h/año mínimo</li>
+                                <li><strong>Certificaciones:</strong> ITIL Foundation</li>
+                                <li><strong>Skills Matrix:</strong> Multi-skill coverage</li>
+                                <li><strong>Career Path:</strong> L1 → L2 → Specialist</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        MÉTRICAS DE EXAMEN: FCR &gt;70%, ASA &lt;20seg, Abandonment &lt;5%, CSAT &gt;85%, SLA Compliance &gt;95%. Memoriza estos benchmarks estándar de la industria.
+                    </div>
+
+                    <h3>📈 Análisis de Tendencias</h3>
+                    <div class="code-block">
+# Análisis de Volumen de Tickets (Python)
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Datos mensuales
+datos = {
+    'Mes': ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    'Tickets': [1200, 1350, 1180, 1420, 1380, 1450],
+    'FCR': [68, 71, 73, 72, 74, 75],
+    'CSAT': [4.1, 4.2, 4.2, 4.3, 4.3, 4.4]
+}
+
+df = pd.DataFrame(datos)
+
+# Tendencia: Volumen creciendo 3% mensual
+# FCR mejorando (formación funcionando)
+# CSAT correlaciona con FCR
+                    </div>
+
+                    <h3>💰 ROI y Business Case</h3>
+                    <div class="highlight-box">
+                        <h4>💵 Cálculo ROI de Service Desk</h4>
+                        <div class="code-block">
+Situación Actual:
+- 1000 tickets/mes
+- Coste por ticket: $25
+- FCR: 60%
+- CSAT: 3.8/5
+
+Mejora Propuesta (Inversión $50,000):
+- Nuevo sistema ticketing
+- Formación agentes
+- Knowledge base mejorada
+
+Resultados Esperados:
+- FCR: 60% → 75% (+15%)
+- Coste por ticket: $25 → $20 (-20%)
+- CSAT: 3.8 → 4.3
+
+ROI Anual:
+- Ahorro: 1000 × 12 × $5 = $60,000
+- ROI: ($60,000 - $50,000) / $50,000 = 20%
+- Payback: 10 meses
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="best-practices" class="tab-content">
+                <div class="content-section">
+                    <h2>✨ Mejores Prácticas y Optimización</h2>
+
+                    <h3>🎯 10 Mejores Prácticas Esenciales</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>1️⃣ Documentar TODO</h4>
+                            <p>Cada interacción, acción y decisión debe quedar registrada en el ticket para trazabilidad completa.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>2️⃣ Ownership Claro</h4>
+                            <p>Un ticket = un responsable. No dejar tickets "huérfanos" sin asignación clara.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>3️⃣ Comunicación Proactiva</h4>
+                            <p>Actualizar al usuario antes de que pregunte. Especialmente en P1/P2.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>4️⃣ Escucha Activa</h4>
+                            <p>Entender el problema real, no solo los síntomas. Preguntar "¿qué intentaba hacer?"</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>5️⃣ Knowledge First</h4>
+                            <p>Consultar KB antes de escalar. Si no existe solución, crearla después.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>6️⃣ Verificar Resolución</h4>
+                            <p>Confirmar con usuario que el problema está resuelto antes de cerrar.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>7️⃣ Categorización Correcta</h4>
+                            <p>Clasificar adecuadamente para análisis de tendencias y mejora continua.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>8️⃣ Respetar SLAs</h4>
+                            <p>Priorizar por impacto×urgencia, no por quién llama (excepto VIPs definidos).</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>9️⃣ Formación Continua</h4>
+                            <p>Mínimo 2h/semana de formación. Tecnología cambia constantemente.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔟 Medir y Mejorar</h4>
+                            <p>Analizar métricas semanalmente. Implementar mejoras incrementales.</p>
+                        </div>
+                    </div>
+
+                    <h3>🚀 Estrategias de Optimización</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Shift-Left Strategy</h4>
+                        <div class="process-flow">
+                            <div class="process-step">
+                                <h4>L(-1)</h4>
+                                <p>Prevención</p>
+                                <small>Evitar incidencias</small>
+                            </div>
+                            <div class="process-step">
+                                <h4>L0</h4>
+                                <p>Self-Service</p>
+                                <small>Portal, KB, FAQ</small>
+                            </div>
+                            <div class="process-step">
+                                <h4>L0.5</h4>
+                                <p>Automation</p>
+                                <small>Chatbots, RPA</small>
+                            </div>
+                            <div class="process-step">
+                                <h4>L1</h4>
+                                <p>Service Desk</p>
+                                <small>Agentes humanos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>👥 Gestión del Equipo</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🎓 Plan de Formación</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Semana 1-2:</strong> Onboarding, sistemas, procesos</li>
+                                <li><strong>Semana 3-4:</strong> Shadowing, casos simples</li>
+                                <li><strong>Mes 2:</strong> Casos complejos supervisados</li>
+                                <li><strong>Mes 3:</strong> Autonomía completa</li>
+                                <li><strong>Ongoing:</strong> 2h/semana actualización</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🏆 Motivación y Retención</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Gamificación:</strong> Badges, leaderboards</li>
+                                <li><strong>Reconocimiento:</strong> Agente del mes</li>
+                                <li><strong>Career Path:</strong> L1→L2→Specialist</li>
+                                <li><strong>Rotación:</strong> Diferentes skills/proyectos</li>
+                                <li><strong>Work-Life Balance:</strong> Turnos flexibles</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 Performance Management</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>1:1 semanal:</strong> Feedback continuo</li>
+                                <li><strong>Quality monitoring:</strong> 5 tickets/mes</li>
+                                <li><strong>Coaching:</strong> Basado en gaps identificados</li>
+                                <li><strong>PIP:</strong> Plan mejora si &lt;80% objetivos</li>
+                                <li><strong>Rewards:</strong> Bonos por performance</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🔧 Optimización de Procesos</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Área</th>
+                                <th>Problema Común</th>
+                                <th>Solución</th>
+                                <th>Resultado Esperado</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Routing</strong></td>
+                                <td>Tickets mal asignados</td>
+                                <td>Skills-based routing automático</td>
+                                <td>-30% reasignaciones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Escalation</strong></td>
+                                <td>Escalado prematuro</td>
+                                <td>Checklist pre-escalado obligatorio</td>
+                                <td>-25% escalados L2</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Knowledge</strong></td>
+                                <td>KB desactualizada</td>
+                                <td>Review trimestral, ownership claro</td>
+                                <td>+40% uso KB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Communication</strong></td>
+                                <td>Usuario desinformado</td>
+                                <td>Auto-updates cada 2h en P1/P2</td>
+                                <td>+20% CSAT</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resolution</strong></td>
+                                <td>Reaperturas frecuentes</td>
+                                <td>Confirmación obligatoria usuario</td>
+                                <td>-50% reaperturas</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🤝 Gestión de Stakeholders</h3>
+                    <div class="highlight-box">
+                        <h4>👥 Mapa de Stakeholders</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Usuarios finales:</strong> Experiencia de servicio, resolución rápida</li>
+                            <li><strong>IT Management:</strong> Métricas, costes, cumplimiento SLA</li>
+                            <li><strong>Negocio:</strong> Disponibilidad servicios, productividad</li>
+                            <li><strong>Proveedores:</strong> Cumplimiento contratos, escalados</li>
+                            <li><strong>Equipo Service Desk:</strong> Herramientas, formación, carga trabajo</li>
+                        </ul>
+                    </div>
+
+                    <h3>💡 Innovación y Mejora Continua</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🔄 Ciclo PDCA</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Plan:</strong> Identificar mejoras potenciales</li>
+                                <li><strong>Do:</strong> Implementar piloto controlado</li>
+                                <li><strong>Check:</strong> Medir resultados vs objetivos</li>
+                                <li><strong>Act:</strong> Estandarizar si exitoso</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 Six Sigma DMAIC</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Define:</strong> Problema y objetivos</li>
+                                <li><strong>Measure:</strong> Baseline actual</li>
+                                <li><strong>Analyze:</strong> Root causes</li>
+                                <li><strong>Improve:</strong> Implementar soluciones</li>
+                                <li><strong>Control:</strong> Sostener mejoras</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎯 Quick Wins</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Templates respuestas:</strong> -30% AHT</li>
+                                <li><strong>Macros teclado:</strong> -20% tiempo typing</li>
+                                <li><strong>Favoritos KB:</strong> Top 20 problemas</li>
+                                <li><strong>Checklist troubleshooting:</strong> +FCR</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🚨 Gestión de Crisis</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Protocolo Major Incident</h4>
+                        <ol>
+                            <li><strong>Detección:</strong> Identificar impacto masivo (&gt;100 usuarios o servicio crítico)</li>
+                            <li><strong>Declaración:</strong> Activar Major Incident Manager</li>
+                            <li><strong>War Room:</strong> Virtual o física, todos los stakeholders</li>
+                            <li><strong>Comunicación:</strong> Updates cada 30 min a executives</li>
+                            <li><strong>Resolución:</strong> Workaround primero, fix permanente después</li>
+                            <li><strong>Post-Mortem:</strong> RCA sin culpables, lecciones aprendidas</li>
+                        </ol>
+                    </div>
+
+                    <div class="hot-tip">
+                        Durante crisis: Comunicación &gt; Resolución. Usuarios prefieren saber qué pasa aunque no esté resuelto. Transparencia genera confianza.
+                    </div>
+
+                    <h3>📋 Checklist de Auditoría Service Desk</h3>
+                    <div class="highlight-box">
+                        <h4>✅ Áreas de Revisión Mensual</h4>
+                        <ul class="list-checkmark">
+                            <li>☐ SLA Compliance &gt; 95%</li>
+                            <li>☐ FCR &gt; 70%</li>
+                            <li>☐ CSAT &gt; 4.0/5</li>
+                            <li>☐ Backlog &lt; 10% del volumen mensual</li>
+                            <li>☐ KB actualizada (sin artículos &gt;6 meses sin revisar)</li>
+                            <li>☐ Formación al día (100% agentes)</li>
+                            <li>☐ Escalation rate &lt; 30%</li>
+                            <li>☐ Reopen rate &lt; 5%</li>
+                            <li>☐ Agent satisfaction &gt; 70%</li>
+                            <li>☐ Cost per ticket en presupuesto</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-alert">
+                        CONCEPTO CLAVE EXAMEN: Service Desk exitoso = Personas + Procesos + Tecnología en equilibrio. Fallar en uno impacta todos. 40% personas, 40% procesos, 20% tecnología.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover clase active de todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        // Efecto de escritura para el título
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('.header h1');
+            const text = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

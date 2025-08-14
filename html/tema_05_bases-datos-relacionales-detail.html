@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 5 - Bases de Datos Relacionales</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--exercise-text);
+        }
+
+        .exercise-container h3 {
+            color: var(--exercise-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .normal-form {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .formula-box {
+            background: var(--highlight-box-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+
+        .codd-rule {
+            background: var(--success-box-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 5: Bases de Datos Relacionales</h1>
+            <p>Características y elementos constitutivos. Antecedentes históricos. El lenguaje SQL. Estándares de conectividad: ODBC y JDBC.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Reglas de Codd</div>
+                <div class="tab" onclick="showTab('content2')">📘 Normalización</div>
+                <div class="tab" onclick="showTab('content3')">📘 Formas Normales</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos y Tips</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">12</span>
+                        <div>Reglas de Codd</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Formas Normales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">ACID</span>
+                        <div>Propiedades de Transacciones</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción a las Bases de Datos Relacionales</h3>
+                    <p>El modelo relacional, propuesto por Edgar F. Codd en 1970, es la base de la mayoría de los sistemas de gestión de bases de datos (SGBD) modernos. Este modelo organiza los datos en tablas relacionadas entre sí, proporcionando integridad y consistencia de los datos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Fundamentales para el Examen</h3>
+                    <ul class="list-checkmark">
+                        <li>Reglas de Codd: 12 reglas que definen un sistema relacional puro</li>
+                        <li>Normalización: Proceso para eliminar redundancias y anomalías</li>
+                        <li>Formas Normales: Criterios para evaluar el diseño de tablas</li>
+                        <li>SQL: Lenguaje estándar para gestión de bases de datos relacionales</li>
+                        <li>ACID: Propiedades de transacciones (Atomicity, Consistency, Isolation, Durability)</li>
+                    </ul>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Tips para el Examen</h4>
+                        <p>Presta especial atención a las reglas de Codd, las formas normales y los ejercicios de normalización. Estos temas son muy frecuentes en exámenes y requieren práctica.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Las 12 Reglas de Codd</h3>
+                    <p>Edgar F. Codd definió 12 reglas que un sistema debe cumplir para ser considerado relacional. Estas reglas son fundamentales para entender las bases de datos relacionales.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Regla 0: Fundación</h4>
+                            <p>Un sistema RDBMS debe gestionar sus bases de datos enteramente mediante sus capacidades relacionales.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Regla 1: Información</h4>
+                            <p>Toda la información en una base de datos relacional se representa explícitamente en los valores almacenados en las tablas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Regla 2: Acceso Garantizado</h4>
+                            <p>Cada dato se puede acceder lógicamente utilizando una combinación de nombre de tabla, nombre de columna y valor de clave primaria.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Reglas 3-6 de Codd</h3>
+                    <div class="codd-rule">
+                        <h4>Regla 3: Tratamiento Sistemático de Valores Nulos</h4>
+                        <p>El SGBD debe permitir valores nulos para representar información desconocida o no aplicable, y debe manejarlos sistemáticamente.</p>
+                    </div>
+                    
+                    <div class="codd-rule">
+                        <h4>Regla 4: Diccionario de Datos Activo en Línea</h4>
+                            <p>La descripción de la base de datos se almacena en línea en tablas relacionales, accesibles a usuarios autorizados mediante el mismo lenguaje relacional.</p>
+                    </div>
+                    
+                    <div class="codd-rule">
+                        <h4>Regla 5: Sublenguaje de Datos Completo</h4>
+                        <p>Debe existir al menos un lenguaje relacional que pueda utilizarse para definir, manipular y restringir datos, tanto de forma interactiva como en programas.</p>
+                    </div>
+                    
+                    <div class="codd-rule">
+                        <h4>Regla 6: Actualización de Vistas</h4>
+                        <p>Todas las vistas que son teóricamente actualizables deben ser actualizables por el sistema.</p>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes para el Examen</h4>
+                        <ul class="list-checkmark">
+                            <li>Memoriza las 12 reglas de Codd en orden</li>
+                            <li>Entiende la importancia de cada regla en la integridad de datos</li>
+                            <li>Reconoce sistemas que cumplen o no cumplen las reglas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Pregunta de Examen Típica</h4>
+                        <p>¿Qué regla de Codd establece que toda la información debe representarse explícitamente en los valores almacenados en las tablas?</p>
+                        <p><strong>Respuesta:</strong> La Regla 1: Información.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📘 Normalización de Bases de Datos</h3>
+                    <p>La normalización es el proceso de organizar los datos en una base de datos para minimizar la redundancia y mejorar la integridad. Es un tema crítico para exámenes de bases de datos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Objetivos de la Normalización</h3>
+                    <p>La normalización busca eliminar tres tipos de anomalías:</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Anomalía</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Inserción</strong></td>
+                                <td>No se puede insertar cierta información sin otra</td>
+                                <td>No se puede insertar un cliente sin pedidos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actualización</strong></td>
+                                <td>Cambios deben realizarse en múltiples lugares</td>
+                                <td>Actualizar dirección de cliente en múltiples pedidos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eliminación</strong></td>
+                                <td>Eliminar datos importantes al borrar otros</td>
+                                <td>Perder datos de cliente al eliminar su último pedido</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Error Común en Exámenes</h4>
+                        <p>Confundir las anomalías de inserción, actualización y eliminación.</p>
+                        <p><strong>Explicación:</strong> Anomalía de inserción: no poder insertar datos sin otros. Anomalía de actualización: tener que cambiar datos en múltiples lugares. Anomalía de eliminación: perder información importante al borrar otros datos.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📋 Pasos de la Normalización</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Consideraciones Importantes</h4>
+                        <p>El proceso de normalización sigue estos pasos sistemáticos:</p>
+                    </div>
+                    
+                    <div class="formula-box">
+                        Paso 1: Eliminar grupos repetitivos (1FN)<br>
+                        Paso 2: Crear tablas separadas para conjuntos de valores que apliquen a múltiples registros (2FN)<br>
+                        Paso 3: Eliminar dependencias transitivas (3FN)<br>
+                        Paso 4: Aislar dependencias multivaluadas (4FN)<br>
+                        Paso 5: Eliminar dependencias de unión (5FN)
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Ejemplo Práctico</h4>
+                        <p>Tabla ClientesPedidos con campos: ClienteID, Nombre, Teléfono, PedidoID, Producto, Cantidad</p>
+                        <ul class="list-checkmark">
+                            <li>1FN: Separar grupos repetitivos</li>
+                            <li>2FN: Eliminar parciales dependencias de clave primaria</li>
+                            <li>3FN: Eliminar dependencias transitivas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Formas Normales Detalladas</h3>
+                    <p>Las formas normales son criterios sucesivos para evaluar la estructura de las tablas en una base de datos relacional. Cada forma normal corrige ciertos tipos de redundancia.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Primera Forma Normal (1FN)</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Requisitos de la 1FN</h4>
+                        <p>Una tabla está en 1FN si:</p>
+                        <ul class="list-checkmark">
+                            <li>Todos los atributos contienen valores atómicos (indivisibles)</li>
+                            <li>No hay grupos repetitivos</li>
+                            <li>Cada fila es única</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Ejemplo de 1FN</h4>
+                        <p>Tabla incorrecta: Estudiantes con campo "Teléfonos" que contiene "912345678, 987654321"</p>
+                        <p>Tabla correcta en 1FN: Cada teléfono en una fila separada con clave compuesta</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📊 Segunda Forma Normal (2FN)</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Requisitos de la 2FN</h4>
+                        <p>Una tabla está en 2FN si:</p>
+                        <ul class="list-checkmark">
+                            <li>Está en 1FN</li>
+                            <li>No tiene dependencias parciales (atributos no clave dependen de parte de la clave primaria)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Escenario Práctico</h4>
+                        <p>Tabla Pedidos con campos: PedidoID, ProductoID, ClienteID, NombreCliente, FechaPedido</p>
+                        <p><strong>Solución:</strong> Separar en tablas Pedidos (PedidoID, ClienteID, FechaPedido) y Clientes (ClienteID, NombreCliente)</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📋 Tercera Forma Normal (3FN)</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Requisitos de la 3FN</h4>
+                        <p>Una tabla está en 3FN si:</p>
+                        <ul class="list-checkmark">
+                            <li>Está en 2FN</li>
+                            <li>No tiene dependencias transitivas (A→B y B→C, entonces A→C)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Ejemplo de 3FN</h4>
+                        <p>Tabla incorrecta: Empleados (EmpleadoID, Nombre, DepartamentoID, NombreDepartamento)</p>
+                        <p>Tabla correcta: Empleados (EmpleadoID, Nombre, DepartamentoID) y Departamentos (DepartamentoID, NombreDepartamento)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>"A Relational Model of Data for Large Shared Data Banks" - E.F. Codd:</strong> Artículo original que definió el modelo relacional</li>
+                        <li><strong>SQL-92, SQL-99, SQL-2003:</strong> Estándares ISO/IEC para el lenguaje SQL</li>
+                        <li><strong>ODBC 3.5:</strong> Especificación Open Database Connectivity</li>
+                        <li><strong>JDBC 4.0:</strong> Especificación Java Database Connectivity</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Base_de_datos_relacional" target="_blank">Wikipedia - Base de datos relacional</a></li>
+                        <li><a href="https://es.wikipedia.org/wiki/SQL" target="_blank">Wikipedia - SQL</a></li>
+                        <li><a href="https://docs.oracle.com/en/database/" target="_blank">Documentación Oracle Database</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes de Examen</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre 2FN y 3FN?</h4>
+                            <p>2FN elimina dependencias parciales (parte de la clave determina un atributo), mientras que 3FN elimina dependencias transitivas (A→B y B→C implica A→C).</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Qué es una dependencia transitiva?</h4>
+                            <p>Ocurre cuando un atributo no clave depende de otro atributo no clave. Por ejemplo, si ClienteID→Ciudad y Ciudad→Región, entonces ClienteID→Región transitivamente.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🎯 Estrategias de Estudio para el Examen</h3>
+                    <div class="exam-tip">
+                        <h4>💡 Plan de Estudio Recomendado</h4>
+                        <p>1. Memoriza las 12 reglas de Codd<br>
+                        2. Practica ejercicios de normalización paso a paso<br>
+                        3. Entiende las anomalías de inserción, actualización y eliminación<br>
+                        4. Diferencia claramente cada forma normal<br>
+                        5. Aprende los estándares ODBC y JDBC</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica para el Examen</h3>
+                    <p>Practica tus conocimientos sobre bases de datos relacionales con estos ejercicios interactivos. Pon a prueba tu comprensión de las reglas de Codd, normalización y formas normales.</p>
+                    <div class="exam-tip">
+                        <h4>💡 Cómo Abordar los Ejercicios</h4>
+                        <p>Para ejercicios de normalización, sigue los pasos sistemáticamente. Para preguntas teóricas sobre Codd, recuerda las reglas en orden. Verifica tus respuestas con las explicaciones detalladas.</p>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Reglas de Codd</h3>
+                    <div class="exercise-question">
+                        ¿Cuál de las siguientes es la Regla 1 de Codd?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Fundación - El sistema debe ser relacional</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Información - Toda la información se representa en valores de tabla</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Acceso Garantizado - Acceso lógico a datos</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">Tratamiento Sistemático de Nulos</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'b', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Normalización Básica</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es el objetivo principal de la normalización?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', 'Eliminar redundancias y anomalías', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Formas Normales</h3>
+                    <div class="exercise-question">
+                        ¿Qué forma normal elimina las dependencias transitivas?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta (ej: 1FN)">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', '3FN', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Anomalías de Base de Datos</h3>
+                    <div class="exercise-question">
+                        ¿Qué tipo de anomalía ocurre cuando no puedes insertar cierta información sin otra?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Anomalía de actualización</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Anomalía de eliminación</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Anomalía de inserción</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt4" name="exercise4" value="d">
+                            <label for="ex4opt4">Anomalía de redundancia</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'c', 'ex4feedback')">Verificar Respuesta</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio de Normalización</h3>
+                    <div class="exercise-question">
+                        Una tabla tiene campos: EstudianteID, Nombre, Curso1, Nota1, Curso2, Nota2. ¿En qué forma normal está?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise5_answer" placeholder="Ingrese su respuesta (ej: 1FN)">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise5_answer', 'No está en 1FN', 'ex5feedback')">Verificar Respuesta</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Dependencias Funcionales</h3>
+                    <div class="exercise-question">
+                        Si EmpleadoID → Departamento y Departamento → Jefe, ¿qué tipo de dependencia es EmpleadoID → Jefe?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise6_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise6_answer', 'Dependencia transitiva', 'ex6feedback')">Verificar Respuesta</button>
+                    <div id="ex6feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>SQL y Conectividad</h3>
+                    <div class="exercise-question">
+                        ¿Qué siglas corresponden a Java Database Connectivity?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt1" name="exercise7" value="a">
+                            <label for="ex7opt1">ODBC</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt2" name="exercise7" value="b">
+                            <label for="ex7opt2">JDBC</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt3" name="exercise7" value="c">
+                            <label for="ex7opt3">SQLC</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt4" name="exercise7" value="d">
+                            <label for="ex7opt4">DBJC</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise7', 'b', 'ex7feedback')">Verificar Respuesta</button>
+                    <div id="ex7feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Normalización Práctica</h3>
+                    <div class="exercise-question">
+                        ¿Cuántas formas normales se consideran comúnmente en diseño de bases de datos?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise8_answer" placeholder="Ingrese su respuesta numérica">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise8_answer', '5', 'ex8feedback')">Verificar Respuesta</button>
+                    <div id="ex8feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode by default
+        document.body.classList.add('dark-mode');
+        
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'Incorrecto. ❌<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌<br><br><strong>Explicación:</strong> ` + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function getExplanation(exerciseName, correctAnswer) {
+            // Customized explanations for each exercise
+            const explanations = {
+                'exercise1': {
+                    'a': 'Incorrecto. Esta es la Regla 0 de Codd.',
+                    'b': 'Correcto. La Regla 1 establece que toda la información en una base de datos relacional se representa explícitamente en los valores almacenados en las tablas.',
+                    'c': 'Incorrecto. Esta es la Regla 2 de Codd.',
+                    'd': 'Incorrecto. Esta es la Regla 3 de Codd.'
+                },
+                'exercise4': {
+                    'a': 'Incorrecto. La anomalía de actualización ocurre cuando cambios deben realizarse en múltiples lugares.',
+                    'b': 'Incorrecto. La anomalía de eliminación ocurre cuando se pierden datos importantes al borrar otros.',
+                    'c': 'Correcto. La anomalía de inserción ocurre cuando no se puede insertar cierta información sin otra.',
+                    'd': 'Incorrecto. Esta no es una anomalía reconocida en la normalización.'
+                },
+                'exercise7': {
+                    'a': 'Incorrecto. ODBC significa Open Database Connectivity.',
+                    'b': 'Correcto. JDBC significa Java Database Connectivity.',
+                    'c': 'Incorrecto. SQLC no es un estándar reconocido.',
+                    'd': 'Incorrecto. DBJC no es un estándar reconocido.'
+                }
+            };
+            
+            if (explanations[exerciseName] && explanations[exerciseName][correctAnswer]) {
+                return explanations[exerciseName][correctAnswer];
+            }
+            return 'Explicación detallada de por qué esta es la respuesta correcta.';
+        }
+
+        function getTextExplanation(inputId, correctAnswer) {
+            // Customized explanations for text exercises
+            const explanations = {
+                'exercise2_answer': 'El objetivo principal de la normalización es eliminar redundancias y anomalías en el diseño de bases de datos para mejorar la integridad y reducir el espacio de almacenamiento.',
+                'exercise3_answer': 'La Tercera Forma Normal (3FN) elimina las dependencias transitivas, donde un atributo no clave depende de otro atributo no clave.',
+                'exercise5_answer': 'La tabla no está en 1FN porque contiene grupos repetitivos (Curso1, Nota1, Curso2, Nota2). Debería separarse en múltiples filas.',
+                'exercise6_answer': 'Esta es una dependencia transitiva porque EmpleadoID → Departamento y Departamento → Jefe, por lo tanto EmpleadoID → Jefe transitivamente.',
+                'exercise8_answer': 'Comúnmente se consideran 5 formas normales: 1FN, 2FN, 3FN, 4FN (forma normal de Boyce-Codd) y 5FN (forma normal proyectiva).'
+            };
+            
+            if (explanations[inputId]) {
+                return explanations[inputId];
+            }
+            return `Explicación detallada de por qué "${correctAnswer}" es la respuesta correcta.`;
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

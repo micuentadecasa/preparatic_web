@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 27: Análisis y Diseño Orientado a Objetos</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #1a1a1a;
+            --surface-color: #2c2c2c;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        .light-theme {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .tab.active {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-card {
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .content-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .content-card li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 0 15px 15px 0;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .exercise-container {
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-container:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+        }
+
+        .exercise h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .exercise-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .exercise-options label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-options label:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .exercise-options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--secondary-color);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 80px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            border: 4px solid var(--background-color);
+        }
+
+        .timeline-content {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-content h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+                margin: 2px 0;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .process-steps {
+            counter-reset: step-counter;
+        }
+
+        .process-step {
+            counter-increment: step-counter;
+            position: relative;
+            padding: 1rem 1rem 1rem 3rem;
+            margin: 1rem 0;
+            background: var(--surface-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .process-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 27: Análisis y Diseño Orientado a Objetos</h1>
+            <p>UML, Proceso Unificado y Patrones de Diseño</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Vista General</button>
+            <button class="tab" onclick="showTab('uml')">UML</button>
+            <button class="tab" onclick="showTab('process')">Proceso Unificado</button>
+            <button class="tab" onclick="showTab('patterns')">Patrones de Diseño</button>
+            <button class="tab" onclick="showTab('exercises')">Ejercicios</button>
+            <button class="tab" onclick="showTab('resources')">Recursos</button>
+        </nav>
+
+        <main class="tab-content active" id="overview">
+            <h2>Vista General: Análisis y Diseño Orientado a Objetos</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">14</span>
+                    <span class="stat-label">Diagramas UML</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">23</span>
+                    <span class="stat-label">Patrones GoF</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Fases UP</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">9</span>
+                    <span class="stat-label">Disciplinas UP</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Paradigma Orientado a Objetos</h3>
+                    <ul>
+                        <li>Encapsulamiento y abstracción</li>
+                        <li>Herencia y polimorfismo</li>
+                        <li>Modularidad y reutilización</li>
+                        <li>Composición y agregación</li>
+                        <li>Interfaces y contratos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>UML (Unified Modeling Language)</h3>
+                    <ul>
+                        <li>Diagramas estructurales (7 tipos)</li>
+                        <li>Diagramas de comportamiento (7 tipos)</li>
+                        <li>Estereotipos y perfiles</li>
+                        <li>OCL (Object Constraint Language)</li>
+                        <li>MDA (Model Driven Architecture)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Proceso Unificado (UP)</h3>
+                    <ul>
+                        <li>Metodología iterativa e incremental</li>
+                        <li>Dirigido por casos de uso</li>
+                        <li>Centrado en la arquitectura</li>
+                        <li>Controlado por riesgos</li>
+                        <li>RUP (Rational Unified Process)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Patrones de Diseño</h3>
+                    <ul>
+                        <li>Patrones creacionales (5 patrones)</li>
+                        <li>Patrones estructurales (7 patrones)</li>
+                        <li>Patrones de comportamiento (11 patrones)</li>
+                        <li>Principios SOLID</li>
+                        <li>Patrones arquitectónicos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Importancia del Diseño OO</h4>
+                <p>El diseño orientado a objetos permite crear sistemas mantenibles, extensibles y reutilizables mediante la aplicación de principios fundamentales como la separación de responsabilidades, el bajo acoplamiento y la alta cohesión. UML proporciona el lenguaje estándar para modelar estos sistemas, mientras que los patrones ofrecen soluciones probadas a problemas recurrentes.</p>
+            </div>
+        </main>
+
+        <div class="tab-content" id="uml">
+            <h2>UML (Unified Modeling Language)</h2>
+            
+            <div class="highlight-box">
+                <h4>📊 Diagramas Estructurales</h4>
+                <p>Representan la estructura estática del sistema: clases, objetos, componentes, despliegue, paquetes, estructura compuesta y perfiles.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Diagrama de Clases</h3>
+                    <ul>
+                        <li>Clases: atributos y métodos</li>
+                        <li>Relaciones: asociación, agregación, composición</li>
+                        <li>Herencia e interfaces</li>
+                        <li>Multiplicidades y restricciones</li>
+                        <li>Clases abstractas e interfaces</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Diagrama de Componentes</h3>
+                    <ul>
+                        <li>Componentes de software</li>
+                        <li>Interfaces proporcionadas y requeridas</li>
+                        <li>Dependencias entre componentes</li>
+                        <li>Puertos y conectores</li>
+                        <li>Empaquetado y despliegue</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Diagrama de Despliegue</h3>
+                    <ul>
+                        <li>Nodos de hardware y software</li>
+                        <li>Artefactos y manifestaciones</li>
+                        <li>Protocolos de comunicación</li>
+                        <li>Especificaciones de despliegue</li>
+                        <li>Entornos de ejecución</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Diagramas de Comportamiento</h3>
+                    <ul>
+                        <li>Casos de uso: actores y escenarios</li>
+                        <li>Secuencia: líneas de vida y mensajes</li>
+                        <li>Colaboración: objetos e interacciones</li>
+                        <li>Estados: transiciones y eventos</li>
+                        <li>Actividades: flujos y decisiones</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Diseño UML</h4>
+                <div class="formula">CBO (Coupling Between Objects) = Σ clases acopladas</div>
+                <div class="formula">DIT (Depth of Inheritance Tree) = máxima profundidad</div>
+                <div class="formula">NOC (Number of Children) = subclases directas</div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>UML 1.0 (1997)</h4>
+                        <p>Primera versión estándar por la OMG, unificando metodologías de Booch, Rumbaugh y Jacobson.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>UML 2.0 (2004)</h4>
+                        <p>Revisión mayor con nuevos diagramas, mejor semántica y soporte para MDA.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>UML 2.5 (2015)</h4>
+                        <p>Versión actual con simplificaciones y mejoras en la especificación.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="process">
+            <h2>Proceso Unificado de Software</h2>
+            
+            <div class="highlight-box">
+                <h4>🔄 Características del Proceso Unificado</h4>
+                <p>Iterativo e incremental, dirigido por casos de uso, centrado en la arquitectura y controlado por riesgos.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Fases del Proceso Unificado</h3>
+                    <ul>
+                        <li>Inicio: Visión y viabilidad del proyecto</li>
+                        <li>Elaboración: Arquitectura y casos de uso críticos</li>
+                        <li>Construcción: Desarrollo incremental</li>
+                        <li>Transición: Despliegue y mantenimiento</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Disciplinas Principales</h3>
+                    <ul>
+                        <li>Modelado de negocio</li>
+                        <li>Requisitos</li>
+                        <li>Análisis y diseño</li>
+                        <li>Implementación</li>
+                        <li>Pruebas</li>
+                        <li>Despliegue</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Disciplinas de Soporte</h3>
+                    <ul>
+                        <li>Gestión de configuración y cambios</li>
+                        <li>Gestión del proyecto</li>
+                        <li>Entorno de desarrollo</li>
+                        <li>Métricas y medición</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Artefactos Principales</h3>
+                    <ul>
+                        <li>Documento de visión</li>
+                        <li>Modelo de casos de uso</li>
+                        <li>Documento de arquitectura software</li>
+                        <li>Modelo de diseño</li>
+                        <li>Plan de desarrollo software</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <h4>Modelado de Requisitos</h4>
+                    <p>Identificación de actores, casos de uso y especificación detallada de requisitos funcionales y no funcionales.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Análisis del Sistema</h4>
+                    <p>Creación del modelo de análisis con clases conceptuales, colaboraciones y paquetes de análisis.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Diseño Arquitectónico</h4>
+                    <p>Definición de la arquitectura software, patrones arquitectónicos y decisiones de diseño principales.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Diseño Detallado</h4>
+                    <p>Refinamiento del modelo de diseño con clases de diseño, interfaces y especificaciones detalladas.</p>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas del Proceso Unificado</h4>
+                <div class="formula">Progreso = (Casos de Uso Implementados / Total Casos de Uso) × 100</div>
+                <div class="formula">Cobertura = (Requisitos Cubiertos / Total Requisitos) × 100</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="patterns">
+            <h2>Patrones de Diseño</h2>
+            
+            <div class="highlight-box">
+                <h4>🏗️ Gang of Four (GoF)</h4>
+                <p>23 patrones fundamentales clasificados en creacionales, estructurales y de comportamiento, que proporcionan soluciones reutilizables a problemas comunes en el diseño de software orientado a objetos.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Patrones Creacionales</h3>
+                    <ul>
+                        <li>Singleton: Instancia única</li>
+                        <li>Factory Method: Creación de objetos</li>
+                        <li>Abstract Factory: Familias de objetos</li>
+                        <li>Builder: Construcción compleja</li>
+                        <li>Prototype: Clonación de objetos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Patrones Estructurales</h3>
+                    <ul>
+                        <li>Adapter: Interfaz compatible</li>
+                        <li>Bridge: Separar abstracción e implementación</li>
+                        <li>Composite: Estructura de árbol</li>
+                        <li>Decorator: Añadir funcionalidad</li>
+                        <li>Facade: Interfaz simplificada</li>
+                        <li>Flyweight: Compartir estado intrínseco</li>
+                        <li>Proxy: Representante de objeto</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Patrones de Comportamiento</h3>
+                    <ul>
+                        <li>Observer: Notificación de cambios</li>
+                        <li>Strategy: Intercambiar algoritmos</li>
+                        <li>Command: Encapsular peticiones</li>
+                        <li>State: Comportamiento según estado</li>
+                        <li>Template Method: Esquema de algoritmo</li>
+                        <li>Visitor: Operaciones en estructura</li>
+                        <li>Chain of Responsibility: Cadena de manejadores</li>
+                        <li>Mediator: Comunicación entre objetos</li>
+                        <li>Memento: Capturar estado interno</li>
+                        <li>Iterator: Acceso secuencial</li>
+                        <li>Interpreter: Gramática de lenguaje</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Principios SOLID</h3>
+                    <ul>
+                        <li>SRP: Responsabilidad única</li>
+                        <li>OCP: Abierto-cerrado</li>
+                        <li>LSP: Sustitución de Liskov</li>
+                        <li>ISP: Segregación de interfaces</li>
+                        <li>DIP: Inversión de dependencias</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Calidad de Diseño</h4>
+                <div class="formula">Cohesión = (Métodos Relacionados / Total Métodos) × 100</div>
+                <div class="formula">Acoplamiento = Dependencias Externas / Total Clases</div>
+                <div class="formula">Complejidad Ciclomática = Aristas - Nodos + 2</div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Patrón Singleton</h4>
+                        <p>Garantiza una única instancia de una clase y proporciona acceso global a ella. Útil para recursos compartidos como configuraciones o logs.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Patrón Observer</h4>
+                        <p>Define dependencia uno-a-muchos entre objetos. Cuando un objeto cambia de estado, notifica automáticamente a todos sus dependientes.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Patrón MVC</h4>
+                        <p>Arquitectura que separa la lógica de negocio (Modelo), la presentación (Vista) y el control de flujo (Controlador).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exercises">
+            <h2>Ejercicios de Diseño Orientado a Objetos</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p style="text-align: center; margin-bottom: 2rem;">Progreso: <span id="progress-text">0/10</span></p>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 1: Métrica CBO (Coupling Between Objects)</h4>
+                    <p>Una clase A utiliza directamente las clases B, C, D y E. La clase B utiliza las clases F y G. ¿Cuál es el CBO de la clase A?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">CBO(A) = Número de clases con las que A tiene acoplamiento directo</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise1" value="a"> a) 6 clases</label>
+                        <label><input type="radio" name="exercise1" value="b"> b) 4 clases</label>
+                        <label><input type="radio" name="exercise1" value="c"> c) 7 clases</label>
+                        <label><input type="radio" name="exercise1" value="d"> d) 5 clases</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(1, 'b', 'El CBO de A es 4, ya que solo cuenta las clases con acoplamiento directo (B, C, D, E). Las clases F y G que usa B no se cuentan en el CBO de A.')">Verificar Respuesta</button>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 2: DIT (Depth of Inheritance Tree)</h4>
+                    <p>En una jerarquía de herencia: Object → Animal → Mamífero → Felino → Gato. ¿Cuál es el DIT de la clase Gato?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">DIT = Profundidad máxima desde la raíz hasta la clase</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise2" value="a"> a) 3 niveles</label>
+                        <label><input type="radio" name="exercise2" value="b"> b) 4 niveles</label>
+                        <label><input type="radio" name="exercise2" value="c"> c) 5 niveles</label>
+                        <label><input type="radio" name="exercise2" value="d"> d) 2 niveles</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(2, 'b', 'El DIT de Gato es 4, contando desde Object (nivel 0): Object→Animal(1)→Mamífero(2)→Felino(3)→Gato(4).')">Verificar Respuesta</button>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 3: LCOM (Lack of Cohesion of Methods)</h4>
+                    <p>Una clase tiene 5 métodos y 4 atributos. Los métodos M1 y M2 usan atributos A1,A2. M3 usa A3. M4 y M5 usan A4. ¿Cuál es el LCOM4?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">LCOM4 = Número de componentes conexas de métodos</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise3" value="a"> a) 1 componente</label>
+                        <label><input type="radio" name="exercise3" value="b"> b) 2 componentes</label>
+                        <label><input type="radio" name="exercise3" value="c"> c) 3 componentes</label>
+                        <label><input type="radio" name="exercise3" value="d"> d) 4 componentes</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(3, 'c', 'LCOM4 = 3 componentes conexas: {M1,M2}, {M3}, {M4,M5}. Cada componente agrupa métodos que comparten atributos.')">Verificar Respuesta</button>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 4: Complejidad Ciclomática</h4>
+                    <p>Un método tiene 2 bucles for anidados, 3 sentencias if y 1 switch con 4 casos. ¿Cuál es su complejidad ciclomática?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">CC = 1 + número de decisiones (if, for, while, case, catch, etc.)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise4" value="a"> a) 10</label>
+                        <label><input type="radio" name="exercise4" value="b"> b) 11</label>
+                        <label><input type="radio" name="exercise4" value="c"> c) 12</label>
+                        <label><input type="radio" name="exercise4" value="d"> d) 9</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(4, 'a', 'CC = 1 + 2(for) + 3(if) + 4(case) = 10. Cada punto de decisión añade 1 a la complejidad base.')">Verificar Respuesta</button>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 5: Fan-in y Fan-out</h4>
+                    <p>El módulo A es llamado por 3 módulos y llama a 5 módulos. ¿Cuáles son sus valores Fan-in y Fan-out?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Fan-in = Número de módulos que llaman a este módulo</div>
+                        <div class="formula">Fan-out = Número de módulos llamados por este módulo</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise5" value="a"> a) Fan-in=5, Fan-out=3</label>
+                        <label><input type="radio" name="exercise5" value="b"> b) Fan-in=3, Fan-out=5</label>
+                        <label><input type="radio" name="exercise5" value="c"> c) Fan-in=8, Fan-out=0</label>
+                        <label><input type="radio" name="exercise5" value="d"> d) Fan-in=2, Fan-out=6</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(5, 'b', 'Fan-in = 3 (módulos que llaman a A), Fan-out = 5 (módulos que A llama). Mayor Fan-in indica reutilización.')">Verificar Respuesta</button>
+                    <div id="feedback5" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 6: WMC (Weighted Methods per Class)</h4>
+                    <p>Una clase tiene 4 métodos con complejidades ciclomáticas 2, 3, 5 y 4 respectivamente. ¿Cuál es el WMC de la clase?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">WMC = Σ complejidades ciclomáticas de todos los métodos</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise6" value="a"> a) 12</label>
+                        <label><input type="radio" name="exercise6" value="b"> b) 14</label>
+                        <label><input type="radio" name="exercise6" value="c"> c) 16</label>
+                        <label><input type="radio" name="exercise6" value="d"> d) 10</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(6, 'b', 'WMC = 2 + 3 + 5 + 4 = 14. Suma la complejidad de todos los métodos de la clase.')">Verificar Respuesta</button>
+                    <div id="feedback6" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 7: NOC (Number of Children)</h4>
+                    <p>La clase Animal tiene 3 subclases directas: Mamífero, Ave, Pez. Mamífero tiene 2 subclases: Perro y Gato. ¿Cuál es el NOC de Animal?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">NOC = Número de subclases inmediatas (hijos directos)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise7" value="a"> a) 5 clases</label>
+                        <label><input type="radio" name="exercise7" value="b"> b) 3 clases</label>
+                        <label><input type="radio" name="exercise7" value="c"> c) 2 clases</label>
+                        <label><input type="radio" name="exercise7" value="d"> d) 4 clases</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(7, 'b', 'NOC de Animal = 3 (Mamífero, Ave, Pez). Solo cuenta subclases directas, no las indirectas como Perro y Gato.')">Verificar Respuesta</button>
+                    <div id="feedback7" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 8: RFC (Response for Class)</h4>
+                    <p>Una clase tiene 6 métodos propios y llama a 8 métodos de otras clases. ¿Cuál es el valor RFC?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">RFC = Métodos propios + Métodos llamados desde otras clases</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise8" value="a"> a) 12</label>
+                        <label><input type="radio" name="exercise8" value="b"> b) 14</label>
+                        <label><input type="radio" name="exercise8" value="c"> c) 16</label>
+                        <label><input type="radio" name="exercise8" value="d"> d) 8</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(8, 'b', 'RFC = 6 (métodos propios) + 8 (métodos externos) = 14. Mide la complejidad potencial de pruebas.')">Verificar Respuesta</button>
+                    <div id="feedback8" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 9: Cálculo de Coste Singleton</h4>
+                    <p>Crear una instancia normal cuesta 100ms. Con Singleton se ahorra 80ms por instancia adicional. Si se necesitan 50 instancias, ¿cuál es el ahorro total?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Ahorro = (Instancias - 1) × Coste unitario ahorrado</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise9" value="a"> a) 3920ms</label>
+                        <label><input type="radio" name="exercise9" value="b"> b) 4000ms</label>
+                        <label><input type="radio" name="exercise9" value="c"> c) 3900ms</label>
+                        <label><input type="radio" name="exercise9" value="d"> d) 3800ms</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(9, 'a', 'Ahorro = (50-1) × 80ms = 49 × 80 = 3920ms. Solo se crea una vez, ahorrando en las 49 restantes.')">Verificar Respuesta</button>
+                    <div id="feedback9" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 10: Eficiencia de Patrones Observer</h4>
+                    <p>Un Subject tiene 20 Observers. Si notificar a cada Observer cuesta 5ms, ¿cuánto tiempo total requiere una notificación completa?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Tiempo total = Número de Observers × Tiempo por notificación</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise10" value="a"> a) 95ms</label>
+                        <label><input type="radio" name="exercise10" value="b"> b) 105ms</label>
+                        <label><input type="radio" name="exercise10" value="c"> c) 100ms</label>
+                        <label><input type="radio" name="exercise10" value="d"> d) 110ms</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(10, 'c', 'Tiempo total = 20 × 5ms = 100ms. En notificación síncrona, se suman todos los tiempos individuales.')">Verificar Respuesta</button>
+                    <div id="feedback10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="resources">
+            <h2>Recursos y Referencias</h2>
+            
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>📚 Bibliografia Esencial</h3>
+                    <ul>
+                        <li>Design Patterns - Gang of Four</li>
+                        <li>UML Distilled - Martin Fowler</li>
+                        <li>Clean Code - Robert C. Martin</li>
+                        <li>The Unified Process - Jacobson, Booch, Rumbaugh</li>
+                        <li>Object-Oriented Analysis and Design - Craig Larman</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🛠️ Herramientas UML</h3>
+                    <ul>
+                        <li>Enterprise Architect</li>
+                        <li>Visual Paradigm</li>
+                        <li>Lucidchart</li>
+                        <li>Draw.io (Diagrams.net)</li>
+                        <li>ArgoUML (Open Source)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎯 Preparación de Examen</h3>
+                    <ul>
+                        <li>Practicar diagramas UML complejos</li>
+                        <li>Memorizar patrones GoF fundamentales</li>
+                        <li>Entender métricas de software</li>
+                        <li>Conocer fases y disciplinas UP</li>
+                        <li>Aplicar principios SOLID</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>💡 Consejos Prácticos</h3>
+                    <ul>
+                        <li>Comenzar con casos de uso simples</li>
+                        <li>Iterar el diseño progresivamente</li>
+                        <li>Validar con stakeholders frecuentemente</li>
+                        <li>Documentar decisiones arquitectónicas</li>
+                        <li>Refactorizar cuando sea necesario</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎓 Puntos Clave para el Examen</h4>
+                <ul>
+                    <li><strong>UML:</strong> Conocer los 14 tipos de diagramas y cuándo usar cada uno</li>
+                    <li><strong>Patrones:</strong> Memorizar problema/solución de patrones GoF principales</li>
+                    <li><strong>Métricas:</strong> Saber calcular CBO, DIT, LCOM, RFC, WMC, NOC</li>
+                    <li><strong>UP:</strong> Entender las 4 fases y 9 disciplinas del proceso</li>
+                    <li><strong>SOLID:</strong> Aplicar principios en ejemplos de código</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4>Resumen de Fórmulas Importantes</h4>
+                <div class="formula">CBO = Clases acopladas directamente</div>
+                <div class="formula">DIT = Profundidad máxima de herencia</div>
+                <div class="formula">LCOM = Componentes conexas de métodos</div>
+                <div class="formula">WMC = Σ complejidades ciclomáticas</div>
+                <div class="formula">RFC = Métodos propios + Métodos externos</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.add('light-theme');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.innerHTML = '<p>Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+
+            if (selectedAnswer.value === correctAnswer) {
+                feedback.innerHTML = `<p><strong>¡Correcto!</strong> ${explanation}</p>`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `<p><strong>Incorrecto.</strong> ${explanation}</p>`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        });
+
+        // Add click handlers for tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.textContent.toLowerCase()
+                        .replace('vista general', 'overview')
+                        .replace('proceso unificado', 'process')
+                        .replace('patrones de diseño', 'patterns')
+                        .replace('ejercicios', 'exercises')
+                        .replace('recursos', 'resources')
+                        .replace('uml', 'uml');
+                    showTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

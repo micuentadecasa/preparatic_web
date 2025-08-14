@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 15: Ciclo de vida de sistemas - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        :root,
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --border: #555555;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .alert-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg-secondary);
+        }
+
+        .highlight {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px var(--shadow);
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .phase-card {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        .phase-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .methodology-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .methodology-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .risk-level {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+
+        .risk-low {
+            background: rgba(39, 174, 96, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .risk-medium {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .risk-high {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .deliverable-list {
+            background: var(--bg-primary);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .deliverable-list h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .deliverable-list ul {
+            margin-left: 1rem;
+        }
+
+        .cost-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .cost-item {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border-top: 3px solid var(--primary);
+        }
+
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 0.5rem;
+            min-width: 150px;
+            position: relative;
+            border-top: 3px solid var(--primary);
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cost-breakdown {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step:not(:last-child)::after {
+                content: '↓';
+                right: 50%;
+                bottom: -15px;
+                top: auto;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>🔄 Ciclo de vida de sistemas</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="subtitle">Metodologías y procesos para el desarrollo de sistemas de información</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📋 Visión General</button>
+            <button class="tab" onclick="showTab('phases')">🔄 Fases del Ciclo</button>
+            <button class="tab" onclick="showTab('methodologies')">⚙️ Metodologías</button>
+            <button class="tab" onclick="showTab('management')">📊 Gestión de Proyectos</button>
+            <button class="tab" onclick="showTab('quality')">✅ Calidad y Testing</button>
+            <button class="tab" onclick="showTab('maintenance')">🛠️ Mantenimiento</button>
+        </div>
+
+        <div id="overview" class="tab-content">
+            <div class="alert alert-info">
+                <strong>🔄 Sistema Development Life Cycle (SDLC):</strong> Marco de trabajo que define las actividades realizadas en cada etapa del desarrollo de un sistema de información, desde su concepción hasta su retirada.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <div>Fases Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80%</span>
+                    <div>Éxito con Metodología</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5-20</span>
+                    <div>Años Vida Útil Sistema</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">60-80%</span>
+                    <div>Costes de Mantenimiento</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivos del SDLC</h3>
+                <ul>
+                    <li><strong>Estructura y organización:</strong> Proporcionar un marco sistemático</li>
+                    <li><strong>Control de calidad:</strong> Asegurar entregables de alta calidad</li>
+                    <li><strong>Gestión de riesgos:</strong> Identificar y mitigar problemas temprano</li>
+                    <li><strong>Eficiencia de recursos:</strong> Optimizar tiempo, coste y personal</li>
+                    <li><strong>Comunicación:</strong> Facilitar colaboración entre equipos</li>
+                    <li><strong>Trazabilidad:</strong> Seguimiento completo del progreso</li>
+                </ul>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>🎯 Planificación</h4>
+                    <p>Definición de objetivos y alcance</p>
+                </div>
+                <div class="process-step">
+                    <h4>📊 Análisis</h4>
+                    <p>Requisitos y especificaciones</p>
+                </div>
+                <div class="process-step">
+                    <h4>🏗️ Diseño</h4>
+                    <p>Arquitectura y especificaciones</p>
+                </div>
+                <div class="process-step">
+                    <h4>⚙️ Desarrollo</h4>
+                    <p>Implementación del código</p>
+                </div>
+                <div class="process-step">
+                    <h4>✅ Testing</h4>
+                    <p>Pruebas y validación</p>
+                </div>
+                <div class="process-step">
+                    <h4>🚀 Despliegue</h4>
+                    <p>Puesta en producción</p>
+                </div>
+                <div class="process-step">
+                    <h4>🛠️ Mantenimiento</h4>
+                    <p>Soporte y evolución</p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📚 Años 1960-1970: Enfoques Estructurados</h4>
+                    <p>Nacimiento del concepto SDLC con metodologías como el <span class="highlight">modelo en cascada</span>. Enfoque secuencial y lineal dominó la industria durante décadas.</p>
+                    <div class="badge">Waterfall</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🔄 Años 1980-1990: Iteración y Prototipado</h4>
+                    <p>Introducción de <span class="highlight">modelos iterativos</span> y técnicas de prototipado rápido. Mayor participación del usuario final en el proceso.</p>
+                    <div class="badge">RAD</div>
+                    <div class="badge">Espiral</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>⚡ Años 2000-2010: Metodologías Ágiles</h4>
+                    <p>Revolución ágil con <span class="highlight">Scrum, XP y Kanban</span>. Enfoque en entrega continua de valor y adaptabilidad al cambio.</p>
+                    <div class="badge">Scrum</div>
+                    <div class="badge">XP</div>
+                    <div class="badge">Lean</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>☁️ Años 2010-presente: DevOps y Cloud</h4>
+                    <p>Integración de desarrollo y operaciones. <span class="highlight">CI/CD, containerización y cloud-native</span> transforman el deployment y mantenimiento.</p>
+                    <div class="badge">DevOps</div>
+                    <div class="badge">Docker</div>
+                    <div class="badge">Kubernetes</div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Factores Críticos de Éxito:</strong>
+                <ul>
+                    <li>Compromiso y participación de stakeholders</li>
+                    <li>Definición clara y detallada de requisitos</li>
+                    <li>Selección de metodología apropiada al contexto</li>
+                    <li>Gestión proactiva de riesgos y cambios</li>
+                    <li>Comunicación efectiva entre equipos</li>
+                    <li>Testing continuo y control de calidad</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📈 Métricas de Éxito del Proyecto</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">±10%</span>
+                        <div>Desviación Presupuesto</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">±15%</span>
+                        <div>Desviación Cronograma</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">95%+</span>
+                        <div>Requisitos Cumplidos</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">8/10</span>
+                        <div>Satisfacción Usuario</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="phases" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🔄 Fases del SDLC:</strong> Cada fase tiene objetivos específicos, entradas definidas, actividades estructuradas y entregables concretos.
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-number">1</div>
+                <h3>🎯 Fase de Planificación</h3>
+                <p><strong>Objetivo:</strong> Definir el alcance, objetivos y viabilidad del proyecto.</p>
+                
+                <div class="grid">
+                    <div class="deliverable-list">
+                        <h4>📋 Entradas</h4>
+                        <ul>
+                            <li>Solicitud de proyecto</li>
+                            <li>Objetivos de negocio</li>
+                            <li>Restricciones presupuestarias</li>
+                            <li>Recursos disponibles</li>
+                        </ul>
+                    </div>
+                    <div class="deliverable-list">
+                        <h4>⚙️ Actividades Principales</h4>
+                        <ul>
+                            <li>Estudio de viabilidad</li>
+                            <li>Análisis coste-beneficio</li>
+                            <li>Identificación de stakeholders</li>
+                            <li>Planificación inicial</li>
+                            <li>Análisis de riesgos</li>
+                        </ul>
+                    </div>
+                    <div class="deliverable-list">
+                        <h4>📤 Entregables</h4>
+                        <ul>
+                            <li>Document de viabilidad</li>
+                            <li>Plan de proyecto</li>
+                            <li>Registro de stakeholders</li>
+                            <li>Matriz de riesgos inicial</li>
+                            <li>Carta de proyecto</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <h4>💰 Coste Típico</h4>
+                        <p><strong>5-10%</strong> del presupuesto total</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>⏱️ Duración</h4>
+                        <p><strong>2-6 semanas</strong> según complejidad</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>👥 Equipo Típico</h4>
+                        <p><strong>3-5 personas</strong> multidisciplinar</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-number">2</div>
+                <h3>📊 Fase de Análisis</h3>
+                <p><strong>Objetivo:</strong> Comprender completamente los requisitos funcionales y no funcionales del sistema.</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🎯 Análisis de Requisitos</h4>
+                        <ul>
+                            <li>Técnicas de elicitación: entrevistas, workshops, observación</li>
+                            <li>Casos de uso y historias de usuario</li>
+                            <li>Requisitos funcionales vs no funcionales</li>
+                            <li>Análisis de procesos de negocio</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📋 Documentación</h4>
+                        <ul>
+                            <li>Especificación de Requisitos Software (SRS)</li>
+                            <li>Modelos de dominio</li>
+                            <li>Diagramas de flujo de procesos</li>
+                            <li>Matriz de trazabilidad</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>✅ Validación</h4>
+                        <ul>
+                            <li>Revisiones con stakeholders</li>
+                            <li>Prototipado conceptual</li>
+                            <li>Análisis de factibilidad técnica</li>
+                            <li>Aprobación formal de requisitos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Riesgos Comunes:</strong>
+                    <ul>
+                        <li><strong>Requirements creep:</strong> Aumento descontrolado de requisitos</li>
+                        <li><strong>Ambigüedad:</strong> Requisitos poco claros o contradictorios</li>
+                        <li><strong>Stakeholder conflicts:</strong> Visiones divergentes no resueltas</li>
+                        <li><strong>Gold plating:</strong> Funcionalidades innecesarias</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-number">3</div>
+                <h3>🏗️ Fase de Diseño</h3>
+                <p><strong>Objetivo:</strong> Traducir requisitos en especificaciones técnicas detalladas.</p>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🎨 Diseño de Alto Nivel</h4>
+                        <ul>
+                            <li><strong>Arquitectura del sistema:</strong> Capas, componentes, patrones</li>
+                            <li><strong>Tecnologías:</strong> Stack tecnológico, frameworks</li>
+                            <li><strong>Interfaces:</strong> APIs, integraciones externas</li>
+                            <li><strong>Seguridad:</strong> Autenticación, autorización, cifrado</li>
+                            <li><strong>Infraestructura:</strong> Servidores, red, almacenamiento</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔧 Diseño Detallado</h4>
+                        <ul>
+                            <li><strong>Modelo de datos:</strong> Esquemas, relaciones, índices</li>
+                            <li><strong>Diseño de interfaces:</strong> Wireframes, mockups, UX</li>
+                            <li><strong>Algoritmos:</strong> Lógica de negocio compleja</li>
+                            <li><strong>Protocolos:</strong> Comunicación entre componentes</li>
+                            <li><strong>Error handling:</strong> Gestión de excepciones</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Artefacto de Diseño</th>
+                            <th>Propósito</th>
+                            <th>Audiencia</th>
+                            <th>Herramientas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Diagrama de arquitectura</td>
+                            <td>Vista general del sistema</td>
+                            <td>Arquitectos, desarrolladores</td>
+                            <td>Visio, Lucidchart, Draw.io</td>
+                        </tr>
+                        <tr>
+                            <td>Modelo de datos</td>
+                            <td>Estructura de información</td>
+                            <td>DBA, desarrolladores</td>
+                            <td>ERwin, MySQL Workbench</td>
+                        </tr>
+                        <tr>
+                            <td>Wireframes/Mockups</td>
+                            <td>Diseño de interfaces</td>
+                            <td>UX/UI, stakeholders</td>
+                            <td>Figma, Sketch, Adobe XD</td>
+                        </tr>
+                        <tr>
+                            <td>Diagrama de clases</td>
+                            <td>Estructura orientada a objetos</td>
+                            <td>Desarrolladores</td>
+                            <td>UML tools, IDE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-number">4</div>
+                <h3>⚙️ Fase de Desarrollo</h3>
+                <p><strong>Objetivo:</strong> Implementar el sistema según las especificaciones de diseño.</p>
+                
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🏗️</span>
+                        <h4>Construcción</h4>
+                        <ul>
+                            <li>Configuración de entornos</li>
+                            <li>Codificación</li>
+                            <li>Pruebas unitarias</li>
+                            <li>Code reviews</li>
+                            <li>Integración continua</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">📚</span>
+                        <h4>Documentación</h4>
+                        <ul>
+                            <li>Documentación técnica</li>
+                            <li>Manuales de usuario</li>
+                            <li>Comentarios de código</li>
+                            <li>APIs documentation</li>
+                            <li>Guías de instalación</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🔄</span>
+                        <h4>Control de Versiones</h4>
+                        <ul>
+                            <li>Git workflow</li>
+                            <li>Branching strategy</li>
+                            <li>Pull requests</li>
+                            <li>Release management</li>
+                            <li>Tagging y versionado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>✅ Mejores Prácticas de Desarrollo:</strong>
+                    <ul>
+                        <li><strong>Coding standards:</strong> Convenciones de código consistentes</li>
+                        <li><strong>DRY Principle:</strong> Don't Repeat Yourself</li>
+                        <li><strong>SOLID Principles:</strong> Diseño orientado a objetos</li>
+                        <li><strong>Test-driven development:</strong> Pruebas antes que código</li>
+                        <li><strong>Refactoring continuo:</strong> Mejora constante del código</li>
+                        <li><strong>Pair programming:</strong> Programación colaborativa</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-number">5</div>
+                <h3>✅ Fase de Testing</h3>
+                <p><strong>Objetivo:</strong> Verificar que el sistema cumple con todos los requisitos y funciona correctamente.</p>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Prueba</th>
+                            <th>Alcance</th>
+                            <th>Ejecutor</th>
+                            <th>% Esfuerzo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Pruebas Unitarias</td>
+                            <td>Funciones/métodos individuales</td>
+                            <td>Desarrolladores</td>
+                            <td>20%</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Pruebas de Integración</td>
+                            <td>Interacción entre componentes</td>
+                            <td>Desarrolladores/QA</td>
+                            <td>25%</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Pruebas de Sistema</td>
+                            <td>Sistema completo</td>
+                            <td>Equipo QA</td>
+                            <td>30%</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Pruebas de Aceptación</td>
+                            <td>Requisitos de negocio</td>
+                            <td>Usuarios finales</td>
+                            <td>25%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="risk-level risk-high">Alto Impacto: Defectos en producción</div>
+                <div class="risk-level risk-medium">Medio Impacto: Retrasos en entrega</div>
+                <div class="risk-level risk-low">Bajo Impacto: Problemas menores</div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Hot Tips para Examen - Fases SDLC:</strong>
+                <ul>
+                    <li><strong>Planificación:</strong> 5-10% presupuesto, análisis viabilidad</li>
+                    <li><strong>Análisis:</strong> Elicitación requisitos, SRS, validación</li>
+                    <li><strong>Diseño:</strong> Alto nivel + detallado, arquitectura + componentes</li>
+                    <li><strong>Desarrollo:</strong> Codificación + documentación + CI/CD</li>
+                    <li><strong>Testing:</strong> Unitarias (20%) + Integración (25%) + Sistema (30%) + Aceptación (25%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="methodologies" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>⚙️ Metodologías SDLC:</strong> Enfoques estructurados que definen cómo organizar, planificar y controlar el proceso de desarrollo de software.
+            </div>
+
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <span class="methodology-icon">💧</span>
+                    <h4>Modelo en Cascada</h4>
+                    <p><strong>Enfoque:</strong> Secuencial y lineal</p>
+                    <div class="alert alert-info">
+                        <strong>✅ Ventajas:</strong>
+                        <ul>
+                            <li>Simple de entender y gestionar</li>
+                            <li>Documentación exhaustiva</li>
+                            <li>Funciona bien para proyectos estables</li>
+                            <li>Facilita planificación y estimación</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>❌ Desventajas:</strong>
+                        <ul>
+                            <li>Inflexible ante cambios</li>
+                            <li>Testing tardío</li>
+                            <li>No hay entregables hasta el final</li>
+                            <li>Alto riesgo de fracaso</li>
+                        </ul>
+                    </div>
+                    <div class="badge">Mejor para: Proyectos bien definidos y estables</div>
+                </div>
+
+                <div class="methodology-card">
+                    <span class="methodology-icon">🌀</span>
+                    <h4>Modelo Espiral</h4>
+                    <p><strong>Enfoque:</strong> Iterativo basado en riesgos</p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <h5>🎯 Planificar</h5>
+                            <p>Objetivos y alternativas</p>
+                        </div>
+                        <div class="process-step">
+                            <h5>⚠️ Riesgo</h5>
+                            <p>Análisis y mitigación</p>
+                        </div>
+                        <div class="process-step">
+                            <h5>🏗️ Desarrollar</h5>
+                            <p>Construir y probar</p>
+                        </div>
+                        <div class="process-step">
+                            <h5>📊 Evaluar</h5>
+                            <p>Revisión y planificación siguiente iteración</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Ideal para:</strong> Proyectos grandes y complejos con alto riesgo técnico
+                    </div>
+                </div>
+
+                <div class="methodology-card">
+                    <span class="methodology-icon">🔄</span>
+                    <h4>Modelo Iterativo</h4>
+                    <p><strong>Enfoque:</strong> Desarrollo en ciclos repetitivos</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h5>Iteración 1: Core Features</h5>
+                            <p>Funcionalidades básicas esenciales</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>Iteración 2: Extended Features</h5>
+                            <p>Funcionalidades adicionales</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>Iteración 3: Polish & Optimize</h5>
+                            <p>Refinamiento y optimización</p>
+                        </div>
+                    </timeline>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">2-6</span>
+                            <div>Semanas por Iteración</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">3-8</span>
+                            <div>Iteraciones Típicas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card">
+                    <span class="methodology-icon">🚀</span>
+                    <h4>RAD (Rapid Application Development)</h4>
+                    <p><strong>Enfoque:</strong> Desarrollo rápido con prototipado</p>
+                    <div class="grid">
+                        <div class="card">
+                            <h5>🎯 Principios RAD</h5>
+                            <ul>
+                                <li>Prototipado rápido</li>
+                                <li>Desarrollo incremental</li>
+                                <li>Timeboxing estricto</li>
+                                <li>Participación activa del usuario</li>
+                                <li>Reutilización de componentes</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>⚙️ Fases RAD</h5>
+                            <ol>
+                                <li><strong>Business modeling:</strong> Procesos de negocio</li>
+                                <li><strong>Data modeling:</strong> Modelo de datos</li>
+                                <li><strong>Process modeling:</strong> Funcionalidades</li>
+                                <li><strong>Application generation:</strong> Construcción</li>
+                                <li><strong>Testing & turnover:</strong> Pruebas y entrega</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Limitaciones:</strong> Requiere recursos experientes, no escalable para proyectos muy grandes
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <h3>⚡ Metodologías Ágiles</h3>
+                <div class="alert alert-info">
+                    <strong>Manifiesto Ágil (2001):</strong> Individuos sobre procesos, software funcionando sobre documentación exhaustiva, colaboración con cliente sobre negociación contractual, responder al cambio sobre seguir un plan.
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>🏃 Scrum</h4>
+                        <p><strong>Framework ágil más popular</strong></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Rol</th>
+                                    <th>Responsabilidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Product Owner</td>
+                                    <td>Define prioridades y acepta entregables</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Scrum Master</td>
+                                    <td>Facilita el proceso y elimina impedimentos</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Development Team</td>
+                                    <td>Desarrolla el producto</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="badge">Sprint: 1-4 semanas</div>
+                        <div class="badge">Daily Standup: 15 min</div>
+                        <div class="badge">Sprint Review & Retrospective</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔧 Extreme Programming (XP)</h4>
+                        <p><strong>Prácticas de ingeniería</strong></p>
+                        <ul>
+                            <li><strong>Pair Programming:</strong> Dos desarrolladores, una estación</li>
+                            <li><strong>TDD:</strong> Test-Driven Development</li>
+                            <li><strong>Refactoring:</strong> Mejora continua del código</li>
+                            <li><strong>Integration continua:</strong> Integración frecuente</li>
+                            <li><strong>Small releases:</strong> Entregas frecuentes</li>
+                            <li><strong>Simple design:</strong> Diseño sencillo</li>
+                        </ul>
+                        <div class="risk-level risk-high">Alta disciplina técnica requerida</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>📋 Kanban</h4>
+                        <p><strong>Gestión visual del flujo</strong></p>
+                        <div class="process-flow">
+                            <div class="process-step">
+                                <h5>📝 To Do</h5>
+                                <p>Tareas pendientes</p>
+                            </div>
+                            <div class="process-step">
+                                <h5>⚙️ In Progress</h5>
+                                <p>En desarrollo</p>
+                            </div>
+                            <div class="process-step">
+                                <h5>✅ Done</h5>
+                                <p>Completadas</p>
+                            </div>
+                        </div>
+                        <div class="alert alert-success">
+                            <strong>WIP Limits:</strong> Límites de trabajo en progreso para optimizar flujo
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Comparación de Metodologías</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Metodología</th>
+                            <th>Flexibilidad</th>
+                            <th>Documentación</th>
+                            <th>Duración Proyecto</th>
+                            <th>Riesgo</th>
+                            <th>Participación Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Cascada</td>
+                            <td>Baja</td>
+                            <td>Alta</td>
+                            <td>Larga</td>
+                            <td>Alto</td>
+                            <td>Baja</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Espiral</td>
+                            <td>Media</td>
+                            <td>Alta</td>
+                            <td>Larga</td>
+                            <td>Controlado</td>
+                            <td>Media</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">RAD</td>
+                            <td>Alta</td>
+                            <td>Media</td>
+                            <td>Corta</td>
+                            <td>Medio</td>
+                            <td>Alta</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Scrum</td>
+                            <td>Muy Alta</td>
+                            <td>Baja</td>
+                            <td>Media</td>
+                            <td>Bajo</td>
+                            <td>Muy Alta</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Kanban</td>
+                            <td>Muy Alta</td>
+                            <td>Baja</td>
+                            <td>Continua</td>
+                            <td>Bajo</td>
+                            <td>Alta</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Selección de Metodología:</strong>
+                <ul>
+                    <li><strong>Cascada:</strong> Requisitos estables, regulación alta, equipos inexpertos</li>
+                    <li><strong>Espiral:</strong> Proyectos complejos, alto riesgo técnico, presupuestos grandes</li>
+                    <li><strong>RAD:</strong> Proyectos pequeños-medianos, tiempo crítico, prototipado</li>
+                    <li><strong>Ágil:</strong> Requisitos cambiantes, equipos experimentados, participación usuario</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="management" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>📊 Gestión de Proyectos:</strong> Aplicación de conocimientos, habilidades, herramientas y técnicas para satisfacer los requisitos del proyecto de desarrollo de software.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">70%</span>
+                    <div>Proyectos con PM Exitosos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">25%</span>
+                    <div>Sin PM Exitosos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">10</span>
+                    <div>Áreas Conocimiento PMI</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">47</span>
+                    <div>Procesos PMBOK</div>
+                </div>
+            </stats-grid>
+
+            <div class="phase-card">
+                <h3>📋 Áreas de Conocimiento PMI</h3>
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <span class="methodology-icon">⚙️</span>
+                        <h4>Gestión de la Integración</h4>
+                        <ul>
+                            <li>Desarrollar acta de constitución</li>
+                            <li>Plan de gestión del proyecto</li>
+                            <li>Dirigir y gestionar la ejecución</li>
+                            <li>Control integrado de cambios</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🎯</span>
+                        <h4>Gestión del Alcance</h4>
+                        <ul>
+                            <li>Recopilar requisitos</li>
+                            <li>Definir el alcance</li>
+                            <li>Crear la EDT/WBS</li>
+                            <li>Controlar el alcance</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">⏱️</span>
+                        <h4>Gestión del Cronograma</h4>
+                        <ul>
+                            <li>Definir actividades</li>
+                            <li>Secuenciar actividades</li>
+                            <li>Estimar duraciones</li>
+                            <li>Desarrollar cronograma</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">💰</span>
+                        <h4>Gestión de Costes</h4>
+                        <ul>
+                            <li>Estimar costes</li>
+                            <li>Determinar presupuesto</li>
+                            <li>Controlar costes</li>
+                            <li>Earned Value Management</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">✅</span>
+                        <h4>Gestión de la Calidad</h4>
+                        <ul>
+                            <li>Planificar la calidad</li>
+                            <li>Asegurar la calidad</li>
+                            <li>Controlar la calidad</li>
+                            <li>Mejora continua</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">👥</span>
+                        <h4>Gestión de Recursos</h4>
+                        <ul>
+                            <li>Planificar recursos</li>
+                            <li>Adquirir el equipo</li>
+                            <li>Desarrollar el equipo</li>
+                            <li>Gestionar el equipo</li>
+                        </ul>
+                    </div>
+                </methodology-grid>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Técnicas de Estimación</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Técnica</th>
+                                <th>Precisión</th>
+                                <th>Esfuerzo</th>
+                                <th>Uso Típico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Analogía</td>
+                                <td>±50%</td>
+                                <td>Bajo</td>
+                                <td>Estimaciones iniciales</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Puntos de Función</td>
+                                <td>±25%</td>
+                                <td>Alto</td>
+                                <td>Sistemas de información</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">COCOMO</td>
+                                <td>±20%</td>
+                                <td>Medio</td>
+                                <td>Proyectos de software</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Planning Poker</td>
+                                <td>±30%</td>
+                                <td>Bajo</td>
+                                <td>Metodologías ágiles</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Cone of Uncertainty:</strong> La precisión de estimaciones mejora a medida que avanza el proyecto
+                        <ul>
+                            <li><strong>Concept:</strong> -75% a +400%</li>
+                            <li><strong>Requirements:</strong> -50% a +100%</li>
+                            <li><strong>Design:</strong> -25% a +50%</li>
+                            <li><strong>Implementation:</strong> -10% a +25%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚠️ Gestión de Riesgos</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>🔍 1. Identificación de Riesgos</h4>
+                            <ul>
+                                <li>Brainstorming con equipo</li>
+                                <li>Análisis de lecciones aprendidas</li>
+                                <li>Revisión de documentación</li>
+                                <li>Técnica Delphi</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>📊 2. Análisis Cualitativo</h4>
+                            <p>Matriz Probabilidad × Impacto</p>
+                            <div class="risk-level risk-high">Alto: P×I = 15-25</div>
+                            <div class="risk-level risk-medium">Medio: P×I = 6-14</div>
+                            <div class="risk-level risk-low">Bajo: P×I = 1-5</div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>💰 3. Análisis Cuantitativo</h4>
+                            <ul>
+                                <li>Expected Monetary Value (EMV)</li>
+                                <li>Simulación Monte Carlo</li>
+                                <li>Árboles de decisión</li>
+                                <li>Análisis de sensibilidad</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🎯 4. Planificación de Respuestas</h4>
+                            <ul>
+                                <li><strong>Evitar:</strong> Cambiar plan proyecto</li>
+                                <li><strong>Mitigar:</strong> Reducir probabilidad/impacto</li>
+                                <li><strong>Transferir:</strong> Seguros, subcontratación</li>
+                                <li><strong>Aceptar:</strong> Reservas de contingencia</li>
+                            </ul>
+                        </div>
+                    </timeline>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <h3>📈 Control y Seguimiento</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>📊 Earned Value Management (EVM)</h4>
+                        <div class="cost-breakdown">
+                            <div class="cost-item">
+                                <h5>PV (Planned Value)</h5>
+                                <p><strong>Valor Planificado</strong></p>
+                                <p>Trabajo programado</p>
+                            </div>
+                            <div class="cost-item">
+                                <h5>EV (Earned Value)</h5>
+                                <p><strong>Valor Ganado</strong></p>
+                                <p>Trabajo completado</p>
+                            </div>
+                            <div class="cost-item">
+                                <h5>AC (Actual Cost)</h5>
+                                <p><strong>Coste Real</strong></p>
+                                <p>Dinero gastado</p>
+                            </div>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Indicador</th>
+                                    <th>Fórmula</th>
+                                    <th>Interpretación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">SV (Schedule Variance)</td>
+                                    <td>EV - PV</td>
+                                    <td>>0: Adelantado, <0: Retrasado</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">CV (Cost Variance)</td>
+                                    <td>EV - AC</td>
+                                    <td>>0: Bajo presupuesto, <0: Sobre presupuesto</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">SPI (Schedule Performance)</td>
+                                    <td>EV / PV</td>
+                                    <td>>1: Adelantado, <1: Retrasado</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">CPI (Cost Performance)</td>
+                                    <td>EV / AC</td>
+                                    <td>>1: Eficiente, <1: Ineficiente</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h4>🎯 KPIs de Proyecto Software</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">Velocidad</span>
+                                <div>Story Points/Sprint</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">Burndown</span>
+                                <div>Trabajo Pendiente</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">Defect Density</span>
+                                <div>Bugs/KLOC</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">Team Happiness</span>
+                                <div>Moral del Equipo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Factores Críticos de Éxito en Gestión:</strong>
+                <ul>
+                    <li><strong>Liderazgo ejecutivo:</strong> Apoyo visible y continuo</li>
+                    <li><strong>Participación usuario:</strong> Stakeholders comprometidos</li>
+                    <li><strong>Requisitos claros:</strong> Alcance bien definido</li>
+                    <li><strong>Planificación realista:</strong> Estimaciones precisas</li>
+                    <li><strong>Gestión de cambios:</strong> Control de scope creep</li>
+                    <li><strong>Comunicación efectiva:</strong> Transparencia total</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="quality" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>✅ Calidad y Testing:</strong> Conjunto de actividades y procesos destinados a garantizar que el software cumple con los requisitos especificados y las expectativas del usuario.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">10:1</span>
+                    <div>Coste Defecto Producción vs Desarrollo</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20-25%</span>
+                    <div>Esfuerzo en Testing</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80/20</span>
+                    <div>Regla de Pareto en Defectos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">99.9%</span>
+                    <div>Objetivo Disponibilidad</div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <h3>🎯 Modelos de Calidad</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>📊 ISO/IEC 25010 - SQuaRE</h4>
+                        <p><strong>System and Software Quality Requirements and Evaluation</strong></p>
+                        <div class="methodology-grid">
+                            <div class="methodology-card">
+                                <span class="methodology-icon">⚡</span>
+                                <h5>Funcionalidad</h5>
+                                <ul>
+                                    <li>Completitud funcional</li>
+                                    <li>Corrección funcional</li>
+                                    <li>Pertinencia funcional</li>
+                                </ul>
+                            </div>
+                            <div class="methodology-card">
+                                <span class="methodology-icon">🚀</span>
+                                <h5>Rendimiento</h5>
+                                <ul>
+                                    <li>Comportamiento temporal</li>
+                                    <li>Utilización de recursos</li>
+                                    <li>Capacidad</li>
+                                </ul>
+                            </div>
+                            <div class="methodology-card">
+                                <span class="methodology-icon">🔌</span>
+                                <h5>Compatibilidad</h5>
+                                <ul>
+                                    <li>Coexistencia</li>
+                                    <li>Interoperabilidad</li>
+                                </ul>
+                            </div>
+                            <div class="methodology-card">
+                                <span class="methodology-icon">👤</span>
+                                <h5>Usabilidad</h5>
+                                <ul>
+                                    <li>Reconocimiento de idoneidad</li>
+                                    <li>Capacidad de aprendizaje</li>
+                                    <li>Operabilidad</li>
+                                    <li>Protección contra errores</li>
+                                </ul>
+                            </div>
+                            <div class="methodology-card">
+                                <span class="methodology-icon">🛡️</span>
+                                <h5>Fiabilidad</h5>
+                                <ul>
+                                    <li>Madurez</li>
+                                    <li>Disponibilidad</li>
+                                    <li>Tolerancia a fallos</li>
+                                    <li>Recuperabilidad</li>
+                                </ul>
+                            </div>
+                            <div class="methodology-card">
+                                <span class="methodology-icon">🔒</span>
+                                <h5>Seguridad</h5>
+                                <ul>
+                                    <li>Confidencialidad</li>
+                                    <li>Integridad</li>
+                                    <li>No repudio</li>
+                                    <li>Autenticidad</li>
+                                </ul>
+                            </div>
+                        </methodology-grid>
+                    </div>
+
+                    <div class="card">
+                        <h4>🏗️ Pirámide de Testing</h4>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h5>🔧 Pruebas Unitarias (70%)</h5>
+                                <ul>
+                                    <li><strong>Alcance:</strong> Funciones/métodos individuales</li>
+                                    <li><strong>Velocidad:</strong> Muy rápida (milisegundos)</li>
+                                    <li><strong>Coste:</strong> Muy bajo</li>
+                                    <li><strong>Mantenimiento:</strong> Fácil</li>
+                                    <li><strong>Herramientas:</strong> JUnit, NUnit, Jest</li>
+                                </ul>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>🔗 Pruebas de Integración (20%)</h5>
+                                <ul>
+                                    <li><strong>Alcance:</strong> Interacción entre componentes</li>
+                                    <li><strong>Velocidad:</strong> Rápida (segundos)</li>
+                                    <li><strong>Coste:</strong> Bajo</li>
+                                    <li><strong>Tipos:</strong> Big Bang, Incremental, Sandwich</li>
+                                    <li><strong>Herramientas:</strong> TestNG, Postman, SoapUI</li>
+                                </ul>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>🎭 Pruebas End-to-End (10%)</h5>
+                                <ul>
+                                    <li><strong>Alcance:</strong> Flujos completos de usuario</li>
+                                    <li><strong>Velocidad:</strong> Lenta (minutos)</li>
+                                    <li><strong>Coste:</strong> Alto</li>
+                                    <li><strong>Fragilidad:</strong> Alta</li>
+                                    <li><strong>Herramientas:</strong> Selenium, Cypress, Playwright</li>
+                                </ul>
+                            </div>
+                        </timeline>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔍 Técnicas de Testing</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Enfoque</th>
+                                <th>Técnicas</th>
+                                <th>Herramientas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Caja Negra</td>
+                                <td>Funcional</td>
+                                <td>Equivalencia, valores límite, casos de uso</td>
+                                <td>Manual, Automation</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Caja Blanca</td>
+                                <td>Estructural</td>
+                                <td>Cobertura de código, caminos, condiciones</td>
+                                <td>Coverage tools, Static analysis</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Caja Gris</td>
+                                <td>Híbrido</td>
+                                <td>Combinación de ambas</td>
+                                <td>Testing frameworks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <strong>📊 Criterios de Cobertura:</strong>
+                        <ul>
+                            <li><strong>Cobertura de sentencias:</strong> % líneas ejecutadas</li>
+                            <li><strong>Cobertura de ramas:</strong> % decisiones evaluadas</li>
+                            <li><strong>Cobertura de condiciones:</strong> % condiciones booleanas</li>
+                            <li><strong>Cobertura de caminos:</strong> % rutas de ejecución</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Testing No Funcional</h3>
+                    
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <span class="methodology-icon">🚀</span>
+                            <h4>Performance Testing</h4>
+                            <ul>
+                                <li><strong>Load Testing:</strong> Carga normal esperada</li>
+                                <li><strong>Stress Testing:</strong> Más allá de capacidad</li>
+                                <li><strong>Spike Testing:</strong> Aumentos súbitos</li>
+                                <li><strong>Volume Testing:</strong> Grandes cantidades datos</li>
+                            </ul>
+                            <div class="badge">JMeter</div>
+                            <div class="badge">LoadRunner</div>
+                            <div class="badge">K6</div>
+                        </div>
+                        <div class="methodology-card">
+                            <span class="methodology-icon">🔒</span>
+                            <h4>Security Testing</h4>
+                            <ul>
+                                <li><strong>Authentication:</strong> Verificación identidad</li>
+                                <li><strong>Authorization:</strong> Control de acceso</li>
+                                <li><strong>SQL Injection:</strong> Inyección código</li>
+                                <li><strong>XSS:</strong> Cross-site scripting</li>
+                            </ul>
+                            <div class="badge">OWASP ZAP</div>
+                            <div class="badge">Burp Suite</div>
+                            <div class="badge">SonarQube</div>
+                        </div>
+                        <div class="methodology-card">
+                            <span class="methodology-icon">👤</span>
+                            <h4>Usability Testing</h4>
+                            <ul>
+                                <li><strong>A/B Testing:</strong> Comparación variantes</li>
+                                <li><strong>Eye tracking:</strong> Seguimiento visual</li>
+                                <li><strong>User journey:</strong> Flujos de usuario</li>
+                                <li><strong>Accessibility:</strong> WCAG compliance</li>
+                            </ul>
+                            <div class="badge">Hotjar</div>
+                            <div class="badge">UsabilityHub</div>
+                            <div class="badge">axe</div>
+                        </div>
+                    </methodology-grid>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <h3>🤖 Test Automation</h3>
+                
+                <div class="alert alert-success">
+                    <strong>💡 Automation Strategy:</strong> No automatizar todo, sino lo que aporta mayor valor y se mantiene fácilmente.
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>✅ Candidatos para Automatización</h4>
+                        <ul>
+                            <li>Pruebas repetitivas y tediosas</li>
+                            <li>Pruebas con datos múltiples</li>
+                            <li>Pruebas de regresión críticas</li>
+                            <li>Pruebas de performance</li>
+                            <li>Pruebas que requieren múltiples datasets</li>
+                            <li>Smoke tests y sanity checks</li>
+                        </ul>
+                        <div class="risk-level risk-high">ROI Alto: Casos frecuentes y estables</div>
+                    </div>
+                    <div class="card">
+                        <h4>❌ No Automatizar</h4>
+                        <ul>
+                            <li>Pruebas que cambian frecuentemente</li>
+                            <li>Pruebas de usabilidad subjetiva</li>
+                            <li>Pruebas ad-hoc y exploratorias</li>
+                            <li>Pruebas que requieren validación visual compleja</li>
+                            <li>Casos de uso únicos</li>
+                            <li>Pruebas de user experience</li>
+                        </ul>
+                        <div class="risk-level risk-low">ROI Bajo: Coste > Beneficio</div>
+                    </div>
+                </div>
+
+                <div class="process-flow">
+                    <div class="process-step">
+                        <h5>🎯 Estrategia</h5>
+                        <p>Qué, cuándo, cómo automatizar</p>
+                    </div>
+                    <div class="process-step">
+                        <h5>🛠️ Framework</h5>
+                        <p>Herramientas y arquitectura</p>
+                    </div>
+                    <div class="process-step">
+                        <h5>📝 Scripts</h5>
+                        <p>Desarrollo de casos automatizados</p>
+                    </div>
+                    <div class="process-step">
+                        <h5>🔄 Ejecución</h5>
+                        <p>CI/CD integration</p>
+                    </div>
+                    <div class="process-step">
+                        <h5>📊 Reporting</h5>
+                        <p>Análisis resultados y mejoras</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Calidad y Testing:</strong>
+                <ul>
+                    <li><strong>ISO 25010:</strong> 8 características calidad (funcionalidad, rendimiento, usabilidad...)</li>
+                    <li><strong>Pirámide Testing:</strong> 70% unitarias, 20% integración, 10% E2E</li>
+                    <li><strong>Cobertura de código:</strong> Sentencias, ramas, condiciones, caminos</li>
+                    <li><strong>Testing no funcional:</strong> Performance, security, usability</li>
+                    <li><strong>Automatización:</strong> Casos repetitivos y estables, no cambios frecuentes</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="maintenance" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🛠️ Mantenimiento de Software:</strong> Proceso de modificar un sistema de software después de su entrega para corregir defectos, mejorar rendimiento o adaptar el producto a un entorno modificado.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">60-80%</span>
+                    <div>Coste Total Ciclo Vida</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20%</span>
+                    <div>Mantenimiento Correctivo</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">25%</span>
+                    <div>Mantenimiento Adaptativo</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">50%</span>
+                    <div>Mantenimiento Perfectivo</div>
+                </div>
+            </stats-grid>
+
+            <div class="grid">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h3>🔧 Mantenimiento Correctivo</h3>
+                    <p><strong>Objetivo:</strong> Corregir defectos encontrados después de la puesta en producción.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>🚨 Detección de Defectos</h4>
+                            <ul>
+                                <li>Reports de usuarios</li>
+                                <li>Monitorización automática</li>
+                                <li>Logs de error</li>
+                                <li>Auditorías de seguridad</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🔍 Análisis y Diagnóstico</h4>
+                            <ul>
+                                <li>Reproducción del error</li>
+                                <li>Análisis de root cause</li>
+                                <li>Impacto assessment</li>
+                                <li>Priorización</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🛠️ Resolución</h4>
+                            <ul>
+                                <li>Desarrollo de fix</li>
+                                <li>Testing de regresión</li>
+                                <li>Deployment controlado</li>
+                                <li>Verificación</li>
+                            </ul>
+                        </div>
+                    </timeline>
+
+                    <div class="alert alert-danger">
+                        <strong>🚨 Clasificación de Severidad:</strong>
+                        <ul>
+                            <li><strong>Crítica:</strong> Sistema no disponible - Fix inmediato</li>
+                            <li><strong>Alta:</strong> Funcionalidad principal afectada - 24-48h</li>
+                            <li><strong>Media:</strong> Funcionalidad secundaria - 1-2 semanas</li>
+                            <li><strong>Baja:</strong> Mejoras menores - Próxima release</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h3>🔄 Mantenimiento Adaptativo</h3>
+                    <p><strong>Objetivo:</strong> Modificar el software para que funcione en un entorno cambiado.</p>
+                    
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <span class="methodology-icon">💻</span>
+                            <h4>Cambios de Plataforma</h4>
+                            <ul>
+                                <li>Nuevas versiones SO</li>
+                                <li>Actualización hardware</li>
+                                <li>Migración a cloud</li>
+                                <li>Nuevos navegadores</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <span class="methodology-icon">📱</span>
+                            <h4>Nuevos Dispositivos</h4>
+                            <ul>
+                                <li>Responsive design</li>
+                                <li>Mobile optimization</li>
+                                <li>Tablet compatibility</li>
+                                <li>Accessibility features</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <span class="methodology-icon">⚖️</span>
+                            <h4>Cambios Regulatorios</h4>
+                            <ul>
+                                <li>Nuevas legislaciones</li>
+                                <li>Compliance updates</li>
+                                <li>Privacy regulations</li>
+                                <li>Security standards</li>
+                            </ul>
+                        </div>
+                    </methodology-grid>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h3>⚡ Mantenimiento Perfectivo</h3>
+                    <p><strong>Objetivo:</strong> Mejorar la funcionalidad, rendimiento o mantenibilidad del software.</p>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>🚀 Mejoras de Rendimiento</h4>
+                            <ul>
+                                <li><strong>Optimización de consultas:</strong> Índices, queries SQL</li>
+                                <li><strong>Caching strategies:</strong> Redis, CDN</li>
+                                <li><strong>Code optimization:</strong> Algoritmos más eficientes</li>
+                                <li><strong>Resource management:</strong> Memory leaks, CPU usage</li>
+                                <li><strong>Load balancing:</strong> Distribución de carga</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>✨ Nuevas Funcionalidades</h4>
+                            <ul>
+                                <li>Requests de usuarios</li>
+                                <li>Competitive features</li>
+                                <li>Technology upgrades</li>
+                                <li>Integration capabilities</li>
+                                <li>User experience improvements</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>🏗️ Refactoring</h4>
+                            <ul>
+                                <li><strong>Code cleanup:</strong> Remove dead code</li>
+                                <li><strong>Structure improvement:</strong> Design patterns</li>
+                                <li><strong>Documentation update:</strong> Technical docs</li>
+                                <li><strong>Test coverage:</strong> Unit tests, integration</li>
+                                <li><strong>Dependency updates:</strong> Libraries, frameworks</li>
+                            </ul>
+                        </div>
+                    </grid>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h3>🔮 Mantenimiento Preventivo</h3>
+                    <p><strong>Objetivo:</strong> Prevenir problemas futuros mediante mejoras proactivas.</p>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <h4>📊 Monitorización</h4>
+                            <p>Métricas de rendimiento y salud del sistema</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>🔍 Análisis Predictivo</h4>
+                            <p>Identificación de patrones y tendencias</p>
+                        </div>
+                        <div class="process-step">
+                            <h4>🛠️ Mantenimiento Proactivo</h4>
+                            <p>Acciones antes de que ocurran problemas</p>
+                        </div>
+                    </process-flow>
+
+                    <div class="alert alert-success">
+                        <strong>🎯 Estrategias Preventivas:</strong>
+                        <ul>
+                            <li><strong>Code reviews regulares:</strong> Detección temprana de problemas</li>
+                            <li><strong>Automated testing:</strong> Prevención de regresiones</li>
+                            <li><strong>Security scans:</strong> Vulnerabilidades proactivas</li>
+                            <li><strong>Performance monitoring:</strong> Alertas de degradación</li>
+                            <li><strong>Dependency updates:</strong> Mantenerse actualizado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Métricas de Mantenimiento</h3>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Definición</th>
+                            <th>Objetivo Típico</th>
+                            <th>Importancia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">MTTR</td>
+                            <td>Mean Time To Repair</td>
+                            <td><4 hours</td>
+                            <td>Velocidad de resolución</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">MTBF</td>
+                            <td>Mean Time Between Failures</td>
+                            <td>>720 hours</td>
+                            <td>Fiabilidad del sistema</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Availability</td>
+                            <td>% tiempo sistema disponible</td>
+                            <td>>99.9%</td>
+                            <td>Disponibilidad servicio</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Defect Density</td>
+                            <td>Defectos por KLOC</td>
+                            <td><1 defecto/KLOC</td>
+                            <td>Calidad del código</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Customer Satisfaction</td>
+                            <td>Satisfacción usuario final</td>
+                            <td>>8/10</td>
+                            <td>Experiencia usuario</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <h4>💰 Coste Mantenimiento</h4>
+                        <p><strong>€50-200/hora</strong> según expertise</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>⏱️ Tiempo Medio</h4>
+                        <p><strong>2-8 horas</strong> por incidencia</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>📈 Tendencia</h4>
+                        <p><strong>Aumenta 5-10%/año</strong> complejidad</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <h3>🔚 End of Life (EOL)</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📅 Planificación EOL</h4>
+                        <ul>
+                            <li>Análisis de viabilidad técnica</li>
+                            <li>Evaluación coste-beneficio</li>
+                            <li>Identificación de sistemas reemplazo</li>
+                            <li>Timeline de migración</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📊 Migración de Datos</h4>
+                        <ul>
+                            <li>Mapping de estructuras</li>
+                            <li>Limpieza y validación</li>
+                            <li>Testing de migración</li>
+                            <li>Backup y rollback plans</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>👥 Gestión del Cambio</h4>
+                        <ul>
+                            <li>Comunicación a stakeholders</li>
+                            <li>Formación en nuevo sistema</li>
+                            <li>Soporte durante transición</li>
+                            <li>Documentación de procesos</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🗂️ Archivo y Documentación</h4>
+                        <ul>
+                            <li>Preservación de datos históricos</li>
+                            <li>Documentación técnica</li>
+                            <li>Lecciones aprendidas</li>
+                            <li>Compliance y auditoría</li>
+                        </ul>
+                    </div>
+                </timeline>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Factores para Decidir EOL:</strong>
+                    <ul>
+                        <li><strong>Coste mantenimiento:</strong> Supera 50% coste nuevo desarrollo</li>
+                        <li><strong>Tecnología obsoleta:</strong> Soporte fabricante descontinuado</li>
+                        <li><strong>Seguridad:</strong> Vulnerabilidades no patcheables</li>
+                        <li><strong>Performance:</strong> No cumple requisitos actuales</li>
+                        <li><strong>Compliance:</strong> No puede adaptarse a nuevas regulaciones</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Mantenimiento:</strong>
+                <ul>
+                    <li><strong>Tipos:</strong> Correctivo (20%), Adaptativo (25%), Perfectivo (50%), Preventivo (5%)</li>
+                    <li><strong>Coste:</strong> 60-80% del coste total del ciclo de vida</li>
+                    <li><strong>Métricas:</strong> MTTR <4h, MTBF >720h, Disponibilidad >99.9%</li>
+                    <li><strong>EOL:</strong> Migración datos + gestión cambio + archivo</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (savedTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card, .phase-card, .methodology-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

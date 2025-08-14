@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 16: Gestión de procesos de desarrollo - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        :root,
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --border: #555555;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .alert-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg-secondary);
+        }
+
+        .highlight {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px var(--shadow);
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .process-card {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        .process-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .methodology-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .methodology-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .maturity-level {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+
+        .maturity-1 {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .maturity-2 {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .maturity-3 {
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .maturity-4 {
+            background: rgba(39, 174, 96, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .maturity-5 {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+
+        .kpi-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 10px;
+        }
+
+        .kpi-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .kpi-item:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .workflow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .workflow-step {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            text-align: center;
+            position: relative;
+        }
+
+        .comparison-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-header {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .comparison-cell {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .best-practice-box {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 10px 10px 0;
+            position: relative;
+        }
+
+        .best-practice-box::before {
+            content: '💡';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--success);
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-matrix {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>⚙️ Gestión de procesos de desarrollo</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="subtitle">Frameworks y metodologías para la optimización de procesos de desarrollo de software</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📋 Visión General</button>
+            <button class="tab" onclick="showTab('frameworks')">🏗️ Frameworks</button>
+            <button class="tab" onclick="showTab('improvement')">📈 Mejora de Procesos</button>
+            <button class="tab" onclick="showTab('metrics')">📊 Métricas y KPIs</button>
+            <button class="tab" onclick="showTab('tools')">🛠️ Herramientas</button>
+            <button class="tab" onclick="showTab('implementation')">🚀 Implementación</button>
+        </div>
+
+        <div id="overview" class="tab-content">
+            <div class="alert alert-info">
+                <strong>⚙️ Gestión de Procesos de Desarrollo:</strong> Disciplina que se centra en la definición, implementación, medición, monitorización, control y mejora de los procesos de desarrollo de software para aumentar la eficiencia, calidad y predictibilidad.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">40%</span>
+                    <div>Mejora Productividad</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">60%</span>
+                    <div>Reducción Defectos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">30%</span>
+                    <div>Reducción Time-to-Market</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div>Niveles Madurez CMMI</div>
+                </div>
+            </stats-grid>
+
+            <div class="card">
+                <h3>🎯 Objetivos Principales</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>📈 Eficiencia Operativa</h4>
+                        <ul>
+                            <li>Optimización de workflows</li>
+                            <li>Eliminación de desperdicios (waste)</li>
+                            <li>Automatización de tareas repetitivas</li>
+                            <li>Mejora continua de procesos</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>✅ Calidad del Producto</h4>
+                        <ul>
+                            <li>Reducción de defectos</li>
+                            <li>Mejora de la satisfacción del cliente</li>
+                            <li>Cumplimiento de estándares</li>
+                            <li>Testing sistemático</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Predictibilidad</h4>
+                        <ul>
+                            <li>Estimaciones más precisas</li>
+                            <li>Control de cronogramas</li>
+                            <li>Gestión de riesgos</li>
+                            <li>Planificación efectiva</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>👥 Satisfacción del Equipo</h4>
+                        <ul>
+                            <li>Reducción de estrés</li>
+                            <li>Claridad de roles</li>
+                            <li>Formación continua</li>
+                            <li>Empoderamiento</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>🔄 Ciclo de Vida de Gestión de Procesos</h3>
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>📋 1. Definición</h4>
+                        <p>Establecer procesos estándar y documentados</p>
+                        <ul>
+                            <li>Mapeo de procesos actuales</li>
+                            <li>Identificación de best practices</li>
+                            <li>Documentación de procedimientos</li>
+                            <li>Definición de roles y responsabilidades</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>🚀 2. Implementación</h4>
+                        <p>Desplegar procesos en los equipos</p>
+                        <ul>
+                            <li>Formación del personal</li>
+                            <li>Piloto en equipos seleccionados</li>
+                            <li>Gradual rollout</li>
+                            <li>Soporte y coaching</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>📊 3. Medición</h4>
+                        <p>Recopilar datos y métricas de rendimiento</p>
+                        <ul>
+                            <li>Definición de KPIs</li>
+                            <li>Sistemas de monitorización</li>
+                            <li>Recopilación de datos</li>
+                            <li>Análisis estadístico</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>🔍 4. Análisis</h4>
+                        <p>Evaluar el rendimiento y identificar mejoras</p>
+                        <ul>
+                            <li>Análisis de tendencias</li>
+                            <li>Identificación de cuellos de botella</li>
+                            <li>Root cause analysis</li>
+                            <li>Benchmarking</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>📈 5. Mejora</h4>
+                        <p>Optimizar procesos basándose en datos</p>
+                        <ul>
+                            <li>Implementación de mejoras</li>
+                            <li>A/B testing de cambios</li>
+                            <li>Actualización de documentación</li>
+                            <li>Validación de resultados</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📚 1990s: Proceso Software Personal (PSP)</h4>
+                    <p>Watts Humphrey introduce el <span class="highlight">Personal Software Process</span>, enfocado en la mejora individual del desarrollo de software.</p>
+                    <div class="badge">PSP</div>
+                </div>
+                <div class="timeline-item">
+                    <h4>🏗️ 1991: Capability Maturity Model (CMM)</h4>
+                    <p>SEI desarrolla CMM para evaluar y mejorar la capacidad de los procesos de desarrollo de software en organizaciones.</p>
+                    <div class="badge">CMM</div>
+                    <div class="badge">SEI</div>
+                </div>
+                <div class="timeline-item">
+                    <h4>⭐ 2002: CMMI (Capability Maturity Model Integration)</h4>
+                    <p>Evolución de CMM integrando múltiples disciplinas: desarrollo, adquisición, servicios y suppliers.</p>
+                    <div class="badge">CMMI</div>
+                    <div class="badge">Integración</div>
+                </div>
+                <div class="timeline-item">
+                    <h4>🏭 2003: Lean Software Development</h4>
+                    <p>Aplicación de principios Lean Manufacturing al desarrollo de software, eliminando desperdicios.</p>
+                    <div class="badge">Lean</div>
+                    <div class="badge">Waste Elimination</div>
+                </div>
+                <div class="timeline-item">
+                    <h4>🔄 2010s: DevOps y Continuous Everything</h4>
+                    <p>Integración de desarrollo y operaciones con enfoque en automatización, CI/CD y feedback continuo.</p>
+                    <div class="badge">DevOps</div>
+                    <div class="badge">CI/CD</div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Beneficios de la Gestión de Procesos:</strong>
+                <ul>
+                    <li><strong>Repetibilidad:</strong> Resultados consistentes y predecibles</li>
+                    <li><strong>Escalabilidad:</strong> Crecimiento organizado de equipos</li>
+                    <li><strong>Visibilidad:</strong> Transparencia en el progreso</li>
+                    <li><strong>Mejora continua:</strong> Optimización basada en datos</li>
+                    <li><strong>Cumplimiento:</strong> Adherencia a estándares y regulaciones</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Desafíos Comunes:</strong>
+                <ul>
+                    <li>Resistencia al cambio por parte de los equipos</li>
+                    <li>Burocracia excesiva que ralentiza el desarrollo</li>
+                    <li>Falta de alineación entre procesos y cultura organizacional</li>
+                    <li>Dificultad para medir el ROI de las mejoras de proceso</li>
+                    <li>Mantenimiento de procesos actualizados</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="frameworks" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🏗️ Frameworks de Gestión de Procesos:</strong> Modelos y metodologías estructuradas que proporcionan guías para implementar, evaluar y mejorar procesos de desarrollo de software.
+            </div>
+
+            <div class="process-card">
+                <h3>⭐ CMMI (Capability Maturity Model Integration)</h3>
+                <div class="alert alert-success">
+                    <strong>🎯 Objetivo:</strong> Ayudar a las organizaciones a mejorar sus procesos y capacidades para desarrollar productos y servicios de manera más eficiente.
+                </div>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <div class="maturity-1">Nivel 1: Inicial</div>
+                        <h4>🌪️ Caótico</h4>
+                        <ul>
+                            <li><strong>Características:</strong> Procesos impredecibles, reactivos</li>
+                            <li><strong>Éxito:</strong> Depende de individuos</li>
+                            <li><strong>Problemas:</strong> Sobrecostes, retrasos</li>
+                            <li><strong>Enfoque:</strong> "Apagar fuegos"</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="maturity-2">Nivel 2: Gestionado</div>
+                        <h4>📋 Planificado</h4>
+                        <ul>
+                            <li><strong>Áreas clave:</strong> Gestión requisitos, planificación</li>
+                            <li><strong>Control:</strong> Proyectos gestionados</li>
+                            <li><strong>Seguimiento:</strong> Monitorización y control</li>
+                            <li><strong>Características:</strong> Procesos disciplinados</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="maturity-3">Nivel 3: Definido</div>
+                        <h4>📚 Estandarizado</h4>
+                        <ul>
+                            <li><strong>Procesos:</strong> Bien caracterizados y entendidos</li>
+                            <li><strong>Estándares:</strong> Procedimientos consistentes</li>
+                            <li><strong>Herramientas:</strong> Métodos, procedimientos</li>
+                            <li><strong>Enfoque:</strong> Organización proactiva</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="maturity-4">Nivel 4: Gestionado Cuantitativamente</div>
+                        <h4>📊 Medido</h4>
+                        <ul>
+                            <li><strong>Métricas:</strong> Control estadístico</li>
+                            <li><strong>Performance:</strong> Rendimiento predecible</li>
+                            <li><strong>Calidad:</strong> Control cuantitativo</li>
+                            <li><strong>Decisiones:</strong> Basadas en datos</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="maturity-5">Nivel 5: Optimizando</div>
+                        <h4>🚀 Mejora Continua</h4>
+                        <ul>
+                            <li><strong>Innovación:</strong> Mejora continua enfocada</li>
+                            <li><strong>Tecnología:</strong> Adopción de nuevas tecnologías</li>
+                            <li><strong>Cambio:</strong> Gestión proactiva del cambio</li>
+                            <li><strong>Objetivo:</strong> Optimización organizacional</li>
+                        </ul>
+                    </div>
+                </methodology-grid>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Área de Proceso</th>
+                            <th>Nivel CMMI</th>
+                            <th>Propósito</th>
+                            <th>Prácticas Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Requirements Management (REQM)</td>
+                            <td>2</td>
+                            <td>Gestionar requisitos del producto</td>
+                            <td>Obtener, comprometer, gestionar cambios</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Project Planning (PP)</td>
+                            <td>2</td>
+                            <td>Establecer planes de proyecto</td>
+                            <td>Estimar, desarrollar plan, obtener compromiso</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Requirements Development (RD)</td>
+                            <td>3</td>
+                            <td>Producir y analizar requisitos</td>
+                            <td>Desarrollar, asignar, identificar interfaces</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Organizational Process Performance (OPP)</td>
+                            <td>4</td>
+                            <td>Establecer baseline cuantitativo</td>
+                            <td>Establecer baseline, modelos de rendimiento</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Organizational Innovation (OID)</td>
+                            <td>5</td>
+                            <td>Seleccionar mejoras para deployment</td>
+                            <td>Seleccionar mejoras, desplegar innovaciones</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="process-card">
+                <h3>🏭 Lean Software Development</h3>
+                <div class="alert alert-info">
+                    <strong>Origen:</strong> Basado en los principios del Lean Manufacturing de Toyota, adaptado para el desarrollo de software.
+                </div>
+
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>🗑️ Eliminar Desperdicios</h4>
+                        <ul>
+                            <li><strong>Overproduction:</strong> Funcionalidades no necesarias</li>
+                            <li><strong>Waiting:</strong> Bloqueos y dependencias</li>
+                            <li><strong>Transport:</strong> Handoffs innecesarios</li>
+                            <li><strong>Inventory:</strong> Código sin desplegar</li>
+                            <li><strong>Motion:</strong> Context switching</li>
+                            <li><strong>Defects:</strong> Bugs y retrabajos</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>📈 Amplificar Aprendizaje</h4>
+                        <ul>
+                            <li>Feedback loops cortos</li>
+                            <li>Iteraciones rápidas</li>
+                            <li>Prototipado</li>
+                            <li>A/B testing</li>
+                            <li>Post-mortems</li>
+                            <li>Knowledge sharing</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>⏰ Decidir lo Más Tarde Posible</h4>
+                        <ul>
+                            <li>Mantener opciones abiertas</li>
+                            <li>Just-in-time decisions</li>
+                            <li>Arquitectura flexible</li>
+                            <li>Reversible decisions</li>
+                            <li>Options thinking</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>🚀 Entregar lo Más Rápido Posible</h4>
+                        <ul>
+                            <li>Time-to-market corto</li>
+                            <li>Continuous delivery</li>
+                            <li>MVP approach</li>
+                            <li>Automated deployment</li>
+                            <li>Release pequeños frecuentes</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+
+                <div class="best-practice-box">
+                    <h4>💡 Técnicas Lean Principales</h4>
+                    <ul>
+                        <li><strong>Value Stream Mapping:</strong> Visualizar flujo de valor completo</li>
+                        <li><strong>Kanban:</strong> Control visual de flujo de trabajo</li>
+                        <li><strong>Pull Systems:</strong> Producción basada en demanda</li>
+                        <li><strong>Kaizen:</strong> Mejora continua e incremental</li>
+                        <li><strong>Poka-yoke:</strong> Prevención de errores</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="process-card">
+                    <h3>📐 Six Sigma</h3>
+                    <p><strong>Enfoque:</strong> Metodología de mejora de procesos basada en datos y estadísticas.</p>
+                    
+                    <div class="alert alert-success">
+                        <strong>🎯 Objetivo:</strong> Reducir defectos a menos de 3.4 por millón de oportunidades.
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>📊 DMAIC para Mejora</h4>
+                            <ul>
+                                <li><strong>Define:</strong> Definir problema y objetivos</li>
+                                <li><strong>Measure:</strong> Medir rendimiento actual</li>
+                                <li><strong>Analyze:</strong> Analizar causas raíz</li>
+                                <li><strong>Improve:</strong> Implementar soluciones</li>
+                                <li><strong>Control:</strong> Mantener las mejoras</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🏗️ DMADV para Diseño</h4>
+                            <ul>
+                                <li><strong>Define:</strong> Definir objetivos del diseño</li>
+                                <li><strong>Measure:</strong> Medir requisitos del cliente</li>
+                                <li><strong>Analyze:</strong> Analizar opciones de diseño</li>
+                                <li><strong>Design:</strong> Diseñar el proceso</li>
+                                <li><strong>Verify:</strong> Verificar el diseño</li>
+                            </ul>
+                        </div>
+                    </timeline>
+                </div>
+
+                <div class="process-card">
+                    <h3>🌊 DevOps</h3>
+                    <p><strong>Filosofía:</strong> Integración de desarrollo y operaciones para entrega continua.</p>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🔄 Collaboration</h4>
+                            <p>Equipos cross-funcionales</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🤖 Automation</h4>
+                            <p>CI/CD pipelines</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📊 Monitoring</h4>
+                            <p>Observabilidad continua</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📈 Feedback</h4>
+                            <p>Loops de retroalimentación</p>
+                        </div>
+                    </workflow-diagram>
+
+                    <div class="kpi-dashboard">
+                        <div class="kpi-item">
+                            <div class="kpi-value">365x</div>
+                            <div class="kpi-label">Deployment Frequency</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">1 día</div>
+                            <div class="kpi-label">Lead Time</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">1 hora</div>
+                            <div class="kpi-label">Mean Recovery Time</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">0-15%</div>
+                            <div class="kpi-label">Change Failure Rate</div>
+                        </div>
+                    </kpi-dashboard>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Frameworks:</strong>
+                <ul>
+                    <li><strong>CMMI:</strong> 5 niveles madurez (Inicial, Gestionado, Definido, Cuantitativo, Optimizando)</li>
+                    <li><strong>Lean:</strong> Eliminar desperdicios, amplificar aprendizaje, decidir tarde, entregar rápido</li>
+                    <li><strong>Six Sigma:</strong> DMAIC (mejora) y DMADV (diseño), <3.4 defectos/millón</li>
+                    <li><strong>DevOps:</strong> Colaboración, automatización, monitorización, feedback continuo</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="improvement" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>📈 Mejora de Procesos:</strong> Enfoque sistemático para analizar, optimizar y evolucionar continuamente los procesos de desarrollo de software.
+            </div>
+
+            <div class="process-card">
+                <h3>🔍 Identificación de Oportunidades de Mejora</h3>
+                
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>📊 Análisis de Métricas</h4>
+                        <ul>
+                            <li>Lead time excesivo</li>
+                            <li>Alta tasa de defectos</li>
+                            <li>Baja velocidad del equipo</li>
+                            <li>Frecuentes rollbacks</li>
+                            <li>Tiempo de resolución alto</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>👥 Feedback del Equipo</h4>
+                        <ul>
+                            <li>Retrospectivas de sprint</li>
+                            <li>Encuestas de satisfacción</li>
+                            <li>Sesiones de brainstorming</li>
+                            <li>Exit interviews</li>
+                            <li>Observación directa</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>🎯 Pain Points del Cliente</h4>
+                        <ul>
+                            <li>Tickets de soporte</li>
+                            <li>Feedback de usuarios</li>
+                            <li>Análisis de usabilidad</li>
+                            <li>Net Promoter Score</li>
+                            <li>Abandono de usuarios</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>🏆 Benchmarking</h4>
+                        <ul>
+                            <li>Comparación con industria</li>
+                            <li>Best practices externas</li>
+                            <li>Estudios de caso</li>
+                            <li>Estándares de rendimiento</li>
+                            <li>Análisis competitivo</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔬 Técnicas de Análisis de Procesos</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Técnica</th>
+                                <th>Propósito</th>
+                                <th>Cuándo Usar</th>
+                                <th>Herramientas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Value Stream Mapping</td>
+                                <td>Visualizar flujo de valor completo</td>
+                                <td>Identificar desperdicios</td>
+                                <td>Lucidchart, Visio</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Root Cause Analysis</td>
+                                <td>Encontrar causa fundamental</td>
+                                <td>Problemas recurrentes</td>
+                                <td>5 Whys, Fishbone</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Process Mining</td>
+                                <td>Descubrir procesos reales</td>
+                                <td>Procesos complejos</td>
+                                <td>Celonis, Disco</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Statistical Analysis</td>
+                                <td>Analizar patrones en datos</td>
+                                <td>Procesos maduros</td>
+                                <td>R, Python, Minitab</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Simulation Modeling</td>
+                                <td>Predecir impacto cambios</td>
+                                <td>Cambios complejos</td>
+                                <td>Arena, AnyLogic</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📐 Metodología de Mejora 8-Step</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1️⃣ Crear Sentido de Urgencia</h4>
+                            <p>Comunicar la necesidad del cambio con datos concretos</p>
+                            <ul>
+                                <li>Presentar métricas de rendimiento</li>
+                                <li>Mostrar impact en el negocio</li>
+                                <li>Comparar con competidores</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2️⃣ Formar Coalición</h4>
+                            <p>Crear equipo de líderes comprometidos</p>
+                            <ul>
+                                <li>Sponsors ejecutivos</li>
+                                <li>Process owners</li>
+                                <li>Champions del cambio</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>3️⃣ Desarrollar Visión</h4>
+                            <p>Definir estado futuro deseado</p>
+                            <ul>
+                                <li>Objetivos específicos</li>
+                                <li>Métricas de éxito</li>
+                                <li>Timeline de implementación</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>4️⃣ Comunicar Visión</h4>
+                            <p>Asegurar entendimiento y buy-in</p>
+                            <ul>
+                                <li>Múltiples canales de comunicación</li>
+                                <li>Repetición consistente</li>
+                                <li>Respuesta a preguntas</li>
+                            </ul>
+                        </div>
+                    </timeline>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>🎯 Estrategias de Implementación</h3>
+                
+                <div class="comparison-matrix">
+                    <div class="comparison-header">Enfoque</div>
+                    <div class="comparison-header">Big Bang</div>
+                    <div class="comparison-header">Piloto</div>
+                    <div class="comparison-header">Incremental</div>
+                    <div class="comparison-cell">Tiempo</div>
+                    <div class="comparison-cell">Rápido</div>
+                    <div class="comparison-cell">Medio</div>
+                    <div class="comparison-cell">Lento</div>
+                    <div class="comparison-cell">Riesgo</div>
+                    <div class="comparison-cell">Alto</div>
+                    <div class="comparison-cell">Medio</div>
+                    <div class="comparison-cell">Bajo</div>
+                    <div class="comparison-cell">Recursos</div>
+                    <div class="comparison-cell">Alto</div>
+                    <div class="comparison-cell">Medio</div>
+                    <div class="comparison-cell">Distribuido</div>
+                    <div class="comparison-cell">Aprendizaje</div>
+                    <div class="comparison-cell">Limitado</div>
+                    <div class="comparison-cell">Concentrado</div>
+                    <div class="comparison-cell">Continuo</div>
+                </comparison-matrix>
+
+                <div class="best-practice-box">
+                    <h4>✅ Factores de Éxito</h4>
+                    <ul>
+                        <li><strong>Liderazgo visible:</strong> Apoyo continuo de management</li>
+                        <li><strong>Comunicación clara:</strong> Objetivos y beneficios bien comunicados</li>
+                        <li><strong>Formación adecuada:</strong> Capacitación antes y durante implementación</li>
+                        <li><strong>Quick wins:</strong> Victorias tempranas para mantener momentum</li>
+                        <li><strong>Medición continua:</strong> Tracking de progreso y ajustes</li>
+                        <li><strong>Gestión resistencia:</strong> Abordar concerns proactivamente</li>
+                    </ul>
+                </best-practice-box>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Mejora Continua (Kaizen)</h3>
+                
+                <div class="alert alert-success">
+                    <strong>Filosofía Kaizen:</strong> Pequeñas mejoras continuas e incrementales que, acumulativamente, generan grandes cambios.
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>📅 Eventos Kaizen</h4>
+                        <ul>
+                            <li><strong>Duración:</strong> 3-5 días intensivos</li>
+                            <li><strong>Equipo:</strong> 6-8 personas multidisciplinar</li>
+                            <li><strong>Facilitador:</strong> Experto en mejora de procesos</li>
+                            <li><strong>Enfoque:</strong> Problema específico</li>
+                            <li><strong>Resultado:</strong> Mejora implementada</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>💡 Técnicas Kaizen</h4>
+                        <ul>
+                            <li><strong>5S:</strong> Sort, Straighten, Shine, Standardize, Sustain</li>
+                            <li><strong>Gemba Walking:</strong> Observación directa del trabajo</li>
+                            <li><strong>Suggestion Systems:</strong> Ideas de mejora de empleados</li>
+                            <li><strong>Standardized Work:</strong> Documentar best practices</li>
+                            <li><strong>Error Proofing:</strong> Prevención de defectos</li>
+                        </ul>
+                    </div>
+                </grid>
+
+                <div class="kpi-dashboard">
+                    <div class="kpi-item">
+                        <div class="kpi-value">80%</div>
+                        <div class="kpi-label">Ideas Implementadas</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">2-5%</div>
+                        <div class="kpi-label">Mejora Mensual</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">€10-50K</div>
+                        <div class="kpi-label">Ahorro por Evento</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">95%</div>
+                        <div class="kpi-label">Participación Equipo</div>
+                    </div>
+                </kpi-dashboard>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Antipatrones de Mejora:</strong>
+                <ul>
+                    <li><strong>Over-engineering:</strong> Soluciones demasiado complejas</li>
+                    <li><strong>Analysis paralysis:</strong> Análisis excesivo sin acción</li>
+                    <li><strong>Not Invented Here:</strong> Rechazo a soluciones externas</li>
+                    <li><strong>Tool-first thinking:</strong> Buscar herramienta antes que solución</li>
+                    <li><strong>Silver bullet mentality:</strong> Esperar solución mágica</li>
+                    <li><strong>Change fatigue:</strong> Cambios demasiado frecuentes</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Hot Tips para Examen - Mejora de Procesos:</strong>
+                <ul>
+                    <li><strong>Identificación:</strong> Métricas, feedback equipo, pain points cliente, benchmarking</li>
+                    <li><strong>Técnicas análisis:</strong> Value Stream Mapping, Root Cause Analysis, Process Mining</li>
+                    <li><strong>Implementación:</strong> Big Bang (rápido/alto riesgo), Piloto (medio), Incremental (lento/bajo riesgo)</li>
+                    <li><strong>Kaizen:</strong> Mejora continua, eventos 3-5 días, 5S, Gemba Walking</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="metrics" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>📊 Métricas y KPIs:</strong> Indicadores cuantitativos que permiten medir, monitorizar y mejorar el rendimiento de los procesos de desarrollo de software.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div>Métricas DORA Clave</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20+</span>
+                    <div>KPIs Desarrollo Típicos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80/20</span>
+                    <div>Regla Pareto en Métricas</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Weekly</span>
+                    <div>Frecuencia Revisión Recomendada</div>
+                </div>
+            </stats-grid>
+
+            <div class="process-card">
+                <h3>🏆 DORA Metrics - Four Key Metrics</h3>
+                <div class="alert alert-success">
+                    <strong>Google DORA Research:</strong> Identificó las 4 métricas clave que distinguen a los equipos de alto rendimiento.
+                </div>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🚀</span>
+                        <h4>Deployment Frequency</h4>
+                        <p><strong>Definición:</strong> Frecuencia de despliegues exitosos a producción</p>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">Elite</div>
+                                <div class="kpi-label">On Demand (365x/año)</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">High</div>
+                                <div class="kpi-label">Semanal - Mensual</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Medium</div>
+                                <div class="kpi-label">Mensual - Semestral</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Low</div>
+                                <div class="kpi-label">Semestral o menos</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+
+                    <div class="methodology-card">
+                        <span class="methodology-icon">⏱️</span>
+                        <h4>Lead Time for Changes</h4>
+                        <p><strong>Definición:</strong> Tiempo desde commit hasta ejecución en producción</p>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">Elite</div>
+                                <div class="kpi-label">< 1 hora</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">High</div>
+                                <div class="kpi-label">1 día - 1 semana</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Medium</div>
+                                <div class="kpi-label">1 semana - 1 mes</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Low</div>
+                                <div class="kpi-label">1 - 6 meses</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🔧</span>
+                        <h4>Mean Time to Recovery</h4>
+                        <p><strong>Definición:</strong> Tiempo promedio para recuperarse de fallos</p>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">Elite</div>
+                                <div class="kpi-label">< 1 hora</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">High</div>
+                                <div class="kpi-label">< 1 día</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Medium</div>
+                                <div class="kpi-label">1 día - 1 semana</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Low</div>
+                                <div class="kpi-label">1 semana - 1 mes</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+
+                    <div class="methodology-card">
+                        <span class="methodology-icon">💥</span>
+                        <h4>Change Failure Rate</h4>
+                        <p><strong>Definición:</strong> % de despliegues que causan fallos</p>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">Elite</div>
+                                <div class="kpi-label">0-15%</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">High</div>
+                                <div class="kpi-label">0-15%</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Medium</div>
+                                <div class="kpi-label">16-30%</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">Low</div>
+                                <div class="kpi-label">31-45%</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+                </methodology-grid>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>⚡ Métricas de Agilidad</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Métrica</th>
+                                <th>Fórmula/Definición</th>
+                                <th>Objetivo Típico</th>
+                                <th>Frecuencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Velocity</td>
+                                <td>Story Points completados por sprint</td>
+                                <td>Tendencia estable/creciente</td>
+                                <td>Por Sprint</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Sprint Burndown</td>
+                                <td>Trabajo restante vs tiempo</td>
+                                <td>Línea descendente suave</td>
+                                <td>Diaria</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Cycle Time</td>
+                                <td>Tiempo desde "In Progress" a "Done"</td>
+                                <td><5 días para historias típicas</td>
+                                <td>Por Historia</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Cumulative Flow</td>
+                                <td>Elementos en cada estado del workflow</td>
+                                <td>Flujo suave, sin cuellos</td>
+                                <td>Semanal</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Escaped Defects</td>
+                                <td>Bugs encontrados en producción</td>
+                                <td><5% de historias entregadas</td>
+                                <td>Por Release</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="best-practice-box">
+                        <h4>🎯 Interpretación de Velocity</h4>
+                        <ul>
+                            <li><strong>Tendencia creciente:</strong> Mejora de eficiencia/skills</li>
+                            <li><strong>Tendencia estable:</strong> Equipo maduro y predecible</li>
+                            <li><strong>Gran variabilidad:</strong> Historias mal estimadas/interrupciones</li>
+                            <li><strong>Caída súbita:</strong> Cambios en equipo/complejidad técnica</li>
+                        </ul>
+                    </best-practice-box>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Métricas de Calidad</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🐛 Defect Density</h4>
+                            <p><strong>Fórmula:</strong> Defectos / KLOC</p>
+                            <p><strong>Benchmark:</strong> <1 defecto/KLOC</p>
+                            <p><strong>Uso:</strong> Comparar módulos/releases</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📈 Defect Removal Efficiency</h4>
+                            <p><strong>Fórmula:</strong> Defectos pre-release / Total defectos</p>
+                            <p><strong>Objetivo:</strong> >95%</p>
+                            <p><strong>Uso:</strong> Efectividad testing</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🧪 Code Coverage</h4>
+                            <p><strong>Tipos:</strong> Line, Branch, Function</p>
+                            <p><strong>Objetivo:</strong> >80% line coverage</p>
+                            <p><strong>Uso:</strong> Completitud pruebas</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>⏱️ Mean Time to Detect</h4>
+                            <p><strong>Definición:</strong> Tiempo hasta detectar problema</p>
+                            <p><strong>Objetivo:</strong> <15 minutos</p>
+                            <p><strong>Uso:</strong> Efectividad monitorización</p>
+                        </div>
+                    </workflow-diagram>
+                </card>
+
+                <div class="card">
+                    <h3>👥 Métricas de Equipo</h3>
+                    
+                    <div class="kpi-dashboard">
+                        <div class="kpi-item">
+                            <div class="kpi-value">Team Happiness</div>
+                            <div class="kpi-label">Encuesta mensual 1-10</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">Turnover Rate</div>
+                            <div class="kpi-label">Rotación anual <10%</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">Learning Hours</div>
+                            <div class="kpi-label">Horas formación/mes</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">Tech Debt Ratio</div>
+                            <div class="kpi-label">% tiempo en deuda técnica</div>
+                        </div>
+                    </kpi-dashboard>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Métricas que Pueden Ser Contraproducentes:</strong>
+                        <ul>
+                            <li><strong>Lines of Code:</strong> Puede incentivar código verboso</li>
+                            <li><strong>Individual Velocity:</strong> Puede reducir colaboración</li>
+                            <li><strong>Bug Count:</strong> Puede desincentivar reporte de bugs</li>
+                            <li><strong>Hours Worked:</strong> Puede promover burn-out</li>
+                            <li><strong>Code Coverage (solo):</strong> Tests de baja calidad</li>
+                        </ul>
+                    </alert>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>📈 Dashboards y Visualización</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🎛️ Dashboard Ejecutivo</h4>
+                        <ul>
+                            <li><strong>Audiencia:</strong> Management, stakeholders</li>
+                            <li><strong>Frecuencia:</strong> Semanal/Mensual</li>
+                            <li><strong>Métricas:</strong> DORA metrics, business KPIs</li>
+                            <li><strong>Formato:</strong> Alto nivel, trends, comparaciones</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>👨‍💻 Dashboard de Equipo</h4>
+                        <ul>
+                            <li><strong>Audiencia:</strong> Desarrolladores, PO, SM</li>
+                            <li><strong>Frecuencia:</strong> Diaria</li>
+                            <li><strong>Métricas:</strong> Sprint progress, quality, blockers</li>
+                            <li><strong>Formato:</strong> Detallado, actionable</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔧 Dashboard Técnico</h4>
+                        <ul>
+                            <li><strong>Audiencia:</strong> DevOps, arquitectos</li>
+                            <li><strong>Frecuencia:</strong> Real-time</li>
+                            <li><strong>Métricas:</strong> Performance, errores, infraestructura</li>
+                            <li><strong>Formato:</strong> Técnico, alertas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="best-practice-box">
+                    <h4>📊 Principios de Good Dashboards</h4>
+                    <ul>
+                        <li><strong>5-7 métricas máximo:</strong> Evitar information overload</li>
+                        <li><strong>Actionable insights:</strong> Datos que llevan a acción</li>
+                        <li><strong>Context matters:</strong> Tendencias vs valores absolutos</li>
+                        <li><strong>Visual hierarchy:</strong> Lo más importante destacado</li>
+                        <li><strong>Real-time cuando necesario:</strong> Balance freshness vs overhead</li>
+                        <li><strong>Mobile-friendly:</strong> Accesible desde cualquier dispositivo</li>
+                    </ul>
+                </best-practice-box>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Métricas y KPIs:</strong>
+                <ul>
+                    <li><strong>DORA Metrics:</strong> Deployment Frequency, Lead Time, MTTR, Change Failure Rate</li>
+                    <li><strong>Agilidad:</strong> Velocity, Burndown, Cycle Time, Cumulative Flow</li>
+                    <li><strong>Calidad:</strong> Defect Density (<1/KLOC), Coverage (>80%), DRE (>95%)</li>
+                    <li><strong>Dashboards:</strong> Ejecutivo (trends), Equipo (progress), Técnico (real-time)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tools" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🛠️ Herramientas de Gestión de Procesos:</strong> Software y plataformas que facilitan la implementación, monitorización y optimización de procesos de desarrollo.
+            </div>
+
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <span class="methodology-icon">📊</span>
+                    <h4>Business Process Management (BPM)</h4>
+                    <p>Plataformas para diseñar, ejecutar y optimizar procesos de negocio</p>
+                    <div class="badge">Camunda</div>
+                    <div class="badge">Bizagi</div>
+                    <div class="badge">Appian</div>
+                    <div class="badge">IBM BPM</div>
+                </div>
+                <div class="methodology-card">
+                    <span class="methodology-icon">🔄</span>
+                    <h4>Workflow Management</h4>
+                    <p>Automatización y gestión de flujos de trabajo</p>
+                    <div class="badge">Jira Workflow</div>
+                    <div class="badge">ServiceNow</div>
+                    <div class="badge">Monday.com</div>
+                    <div class="badge">Asana</div>
+                </div>
+                <div class="methodology-card">
+                    <span class="methodology-icon">📈</span>
+                    <h4>Process Mining</h4>
+                    <p>Análisis de procesos basado en event logs</p>
+                    <div class="badge">Celonis</div>
+                    <div class="badge">Process Gold</div>
+                    <div class="badge">Disco</div>
+                    <div class="badge">ProM</div>
+                </div>
+                <div class="methodology-card">
+                    <span class="methodology-icon">📊</span>
+                    <h4>Analytics & BI</h4>
+                    <p>Análisis de datos y métricas de proceso</p>
+                    <div class="badge">Tableau</div>
+                    <div class="badge">Power BI</div>
+                    <div class="badge">Grafana</div>
+                    <div class="badge">Kibana</div>
+                </div>
+            </methodology-grid>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Gestión de Proyectos Ágiles</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Fortalezas</th>
+                                <th>Mejor Para</th>
+                                <th>Precio Aprox.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Jira</td>
+                                <td>Customización, integraciones, reporting</td>
+                                <td>Equipos técnicos grandes</td>
+                                <td>€7-14/usuario/mes</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Azure DevOps</td>
+                                <td>Integración Microsoft, CI/CD</td>
+                                <td>Ecosistema Microsoft</td>
+                                <td>€6/usuario/mes</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Linear</td>
+                                <td>Velocidad, UX moderna</td>
+                                <td>Equipos de producto rápidos</td>
+                                <td>€8/usuario/mes</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Monday.com</td>
+                                <td>Flexibilidad, visualización</td>
+                                <td>Equipos no-técnicos</td>
+                                <td>€8-16/usuario/mes</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">ClickUp</td>
+                                <td>All-in-one, precio</td>
+                                <td>Startups, equipos pequeños</td>
+                                <td>€5-12/usuario/mes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="best-practice-box">
+                        <h4>🎯 Criterios de Selección</h4>
+                        <ul>
+                            <li><strong>Tamaño del equipo:</strong> Escalabilidad y licenciamiento</li>
+                            <li><strong>Metodología:</strong> Soporte nativo para Scrum/Kanban</li>
+                            <li><strong>Integraciones:</strong> Ecosystem tecnológico existente</li>
+                            <li><strong>Customización:</strong> Adaptación a procesos específicos</li>
+                            <li><strong>Reporting:</strong> Métricas y dashboards nativos</li>
+                        </ul>
+                    </best-practice-box>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 CI/CD y DevOps</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🔨 Build Tools</h4>
+                            <ul>
+                                <li><strong>Jenkins:</strong> Open source, flexible</li>
+                                <li><strong>GitLab CI:</strong> Integrado con Git</li>
+                                <li><strong>GitHub Actions:</strong> Cloud-native</li>
+                                <li><strong>Azure Pipelines:</strong> Microsoft ecosystem</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📦 Artifact Management</h4>
+                            <ul>
+                                <li><strong>Artifactory:</strong> Universal repository</li>
+                                <li><strong>Nexus:</strong> Java-focused</li>
+                                <li><strong>Harbor:</strong> Container registry</li>
+                                <li><strong>Docker Hub:</strong> Public containers</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🚀 Deployment</h4>
+                            <ul>
+                                <li><strong>Kubernetes:</strong> Container orchestration</li>
+                                <li><strong>Terraform:</strong> Infrastructure as Code</li>
+                                <li><strong>Ansible:</strong> Configuration management</li>
+                                <li><strong>Helm:</strong> Kubernetes packages</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📊 Monitoring</h4>
+                            <ul>
+                                <li><strong>Prometheus:</strong> Metrics collection</li>
+                                <li><strong>Grafana:</strong> Visualization</li>
+                                <li><strong>ELK Stack:</strong> Log analysis</li>
+                                <li><strong>Jaeger:</strong> Distributed tracing</li>
+                            </ul>
+                        </div>
+                    </workflow-diagram>
+                </card>
+
+                <div class="card">
+                    <h3>🎨 Process Modeling & Documentation</h3>
+                    
+                    <div class="comparison-matrix">
+                        <div class="comparison-header">Herramienta</div>
+                        <div class="comparison-header">Visio</div>
+                        <div class="comparison-header">Lucidchart</div>
+                        <div class="comparison-header">Draw.io</div>
+                        <div class="comparison-cell">Usabilidad</div>
+                        <div class="comparison-cell">Media</div>
+                        <div class="comparison-cell">Alta</div>
+                        <div class="comparison-cell">Media</div>
+                        <div class="comparison-cell">Colaboración</div>
+                        <div class="comparison-cell">Limitada</div>
+                        <div class="comparison-cell">Excelente</div>
+                        <div class="comparison-cell">Buena</div>
+                        <div class="comparison-cell">Precio</div>
+                        <div class="comparison-cell">€15/mes</div>
+                        <div class="comparison-cell">€10/mes</div>
+                        <div class="comparison-cell">Gratis</div>
+                        <div class="comparison-cell">Integración</div>
+                        <div class="comparison-cell">Microsoft</div>
+                        <div class="comparison-cell">Universal</div>
+                        <div class="comparison-cell">Google/Atlassian</div>
+                    </comparison-matrix>
+
+                    <div class="alert alert-info">
+                        <strong>📋 Tipos de Diagramas de Proceso:</strong>
+                        <ul>
+                            <li><strong>BPMN 2.0:</strong> Business Process Model and Notation</li>
+                            <li><strong>Flowcharts:</strong> Diagramas de flujo tradicionales</li>
+                            <li><strong>Swimlanes:</strong> Responsabilidades por actor</li>
+                            <li><strong>Value Stream Maps:</strong> Flujo de valor Lean</li>
+                            <li><strong>UML Activity:</strong> Diagramas de actividad UML</li>
+                        </ul>
+                    </div>
+                </card>
+            </div>
+
+            <div class="process-card">
+                <h3>🤖 Automatización de Procesos</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🔄 Robotic Process Automation (RPA)</h4>
+                        <ul>
+                            <li><strong>UiPath:</strong> Líder del mercado, visual</li>
+                            <li><strong>Blue Prism:</strong> Enterprise-focused</li>
+                            <li><strong>Automation Anywhere:</strong> Cloud-first</li>
+                            <li><strong>Microsoft Power Automate:</strong> Integración Office 365</li>
+                        </ul>
+                        <div class="alert alert-warning">
+                            <strong>⚠️ Casos de Uso RPA:</strong>
+                            <ul>
+                                <li>Tareas repetitivas y basadas en reglas</li>
+                                <li>Integración de sistemas legacy</li>
+                                <li>Data entry y validación</li>
+                                <li>Reporting automatizado</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>🧠 Intelligent Process Automation (IPA)</h4>
+                        <ul>
+                            <li><strong>Capacidades:</strong> AI/ML + RPA</li>
+                            <li><strong>OCR:</strong> Reconocimiento de documentos</li>
+                            <li><strong>NLP:</strong> Procesamiento de lenguaje natural</li>
+                            <li><strong>Decision engines:</strong> Automatización inteligente</li>
+                        </ul>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">60-80%</div>
+                                <div class="kpi-label">Reducción Tiempo</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">90%+</div>
+                                <div class="kpi-label">Precisión</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">6-12</div>
+                                <div class="kpi-label">Meses ROI</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+                </grid>
+            </div>
+
+            <div class="card">
+                <h3>📊 Herramientas de Análisis y Métricas</h3>
+                
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <span class="methodology-icon">📈</span>
+                        <h4>SonarQube</h4>
+                        <p><strong>Propósito:</strong> Calidad de código y deuda técnica</p>
+                        <ul>
+                            <li>Static code analysis</li>
+                            <li>Security vulnerabilities</li>
+                            <li>Code coverage tracking</li>
+                            <li>Quality gates</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">⚡</span>
+                        <h4>New Relic</h4>
+                        <p><strong>Propósito:</strong> Application Performance Monitoring</p>
+                        <ul>
+                            <li>Real user monitoring</li>
+                            <li>Application insights</li>
+                            <li>Error tracking</li>
+                            <li>Custom dashboards</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">🔍</span>
+                        <h4>Datadog</h4>
+                        <p><strong>Propósito:</strong> Infrastructure y application monitoring</p>
+                        <ul>
+                            <li>Métricas de infraestructura</li>
+                            <li>APM y tracing</li>
+                            <li>Log management</li>
+                            <li>Synthetic monitoring</li>
+                        </ul>
+                    </div>
+                    <div class="methodology-card">
+                        <span class="methodology-icon">📊</span>
+                        <h4>GitLab Insights</h4>
+                        <p><strong>Propósito:</strong> DevOps metrics nativo</p>
+                        <ul>
+                            <li>DORA metrics</li>
+                            <li>Cycle analytics</li>
+                            <li>Security dashboards</li>
+                            <li>Compliance reporting</li>
+                        </ul>
+                    </div>
+                </methodology-grid>
+            </div>
+
+            <div class="best-practice-box">
+                <h4>🛠️ Estrategia de Herramientas</h4>
+                <ul>
+                    <li><strong>Tool consolidation:</strong> Reducir número de herramientas</li>
+                    <li><strong>API-first:</strong> Priorizar herramientas con APIs</li>
+                    <li><strong>Cloud vs On-premise:</strong> Evaluar según contexto</li>
+                    <li><strong>Training investment:</strong> Budget para formación</li>
+                    <li><strong>Vendor lock-in:</strong> Evitar dependencias críticas</li>
+                    <li><strong>Data portability:</strong> Capacidad de exportar datos</li>
+                </ul>
+            </best-practice-box>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Herramientas:</strong>
+                <ul>
+                    <li><strong>BPM:</strong> Camunda, Bizagi para modelado y ejecución de procesos</li>
+                    <li><strong>Gestión Ágil:</strong> Jira, Azure DevOps, Linear según ecosistema</li>
+                    <li><strong>CI/CD:</strong> Jenkins, GitLab CI, GitHub Actions para automatización</li>
+                    <li><strong>RPA:</strong> UiPath, Power Automate para tareas repetitivas</li>
+                    <li><strong>Métricas:</strong> SonarQube (calidad), New Relic (performance), GitLab Insights (DORA)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="implementation" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🚀 Implementación de Gestión de Procesos:</strong> Estrategias prácticas y metodologías para la exitosa adopción de procesos de desarrollo mejorados en organizaciones.
+            </div>
+
+            <div class="process-card">
+                <h3>📋 Roadmap de Implementación</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🔍 Fase 1: Assessment (4-6 semanas)</h4>
+                        <div class="grid">
+                            <div class="card">
+                                <h5>📊 Current State Analysis</h5>
+                                <ul>
+                                    <li>Process mapping de estado actual</li>
+                                    <li>Entrevistas con stakeholders</li>
+                                    <li>Análisis de métricas existentes</li>
+                                    <li>Identificación de pain points</li>
+                                    <li>Gap analysis con best practices</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h5>🎯 Maturity Assessment</h5>
+                                <ul>
+                                    <li>Evaluación CMMI nivel actual</li>
+                                    <li>Capacidades de equipo</li>
+                                    <li>Herramientas y tecnología</li>
+                                    <li>Cultura organizacional</li>
+                                    <li>Readiness para cambio</li>
+                                </ul>
+                            </div>
+                        </grid>
+                        <div class="kpi-dashboard">
+                            <div class="kpi-item">
+                                <div class="kpi-value">20-30</div>
+                                <div class="kpi-label">Entrevistas Stakeholder</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">5-10</div>
+                                <div class="kpi-label">Procesos Mapeados</div>
+                            </div>
+                            <div class="kpi-item">
+                                <div class="kpi-value">15-25</div>
+                                <div class="kpi-label">Métricas Analizadas</div>
+                            </div>
+                        </kpi-dashboard>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4>🎨 Fase 2: Design (6-8 semanas)</h4>
+                        <div class="workflow-diagram">
+                            <div class="workflow-step">
+                                <h5>📐 Process Design</h5>
+                                <ul>
+                                    <li>Definir procesos target</li>
+                                    <li>Roles y responsabilidades</li>
+                                    <li>Workflows y handoffs</li>
+                                    <li>Quality gates</li>
+                                </ul>
+                            </div>
+                            <div class="workflow-step">
+                                <h5>🛠️ Tool Selection</h5>
+                                <ul>
+                                    <li>Requirements definition</li>
+                                    <li>Vendor evaluation</li>
+                                    <li>POC development</li>
+                                    <li>Cost-benefit analysis</li>
+                                </ul>
+                            </div>
+                            <div class="workflow-step">
+                                <h5>📊 Metrics Framework</h5>
+                                <ul>
+                                    <li>KPI definition</li>
+                                    <li>Data collection strategy</li>
+                                    <li>Dashboard design</li>
+                                    <li>Reporting cadence</li>
+                                </ul>
+                            </div>
+                            <div class="workflow-step">
+                                <h5>📚 Training Plan</h5>
+                                <ul>
+                                    <li>Skill gap analysis</li>
+                                    <li>Curriculum development</li>
+                                    <li>Delivery methodology</li>
+                                    <li>Certification path</li>
+                                </ul>
+                            </div>
+                        </workflow-diagram>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4>🚀 Fase 3: Pilot (8-12 semanas)</h4>
+                        <p><strong>Estrategia:</strong> Implementar en 1-2 equipos seleccionados para validar enfoque.</p>
+                        
+                        <div class="grid">
+                            <div class="card">
+                                <h5>🎯 Criterios de Selección Pilot</h5>
+                                <ul>
+                                    <li><strong>Team maturity:</strong> Equipos con mentalidad de crecimiento</li>
+                                    <li><strong>Project criticality:</strong> Importante pero no crítico</li>
+                                    <li><strong>Sponsorship:</strong> Leadership support fuerte</li>
+                                    <li><strong>Size:</strong> 5-10 personas idealmente</li>
+                                    <li><strong>Duration:</strong> 2-3 sprints mínimo</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h5>📈 Success Metrics</h5>
+                                <ul>
+                                    <li>Lead time reduction: >20%</li>
+                                    <li>Defect rate improvement: >30%</li>
+                                    <li>Team satisfaction: >8/10</li>
+                                    <li>Process compliance: >90%</li>
+                                    <li>Knowledge transfer: 100% team trained</li>
+                                </ul>
+                            </div>
+                        </grid>
+
+                        <div class="alert alert-warning">
+                            <strong>🚨 Pilot Risk Mitigation:</strong>
+                            <ul>
+                                <li>Daily standup con process coach</li>
+                                <li>Weekly retrospectives específicas</li>
+                                <li>Escape hatch para rollback</li>
+                                <li>Parallel tracking de métricas</li>
+                                <li>Frequent stakeholder communication</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4>📈 Fase 4: Rollout (6-18 meses)</h4>
+                        <p><strong>Approach:</strong> Expansión gradual basada en lecciones del pilot.</p>
+                        
+                        <div class="comparison-matrix">
+                            <div class="comparison-header">Wave</div>
+                            <div class="comparison-header">Wave 1</div>
+                            <div class="comparison-header">Wave 2</div>
+                            <div class="comparison-header">Wave 3</div>
+                            <div class="comparison-cell">Teams</div>
+                            <div class="comparison-cell">2-3 equipos</div>
+                            <div class="comparison-cell">5-8 equipos</div>
+                            <div class="comparison-cell">Restantes</div>
+                            <div class="comparison-cell">Duration</div>
+                            <div class="comparison-cell">3 meses</div>
+                            <div class="comparison-cell">4 meses</div>
+                            <div class="comparison-cell">6-12 meses</div>
+                            <div class="comparison-cell">Focus</div>
+                            <div class="comparison-cell">Core processes</div>
+                            <div class="comparison-cell">Advanced practices</div>
+                            <div class="comparison-cell">Organization-wide</div>
+                        </comparison-matrix>
+                    </div>
+                </timeline>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>👥 Change Management</h3>
+                    
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <span class="methodology-icon">🎯</span>
+                            <h4>Stakeholder Analysis</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Grupo</th>
+                                        <th>Influencia</th>
+                                        <th>Actitud</th>
+                                        <th>Estrategia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Executives</td>
+                                        <td class="highlight">Alta</td>
+                                        <td>Positiva</td>
+                                        <td>Mantener involucrados</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Team Leads</td>
+                                        <td class="highlight">Alta</td>
+                                        <td>Neutral</td>
+                                        <td>Convertir en champions</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Senior Devs</td>
+                                        <td>Media</td>
+                                        <td>Escéptica</td>
+                                        <td>Demostrar valor</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Junior Devs</td>
+                                        <td>Baja</td>
+                                        <td>Positiva</td>
+                                        <td>Empoderar como early adopters</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </methodology-grid>
+
+                    <div class="best-practice-box">
+                        <h4>💬 Communication Strategy</h4>
+                        <ul>
+                            <li><strong>Multi-channel approach:</strong> Email, Slack, town halls, 1:1s</li>
+                            <li><strong>Consistent messaging:</strong> Why, what, when, how</li>
+                            <li><strong>Two-way communication:</strong> Feedback loops y Q&A sessions</li>
+                            <li><strong>Success stories:</strong> Celebrate early wins públicamente</li>
+                            <li><strong>Transparency:</strong> Share both successes y challenges</li>
+                        </ul>
+                    </best-practice-box>
+                </div>
+
+                <div class="card">
+                    <h3>🎓 Training & Enablement</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>📚 L&D Strategy</h4>
+                            <ul>
+                                <li><strong>Just-in-time learning:</strong> Cuando se necesita</li>
+                                <li><strong>Multiple modalities:</strong> Online, presencial, hands-on</li>
+                                <li><strong>Progressive disclosure:</strong> Complexity gradual</li>
+                                <li><strong>Practice opportunities:</strong> Safe-to-fail environments</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>👨‍🏫 Coaching Model</h4>
+                            <ul>
+                                <li><strong>Process coaches:</strong> 1 por 2-3 equipos</li>
+                                <li><strong>Embedded support:</strong> Primeras 4-6 semanas</li>
+                                <li><strong>Office hours:</strong> Sessions semanales Q&A</li>
+                                <li><strong>Peer mentoring:</strong> Buddy system</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📖 Knowledge Management</h4>
+                            <ul>
+                                <li><strong>Process wiki:</strong> Documentation centralizada</li>
+                                <li><strong>Video library:</strong> How-to recordings</li>
+                                <li><strong>FAQ database:</strong> Common questions</li>
+                                <li><strong>Community of practice:</strong> Forums y discussion</li>
+                            </ul>
+                        </div>
+                    </workflow-diagram>
+
+                    <div class="kpi-dashboard">
+                        <div class="kpi-item">
+                            <div class="kpi-value">100%</div>
+                            <div class="kpi-label">Completion Rate</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">4.5/5</div>
+                            <div class="kpi-label">Training Satisfaction</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">80%</div>
+                            <div class="kpi-label">Knowledge Retention</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">90%</div>
+                            <div class="kpi-label">Behavior Change</div>
+                        </div>
+                    </kpi-dashboard>
+                </card>
+            </div>
+
+            <div class="process-card">
+                <h3>🚧 Common Implementation Challenges</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🛑 Challenge: Resistance to Change</h4>
+                        <p><strong>Manifestations:</strong></p>
+                        <ul>
+                            <li>"This is how we've always done it"</li>
+                            <li>Passive-aggressive compliance</li>
+                            <li>Selective adoption</li>
+                            <li>Shadow processes</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ul>
+                            <li>Involve resistors en design</li>
+                            <li>Address concerns directamente</li>
+                            <li>Show benefits with data</li>
+                            <li>Create psychological safety</li>
+                        </ul>
+                    </card>
+                    <div class="card">
+                        <h4>⚖️ Challenge: Process Over-Engineering</h4>
+                        <p><strong>Symptoms:</strong></p>
+                        <ul>
+                            <li>Excesiva documentation</li>
+                            <li>Too many approvals</li>
+                            <li>Rigid workflows</li>
+                            <li>Bureaucracy creep</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ul>
+                            <li>Start simple, iterate</li>
+                            <li>Value stream focus</li>
+                            <li>Regular process review</li>
+                            <li>Eliminate non-value-add steps</li>
+                        </ul>
+                    </card>
+                    <div class="card">
+                        <h4>📊 Challenge: Metrics Misuse</h4>
+                        <p><strong>Anti-patterns:</strong></p>
+                        <ul>
+                            <li>Gaming the metrics</li>
+                            <li>Individual performance focus</li>
+                            <li>Punishment culture</li>
+                            <li>Vanity metrics</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ul>
+                            <li>Focus en team metrics</li>
+                            <li>Leading vs lagging indicators</li>
+                            <li>Metrics for improvement</li>
+                            <li>Regular metric hygiene</li>
+                        </ul>
+                    </card>
+                    <div class="card">
+                        <h4>🛠️ Challenge: Tool Proliferation</h4>
+                        <p><strong>Issues:</strong></p>
+                        <ul>
+                            <li>Integration complexity</li>
+                            <li>Context switching</li>
+                            <li>Training overhead</li>
+                            <li>Data silos</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ul>
+                            <li>Tool consolidation strategy</li>
+                            <li>API-first architecture</li>
+                            <li>Single source of truth</li>
+                            <li>User experience focus</li>
+                        </ul>
+                    </card>
+                </grid>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Success Factors</h3>
+                
+                <div class="best-practice-box">
+                    <h4>✅ Critical Success Factors</h4>
+                    <ul>
+                        <li><strong>Executive sponsorship:</strong> Visible, consistent leadership support</li>
+                        <li><strong>Start small, scale smart:</strong> Pilot approach con gradual expansion</li>
+                        <li><strong>Culture first:</strong> Address cultural impediments before process</li>
+                        <li><strong>Measure everything:</strong> Data-driven decision making</li>
+                        <li><strong>Continuous improvement:</strong> Never "done", always evolving</li>
+                        <li><strong>People empowerment:</strong> Teams own their processes</li>
+                        <li><strong>Tool integration:</strong> Seamless user experience</li>
+                        <li><strong>Knowledge sharing:</strong> Communities of practice</li>
+                        <li><strong>Celebrate wins:</strong> Recognition y positive reinforcement</li>
+                        <li><strong>Long-term view:</strong> Sustainable change, not quick fixes</li>
+                    </ul>
+                </best-practice-box>
+
+                <div class="kpi-dashboard">
+                    <div class="kpi-item">
+                        <div class="kpi-value">18-24</div>
+                        <div class="kpi-label">Meses Transformación</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">2-3x</div>
+                        <div class="kpi-label">ROI Típico</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">75%</div>
+                        <div class="kpi-label">Success Rate</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">85%+</div>
+                        <div class="kpi-label">Employee Satisfaction</div>
+                    </div>
+                </kpi-dashboard>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen - Implementación:</strong>
+                <ul>
+                    <li><strong>Fases:</strong> Assessment (4-6 sem) → Design (6-8 sem) → Pilot (8-12 sem) → Rollout (6-18 meses)</li>
+                    <li><strong>Change Management:</strong> Stakeholder analysis, comunicación multi-canal, coaching embedded</li>
+                    <li><strong>Challenges:</strong> Resistencia cambio, over-engineering, metrics misuse, tool proliferation</li>
+                    <li><strong>Success Factors:</strong> Executive sponsorship, start small, culture first, measure everything</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (savedTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card, .process-card, .methodology-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

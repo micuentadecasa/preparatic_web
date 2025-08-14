@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 29 - DevOps y Buenas Prácticas</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #404040;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .nav-tab {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .devops-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 25px;
+            margin-left: 15px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--bg-card);
+        }
+
+        .timeline-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .practice-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .practice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+        }
+
+        .practice-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .tools-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .tools-table th,
+        .tools-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tools-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .tools-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .exercise-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .exercise-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exercise-option:hover {
+            background: var(--accent-color)20;
+            border-color: var(--accent-color);
+        }
+
+        .exercise-option input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+
+        .exercise-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .exercise-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: var(--success-color)20;
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-incorrect {
+            background: var(--error-color)20;
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .list-styled li::before {
+            content: "▶";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .pipeline-diagram {
+            background: linear-gradient(135deg, var(--success-color)10, var(--accent-color)10);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--accent-color)30;
+        }
+
+        .metrics-card {
+            background: linear-gradient(135deg, var(--success-color)15, var(--warning-color)15);
+            border-left: 4px solid var(--success-color);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .metrics-card h4 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                border-radius: 8px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .practices-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 29: DevOps y Buenas Prácticas</h1>
+            <p>DevOps, SecOps, MLOps y metodologías para desarrollo y operaciones eficientes</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="nav-tab" onclick="showTab(event, 'devops')">DevOps</button>
+            <button class="nav-tab" onclick="showTab(event, 'secops')">SecOps</button>
+            <button class="nav-tab" onclick="showTab(event, 'mlops')">MLOps</button>
+            <button class="nav-tab" onclick="showTab(event, 'practices')">Buenas Prácticas</button>
+            <button class="nav-tab" onclick="showTab(event, 'exercises')">Ejercicios</button>
+            <button class="nav-tab" onclick="showTab(event, 'resources')">Recursos</button>
+        </nav>
+
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Introducción a DevOps y Buenas Prácticas</h2>
+                <p>DevOps representa una transformación cultural y técnica que unifica el desarrollo de software con las operaciones de TI, promoviendo la colaboración, automatización y mejora continua en todo el ciclo de vida del software.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">63%</span>
+                        <span class="stat-label">Mejora en frecuencia de despliegues</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50%</span>
+                        <span class="stat-label">Reducción en tiempo de recovery</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">22%</span>
+                        <span class="stat-label">Menos tiempo en trabajo no planificado</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">18%</span>
+                        <span class="stat-label">Más tiempo en nuevas características</span>
+                    </div>
+                </div>
+
+                <h3>Pilares Fundamentales de DevOps</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>Colaboración</h4>
+                        <p>Eliminación de silos entre equipos de desarrollo y operaciones.</p>
+                        <ul class="list-styled">
+                            <li>Equipos multifuncionales</li>
+                            <li>Comunicación transparente</li>
+                            <li>Responsabilidades compartidas</li>
+                            <li>Objetivos alineados</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Automatización</h4>
+                        <p>Automatización de procesos manuales repetitivos y propensos a errores.</p>
+                        <ul class="list-styled">
+                            <li>CI/CD pipelines</li>
+                            <li>Testing automatizado</li>
+                            <li>Infrastructure as Code</li>
+                            <li>Deployment automatizado</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Medición</h4>
+                        <p>Monitoreo y métricas para toma de decisiones basada en datos.</p>
+                        <ul class="list-styled">
+                            <li>Métricas de rendimiento</li>
+                            <li>Logs centralizados</li>
+                            <li>Alertas proactivas</li>
+                            <li>Dashboards en tiempo real</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Compartir</h4>
+                        <p>Cultura de aprendizaje continuo y compartición de conocimiento.</p>
+                        <ul class="list-styled">
+                            <li>Post-mortems sin culpa</li>
+                            <li>Documentación colaborativa</li>
+                            <li>Sesiones de retrospectiva</li>
+                            <li>Comunidades de práctica</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Evolución hacia *Ops</h3>
+                <div class="devops-timeline">
+                    <div class="timeline-item">
+                        <h4>DevOps (2009)</h4>
+                        <p>Integración de desarrollo y operaciones para acelerar la entrega de software.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>SecOps (2012)</h4>
+                        <p>Incorporación de seguridad en los procesos DevOps ("shift left").</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>DataOps (2014)</h4>
+                        <p>Aplicación de principios DevOps a pipelines de datos y análisis.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>MLOps (2018)</h4>
+                        <p>Operacionalización de modelos de machine learning con principios DevOps.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>GitOps (2019)</h4>
+                        <p>Gestión de infraestructura y despliegues usando Git como fuente de verdad.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>FinOps (2020)</h4>
+                        <p>Optimización de costos cloud con visibilidad y responsabilidad financiera.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Beneficios Demostrados de DevOps</h4>
+                    <p><strong>Velocidad:</strong> Despliegues más frecuentes y rápidos al mercado.</p>
+                    <p><strong>Confiabilidad:</strong> Menor tasa de fallos y recuperación más rápida.</p>
+                    <p><strong>Escalabilidad:</strong> Infraestructura y procesos que crecen con el negocio.</p>
+                    <p><strong>Seguridad:</strong> Controles integrados sin comprometer la velocidad.</p>
+                    <p><strong>Colaboración:</strong> Mejores relaciones entre equipos y mayor satisfacción.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="devops" class="tab-content">
+            <div class="card">
+                <h2>DevOps: Desarrollo y Operaciones</h2>
+                <p>DevOps es una metodología que combina desarrollo de software (Dev) con operaciones de TI (Ops), enfocándose en acortar el ciclo de vida de desarrollo y proporcionar entrega continua con alta calidad de software.</p>
+
+                <h3>Pipeline CI/CD</h3>
+                <div class="pipeline-diagram">
+                    <h4>Flujo de Integración y Entrega Continua</h4>
+                    <p><strong>1. Code:</strong> Desarrollo en ramas de características</p>
+                    <p><strong>2. Build:</strong> Compilación y empaquetado automatizado</p>
+                    <p><strong>3. Test:</strong> Ejecución de test suites (unit, integration, e2e)</p>
+                    <p><strong>4. Release:</strong> Preparación de artefactos para despliegue</p>
+                    <p><strong>5. Deploy:</strong> Despliegue automatizado a entornos</p>
+                    <p><strong>6. Operate:</strong> Monitoreo y gestión en producción</p>
+                    <p><strong>7. Monitor:</strong> Recolección de métricas y feedback</p>
+                </div>
+
+                <h3>Herramientas del Ecosistema DevOps</h3>
+                <table class="tools-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Herramientas Populares</th>
+                            <th>Propósito</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Control de Versiones</td>
+                            <td>Git, GitHub, GitLab, Bitbucket</td>
+                            <td>Gestión de código fuente</td>
+                            <td>Branching, merging, collaboration</td>
+                        </tr>
+                        <tr>
+                            <td>CI/CD</td>
+                            <td>Jenkins, GitHub Actions, GitLab CI, Azure DevOps</td>
+                            <td>Automatización de pipelines</td>
+                            <td>Build, test, deploy automation</td>
+                        </tr>
+                        <tr>
+                            <td>Containerización</td>
+                            <td>Docker, Podman, containerd</td>
+                            <td>Empaquetado de aplicaciones</td>
+                            <td>Portabilidad, consistencia</td>
+                        </tr>
+                        <tr>
+                            <td>Orquestación</td>
+                            <td>Kubernetes, Docker Swarm, OpenShift</td>
+                            <td>Gestión de contenedores</td>
+                            <td>Scaling, service discovery</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure as Code</td>
+                            <td>Terraform, Ansible, Chef, Puppet</td>
+                            <td>Gestión de infraestructura</td>
+                            <td>Versionado, reproducibilidad</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoreo</td>
+                            <td>Prometheus, Grafana, ELK Stack, Datadog</td>
+                            <td>Observabilidad</td>
+                            <td>Métricas, logs, trazas</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Ejemplo de Pipeline CI/CD</h3>
+                <div class="code-block">
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: my-app
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run unit tests
+      run: npm run test:unit
+    
+    - name: Run integration tests
+      run: npm run test:integration
+      
+    - name: Code coverage
+      run: npm run coverage
+      
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run security scan
+      uses: securecodewarrior/github-action-add-sarif@v1
+      with:
+        sarif-file: 'security-scan-results.sarif'
+    
+    - name: Dependency vulnerability scan
+      run: npm audit
+
+  build:
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker image
+      run: |
+        docker build -t $IMAGE_NAME:$GITHUB_SHA .
+        docker tag $IMAGE_NAME:$GITHUB_SHA $IMAGE_NAME:latest
+    
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $DOCKER_REGISTRY -u ${{ github.actor }} --password-stdin
+    
+    - name: Push to registry
+      run: |
+        docker push $DOCKER_REGISTRY/${{ github.repository_owner }}/$IMAGE_NAME:$GITHUB_SHA
+        docker push $DOCKER_REGISTRY/${{ github.repository_owner }}/$IMAGE_NAME:latest
+
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        # Kubernetes deployment
+        kubectl set image deployment/my-app my-app=$DOCKER_REGISTRY/${{ github.repository_owner }}/$IMAGE_NAME:$GITHUB_SHA
+        kubectl rollout status deployment/my-app
+        
+    - name: Run smoke tests
+      run: npm run test:smoke -- --env=staging
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Blue-Green deployment
+      run: |
+        # Deploy to green environment
+        kubectl apply -f k8s/production/
+        # Health checks
+        # Switch traffic
+        # Remove blue environment
+                </div>
+
+                <h3>Métricas DORA</h3>
+                <div class="practices-grid">
+                    <div class="metrics-card">
+                        <h4>Deployment Frequency</h4>
+                        <p>Frecuencia con la que una organización despliega código con éxito a producción.</p>
+                        <ul class="list-styled">
+                            <li><strong>Elite:</strong> Múltiples despliegues por día</li>
+                            <li><strong>High:</strong> Entre una vez por día y una vez por semana</li>
+                            <li><strong>Medium:</strong> Entre una vez por semana y una vez por mes</li>
+                            <li><strong>Low:</strong> Menos de una vez por mes</li>
+                        </ul>
+                    </div>
+                    <div class="metrics-card">
+                        <h4>Lead Time for Changes</h4>
+                        <p>Tiempo desde que se hace un commit hasta que se ejecuta con éxito en producción.</p>
+                        <ul class="list-styled">
+                            <li><strong>Elite:</strong> Menos de una hora</li>
+                            <li><strong>High:</strong> Entre una hora y un día</li>
+                            <li><strong>Medium:</strong> Entre un día y una semana</li>
+                            <li><strong>Low:</strong> Más de una semana</li>
+                        </ul>
+                    </div>
+                    <div class="metrics-card">
+                        <h4>Change Failure Rate</h4>
+                        <p>Porcentaje de despliegues que causan una falla en producción.</p>
+                        <ul class="list-styled">
+                            <li><strong>Elite:</strong> 0-15%</li>
+                            <li><strong>High:</strong> 0-15%</li>
+                            <li><strong>Medium:</strong> 16-30%</li>
+                            <li><strong>Low:</strong> 16-30%</li>
+                        </ul>
+                    </div>
+                    <div class="metrics-card">
+                        <h4>Time to Restore Service</h4>
+                        <p>Tiempo que toma recuperarse de una falla en producción.</p>
+                        <ul class="list-styled">
+                            <li><strong>Elite:</strong> Menos de una hora</li>
+                            <li><strong>High:</strong> Menos de un día</li>
+                            <li><strong>Medium:</strong> Entre un día y una semana</li>
+                            <li><strong>Low:</strong> Más de una semana</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Estrategias de Despliegue</h4>
+                    <p><strong>Blue-Green:</strong> Dos entornos idénticos, switch instantáneo.</p>
+                    <p><strong>Canary:</strong> Despliegue gradual a subconjunto de usuarios.</p>
+                    <p><strong>Rolling:</strong> Actualización progresiva de instancias.</p>
+                    <p><strong>Feature Flags:</strong> Activación/desactivación dinámica de características.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="secops" class="tab-content">
+            <div class="card">
+                <h2>SecOps: Security Operations</h2>
+                <p>SecOps integra la seguridad en el ciclo de vida de desarrollo y operaciones, implementando seguridad desde las fases más tempranas del desarrollo (shift-left security).</p>
+
+                <h3>Principios de SecOps</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>Shift-Left Security</h4>
+                        <p>Integración de controles de seguridad desde el inicio del desarrollo.</p>
+                        <ul class="list-styled">
+                            <li>Security requirements en user stories</li>
+                            <li>Threat modeling en diseño</li>
+                            <li>Static Application Security Testing (SAST)</li>
+                            <li>Dependency vulnerability scanning</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Automated Security</h4>
+                        <p>Automatización de controles de seguridad en CI/CD.</p>
+                        <ul class="list-styled">
+                            <li>Security gates en pipelines</li>
+                            <li>Dynamic Application Security Testing (DAST)</li>
+                            <li>Infrastructure security scanning</li>
+                            <li>Compliance as code</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Continuous Monitoring</h4>
+                        <p>Monitoreo continuo de seguridad en tiempo real.</p>
+                        <ul class="list-styled">
+                            <li>Security Information and Event Management (SIEM)</li>
+                            <li>Runtime Application Self-Protection (RASP)</li>
+                            <li>Container security monitoring</li>
+                            <li>Threat detection automatizada</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Incident Response</h4>
+                        <p>Respuesta rápida y efectiva a incidentes de seguridad.</p>
+                        <ul class="list-styled">
+                            <li>Playbooks de respuesta automatizados</li>
+                            <li>Security orchestration (SOAR)</li>
+                            <li>Forensics digitales</li>
+                            <li>Post-incident learning</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Pipeline de Seguridad DevSecOps</h3>
+                <div class="code-block">
+# Security Pipeline Example
+stages:
+  - security-scan
+  - build
+  - security-test
+  - deploy
+  - runtime-security
+
+security-scan:
+  stage: security-scan
+  script:
+    # Secret scanning
+    - truffleHog --regex --entropy=False .
+    
+    # Dependency vulnerability scan
+    - npm audit --audit-level=high
+    - snyk test --severity-threshold=medium
+    
+    # Static code analysis
+    - sonar-scanner -Dsonar.projectKey=myapp -Dsonar.sources=.
+    
+    # Infrastructure as Code security
+    - tfsec .
+    - checkov -f terraform/
+  
+  # Fail pipeline if critical vulnerabilities found
+  allow_failure: false
+
+container-security:
+  stage: security-test
+  script:
+    # Container image scanning
+    - docker run --rm -v $(pwd):/app anchore/syft /app > sbom.json
+    - docker run --rm -v $(pwd):/app anchore/grype sbom:sbom.json
+    
+    # Runtime security baseline
+    - docker run --rm -v $(pwd):/app docker/docker-bench-security
+    
+    # Kubernetes security policies
+    - kubectl apply -f security/pod-security-policies.yaml
+    - kube-score score --output-format json k8s/
+
+runtime-monitoring:
+  stage: runtime-security
+  script:
+    # Deploy security monitoring
+    - helm install falco falcosecurity/falco
+    - kubectl apply -f monitoring/security-dashboards.yaml
+    
+    # Configure SIEM integration
+    - curl -X POST "$SIEM_ENDPOINT/logs" -d "@security-logs.json"
+                </div>
+
+                <h3>Herramientas de SecOps</h3>
+                <table class="tools-table">
+                    <thead>
+                        <tr>
+                            <th>Fase</th>
+                            <th>Herramienta</th>
+                            <th>Propósito</th>
+                            <th>Tipo de Análisis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Code</td>
+                            <td>SonarQube, Checkmarx, Veracode</td>
+                            <td>Static Application Security Testing</td>
+                            <td>SAST</td>
+                        </tr>
+                        <tr>
+                            <td>Dependencies</td>
+                            <td>Snyk, OWASP Dependency Check, WhiteSource</td>
+                            <td>Vulnerability scanning de dependencias</td>
+                            <td>SCA</td>
+                        </tr>
+                        <tr>
+                            <td>Container</td>
+                            <td>Twistlock, Aqua Security, Anchore</td>
+                            <td>Container security scanning</td>
+                            <td>Container Security</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure</td>
+                            <td>Terraform Security, Checkov, tfsec</td>
+                            <td>Infrastructure as Code security</td>
+                            <td>IaC Security</td>
+                        </tr>
+                        <tr>
+                            <td>Runtime</td>
+                            <td>OWASP ZAP, Burp Suite, Netsparker</td>
+                            <td>Dynamic security testing</td>
+                            <td>DAST</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoring</td>
+                            <td>Splunk, ELK Stack, Falco</td>
+                            <td>Security monitoring y SIEM</td>
+                            <td>Monitoring</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Compliance as Code</h3>
+                <div class="highlight-box">
+                    <h4>Marcos de Cumplimiento Automatizado</h4>
+                    <p><strong>SOC 2:</strong> Controles automáticos para seguridad, disponibilidad, integridad.</p>
+                    <p><strong>PCI DSS:</strong> Cumplimiento de estándares de seguridad de tarjetas de pago.</p>
+                    <p><strong>GDPR:</strong> Controles de privacidad y protección de datos automatizados.</p>
+                    <p><strong>ISO 27001:</strong> Sistema de gestión de seguridad de la información.</p>
+                    <p><strong>CIS Controls:</strong> 20 controles críticos de ciberseguridad implementados como código.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mlops" class="tab-content">
+            <div class="card">
+                <h2>MLOps: Machine Learning Operations</h2>
+                <p>MLOps aplica principios DevOps al machine learning, gestionando el ciclo de vida completo de modelos ML desde el desarrollo hasta la producción y monitoreo continuo.</p>
+
+                <h3>Desafíos Únicos de ML en Producción</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>Data Drift</h4>
+                        <p>Cambios en las características de los datos de entrada que afectan el rendimiento del modelo.</p>
+                        <ul class="list-styled">
+                            <li>Monitoreo de distribución de datos</li>
+                            <li>Statistical tests para detectar cambios</li>
+                            <li>Alertas automáticas de drift</li>
+                            <li>Reentrenamiento programado</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Model Drift</h4>
+                        <p>Degradación del rendimiento del modelo debido a cambios en el mundo real.</p>
+                        <ul class="list-styled">
+                            <li>Monitoreo de métricas de rendimiento</li>
+                            <li>A/B testing de modelos</li>
+                            <li>Champion/Challenger deployment</li>
+                            <li>Rollback automático</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Reproducibilidad</h4>
+                        <p>Garantizar que los experimentos y modelos sean reproducibles.</p>
+                        <ul class="list-styled">
+                            <li>Version control de datasets</li>
+                            <li>Experiment tracking</li>
+                            <li>Environment reproducibility</li>
+                            <li>Seed management</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Escalabilidad</h4>
+                        <p>Servir modelos ML a escala con baja latencia y alta disponibilidad.</p>
+                        <ul class="list-styled">
+                            <li>Model serving platforms</li>
+                            <li>Auto-scaling de inferencia</li>
+                            <li>Caching de predictions</li>
+                            <li>Batch vs real-time serving</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Pipeline MLOps</h3>
+                <div class="pipeline-diagram">
+                    <h4>Flujo de Machine Learning Operations</h4>
+                    <p><strong>1. Data Pipeline:</strong> Ingestion, validation, preprocessing</p>
+                    <p><strong>2. Feature Engineering:</strong> Feature extraction, selection, transformation</p>
+                    <p><strong>3. Model Training:</strong> Experimentation, hyperparameter tuning</p>
+                    <p><strong>4. Model Validation:</strong> Testing, validation, bias detection</p>
+                    <p><strong>5. Model Deployment:</strong> Containerization, serving, A/B testing</p>
+                    <p><strong>6. Monitoring:</strong> Performance, drift detection, retraining triggers</p>
+                </div>
+
+                <h3>Ejemplo de Pipeline MLOps</h3>
+                <div class="code-block">
+# MLflow Pipeline Example
+import mlflow
+import mlflow.sklearn
+from mlflow.tracking import MlflowClient
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score
+
+# Experiment setup
+mlflow.set_experiment("customer-churn-prediction")
+
+with mlflow.start_run():
+    # Data loading and validation
+    data = pd.read_csv("data/customer_data.csv")
+    
+    # Log data statistics
+    mlflow.log_param("data_size", len(data))
+    mlflow.log_param("features", list(data.columns))
+    
+    # Feature engineering
+    X_train, X_test, y_train, y_test = prepare_features(data)
+    
+    # Model training
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,
+        random_state=42
+    )
+    
+    model.fit(X_train, y_train)
+    
+    # Predictions and metrics
+    predictions = model.predict(X_test)
+    
+    accuracy = accuracy_score(y_test, predictions)
+    precision = precision_score(y_test, predictions)
+    recall = recall_score(y_test, predictions)
+    
+    # Log parameters and metrics
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_param("max_depth", 10)
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("precision", precision)
+    mlflow.log_metric("recall", recall)
+    
+    # Log model
+    mlflow.sklearn.log_model(
+        model, 
+        "model",
+        registered_model_name="customer-churn-classifier"
+    )
+    
+    # Model deployment to staging
+    client = MlflowClient()
+    model_version = client.create_model_version(
+        name="customer-churn-classifier",
+        source=mlflow.get_artifact_uri("model"),
+        run_id=mlflow.active_run().info.run_id
+    )
+    
+    # Promote to staging
+    client.transition_model_version_stage(
+        name="customer-churn-classifier",
+        version=model_version.version,
+        stage="Staging"
+    )
+
+# Monitoring script
+def monitor_model_performance():
+    # Load production model
+    model = mlflow.sklearn.load_model(
+        "models:/customer-churn-classifier/Production"
+    )
+    
+    # Get recent predictions
+    recent_data = get_recent_data()
+    predictions = model.predict(recent_data)
+    
+    # Check for data drift
+    drift_score = calculate_drift(recent_data, reference_data)
+    
+    if drift_score > DRIFT_THRESHOLD:
+        trigger_retraining_pipeline()
+        send_alert("Data drift detected", drift_score)
+    
+    # Log monitoring metrics
+    mlflow.log_metric("drift_score", drift_score)
+    mlflow.log_metric("prediction_count", len(predictions))
+                </div>
+
+                <h3>Herramientas MLOps</h3>
+                <table class="tools-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Herramientas</th>
+                            <th>Propósito</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Experiment Tracking</td>
+                            <td>MLflow, Weights & Biases, Neptune</td>
+                            <td>Tracking de experimentos ML</td>
+                            <td>Metrics, parameters, artifacts</td>
+                        </tr>
+                        <tr>
+                            <td>Data Versioning</td>
+                            <td>DVC, Pachyderm, Delta Lake</td>
+                            <td>Version control de datasets</td>
+                            <td>Data lineage, reproducibility</td>
+                        </tr>
+                        <tr>
+                            <td>Feature Store</td>
+                            <td>Feast, Tecton, AWS Feature Store</td>
+                            <td>Gestión de features centralizadas</td>
+                            <td>Feature sharing, consistency</td>
+                        </tr>
+                        <tr>
+                            <td>Model Serving</td>
+                            <td>Seldon, KServe, TorchServe</td>
+                            <td>Serving de modelos en producción</td>
+                            <td>Scaling, A/B testing</td>
+                        </tr>
+                        <tr>
+                            <td>Orchestration</td>
+                            <td>Kubeflow, Apache Airflow, Prefect</td>
+                            <td>Orchestración de pipelines ML</td>
+                            <td>Workflow management</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoring</td>
+                            <td>Evidently, Arize, Fiddler</td>
+                            <td>Monitoreo de modelos en producción</td>
+                            <td>Drift detection, explainability</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Niveles de Madurez MLOps</h4>
+                    <p><strong>Nivel 0:</strong> Proceso manual, scripts ad-hoc, modelos estáticos.</p>
+                    <p><strong>Nivel 1:</strong> Pipeline de training automatizado, deployment manual.</p>
+                    <p><strong>Nivel 2:</strong> CI/CD para ML, retraining automático, monitoreo continuo.</p>
+                    <p><strong>Nivel 3:</strong> MLOps completamente automatizado con governance y compliance.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="practices" class="tab-content">
+            <div class="card">
+                <h2>Buenas Prácticas de Desarrollo</h2>
+                <p>Conjunto de principios, metodologías y técnicas que mejoran la calidad, mantenibilidad y eficiencia del desarrollo de software.</p>
+
+                <h3>Principios SOLID</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>Single Responsibility</h4>
+                        <p>Una clase debe tener solo una razón para cambiar.</p>
+                        <ul class="list-styled">
+                            <li>Clases con propósito único y bien definido</li>
+                            <li>Separación de responsabilidades</li>
+                            <li>Cohesión alta dentro de módulos</li>
+                            <li>Facilita testing y mantenimiento</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Open/Closed</h4>
+                        <p>Entidades deben estar abiertas para extensión pero cerradas para modificación.</p>
+                        <ul class="list-styled">
+                            <li>Uso de interfaces y abstracción</li>
+                            <li>Patrón Strategy y Template Method</li>
+                            <li>Polimorfismo para extensibilidad</li>
+                            <li>Minimiza riesgo de regresiones</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Liskov Substitution</h4>
+                        <p>Objetos de una superclase deben ser reemplazables por objetos de subclases.</p>
+                        <ul class="list-styled">
+                            <li>Contratos de comportamiento consistentes</li>
+                            <li>Herencia semántica correcta</li>
+                            <li>Precondiciones no más fuertes</li>
+                            <li>Postcondiciones no más débiles</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Interface Segregation</h4>
+                        <p>Clientes no deben depender de interfaces que no usan.</p>
+                        <ul class="list-styled">
+                            <li>Interfaces específicas y cohesivas</li>
+                            <li>Evitar interfaces demasiado amplias</li>
+                            <li>Composición de interfaces pequeñas</li>
+                            <li>Reduce acoplamiento innecesario</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Dependency Inversion</h4>
+                        <p>Módulos de alto nivel no deben depender de módulos de bajo nivel.</p>
+                        <ul class="list-styled">
+                            <li>Inyección de dependencias</li>
+                            <li>Inversión de control (IoC)</li>
+                            <li>Dependencia de abstracciones</li>
+                            <li>Facilita testing con mocks</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Clean Code Practices</h3>
+                <div class="code-block">
+// ❌ Código problemático
+public class DataProcessor {
+    public void processData(String data) {
+        // Método muy largo con múltiples responsabilidades
+        String[] lines = data.split("\n");
+        List&lt;String&gt; validLines = new ArrayList&lt;&gt;();
+        
+        // Validación
+        for (String line : lines) {
+            if (line.length() > 0 && !line.startsWith("#")) {
+                validLines.add(line);
+            }
+        }
+        
+        // Procesamiento
+        for (String line : validLines) {
+            String[] parts = line.split(",");
+            if (parts.length == 3) {
+                // Lógica compleja de transformación
+                String result = parts[0].trim().toUpperCase() + 
+                               "|" + parts[1].trim() + 
+                               "|" + convertDate(parts[2].trim());
+                saveToDatabase(result);
+            }
+        }
+        
+        // Logging
+        System.out.println("Processed " + validLines.size() + " lines");
+    }
+}
+
+// ✅ Código mejorado
+public class DataProcessor {
+    private final DataValidator validator;
+    private final DataTransformer transformer;
+    private final DataRepository repository;
+    private final Logger logger;
+    
+    public void processData(String rawData) {
+        List&lt;String&gt; dataLines = parseDataLines(rawData);
+        List&lt;String&gt; validLines = validator.filterValidLines(dataLines);
+        List&lt;ProcessedData&gt; processedData = transformer.transform(validLines);
+        
+        repository.saveAll(processedData);
+        logger.info("Successfully processed {} lines", processedData.size());
+    }
+    
+    private List&lt;String&gt; parseDataLines(String rawData) {
+        return Arrays.asList(rawData.split("\n"));
+    }
+}
+
+public class DataValidator {
+    public List&lt;String&gt; filterValidLines(List&lt;String&gt; lines) {
+        return lines.stream()
+                   .filter(this::isValidLine)
+                   .collect(Collectors.toList());
+    }
+    
+    private boolean isValidLine(String line) {
+        return StringUtils.isNotEmpty(line) && !line.startsWith("#");
+    }
+}
+
+public class DataTransformer {
+    public List&lt;ProcessedData&gt; transform(List&lt;String&gt; lines) {
+        return lines.stream()
+                   .map(this::parseLineToData)
+                   .filter(Optional::isPresent)
+                   .map(Optional::get)
+                   .collect(Collectors.toList());
+    }
+    
+    private Optional&lt;ProcessedData&gt; parseLineToData(String line) {
+        String[] parts = line.split(",");
+        if (parts.length != 3) {
+            return Optional.empty();
+        }
+        
+        return Optional.of(ProcessedData.builder()
+            .name(parts[0].trim().toUpperCase())
+            .value(parts[1].trim())
+            .date(convertDate(parts[2].trim()))
+            .build());
+    }
+}
+                </div>
+
+                <h3>Testing Best Practices</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>Test Pyramid</h4>
+                        <p>Mayoría de tests unitarios, algunos de integración, pocos end-to-end.</p>
+                        <ul class="list-styled">
+                            <li><strong>Unit Tests (70%):</strong> Rápidos, aislados, específicos</li>
+                            <li><strong>Integration Tests (20%):</strong> Componentes trabajando juntos</li>
+                            <li><strong>E2E Tests (10%):</strong> Flujos completos de usuario</li>
+                            <li>Tests de contrato para APIs</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Test-Driven Development</h4>
+                        <p>Escribir tests antes que el código de implementación.</p>
+                        <ul class="list-styled">
+                            <li><strong>Red:</strong> Escribir test que falla</li>
+                            <li><strong>Green:</strong> Implementar mínimo para pasar</li>
+                            <li><strong>Refactor:</strong> Mejorar código manteniendo tests</li>
+                            <li>Mejora diseño y cobertura</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Behavior-Driven Development</h4>
+                        <p>Tests expresados en lenguaje de negocio usando Given-When-Then.</p>
+                        <ul class="list-styled">
+                            <li>Colaboración entre stakeholders</li>
+                            <li>Especificaciones ejecutables</li>
+                            <li>Documentación viva</li>
+                            <li>Herramientas: Cucumber, SpecFlow</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Test Doubles</h4>
+                        <p>Objetos que reemplazan dependencias reales en tests.</p>
+                        <ul class="list-styled">
+                            <li><strong>Mock:</strong> Verificar interacciones</li>
+                            <li><strong>Stub:</strong> Respuestas predefinidas</li>
+                            <li><strong>Fake:</strong> Implementación simplificada</li>
+                            <li><strong>Spy:</strong> Wrapper con tracking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Code Review Best Practices</h4>
+                    <p><strong>Tamaño:</strong> PRs pequeños (< 400 líneas) para reviews efectivos.</p>
+                    <p><strong>Descripción:</strong> Contexto claro del cambio y su propósito.</p>
+                    <p><strong>Automatización:</strong> Checks automáticos antes de review humano.</p>
+                    <p><strong>Feedback constructivo:</strong> Sugerencias específicas y ejemplos.</p>
+                    <p><strong>Rapidez:</strong> Reviews dentro de 24 horas para mantener flujo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos de DevOps</h2>
+                <p>Resuelve estos ejercicios para aplicar conceptos de DevOps, SecOps, MLOps y buenas prácticas de desarrollo.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p>Progreso: <span id="progress-text">0/10</span> ejercicios completados</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 1:</strong> Un pipeline CI/CD procesa 100 commits/día. Si cada pipeline toma 15 minutos y el 20% fallan requiriendo rerun, ¿cuánto tiempo total de compute se usa diariamente?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="1800">
+                        <label>1800 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="1500">
+                        <label>1500 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="2100">
+                        <label>2100 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="1200">
+                        <label>1200 minutos</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(1, 1800, 'Tiempo = 100 pipelines × 15 min + (20 fallos × 15 min rerun) = 1500 + 300 = 1800 minutos')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 2:</strong> Una aplicación tiene lead time de 5 días. Si se implementa DevOps y mejora a 2 horas, ¿cuál es la mejora porcentual en lead time?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="98.3">
+                        <label>98.3%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="60">
+                        <label>60%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="150">
+                        <label>150%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="40">
+                        <label>40%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(2, 98.3, 'Mejora = ((120h - 2h) / 120h) × 100 = (118/120) × 100 = 98.3%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 3:</strong> Un sistema tiene 95% disponibilidad. Si DevOps mejora a 99.9%, ¿cuántas horas adicionales de uptime hay en un año?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="429.24">
+                        <label>429.24 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="350.5">
+                        <label>350.5 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="420">
+                        <label>420 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="500">
+                        <label>500 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(3, 429.24, 'Downtime anterior: 8760h × 5% = 438h. Nuevo: 8760h × 0.1% = 8.76h. Mejora: 438 - 8.76 = 429.24h')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 4:</strong> Un equipo hace 10 deployments/mes con 30% failure rate. Después de DevOps hace 50 deployments/mes con 5% failure rate. ¿Cuántos deployments exitosos adicionales por mes?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="40.5">
+                        <label>40.5 deployments</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="47.5">
+                        <label>47.5 deployments</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="35">
+                        <label>35 deployments</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="30">
+                        <label>30 deployments</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(4, 40.5, 'Exitosos antes: 10 × 70% = 7. Exitosos después: 50 × 95% = 47.5. Mejora: 47.5 - 7 = 40.5')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 5:</strong> Un modelo ML en producción tiene 85% accuracy. Si data drift lo reduce a 75%, ¿cuál es la degradación porcentual en accuracy?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="11.8">
+                        <label>11.8%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="10">
+                        <label>10%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="13.3">
+                        <label>13.3%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="15">
+                        <label>15%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(5, 11.8, 'Degradación = ((85 - 75) / 85) × 100 = (10/85) × 100 = 11.8%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 6:</strong> Un security scan encuentra 20 vulnerabilidades críticas y 50 medias. Si críticas toman 4h y medias 1h cada una, ¿cuánto tiempo total de remediación?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="130">
+                        <label>130 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="280">
+                        <label>280 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="70">
+                        <label>70 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="200">
+                        <label>200 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(6, 130, 'Tiempo = (20 críticas × 4h) + (50 medias × 1h) = 80 + 50 = 130 horas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 7:</strong> Un cluster Kubernetes tiene 10 nodos, cada uno puede manejar 30 pods. Si se usa 80% de capacidad como máximo, ¿cuántos pods pueden desplegarse?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="240">
+                        <label>240 pods</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="300">
+                        <label>300 pods</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="200">
+                        <label>200 pods</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="150">
+                        <label>150 pods</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(7, 240, 'Capacidad total = 10 nodos × 30 pods × 80% = 300 × 0.8 = 240 pods')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 8:</strong> Un test suite tiene 1000 tests unitarios que tardan 10 minutos. Si se paraleliza en 4 runners, ¿cuál es el tiempo de ejecución?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="2.5">
+                        <label>2.5 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="4">
+                        <label>4 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="5">
+                        <label>5 minutos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="10">
+                        <label>10 minutos</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(8, 2.5, 'Tiempo paralelo = 10 minutos / 4 runners = 2.5 minutos')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback8"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 9:</strong> Un feature flag está habilitado para 20% de usuarios. Si la aplicación tiene 10,000 usuarios activos, ¿cuántos ven la nueva feature?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="2000">
+                        <label>2000 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="1000">
+                        <label>1000 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="5000">
+                        <label>5000 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="8000">
+                        <label>8000 usuarios</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(9, 2000, 'Usuarios con feature = 10,000 × 20% = 2000 usuarios')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 10:</strong> Un proyecto reduce el tiempo de code review de 2 días a 4 horas. Si se hacen 50 reviews/mes, ¿cuántas horas se ahorran mensualmente?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="1000">
+                        <label>1000 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="800">
+                        <label>800 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="1200">
+                        <label>1200 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="600">
+                        <label>600 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(10, 1000, 'Ahorro = 50 reviews × (48h - 4h) = 50 × 44 = 2200h. Error: 50 × (2×8h - 4h) = 50 × 20 = 1000h')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback10"></div>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>Recursos y Herramientas</h2>
+                <p>Conjunto completo de recursos, herramientas y referencias para implementar DevOps, SecOps, MLOps y buenas prácticas de desarrollo.</p>
+
+                <h3>Plataformas DevOps Integrales</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>GitHub</h4>
+                        <ul class="list-styled">
+                            <li>GitHub Actions para CI/CD</li>
+                            <li>GitHub Packages para artefactos</li>
+                            <li>GitHub Security para scanning</li>
+                            <li>GitHub Codespaces para dev environments</li>
+                            <li>Integración con ecosistema de herramientas</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>GitLab</h4>
+                        <ul class="list-styled">
+                            <li>GitLab CI/CD integrado</li>
+                            <li>Container Registry incluido</li>
+                            <li>Security scanning nativo</li>
+                            <li>Kubernetes integration</li>
+                            <li>Issue tracking y project management</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Azure DevOps</h4>
+                        <ul class="list-styled">
+                            <li>Azure Pipelines para CI/CD</li>
+                            <li>Azure Repos para Git</li>
+                            <li>Azure Artifacts para packages</li>
+                            <li>Azure Boards para tracking</li>
+                            <li>Integración nativa con Azure</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>AWS DevOps</h4>
+                        <ul class="list-styled">
+                            <li>CodePipeline, CodeBuild, CodeDeploy</li>
+                            <li>CodeCommit para repositorios</li>
+                            <li>CloudFormation para IaC</li>
+                            <li>X-Ray para observability</li>
+                            <li>Integración con servicios AWS</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Herramientas por Categoría</h3>
+                <table class="tools-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Open Source</th>
+                            <th>Comercial/SaaS</th>
+                            <th>Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CI/CD</td>
+                            <td>Jenkins, GitLab CI, GitHub Actions</td>
+                            <td>CircleCI, Travis CI, Buildkite</td>
+                            <td>Azure DevOps, AWS CodePipeline</td>
+                        </tr>
+                        <tr>
+                            <td>Container Orchestration</td>
+                            <td>Kubernetes, Docker Swarm</td>
+                            <td>Rancher, Platform9</td>
+                            <td>OpenShift, Amazon EKS, Azure AKS</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure as Code</td>
+                            <td>Terraform, Ansible, Pulumi</td>
+                            <td>Terraform Cloud, Ansible Tower</td>
+                            <td>AWS CloudFormation, Azure ARM</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoring</td>
+                            <td>Prometheus, Grafana, ELK Stack</td>
+                            <td>Datadog, New Relic, Splunk</td>
+                            <td>Dynatrace, AppDynamics</td>
+                        </tr>
+                        <tr>
+                            <td>Security Scanning</td>
+                            <td>OWASP ZAP, SonarQube Community</td>
+                            <td>Snyk, Veracode, Checkmarx</td>
+                            <td>Fortify, IBM Security AppScan</td>
+                        </tr>
+                        <tr>
+                            <td>Artifact Management</td>
+                            <td>Nexus OSS, Apache Archiva</td>
+                            <td>JFrog Artifactory, GitHub Packages</td>
+                            <td>Azure Artifacts, AWS CodeArtifact</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Certificaciones Recomendadas</h3>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <h4>DevOps</h4>
+                        <ul class="list-styled">
+                            <li><strong>AWS Certified DevOps Engineer</strong></li>
+                            <li><strong>Azure DevOps Engineer Expert</strong></li>
+                            <li><strong>Google Cloud Professional Cloud DevOps Engineer</strong></li>
+                            <li><strong>Docker Certified Associate</strong></li>
+                            <li><strong>Certified Kubernetes Administrator (CKA)</strong></li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Security</h4>
+                        <ul class="list-styled">
+                            <li><strong>Certified Ethical Hacker (CEH)</strong></li>
+                            <li><strong>CISSP - Security Professional</strong></li>
+                            <li><strong>CompTIA Security+</strong></li>
+                            <li><strong>AWS Certified Security - Specialty</strong></li>
+                            <li><strong>GSEC - Security Essentials</strong></li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Cloud & Infrastructure</h4>
+                        <ul class="list-styled">
+                            <li><strong>Terraform Associate</strong></li>
+                            <li><strong>Ansible Certified Specialist</strong></li>
+                            <li><strong>Red Hat Certified System Administrator</strong></li>
+                            <li><strong>VMware Certified Professional</strong></li>
+                            <li><strong>Linux Professional Institute (LPIC)</strong></li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <h4>Metodologías</h4>
+                        <ul class="list-styled">
+                            <li><strong>Certified ScrumMaster (CSM)</strong></li>
+                            <li><strong>SAFe DevOps Practitioner</strong></li>
+                            <li><strong>DevOps Institute Certifications</strong></li>
+                            <li><strong>ITIL 4 Foundation</strong></li>
+                            <li><strong>Lean Six Sigma</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Learning Path DevOps</h3>
+                <div class="pipeline-diagram">
+                    <h4>Ruta de Aprendizaje Recomendada</h4>
+                    <p><strong>1. Fundamentos:</strong> Linux, Git, networking básico, scripting</p>
+                    <p><strong>2. Desarrollo:</strong> Un lenguaje (Python/Go/Java), APIs REST, bases de datos</p>
+                    <p><strong>3. Cloud Basics:</strong> AWS/Azure/GCP fundamentals, servicios core</p>
+                    <p><strong>4. Containers:</strong> Docker, container registries, orchestration basics</p>
+                    <p><strong>5. CI/CD:</strong> Jenkins/GitHub Actions, pipeline as code, testing automation</p>
+                    <p><strong>6. Infrastructure as Code:</strong> Terraform, Ansible, cloud templates</p>
+                    <p><strong>7. Monitoring:</strong> Prometheus, Grafana, logging, observability</p>
+                    <p><strong>8. Kubernetes:</strong> Orchestration, service mesh, advanced patterns</p>
+                    <p><strong>9. Security:</strong> DevSecOps practices, scanning tools, compliance</p>
+                    <p><strong>10. Especialización:</strong> MLOps, FinOps, platform engineering</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Métricas Clave para Medir DevOps</h4>
+                    <p><strong>DORA Metrics:</strong> Deployment frequency, lead time, change failure rate, recovery time</p>
+                    <p><strong>Flow Metrics:</strong> Cycle time, throughput, work in progress</p>
+                    <p><strong>Quality Metrics:</strong> Defect escape rate, test coverage, code quality</p>
+                    <p><strong>Reliability:</strong> SLA/SLO compliance, MTTR, MTBF</p>
+                    <p><strong>Team Health:</strong> Satisfaction surveys, retention, learning time</p>
+                </div>
+
+                <h3>Recursos de Aprendizaje</h3>
+                <ul class="list-styled">
+                    <li><strong>Libros:</strong> "The Phoenix Project", "Accelerate", "The DevOps Handbook"</li>
+                    <li><strong>Plataformas:</strong> Linux Academy, A Cloud Guru, Pluralsight</li>
+                    <li><strong>Prácticas:</strong> Katacoda, Play with Docker/Kubernetes</li>
+                    <li><strong>Comunidades:</strong> DevOps.com, CNCF, local meetups</li>
+                    <li><strong>Conferencias:</strong> DevOpsDays, KubeCon, DockerCon</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('nav-tab');
+            
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.style.display = 'block';
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = '❌ Por favor selecciona una respuesta.';
+                return;
+            }
+            
+            const userAnswer = parseFloat(selectedAnswer.value);
+            const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.1;
+            
+            feedback.style.display = 'block';
+            
+            if (isCorrect) {
+                feedback.className = 'exercise-feedback feedback-correct';
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                
+                if (!selectedAnswer.closest('.exercise-container').dataset.completed) {
+                    completedExercises++;
+                    selectedAnswer.closest('.exercise-container').dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completedExercises}/10`;
+        }
+
+        // Inicializar tema
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌞 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

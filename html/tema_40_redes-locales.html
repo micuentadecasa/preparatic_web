@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 40 - Redes Locales</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--exercise-text);
+        }
+
+        .exercise-container h3 {
+            color: var(--exercise-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .subnet-calculator {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .formula-box {
+            background: var(--highlight-box-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 40: Redes Locales</h1>
+            <p>Tipología. Técnicas de transmisión. Métodos de acceso. Dispositivos de interconexión.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Topologías y Tipos</div>
+                <div class="tab" onclick="showTab('content2')">📘 Modelos OSI vs TCP/IP</div>
+                <div class="tab" onclick="showTab('content3')">📘 Subnetting y Direccionamiento</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos y Tips</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Topologías principales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7 vs 4</span>
+                        <div>Capas OSI vs TCP/IP</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">/30</span>
+                        <div>Máscara más pequeña útil</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción a las Redes Locales</h3>
+                    <p>Una red local (LAN - Local Area Network) es una red de computadoras que interconecta dispositivos en un área geográfica limitada como una oficina, edificio o campus. Las LAN permiten compartir recursos como impresoras, archivos, conexiones a Internet y otros servicios entre los dispositivos conectados.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Fundamentales para el Examen</h3>
+                    <ul class="list-checkmark">
+                        <li>Topologías de red: Estrella, Bus, Anillo, Malla y Árbol</li>
+                        <li>Modelos de referencia: OSI (7 capas) vs TCP/IP (4 capas)</li>
+                        <li>Subnetting: Cálculo de subredes y hosts disponibles</li>
+                        <li>Dispositivos de interconexión: Switches, Routers, Hubs y Bridges</li>
+                        <li>Protocolos de acceso: CSMA/CD, CSMA/CA y Token Passing</li>
+                    </ul>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Tips para el Examen</h4>
+                        <p>En los exámenes, presta especial atención a las diferencias entre hubs, switches y routers, y a los cálculos de subnetting. Estos temas son muy frecuentes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Topologías de Red</h3>
+                    <p>La topología de red define la estructura física o lógica de cómo se conectan los dispositivos en una red. Cada topología tiene sus ventajas y desventajas en términos de rendimiento, confiabilidad y costos.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Topología en Estrella</h4>
+                            <p>La más utilizada en redes modernas. Todos los dispositivos se conectan a un switch central. Ventajas: fácil diagnóstico de fallos, escalable. Desventajas: punto único de fallo en el switch central.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Topología en Bus</h4>
+                            <p>Utilizada en las primeras redes Ethernet. Todos los dispositivos comparten un único cable coaxial. Ventajas: bajo costo. Desventajas: difícil diagnóstico, un corte en el cable afecta toda la red.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Topología en Anillo</h4>
+                            <p>Los datos viajan en una dirección alrededor del anillo. Utilizada en redes Token Ring. Ventajas: rendimiento predecible. Desventajas: un fallo rompe toda la red.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Comparativa de Topologías</h3>
+                    <p>Cada topología tiene características específicas que la hacen adecuada para diferentes entornos:</p>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes para el Examen</h4>
+                        <ul class="list-checkmark">
+                            <li>La topología en estrella es la más común en redes Ethernet modernas</li>
+                            <li>Las topologías híbridas combinan múltiples tipos para optimizar el rendimiento</li>
+                            <li>La elección de topología afecta el rendimiento, confiabilidad y costos de la red</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Pregunta de Examen Típica</h4>
+                        <p>¿Qué topología tiene un punto único de fallo?</p>
+                        <p><strong>Respuesta:</strong> La topología en estrella, ya que si falla el switch central, toda la red se interrumpe.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📘 Comparación de Modelos OSI vs TCP/IP</h3>
+                    <p>Los modelos de referencia OSI y TCP/IP son marcos conceptuales que describen cómo se comunican los sistemas en red. Es crucial entender sus diferencias para el examen.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Comparativa Detallada de Capas</h3>
+                    <p>La comparación entre ambos modelos es un tema frecuente en exámenes:</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Capa OSI</th>
+                                <th>Descripción</th>
+                                <th>Capa TCP/IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Capa 7 - Aplicación</strong></td>
+                                <td>Interfaces con aplicaciones de red</td>
+                                <td rowspan="3"><strong>Capa de Aplicación</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capa 6 - Presentación</strong></td>
+                                <td>Traducción, cifrado y compresión</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capa 5 - Sesión</strong></td>
+                                <td>Gestión de sesiones de comunicación</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capa 4 - Transporte</strong></td>
+                                <td>Control de flujo y errores</td>
+                                <td><strong>Capa de Transporte</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capa 3 - Red</strong></td>
+                                <td>Direccionamiento y enrutamiento</td>
+                                <td><strong>Capa de Internet</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capas 2 y 1 - Enlace y Física</strong></td>
+                                <td>Transmisión física de datos</td>
+                                <td><strong>Capa de Acceso a Red</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Error Común en Exámenes</h4>
+                        <p>Confundir el número de capas de cada modelo o asignar incorrectamente las funciones de cada capa.</p>
+                        <p><strong>Explicación:</strong> El modelo OSI tiene 7 capas y es teórico, mientras que TCP/IP tiene 4 capas y es práctico. Las capas superiores del OSI (5, 6 y 7) se combinan en la capa de Aplicación del TCP/IP.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Subnetting y Direccionamiento IP</h3>
+                    <p>El subnetting es una habilidad crítica para los exámenes de redes. Permite dividir una red en subredes más pequeñas para una mejor gestión.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Fórmulas Clave para Subnetting</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Consideraciones Importantes</h4>
+                        <p>Las preguntas de subnetting suelen involucrar cálculos de número de subredes, hosts por subred y rangos de direcciones. Memoriza estas fórmulas:</p>
+                    </div>
+                    
+                    <div class="formula-box">
+                        Número de subredes = 2^n (donde n = bits prestados)<br>
+                        Hosts por subred = 2^h - 2 (donde h = bits de host restantes)<br>
+                        Máscara de subred = 256 - valor del último octeto
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Ejemplo Práctico</h4>
+                        <p>Red 192.168.1.0/24 subneteada a /26:</p>
+                        <ul class="list-checkmark">
+                            <li>Bits prestados: 2 (26-24)</li>
+                            <li>Subredes: 2^2 = 4</li>
+                            <li>Hosts por subred: 2^6 - 2 = 62</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Escenario Práctico</h4>
+                        <p>Necesitas crear 6 subredes con al menos 30 hosts cada una. ¿Qué máscara usarías?</p>
+                        <p><strong>Solución:</strong> Necesitas 3 bits para 6 subredes (2^3=8) y 5 bits para 30 hosts (2^5-2=30). Total 8 bits, máscara /27.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>IEEE 802.3:</strong> Estándar Ethernet para redes locales cableadas</li>
+                        <li><strong>IEEE 802.11:</strong> Estándar para redes inalámbricas Wi-Fi</li>
+                        <li><strong>RFC 791:</strong> Especificación del Protocolo Internet (IP)</li>
+                        <li><strong>Libro "Redes de Computadoras" de Andrew Tanenbaum:</strong> Referencia clásica sobre redes</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Red_local" target="_blank">Wikipedia - Red local</a></li>
+                        <li><a href="https://www.ieee802.org/" target="_blank">IEEE 802 Standards</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/solutions/enterprise-networks/lan-switching/index.html" target="_blank">Cisco LAN Switching</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes de Examen</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre hub y switch?</h4>
+                            <p>Un hub repite todas las tramas a todos los puertos (creando un dominio de colisión único), mientras que un switch crea dominios de colisión separados para cada puerto y puede tomar decisiones inteligentes sobre el reenvío de tramas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Por qué se prefiere la topología en estrella?</h4>
+                            <p>Ofrece mejor rendimiento, facilidad de diagnóstico, escalabilidad y confiabilidad. Un fallo en un dispositivo no afecta a los demás, y el diagnóstico se limita al segmento entre el dispositivo y el switch.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🎯 Estrategias de Estudio para el Examen</h3>
+                    <div class="exam-tip">
+                        <h4>💡 Plan de Estudio Recomendado</h4>
+                        <p>1. Memoriza las diferencias entre los modelos OSI y TCP/IP<br>
+                        2. Practica subnetting con diferentes escenarios<br>
+                        3. Aprende las características de cada topología de red<br>
+                        4. Entiende las funciones de cada dispositivo de red<br>
+                        5. Revisa las fórmulas de cálculo de subredes y hosts</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica para el Examen</h3>
+                    <p>Practica tus conocimientos sobre redes locales con estos ejercicios interactivos. Pon a prueba tu comprensión de topologías, modelos de red, subnetting y protocolos de acceso.</p>
+                    <div class="exam-tip">
+                        <h4>💡 Cómo Abordar los Ejercicios</h4>
+                        <p>Lee cuidadosamente cada pregunta. Para ejercicios de subnetting, usa las fórmulas. Para preguntas teóricas, piensa en ejemplos prácticos. Verifica tus respuestas con las explicaciones detalladas.</p>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Comparación de Modelos de Red</h3>
+                    <div class="exercise-question">
+                        ¿Cuántas capas tiene el modelo TCP/IP en comparación con el modelo OSI?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">4 capas vs 7 capas</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">7 capas vs 4 capas</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">5 capas vs 7 capas</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">7 capas vs 5 capas</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'a', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Subnetting Básico</h3>
+                    <div class="exercise-question">
+                        ¿Cuántas subredes se pueden crear con una máscara de subred /26?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta numérica">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', '4', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Topologías de Red</h3>
+                    <div class="exercise-question">
+                        ¿Qué topología de red tiene un punto de fallo único?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', 'Estrella', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Tipos de Redes TCP/IP</h3>
+                    <div class="exercise-question">
+                        ¿Qué tipo de red en TCP/IP se encarga de la transmisión física de datos?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Capa de Aplicación</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Capa de Transporte</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Capa de Internet</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt4" name="exercise4" value="d">
+                            <label for="ex4opt4">Capa de Acceso a Red</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'd', 'ex4feedback')">Verificar Respuesta</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Cálculo de Hosts</h3>
+                    <div class="exercise-question">
+                        ¿Cuántos hosts se pueden direccionar en una red /28?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise5_answer" placeholder="Ingrese su respuesta numérica">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise5_answer', '14', 'ex5feedback')">Verificar Respuesta</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Subnetting Avanzado</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es la máscara de subred para dividir 192.168.1.0 en 8 subredes?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise6_answer" placeholder="Ejemplo: 255.255.255.224">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise6_answer', '255.255.255.224', 'ex6feedback')">Verificar Respuesta</button>
+                    <div id="ex6feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Comparación de Capas</h3>
+                    <div class="exercise-question">
+                        ¿En qué capa del modelo TCP/IP se encuentra el protocolo TCP?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt1" name="exercise7" value="a">
+                            <label for="ex7opt1">Capa de Acceso a Red</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt2" name="exercise7" value="b">
+                            <label for="ex7opt2">Capa de Internet</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt3" name="exercise7" value="c">
+                            <label for="ex7opt3">Capa de Transporte</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt4" name="exercise7" value="d">
+                            <label for="ex7opt4">Capa de Aplicación</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise7', 'c', 'ex7feedback')">Verificar Respuesta</button>
+                    <div id="ex7feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode by default
+        document.body.classList.add('dark-mode');
+        
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'Incorrecto. ❌<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌<br><br><strong>Explicación:</strong> ` + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function getExplanation(exerciseName, correctAnswer) {
+            // Customized explanations for each exercise
+            const explanations = {
+                'exercise1': {
+                    'a': 'El modelo TCP/IP tiene 4 capas (Aplicación, Transporte, Internet, Acceso a Red) mientras que el modelo OSI tiene 7 capas (Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación).',
+                    'b': 'Incorrecto. El modelo OSI tiene 7 capas y el TCP/IP tiene 4 capas.',
+                    'c': 'Incorrecto. El modelo TCP/IP tiene 4 capas y el OSI tiene 7 capas.',
+                    'd': 'Incorrecto. El modelo OSI tiene 7 capas y el TCP/IP tiene 4 capas.'
+                },
+                'exercise4': {
+                    'a': 'Incorrecto. La capa de Aplicación se encarga de las interfaces con aplicaciones de red.',
+                    'b': 'Incorrecto. La capa de Transporte maneja el control de flujo y errores.',
+                    'c': 'Incorrecto. La capa de Internet se encarga del direccionamiento y enrutamiento.',
+                    'd': 'Correcto. La capa de Acceso a Red es la responsable de la transmisión física de datos en el modelo TCP/IP.'
+                },
+                'exercise7': {
+                    'a': 'Incorrecto. La capa de Acceso a Red se encarga de la transmisión física.',
+                    'b': 'Incorrecto. La capa de Internet maneja el direccionamiento y enrutamiento.',
+                    'c': 'Correcto. TCP opera en la capa de Transporte del modelo TCP/IP.',
+                    'd': 'Incorrecto. La capa de Aplicación maneja las interfaces con aplicaciones.'
+                }
+            };
+            
+            if (explanations[exerciseName] && explanations[exerciseName][correctAnswer]) {
+                return explanations[exerciseName][correctAnswer];
+            }
+            return 'Explicación detallada de por qué esta es la respuesta correcta.';
+        }
+
+        function getTextExplanation(inputId, correctAnswer) {
+            // Customized explanations for text exercises
+            const explanations = {
+                'exercise2_answer': 'Con una máscara /26, se prestan 2 bits (26-24=2) para subredes, lo que da 2^2 = 4 subredes.',
+                'exercise3_answer': 'La topología en estrella tiene un punto único de fallo porque todos los dispositivos se conectan a un switch central. Si este falla, toda la red se interrumpe.',
+                'exercise5_answer': 'Con una máscara /28, quedan 4 bits para hosts (32-28=4), lo que da 2^4 - 2 = 14 hosts utilizables (se restan 2 por la dirección de red y broadcast).',
+                'exercise6_answer': 'Para crear 8 subredes se necesitan 3 bits (2^3=8). Esto cambia la máscara de /24 a /27, que es 255.255.255.224.',
+                'exercise8_answer': 'La capa de Transporte maneja el control de flujo, errores y entrega confiable de datos. TCP es un protocolo orientado a conexión que opera en esta capa.'
+            };
+            
+            if (explanations[inputId]) {
+                return explanations[inputId];
+            }
+            return `Explicación detallada de por qué "${correctAnswer}" es la respuesta correcta.`;
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

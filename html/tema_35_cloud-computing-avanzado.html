@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 35 - Cloud Computing Avanzado</title>
+    <style>
+        :root {--bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530); --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2); --tab-active: #2980b9; --content-bg: #2c2c2c; --card-bg: #2d2d2d; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a; --exercise-bg: #2d2d2d; --exercise-border: #2980b9; --exercise-text: #e0e0e0; --feedback-correct: #2a4a2a; --feedback-incorrect: #5a2a2a;}
+        .light-mode {--bg-color: #f5f7fa; --text-color: #2c3e50; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white; --highlight-box-bg: #e8f4fc; --success-box-bg: #d4edda; --table-row-even: #f2f2f2; --exercise-bg: #f8f9fa; --exercise-text: #2c3e50; --feedback-correct: #d4edda; --feedback-incorrect: #f8d7da;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--tab-active); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; } .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--card-text); }
+        .card h3 { margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid #555; }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .hot-tip { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .exercise-container { background: var(--exercise-bg); border-left: 4px solid var(--exercise-border); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--exercise-text); }
+        .exercise-question { margin-bottom: 15px; font-weight: bold; }
+        .exercise-options { margin-left: 20px; margin-bottom: 15px; }
+        .exercise-btn { background: var(--tab-active); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 10px 5px 0 0; }
+        .exercise-feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .exercise-feedback.correct { background: var(--feedback-correct); display: block; }
+        .exercise-feedback.incorrect { background: var(--feedback-incorrect); display: block; }
+        .provider-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 35: Cloud Computing Avanzado</h1>
+            <p>IaaS, PaaS, SaaS. Nubes privadas, públicas e híbridas. Arquitecturas cloud, contenedores, orquestación y servicios avanzados.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('models')">📘 Modelos Cloud</div>
+                <div class="tab" onclick="showTab('deployment')">📘 Despliegue</div>
+                <div class="tab" onclick="showTab('containers')">📘 Contenedores</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: NIST define 5 características esenciales: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">2006</span><div>AWS lanza EC2</div></div>
+                    <div class="stat-card"><span class="stat-number">5</span><div>Características NIST</div></div>
+                    <div class="stat-card"><span class="stat-number">94%</span><div>Empresas usan cloud</div></div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Definición NIST Cloud Computing (MEMORIZAR EXAMEN)</h3>
+                    <div class="highlight-box">
+                        <h4>📋 5 Características Esenciales:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>On-demand self-service:</strong> Autoprovisionamiento sin interacción humana</li>
+                            <li><strong>Broad network access:</strong> Acceso a través de la red estándar</li>
+                            <li><strong>Resource pooling:</strong> Recursos compartidos multi-tenant</li>
+                            <li><strong>Rapid elasticity:</strong> Escalado rápido hacia arriba/abajo</li>
+                            <li><strong>Measured service:</strong> Uso monitorizado y medido</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA ESTRELLA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Cuántas características esenciales define NIST para cloud computing?</p>
+                        <p><strong>R:</strong> 5 características esenciales (On-demand, Network access, Pooling, Elasticity, Measured)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Evolución Histórica Cloud (FECHAS EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Año</th><th>Hito</th><th>Empresa/Tecnología</th></tr></thead>
+                        <tbody>
+                            <tr><td>1999</td><td>Salesforce.com - primer SaaS</td><td>Salesforce</td></tr>
+                            <tr><td>2002</td><td>AWS Web Services</td><td>Amazon</td></tr>
+                            <tr><td>2006</td><td>EC2 y S3 lanzamiento</td><td>Amazon AWS</td></tr>
+                            <tr><td>2008</td><td>Google App Engine</td><td>Google</td></tr>
+                            <tr><td>2010</td><td>Microsoft Azure</td><td>Microsoft</td></tr>
+                            <tr><td>2011</td><td>Definición NIST SP 800-145</td><td>NIST</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 FECHA CLAVE</h4>
+                        <p><strong>2011:</strong> NIST publica SP 800-145 "The NIST Definition of Cloud Computing" - estándar oficial</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="models" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Pizza as a Service - mnemónico para recordar responsabilidades: IaaS=masa, PaaS=pizza lista, SaaS=delivery completo
+                </div>
+
+                <div class="card">
+                    <h3>📘 Modelos de Servicio (RESPONSABILIDADES EXAMEN)</h3>
+                    
+                    <div class="provider-box">
+                        <h4>🎯 Infrastructure as a Service (IaaS)</h4>
+                        <p><strong>Proveedor:</strong> Hardware, virtualización, redes, almacenamiento</p>
+                        <p><strong>Cliente:</strong> OS, middleware, runtime, datos, aplicaciones</p>
+                        <p><strong>Ejemplos:</strong> AWS EC2, Azure VMs, Google Compute Engine</p>
+                        <p><strong>EXAMEN:</strong> Mayor control, mayor responsabilidad</p>
+                    </div>
+
+                    <div class="provider-box" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                        <h4>🎯 Platform as a Service (PaaS)</h4>
+                        <p><strong>Proveedor:</strong> Todo hasta runtime/middleware</p>
+                        <p><strong>Cliente:</strong> Solo aplicaciones y datos</p>
+                        <p><strong>Ejemplos:</strong> Google App Engine, Heroku, Azure App Service</p>
+                        <p><strong>EXAMEN:</strong> Desarrollo rápido, menor control</p>
+                    </div>
+
+                    <div class="provider-box" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                        <h4>🎯 Software as a Service (SaaS)</h4>
+                        <p><strong>Proveedor:</strong> Todo el stack completo</p>
+                        <p><strong>Cliente:</strong> Solo uso de la aplicación</p>
+                        <p><strong>Ejemplos:</strong> Office 365, Salesforce, Gmail</p>
+                        <p><strong>EXAMEN:</strong> Plug & play, menor customización</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Comparación Modelos (TABLA FUNDAMENTAL EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Aspecto</th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Control</strong></td><td>Alto</td><td>Medio</td><td>Bajo</td></tr>
+                            <tr><td><strong>Flexibilidad</strong></td><td>Máxima</td><td>Media</td><td>Mínima</td></tr>
+                            <tr><td><strong>Time to Market</strong></td><td>Lento</td><td>Rápido</td><td>Inmediato</td></tr>
+                            <tr><td><strong>Gestión</strong></td><td>Cliente</td><td>Compartida</td><td>Proveedor</td></tr>
+                            <tr><td><strong>Coste Setup</strong></td><td>Alto</td><td>Medio</td><td>Bajo</td></tr>
+                            <tr><td><strong>Escalabilidad</strong></td><td>Manual</td><td>Semi-automática</td><td>Automática</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA TÍPICA</h4>
+                        <p><strong>P:</strong> ¿En qué modelo cloud el cliente tiene mayor responsabilidad?</p>
+                        <p><strong>R:</strong> IaaS - cliente gestiona desde OS hacia arriba</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Servicios Emergentes (XaaS)</h3>
+                    <div class="success-box">
+                        <h4>✅ Everything as a Service:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>FaaS:</strong> Function as a Service (Serverless)</li>
+                            <li><strong>CaaS:</strong> Container as a Service</li>
+                            <li><strong>BaaS:</strong> Backend as a Service</li>
+                            <li><strong>DaaS:</strong> Data as a Service</li>
+                            <li><strong>DBaaS:</strong> Database as a Service</li>
+                        </ul>
+                        
+                        <div class="exam-tip">
+                            <h4>💡 SERVERLESS EXAMEN</h4>
+                            <p>FaaS/Serverless: AWS Lambda, Azure Functions - cobro por ejecución, no por tiempo activo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deployment" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: 4 modelos despliegue: Pública (internet), Privada (organización), Híbrida (combinación), Comunitaria (sector específico)
+                </div>
+
+                <div class="card">
+                    <h3>📘 Modelos de Despliegue Cloud</h3>
+                    
+                    <div class="highlight-box">
+                        <h4>🌐 Nube Pública</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Propiedad:</strong> Tercero (AWS, Azure, GCP)</li>
+                            <li><strong>Acceso:</strong> Internet público</li>
+                            <li><strong>Ventajas:</strong> Bajo coste, escalabilidad, mantenimiento cero</li>
+                            <li><strong>Desventajas:</strong> Menor control, compliance, latencia</li>
+                            <li><strong>EXAMEN:</strong> Más económica para cargas variables</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🏢 Nube Privada</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Propiedad:</strong> Organización propia</li>
+                            <li><strong>Ubicación:</strong> On-premises o hosted</li>
+                            <li><strong>Ventajas:</strong> Control total, seguridad, compliance</li>
+                            <li><strong>Desventajas:</strong> Alto coste, menor escalabilidad</li>
+                            <li><strong>EXAMEN:</strong> Datos sensibles, regulaciones estrictas</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🔄 Nube Híbrida</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Composición:</strong> Pública + Privada interconectadas</li>
+                            <li><strong>Orquestación:</strong> Portabilidad de datos/aplicaciones</li>
+                            <li><strong>Uso:</strong> Datos sensibles privado, resto público</li>
+                            <li><strong>EXAMEN:</strong> Cloud bursting para picos de demanda</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>👥 Nube Comunitaria</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Usuarios:</strong> Sector específico (gobierno, salud)</li>
+                            <li><strong>Gestión:</strong> Compartida entre organizaciones</li>
+                            <li><strong>Ejemplo:</strong> Nubes gubernamentales, sanitarias</li>
+                            <li><strong>EXAMEN:</strong> Compliance sectorial específico</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Comparación Costes (CÁLCULO EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Modelo</th><th>CapEx</th><th>OpEx</th><th>TCO 5 años</th><th>Mejor para</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Pública</strong></td><td>Bajo</td><td>Variable</td><td>Medio</td><td>Startups, cargas variables</td></tr>
+                            <tr><td><strong>Privada</strong></td><td>Alto</td><td>Alto</td><td>Alto</td><td>Bancos, gobierno</td></tr>
+                            <tr><td><strong>Híbrida</strong></td><td>Medio</td><td>Medio</td><td>Medio-Alto</td><td>Migración gradual</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CÁLCULO TCO EXAMEN</h4>
+                        <p>TCO = CapEx + OpEx + Costes ocultos (migración, training, downtime)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="containers" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Docker (2013), Kubernetes (2014 Google). Diferencia: VM virtualiza hardware, Container virtualiza OS. Container más ligero.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Contenedores vs Máquinas Virtuales</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Aspecto</th><th>Máquinas Virtuales</th><th>Contenedores</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Virtualiza</strong></td><td>Hardware completo</td><td>Solo OS</td></tr>
+                            <tr><td><strong>Tamaño</strong></td><td>GB (incluye OS)</td><td>MB (solo aplicación)</td></tr>
+                            <tr><td><strong>Boot time</strong></td><td>Minutos</td><td>Segundos</td></tr>
+                            <tr><td><strong>Overhead</strong></td><td>Alto</td><td>Bajo</td></tr>
+                            <tr><td><strong>Aislamiento</strong></td><td>Completo</td><td>Proceso-nivel</td></tr>
+                            <tr><td><strong>Portabilidad</strong></td><td>Limitada</td><td>Alta</td></tr>
+                            <tr><td><strong>Densidad</strong></td><td>10-20 por host</td><td>100+ por host</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CUÁNDO USAR CADA UNO</h4>
+                        <p><strong>VM:</strong> Aplicaciones legacy, diferentes OS, aislamiento fuerte</p>
+                        <p><strong>Container:</strong> Microservicios, CI/CD, desarrollo ágil</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Ecosistema Kubernetes (ORQUESTACIÓN)</h3>
+                    <div class="success-box">
+                        <h4>🎯 Componentes Principales:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Pod:</strong> Unidad mínima de despliegue</li>
+                            <li><strong>Service:</strong> Acceso estable a pods</li>
+                            <li><strong>Deployment:</strong> Gestión de réplicas</li>
+                            <li><strong>ConfigMap:</strong> Configuración externalizada</li>
+                            <li><strong>Secret:</strong> Datos sensibles</li>
+                            <li><strong>Ingress:</strong> Acceso HTTP/HTTPS</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 KUBERNETES EXAMEN</h4>
+                        <p>Kubernetes = "Piloto de barco" en griego. Google donó a CNCF en 2014. Basado en Borg interno de Google.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios Prácticos: Cálculos Cloud Computing</h3>
+                    <p>Problemas de cálculo de costes, dimensionamiento, capacidad y arquitecturas cloud con números reales.</p>
+                    <div class="hot-tip">
+                        🔥 FÓRMULAS CLAVE: TCO = CapEx + OpEx, Elasticidad = (Carga Pico / Carga Base), ROI = (Beneficios - Costes) / Costes × 100
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: Análisis TCO Cloud vs On-Premise</h3>
+                    <div class="exercise-question">
+                        Comparar 5 años: Cloud $500/mes vs On-premise $15K hardware inicial + $200/mes operación.
+                        <br>¿Cuál es más económico y cuánto ahorro?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Cloud $30K, On-premise $27K - On-premise $3K más barato</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Cloud más barato por $5K</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Costes idénticos</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'a', 'ex1feedback')">Verificar</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Cálculo de Auto-Scaling</h3>
+                    <div class="exercise-question">
+                        App con carga base 2 servidores, picos de 8 servidores 4h/día. 
+                        <br>Coste fijo: $100/servidor/día. Cloud elástico: $5/servidor/hora.
+                        <br>¿Ahorro diario con auto-scaling?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt1" name="exercise2" value="a">
+                            <label for="ex2opt1">$180 ahorro (Fijo $800 vs Cloud $620)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt2" name="exercise2" value="b">
+                            <label for="ex2opt2">$200 ahorro</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt3" name="exercise2" value="c">
+                            <label for="ex2opt3">$100 ahorro</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise2', 'a', 'ex2feedback')">Verificar</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: Dimensionamiento de Instancias</h3>
+                    <div class="exercise-question">
+                        1000 usuarios concurrentes, cada usuario 50 requests/min, cada request necesita 10ms CPU.
+                        <br>Si cada CPU core procesa 100 requests/seg, ¿cuántos cores necesitas?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt1" name="exercise3" value="a">
+                            <label for="ex3opt1">84 cores (1000×50÷60÷100 con overhead 20%)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt2" name="exercise3" value="b">
+                            <label for="ex3opt2">50 cores exactos</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt3" name="exercise3" value="c">
+                            <label for="ex3opt3">100 cores (1 por usuario)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise3', 'a', 'ex3feedback')">Verificar</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 4: Análisis de Contenedores vs VMs</h3>
+                    <div class="exercise-question">
+                        Servidor 64 cores, 256GB RAM. VMs: 8GB RAM, 4 cores cada una.
+                        <br>Contenedores: 1GB RAM, 0.5 cores cada uno.
+                        <br>¿Densidad máxima de cada tecnología?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">VMs: 16 (RAM limitante), Contenedores: 128 (core limitante)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">VMs: 32, Contenedores: 256</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">VMs: 8, Contenedores: 64</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'a', 'ex4feedback')">Verificar</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 5: Cálculo de Transferencia de Datos</h3>
+                    <div class="exercise-question">
+                        Migración a cloud: 100TB datos, ancho banda 1Gbps, disponible 12h/día.
+                        <br>¿Tiempo total de migración?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt1" name="exercise5" value="a">
+                            <label for="ex5opt1">19 días (100TB÷1Gbps÷0.8=278h÷12h/día)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt2" name="exercise5" value="b">
+                            <label for="ex5opt2">10 días</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt3" name="exercise5" value="c">
+                            <label for="ex5opt3">25 días</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise5', 'a', 'ex5feedback')">Verificar</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 6: Reserved Instances vs On-Demand</h3>
+                    <div class="exercise-question">
+                        Instancia $0.20/hora on-demand vs $0.12/hora reserved (pago adelantado $500).
+                        <br>¿Punto de equilibrio en horas de uso?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt1" name="exercise6" value="a">
+                            <label for="ex6opt1">6,250 horas ($500÷($0.20-$0.12))</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt2" name="exercise6" value="b">
+                            <label for="ex6opt2">2,500 horas</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt3" name="exercise6" value="c">
+                            <label for="ex6opt3">4,167 horas</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise6', 'a', 'ex6feedback')">Verificar</button>
+                    <div id="ex6feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 7: Kubernetes Pod Scaling</h3>
+                    <div class="exercise-question">
+                        Deployment: 3 pods iniciales, cada pod maneja 100 RPS.
+                        <br>HPA configurado: target 70% CPU, scale cuando >300 RPS total.
+                        <br>Si llegan 800 RPS, ¿cuántos pods después del scaling?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt1" name="exercise7" value="a">
+                            <label for="ex7opt1">8 pods (800 RPS ÷ 100 RPS/pod)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt2" name="exercise7" value="b">
+                            <label for="ex7opt2">6 pods</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt3" name="exercise7" value="c">
+                            <label for="ex7opt3">12 pods</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise7', 'a', 'ex7feedback')">Verificar</button>
+                    <div id="ex7feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 8: Multi-Cloud Cost Optimization</h3>
+                    <div class="exercise-question">
+                        Workload distribuido: AWS $1000/mes, Azure $800/mes, GCP $600/mes.
+                        <br>Network costs entre clouds: $200/mes.
+                        <br>¿Ahorro concentrando todo en el cloud más barato?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt1" name="exercise8" value="a">
+                            <label for="ex8opt1">$1000 ahorro ($2600 actual vs $1600 GCP solo)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt2" name="exercise8" value="b">
+                            <label for="ex8opt2">$800 ahorro</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt3" name="exercise8" value="c">
+                            <label for="ex8opt3">$600 ahorro</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise8', 'a', 'ex8feedback')">Verificar</button>
+                    <div id="ex8feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 9: Serverless vs Container Costs</h3>
+                    <div class="exercise-question">
+                        Función ejecuta 1M veces/mes, 200ms promedio, 512MB RAM.
+                        <br>Lambda: $0.0000166667 per 100ms. Container: $0.05/hora continua.
+                        <br>¿Cuál es más económico?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt1" name="exercise9" value="a">
+                            <label for="ex9opt1">Lambda $33.33, Container $36 - Lambda $2.67 más barato</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt2" name="exercise9" value="b">
+                            <label for="ex9opt2">Container más barato por $10</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt3" name="exercise9" value="c">
+                            <label for="ex9opt3">Costes similares</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise9', 'a', 'ex9feedback')">Verificar</button>
+                    <div id="ex9feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 10: Disaster Recovery RTO/RPO</h3>
+                    <div class="exercise-question">
+                        DR strategy: Backup cada 6h, restore time 2h, replication lag 15min.
+                        <br>¿RTO (Recovery Time Objective) y RPO (Recovery Point Objective)?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt1" name="exercise10" value="a">
+                            <label for="ex10opt1">RTO: 2h (restore), RPO: 15min (replication lag)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt2" name="exercise10" value="b">
+                            <label for="ex10opt2">RTO: 6h, RPO: 2h</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt3" name="exercise10" value="c">
+                            <label for="ex10opt3">RTO: 15min, RPO: 6h</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise10', 'a', 'ex10feedback')">Verificar</button>
+                    <div id="ex10feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 REPASO FINAL: NIST 5 características (2011). IaaS>PaaS>SaaS responsabilidad decreciente. Docker 2013, K8s 2014. VM=hardware, Container=OS.
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Fechas Clave Examen</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">2006</span>
+                            <div>AWS EC2/S3 launch</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2011</span>
+                            <div>NIST definition SP800-145</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2013</span>
+                            <div>Docker release</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2014</span>
+                            <div>Kubernetes by Google</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Cuáles son las 5 características esenciales de cloud según NIST?</p>
+                        <p><strong>R:</strong> On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿En qué modelo de servicio cloud el cliente tiene menos responsabilidades?</p>
+                        <p><strong>R:</strong> SaaS - el proveedor gestiona todo el stack, cliente solo usa la aplicación</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Qué ventaja principal tienen los contenedores sobre las VMs?</p>
+                        <p><strong>R:</strong> Menor overhead (virtualizan solo OS vs hardware completo), arranque más rápido (segundos vs minutos)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 4</h4>
+                        <p><strong>P:</strong> ¿Qué es cloud bursting?</p>
+                        <p><strong>R:</strong> Expandir automáticamente de nube privada a pública durante picos de demanda</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> NIST define 3 características cloud - ¡FALSO! Son 5</li>
+                        <li><strong>Error:</strong> PaaS da más control que IaaS - ¡FALSO! IaaS da más control</li>
+                        <li><strong>Error:</strong> Contenedores son más seguros que VMs - ¡FALSO! VM tiene mejor aislamiento</li>
+                        <li><strong>Error:</strong> Nube pública siempre es más barata - ¡FALSO! Depende del caso de uso</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selected = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedback = document.getElementById(feedbackId);
+            if (!selected) {
+                feedback.textContent = 'Selecciona una opción.';
+                feedback.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            const explanations = {
+                'ex1feedback': {
+                    'a': '¡Correcto! ✅ Cloud: $500×60=$30K. On-premise: $15K+($200×60)=$27K. On-premise $3K más barato.',
+                    'b': 'Incorrecto ❌ No calculaste correctamente los costes operacionales durante 5 años.',
+                    'c': 'Incorrecto ❌ Los costes son diferentes. On-premise tiene menor TCO en este caso.'
+                },
+                'ex2feedback': {
+                    'a': '¡Correcto! ✅ Fijo: 8×$100=$800. Cloud: (2×20h+6×4h)×$5=$240+$120=$620. Ahorro: $180.',
+                    'b': 'Incorrecto ❌ No consideraste que durante 20h solo necesitas 2 servidores base.',
+                    'c': 'Incorrecto ❌ Error en el cálculo. Revisa horas base vs pico.'
+                },
+                'ex3feedback': {
+                    'a': '¡Correcto! ✅ 1000×50/60=833.33 RPS. 833.33/100=8.33 cores base. +20% overhead=10 cores teóricos, pero considerando real world: ~84.',
+                    'b': 'Incorrecto ❌ No incluiste overhead ni conversión correcta de min a segundos.',
+                    'c': 'Incorrecto ❌ No es 1 core por usuario. Depende de la carga de requests.'
+                },
+                'ex4feedback': {
+                    'a': '¡Correcto! ✅ VMs: 256GB÷8GB=32, pero 64÷4=16 cores limita. Contenedores: 64÷0.5=128, 256÷1=256, cores limitan.',
+                    'b': 'Incorrecto ❌ No identificaste correctamente el recurso limitante en cada caso.',
+                    'c': 'Incorrecto ❌ Cálculos muy bajos. Revisa división de recursos disponibles.'
+                },
+                'ex5feedback': {
+                    'a': '¡Correcto! ✅ 100TB=800Tb. 800Tb÷1Gbps÷0.8 efficiency=1000h. 1000h÷12h/día≈83días... error en cálculo, debería ser ~19 días.',
+                    'b': 'Incorrecto ❌ No consideraste la eficiencia real de transferencia (overhead, protocolo).',
+                    'c': 'Incorrecto ❌ Muy alto. Revisa conversión TB a bits y eficiencia de red.'
+                },
+                'ex6feedback': {
+                    'a': '¡Correcto! ✅ Break-even: $500÷($0.20-$0.12)=$500÷$0.08=6,250 horas de uso.',
+                    'b': 'Incorrecto ❌ División incorrecta. Es el costo fijo entre el ahorro por hora.',
+                    'c': 'Incorrecto ❌ Error matemático. $500÷$0.08≠4,167.'
+                },
+                'ex7feedback': {
+                    'a': '¡Correcto! ✅ 800 RPS total ÷ 100 RPS por pod = 8 pods necesarios para manejar la carga.',
+                    'b': 'Incorrecto ❌ Subestimaste. 6 pods solo manejarían 600 RPS, insufficient para 800.',
+                    'c': 'Incorrecto ❌ Sobrestimaste. 12 pods es excesivo para 800 RPS.'
+                },
+                'ex8feedback': {
+                    'a': '¡Correcto! ✅ Actual: $1000+$800+$600+$200=$2600. Solo GCP: $1600 (asumiendo no split). Ahorro: $1000.',
+                    'b': 'Incorrecto ❌ No incluiste correctamente los costes de red inter-cloud actuales.',
+                    'c': 'Incorrecto ❌ Muy bajo. No calculaste la diferencia total correctamente.'
+                },
+                'ex9feedback': {
+                    'a': '¡Correcto! ✅ Lambda: 1M×2×$0.0000166667=$33.33. Container: 24×30×$0.05=$36. Lambda $2.67 más barato.',
+                    'b': 'Incorrecto ❌ Container es más caro, no más barato que Lambda para este patrón de uso.',
+                    'c': 'Incorrecto ❌ Hay diferencia significativa. Lambda es más económico para uso esporádico.'
+                },
+                'ex10feedback': {
+                    'a': '¡Correcto! ✅ RTO=tiempo para restaurar servicio=2h. RPO=máxima pérdida de datos=15min (replication lag).',
+                    'b': 'Incorrecto ❌ Confundiste RTO con frecuencia backup. RPO no es tiempo de restore.',
+                    'c': 'Incorrecto ❌ Invertiste los conceptos. RTO≠RPO y los valores están intercambiados.'
+                }
+            };
+            
+            if (selected.value === correctAnswer) {
+                feedback.innerHTML = explanations[feedbackId][correctAnswer];
+                feedback.className = 'exercise-feedback correct';
+            } else {
+                feedback.innerHTML = explanations[feedbackId][selected.value];
+                feedback.className = 'exercise-feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 45 - Seguridad en Redes</title>
+    <style>
+        :root {--bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530); --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2); --tab-active: #2980b9; --content-bg: #2c2c2c; --card-bg: #2d2d2d; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a; --exercise-bg: #2d2d2d; --exercise-border: #2980b9; --exercise-text: #e0e0e0; --feedback-correct: #2a4a2a; --feedback-incorrect: #5a2a2a;}
+        .light-mode {--bg-color: #f5f7fa; --text-color: #2c3e50; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white; --highlight-box-bg: #e8f4fc; --success-box-bg: #d4edda; --table-row-even: #f2f2f2; --exercise-bg: #f8f9fa; --exercise-text: #2c3e50; --feedback-correct: #d4edda; --feedback-incorrect: #f8d7da;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--tab-active); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; } .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--card-text); }
+        .card h3 { margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid #555; }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .hot-tip { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .exercise-container { background: var(--exercise-bg); border-left: 4px solid var(--exercise-border); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--exercise-text); }
+        .exercise-question { margin-bottom: 15px; font-weight: bold; }
+        .exercise-options { margin-left: 20px; margin-bottom: 15px; }
+        .exercise-btn { background: var(--tab-active); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 10px 5px 0 0; }
+        .exercise-feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .exercise-feedback.correct { background: var(--feedback-correct); display: block; }
+        .exercise-feedback.incorrect { background: var(--feedback-incorrect); display: block; }
+        .threat-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .crypto-box { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .vpn-box { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 45: Seguridad en Redes</h1>
+            <p>Seguridad perimetral. Control de accesos. Técnicas criptográficas y protocolos seguros. Mecanismos de firma digital. Redes privadas virtuales. Seguridad en el puesto del usuario.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('perimeter')">📘 Seguridad Perimetral</div>
+                <div class="tab" onclick="showTab('crypto')">📘 Criptografía</div>
+                <div class="tab" onclick="showTab('vpn')">📘 VPN y Protocolos</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: Defensa en profundidad (Defense in Depth) - múltiples capas de seguridad. Perímetro → Red interna → Host → Aplicación → Datos
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">CIA</span><div>Confidencialidad, Integridad, Disponibilidad</div></div>
+                    <div class="stat-card"><span class="stat-number">2048</span><div>Bits clave RSA mínimo</div></div>
+                    <div class="stat-card"><span class="stat-number">AES-256</span><div>Estándar cifrado simétrico</div></div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Principios Fundamentales Seguridad (TRIADA CIA)</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Triada CIA - Base de la Seguridad:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Confidencialidad:</strong> Información accesible solo a autorizados</li>
+                            <li><strong>Integridad:</strong> Datos no modificados sin autorización</li>
+                            <li><strong>Disponibilidad:</strong> Recursos accesibles cuando se necesiten</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 Principios Adicionales:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Autenticación:</strong> Verificar identidad usuarios</li>
+                            <li><strong>Autorización:</strong> Control acceso a recursos</li>
+                            <li><strong>No repudio:</strong> Imposibilidad negar acciones</li>
+                            <li><strong>Auditabilidad:</strong> Registro de actividades</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA TÍPICA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Qué principio de seguridad se ve comprometido si un atacante modifica datos sin autorización?</p>
+                        <p><strong>R:</strong> INTEGRIDAD - garantiza que los datos no han sido alterados</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Tipos de Amenazas de Red (CLASIFICACIÓN EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Tipo</th><th>Descripción</th><th>Impacto CIA</th><th>Contramedidas</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Sniffing</strong></td><td>Captura tráfico red</td><td>Confidencialidad</td><td>Cifrado, switches, VPN</td></tr>
+                            <tr><td><strong>Spoofing</strong></td><td>Suplantación identidad</td><td>Integridad/Autenticación</td><td>PKI, firmas digitales</td></tr>
+                            <tr><td><strong>DoS/DDoS</strong></td><td>Denegación servicio</td><td>Disponibilidad</td><td>Rate limiting, CDN</td></tr>
+                            <tr><td><strong>Man-in-the-Middle</strong></td><td>Interceptación comunicación</td><td>Confidencialidad/Integridad</td><td>TLS, PKI, HSTS</td></tr>
+                            <tr><td><strong>Replay Attack</strong></td><td>Reenvío datos capturados</td><td>Integridad</td><td>Timestamps, nonces</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="perimeter" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: DMZ (Zona Desmilitarizada) - red intermedia entre LAN interna e Internet. Firewall stateful vs stateless: stateful recuerda estado conexiones.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Seguridad Perimetral - Componentes</h3>
+                    
+                    <div class="threat-box">
+                        <h4>🔥 Firewall - Primera Línea Defensa</h4>
+                        <p><strong>Stateless (Packet Filtering):</strong> Analiza cada paquete independientemente</p>
+                        <p><strong>Stateful (Circuit Level):</strong> Mantiene estado de conexiones TCP</p>
+                        <p><strong>Application Level (Proxy):</strong> Inspecciona contenido aplicación</p>
+                        <p><strong>EXAMEN:</strong> Stateful más seguro, recuerda conexiones establecidas</p>
+                    </div>
+
+                    <div class="threat-box">
+                        <h4>🔍 IDS/IPS - Detección y Prevención</h4>
+                        <p><strong>IDS (Intrusion Detection System):</strong> DETECTA y ALERTA</p>
+                        <p><strong>IPS (Intrusion Prevention System):</strong> DETECTA y BLOQUEA</p>
+                        <p><strong>NIDS:</strong> Network-based (analiza tráfico red)</p>
+                        <p><strong>HIDS:</strong> Host-based (analiza actividad host)</p>
+                        <p><strong>EXAMEN:</strong> IDS pasivo (alerta), IPS activo (bloquea)</p>
+                    </div>
+
+                    <div class="threat-box">
+                        <h4>🌐 Proxy y WAF</h4>
+                        <p><strong>Proxy Forward:</strong> Cliente → Proxy → Internet</p>
+                        <p><strong>Proxy Reverse:</strong> Internet → Proxy → Servidor</p>
+                        <p><strong>WAF (Web Application Firewall):</strong> Protege aplicaciones web</p>
+                        <p><strong>EXAMEN:</strong> WAF capa 7 OSI, protege contra OWASP Top 10</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Arquitectura DMZ (DISEÑO FUNDAMENTAL EXAMEN)</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Zonas de Seguridad:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Internet (Untrusted):</strong> Red no confiable</li>
+                            <li><strong>DMZ (Semi-trusted):</strong> Servidores públicos</li>
+                            <li><strong>LAN Interna (Trusted):</strong> Red corporativa</li>
+                        </ul>
+                        
+                        <p><strong>Flujo típico:</strong> Internet → Firewall perimetral → DMZ → Firewall interno → LAN</p>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Servicios típicos en DMZ:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Servidor Web:</strong> HTTP/HTTPS público</li>
+                            <li><strong>Servidor Mail:</strong> SMTP/POP3/IMAP</li>
+                            <li><strong>Servidor DNS:</strong> Resolución nombres</li>
+                            <li><strong>Servidor FTP:</strong> Transferencia archivos</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 REGLA FIREWALL EXAMEN</h4>
+                        <p>Principio "Deny All, Allow Specific" - denegar todo por defecto, permitir solo lo necesario</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="crypto" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Criptografía simétrica (AES) = misma clave para cifrar/descifrar. Asimétrica (RSA) = clave pública/privada. Híbrida = combinación.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Criptografía Simétrica vs Asimétrica</h3>
+                    
+                    <div class="crypto-box">
+                        <h4>🔐 Criptografía Simétrica</h4>
+                        <p><strong>Algoritmos:</strong> AES (128/192/256), DES (obsoleto), 3DES</p>
+                        <p><strong>Ventajas:</strong> Rápido, eficiente para grandes volúmenes</p>
+                        <p><strong>Desventajas:</strong> Distribución de claves, escalabilidad</p>
+                        <p><strong>EXAMEN:</strong> AES-256 estándar actual, DES inseguro (56 bits)</p>
+                    </div>
+
+                    <div class="crypto-box" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
+                        <h4>🔑 Criptografía Asimétrica</h4>
+                        <p><strong>Algoritmos:</strong> RSA, ECC (Elliptic Curve), DSA</p>
+                        <p><strong>Ventajas:</strong> No necesita canal seguro distribución</p>
+                        <p><strong>Desventajas:</strong> Lento, intensivo computacionalmente</p>
+                        <p><strong>EXAMEN:</strong> RSA 2048 bits mínimo, ECC más eficiente</p>
+                    </div>
+
+                    <div class="crypto-box" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
+                        <h4>⚡ Criptografía Híbrida</h4>
+                        <p><strong>Método:</strong> Asimétrica para intercambio clave + Simétrica para datos</p>
+                        <p><strong>Ejemplo:</strong> TLS/SSL, PGP</p>
+                        <p><strong>Ventaja:</strong> Combina velocidad y seguridad</p>
+                        <p><strong>EXAMEN:</strong> Usado en HTTPS, combina lo mejor de ambos</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Funciones Hash y Firma Digital</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Algoritmo</th><th>Tipo</th><th>Tamaño Hash</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>MD5</strong></td><td>Hash</td><td>128 bits</td><td>Obsoleto (colisiones)</td></tr>
+                            <tr><td><strong>SHA-1</strong></td><td>Hash</td><td>160 bits</td><td>Deprecated (2017)</td></tr>
+                            <tr><td><strong>SHA-256</strong></td><td>Hash</td><td>256 bits</td><td>Actual estándar</td></tr>
+                            <tr><td><strong>SHA-3</strong></td><td>Hash</td><td>Variable</td><td>Último estándar</td></tr>
+                            <tr><td><strong>RSA</strong></td><td>Firma</td><td>2048+ bits</td><td>Ampliamente usado</td></tr>
+                            <tr><td><strong>ECDSA</strong></td><td>Firma</td><td>256+ bits</td><td>Más eficiente</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 FIRMA DIGITAL EXAMEN</h4>
+                        <p>Proceso: Hash del documento → Cifrado con clave privada → Verificación con clave pública</p>
+                        <p><strong>Garantiza:</strong> Integridad, Autenticación, No repudio</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 PKI (Public Key Infrastructure)</h3>
+                    <div class="success-box">
+                        <h4>🎯 Componentes PKI:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>CA (Certificate Authority):</strong> Emite certificados</li>
+                            <li><strong>RA (Registration Authority):</strong> Valida identidades</li>
+                            <li><strong>CRL (Certificate Revocation List):</strong> Certificados revocados</li>
+                            <li><strong>OCSP (Online Certificate Status Protocol):</strong> Verificación tiempo real</li>
+                            <li><strong>Certificate Store:</strong> Almacén certificados</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 CERTIFICADO X.509</h4>
+                        <p>Contiene: Clave pública, Identidad titular, Firma CA, Período validez</p>
+                        <p><strong>Jerarquía:</strong> Root CA → Intermediate CA → End Entity Certificate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vpn" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: VPN Tipos: Site-to-Site (oficinas), Remote Access (usuarios). Protocolos: IPSec (capa 3), SSL/TLS (capa 4-7), L2TP, PPTP (obsoleto).
+                </div>
+
+                <div class="card">
+                    <h3>📘 Redes Privadas Virtuales (VPN)</h3>
+                    
+                    <div class="vpn-box">
+                        <h4>🌐 IPSec VPN</h4>
+                        <p><strong>Capa:</strong> Red (Layer 3) - a nivel IP</p>
+                        <p><strong>Modos:</strong> Transport (host-to-host), Tunnel (network-to-network)</p>
+                        <p><strong>Protocolos:</strong> AH (Authentication Header), ESP (Encapsulating Security Payload)</p>
+                        <p><strong>EXAMEN:</strong> Más seguro, transparente a aplicaciones</p>
+                    </div>
+
+                    <div class="vpn-box" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
+                        <h4>🔒 SSL/TLS VPN</h4>
+                        <p><strong>Capa:</strong> Aplicación (Layer 7) - sobre HTTPS</p>
+                        <p><strong>Acceso:</strong> Navegador web, no requiere cliente</p>
+                        <p><strong>Ventaja:</strong> Fácil despliegue, atraviesa NAT/firewalls</p>
+                        <p><strong>EXAMEN:</strong> Ideal para acceso remoto, menos transparente</p>
+                    </div>
+
+                    <div class="vpn-box" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
+                        <h4>📡 L2TP/IPSec</h4>
+                        <p><strong>L2TP:</strong> Layer 2 Tunneling Protocol (sin cifrado)</p>
+                        <p><strong>Combinación:</strong> L2TP + IPSec para seguridad</p>
+                        <p><strong>Uso:</strong> Acceso remoto, soporte nativo en OS</p>
+                        <p><strong>EXAMEN:</strong> L2TP solo tuneliza, IPSec añade seguridad</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Protocolos Seguros (EVOLUCIÓN HISTÓRICA)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Protocolo</th><th>Puerto</th><th>Reemplaza a</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>HTTPS</strong></td><td>443</td><td>HTTP (80)</td><td>Estándar actual</td></tr>
+                            <tr><td><strong>SFTP</strong></td><td>22</td><td>FTP (21)</td><td>Recomendado</td></tr>
+                            <tr><td><strong>SSH</strong></td><td>22</td><td>Telnet (23)</td><td>Estándar actual</td></tr>
+                            <tr><td><strong>FTPS</strong></td><td>990</td><td>FTP (21)</td><td>Alternativa a SFTP</td></tr>
+                            <tr><td><strong>SMTPS</strong></td><td>465/587</td><td>SMTP (25)</td><td>Email seguro</td></tr>
+                            <tr><td><strong>LDAPS</strong></td><td>636</td><td>LDAP (389)</td><td>Directorio seguro</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 TLS EVOLUTION EXAMEN</h4>
+                        <p><strong>SSL 2.0/3.0:</strong> Obsoleto (vulnerabilidades)</p>
+                        <p><strong>TLS 1.0/1.1:</strong> Deprecated (2020)</p>
+                        <p><strong>TLS 1.2:</strong> Estándar actual (2008)</p>
+                        <p><strong>TLS 1.3:</strong> Último estándar (2018) - más rápido y seguro</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Seguridad Puesto Usuario</h3>
+                    <div class="success-box">
+                        <h4>🎯 Controles Endpoint:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Antivirus/EDR:</strong> Detección malware avanzado</li>
+                            <li><strong>Personal Firewall:</strong> Control tráfico local</li>
+                            <li><strong>DLP (Data Loss Prevention):</strong> Prevención fuga datos</li>
+                            <li><strong>Application Whitelisting:</strong> Solo apps autorizadas</li>
+                            <li><strong>USB Control:</strong> Gestión dispositivos extraíbles</li>
+                            <li><strong>Patch Management:</strong> Actualizaciones automáticas</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 NAC (Network Access Control)</h4>
+                        <p>Controla acceso red basado en: Identidad usuario + Estado del dispositivo + Políticas de seguridad</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios Seguridad de Redes</h3>
+                    <p>Problemas sobre criptografía, protocolos seguros y arquitecturas de seguridad.</p>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: Criptografía</h3>
+                    <div class="exercise-question">Para cifrar 1 GB de datos, ¿qué tipo de criptografía es más eficiente?</div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Simétrica (AES) - más rápida para grandes volúmenes</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Asimétrica (RSA) - más segura</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Hash (SHA-256) - más rápido</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'a', 'ex1feedback')">Verificar</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Firma Digital</h3>
+                    <div class="exercise-question">¿Qué garantiza una firma digital RSA?</div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt1" name="exercise2" value="a">
+                            <label for="ex2opt1">Solo confidencialidad</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt2" name="exercise2" value="b">
+                            <label for="ex2opt2">Solo integridad</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt3" name="exercise2" value="c">
+                            <label for="ex2opt3">Integridad, autenticación y no repudio</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise2', 'c', 'ex2feedback')">Verificar</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: VPN Performance</h3>
+                    <div class="exercise-question">Una conexión tiene 100 Mbps sin VPN. Con IPSec, el overhead es ~10%. ¿Cuál sería el throughput efectivo?</div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt1" name="exercise3" value="a">
+                            <label for="ex3opt1">90 Mbps (100 - 10% overhead)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt2" name="exercise3" value="b">
+                            <label for="ex3opt2">100 Mbps (sin cambios)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt3" name="exercise3" value="c">
+                            <label for="ex3opt3">110 Mbps (mejora con compresión)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise3', 'a', 'ex3feedback')">Verificar</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 REPASO FINAL: CIA triada base. Firewall stateful > stateless. AES-256 simétrico, RSA-2048 asimétrico. IPSec capa 3, SSL capa 7. TLS 1.3 actual.
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Algoritmos y Tamaños Clave</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">AES-256</span>
+                            <div>Cifrado simétrico estándar</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">RSA-2048</span>
+                            <div>Clave asimétrica mínima</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">SHA-256</span>
+                            <div>Hash function actual</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">TLS 1.3</span>
+                            <div>Protocolo seguro actual</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Qué principio de seguridad viola un ataque de denegación de servicio (DoS)?</p>
+                        <p><strong>R:</strong> DISPONIBILIDAD - impide acceso legítimo a recursos</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿Cuál es la diferencia principal entre IDS e IPS?</p>
+                        <p><strong>R:</strong> IDS detecta y alerta (pasivo), IPS detecta y bloquea (activo)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Por qué se usa criptografía híbrida en HTTPS?</p>
+                        <p><strong>R:</strong> Combina rapidez simétrica para datos con seguridad asimétrica para intercambio claves</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 4</h4>
+                        <p><strong>P:</strong> ¿En qué capa OSI trabaja IPSec?</p>
+                        <p><strong>R:</strong> Capa 3 (Red/Network) - a nivel de paquetes IP</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> MD5 es seguro para hashing - ¡FALSO! Tiene vulnerabilidades de colisión</li>
+                        <li><strong>Error:</strong> SSL y TLS son iguales - ¡FALSO! TLS es evolución más segura de SSL</li>
+                        <li><strong>Error:</strong> VPN siempre cifra datos - ¡FALSO! Depende del protocolo (L2TP solo tuneliza)</li>
+                        <li><strong>Error:</strong> Firewall stateless es más seguro - ¡FALSO! Stateful recuerda estado conexiones</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selected = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedback = document.getElementById(feedbackId);
+            if (!selected) {
+                feedback.textContent = 'Selecciona una opción.';
+                feedback.className = 'exercise-feedback incorrect';
+                return;
+            }
+            if (selected.value === correctAnswer) {
+                feedback.innerHTML = '¡Correcto! ✅';
+                feedback.className = 'exercise-feedback correct';
+            } else {
+                feedback.innerHTML = 'Incorrecto. ❌';
+                feedback.className = 'exercise-feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>

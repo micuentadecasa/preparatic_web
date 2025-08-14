@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 38: Control de Ejecución de Trabajos</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #1a1a1a;
+            --surface-color: #2c2c2c;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        .light-theme {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .tab.active {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-card {
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .content-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .content-card li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 0 15px 15px 0;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .exercise-container {
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-container:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+        }
+
+        .exercise h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .exercise-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .exercise-options label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-options label:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .exercise-options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--secondary-color);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+                margin: 2px 0;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .performance-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .performance-item {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .performance-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .performance-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 80px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            border: 4px solid var(--background-color);
+        }
+
+        .timeline-content {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-content h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--surface-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 38: Control de Ejecución de Trabajos</h1>
+            <p>Evaluación del Rendimiento y Planificación de Capacidad</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Vista General</button>
+            <button class="tab" onclick="showTab('performance')">Rendimiento</button>
+            <button class="tab" onclick="showTab('capacity')">Capacidad</button>
+            <button class="tab" onclick="showTab('workload')">Carga de Trabajo</button>
+            <button class="tab" onclick="showTab('exercises')">Ejercicios</button>
+            <button class="tab" onclick="showTab('resources')">Recursos</button>
+        </nav>
+
+        <main class="tab-content active" id="overview">
+            <h2>Vista General: Control de Ejecución</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">SLA Objetivo</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">&lt;200ms</span>
+                    <span class="stat-label">Tiempo Respuesta</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80%</span>
+                    <span class="stat-label">Utilización CPU</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Monitoreo</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Control de Ejecución</h3>
+                    <ul>
+                        <li>Planificación de trabajos batch</li>
+                        <li>Gestión de colas de procesamiento</li>
+                        <li>Priorización de tareas</li>
+                        <li>Control de recursos del sistema</li>
+                        <li>Balanceo de carga</li>
+                        <li>Gestión de deadlines</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Evaluación del Rendimiento</h3>
+                    <ul>
+                        <li>Métricas de performance</li>
+                        <li>Análisis de cuellos de botella</li>
+                        <li>Tiempo de respuesta y throughput</li>
+                        <li>Utilización de recursos</li>
+                        <li>Análisis de tendencias</li>
+                        <li>Benchmarking y comparativas</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Planificación de Capacidad</h3>
+                    <ul>
+                        <li>Modelado de capacidad</li>
+                        <li>Predicción de crecimiento</li>
+                        <li>Análisis what-if</li>
+                        <li>Sizing de infraestructura</li>
+                        <li>Planificación de upgrades</li>
+                        <li>Gestión de picos de demanda</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Herramientas y Técnicas</h3>
+                    <ul>
+                        <li>Job schedulers (Cron, Control-M, Autosys)</li>
+                        <li>Herramientas APM (Application Performance Management)</li>
+                        <li>Sistemas de monitoreo (Prometheus, Grafana)</li>
+                        <li>Análisis de logs y métricas</li>
+                        <li>Herramientas de profiling</li>
+                        <li>Simuladores de carga</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>⚡ Importancia del Control de Ejecución</h4>
+                <p>El control efectivo de la ejecución de trabajos garantiza el uso óptimo de recursos, el cumplimiento de SLAs, y la capacidad de responder a demandas cambiantes. La evaluación continua del rendimiento permite identificar y resolver problemas antes de que impacten a los usuarios, mientras que la planificación de capacidad asegura que la infraestructura pueda manejar el crecimiento futuro.</p>
+            </div>
+
+            <div class="performance-chart">
+                <div class="performance-item">
+                    <span class="performance-value">CPU</span>
+                    <span class="performance-label">Procesamiento</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">I/O</span>
+                    <span class="performance-label">Entrada/Salida</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">RAM</span>
+                    <span class="performance-label">Memoria</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">NET</span>
+                    <span class="performance-label">Red</span>
+                </div>
+            </div>
+        </main>
+
+        <div class="tab-content" id="performance">
+            <h2>Evaluación del Rendimiento</h2>
+            
+            <div class="highlight-box">
+                <h4>📈 Métricas Clave de Performance</h4>
+                <p>La evaluación del rendimiento implica medir, analizar y optimizar el comportamiento del sistema bajo diferentes cargas de trabajo, identificando cuellos de botella y oportunidades de mejora.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Métricas de Tiempo</h3>
+                    <ul>
+                        <li>Tiempo de respuesta (Response Time)</li>
+                        <li>Tiempo de procesamiento (Processing Time)</li>
+                        <li>Tiempo de espera (Wait Time)</li>
+                        <li>Tiempo de servicio (Service Time)</li>
+                        <li>Latencia de red</li>
+                        <li>Tiempo de acceso a disco</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Métricas de Throughput</h3>
+                    <ul>
+                        <li>Transacciones por segundo (TPS)</li>
+                        <li>Requests por segundo (RPS)</li>
+                        <li>Trabajos completados por hora</li>
+                        <li>Datos procesados por minuto</li>
+                        <li>Mensajes procesados</li>
+                        <li>Operaciones I/O por segundo</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Métricas de Utilización</h3>
+                    <ul>
+                        <li>% Utilización CPU</li>
+                        <li>% Memoria utilizada</li>
+                        <li>% Ancho de banda de red</li>
+                        <li>% Espacio en disco</li>
+                        <li>Queue length (longitud de cola)</li>
+                        <li>Concurrencia de procesos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Análisis de Performance</h3>
+                    <ul>
+                        <li>Profiling de aplicaciones</li>
+                        <li>Análisis de hot spots</li>
+                        <li>Detección de memory leaks</li>
+                        <li>Análisis de deadlocks</li>
+                        <li>Optimización de queries</li>
+                        <li>Tuning de parámetros</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>Fórmulas de Performance</h4>
+                <div class="formula">Response Time = Service Time + Wait Time</div>
+                <div class="formula">Throughput = Work Completed / Time Period</div>
+                <div class="formula">Utilization = Busy Time / Total Time × 100</div>
+                <div class="formula">Little's Law: L = λ × W</div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Bueno</th>
+                        <th>Aceptable</th>
+                        <th>Crítico</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CPU Utilización</td>
+                        <td>&lt; 60%</td>
+                        <td>60-80%</td>
+                        <td>&gt; 80%</td>
+                        <td>Escalar horizontalmente</td>
+                    </tr>
+                    <tr>
+                        <td>Memoria</td>
+                        <td>&lt; 70%</td>
+                        <td>70-85%</td>
+                        <td>&gt; 85%</td>
+                        <td>Aumentar RAM</td>
+                    </tr>
+                    <tr>
+                        <td>Response Time</td>
+                        <td>&lt; 100ms</td>
+                        <td>100-500ms</td>
+                        <td>&gt; 500ms</td>
+                        <td>Optimizar código</td>
+                    </tr>
+                    <tr>
+                        <td>Queue Length</td>
+                        <td>&lt; 5</td>
+                        <td>5-10</td>
+                        <td>&gt; 10</td>
+                        <td>Añadir workers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Baseline</h4>
+                        <p>Establecer métricas de referencia del sistema en condiciones normales.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Monitoreo</h4>
+                        <p>Recolección continua de métricas y detección de anomalías.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Análisis</h4>
+                        <p>Identificación de cuellos de botella y oportunidades de optimización.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>Optimización</h4>
+                        <p>Implementación de mejoras y validación de resultados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="capacity">
+            <h2>Planificación de Capacidad</h2>
+            
+            <div class="highlight-box">
+                <h4>📊 Gestión Proactiva de Recursos</h4>
+                <p>La planificación de capacidad asegura que los recursos del sistema sean suficientes para manejar la carga actual y futura, optimizando costos y manteniendo el rendimiento.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Modelado de Capacidad</h3>
+                    <ul>
+                        <li>Modelos analíticos (teoría de colas)</li>
+                        <li>Simulación de sistemas</li>
+                        <li>Modelos de regresión</li>
+                        <li>Machine learning predictivo</li>
+                        <li>Análisis de tendencias históricas</li>
+                        <li>Proyecciones de crecimiento</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Métricas de Capacidad</h3>
+                    <ul>
+                        <li>Capacidad máxima teórica</li>
+                        <li>Capacidad efectiva real</li>
+                        <li>Headroom disponible</li>
+                        <li>Factor de seguridad</li>
+                        <li>Punto de saturación</li>
+                        <li>Elasticidad del sistema</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Planificación de Recursos</h3>
+                    <ul>
+                        <li>Sizing de servidores</li>
+                        <li>Dimensionamiento de storage</li>
+                        <li>Ancho de banda de red</li>
+                        <li>Licencias de software</li>
+                        <li>Recursos humanos</li>
+                        <li>Presupuesto IT</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Estrategias de Escalamiento</h3>
+                    <ul>
+                        <li>Escalamiento vertical (scale-up)</li>
+                        <li>Escalamiento horizontal (scale-out)</li>
+                        <li>Auto-scaling dinámico</li>
+                        <li>Load balancing</li>
+                        <li>Caching y CDN</li>
+                        <li>Optimización de código</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>Fórmulas de Capacidad</h4>
+                <div class="formula">Headroom = (Max Capacity - Current Usage) / Max Capacity × 100</div>
+                <div class="formula">Growth Rate = (Future Load - Current Load) / Current Load × 100</div>
+                <div class="formula">Capacity Required = Current Usage × (1 + Growth Rate)^Years</div>
+            </div>
+
+            <div class="performance-chart">
+                <div class="performance-item">
+                    <span class="performance-value">70%</span>
+                    <span class="performance-label">Utilización Actual</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">30%</span>
+                    <span class="performance-label">Headroom</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">20%</span>
+                    <span class="performance-label">Crecimiento Anual</span>
+                </div>
+                <div class="performance-item">
+                    <span class="performance-value">18m</span>
+                    <span class="performance-label">Tiempo hasta Upgrade</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="workload">
+            <h2>Análisis de Carga de Trabajo</h2>
+            
+            <div class="highlight-box">
+                <h4>🔄 Gestión de Workload</h4>
+                <p>El análisis de carga permite entender los patrones de uso, optimizar la distribución de recursos y mejorar el rendimiento general del sistema.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Tipos de Carga</h3>
+                    <ul>
+                        <li>Carga transaccional (OLTP)</li>
+                        <li>Carga analítica (OLAP)</li>
+                        <li>Batch processing</li>
+                        <li>Real-time processing</li>
+                        <li>Cargas mixtas</li>
+                        <li>Picos estacionales</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Caracterización de Workload</h3>
+                    <ul>
+                        <li>Patrones de llegada</li>
+                        <li>Distribución de tamaños</li>
+                        <li>Mix de operaciones</li>
+                        <li>Intensidad de recursos</li>
+                        <li>Dependencias entre trabajos</li>
+                        <li>Criticidad y prioridades</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Gestión de Colas</h3>
+                    <ul>
+                        <li>Algoritmos de scheduling (FIFO, SJF, RR)</li>
+                        <li>Priorización de trabajos</li>
+                        <li>Fair queuing</li>
+                        <li>Backpressure management</li>
+                        <li>Timeout y retry policies</li>
+                        <li>Dead letter queues</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Balanceo de Carga</h3>
+                    <ul>
+                        <li>Round-robin distribution</li>
+                        <li>Least connections</li>
+                        <li>Weighted distribution</li>
+                        <li>Hash-based routing</li>
+                        <li>Geographic distribution</li>
+                        <li>Health checks y failover</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Algoritmo</th>
+                        <th>Ventajas</th>
+                        <th>Desventajas</th>
+                        <th>Uso Ideal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>FIFO</td>
+                        <td>Simple, justo</td>
+                        <td>No óptimo</td>
+                        <td>Cargas uniformes</td>
+                    </tr>
+                    <tr>
+                        <td>SJF</td>
+                        <td>Minimiza tiempo promedio</td>
+                        <td>Starvation posible</td>
+                        <td>Trabajos conocidos</td>
+                    </tr>
+                    <tr>
+                        <td>Round Robin</td>
+                        <td>Fair, responsive</td>
+                        <td>Context switching</td>
+                        <td>Time-sharing</td>
+                    </tr>
+                    <tr>
+                        <td>Priority</td>
+                        <td>Control fino</td>
+                        <td>Complejidad</td>
+                        <td>Sistemas críticos</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="formula-box">
+                <h4>Teoría de Colas</h4>
+                <div class="formula">λ = Tasa de llegada (arrivals/time)</div>
+                <div class="formula">μ = Tasa de servicio (services/time)</div>
+                <div class="formula">ρ = λ/μ = Factor de utilización</div>
+                <div class="formula">Lq = λ²/(μ(μ-λ)) = Longitud promedio de cola</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exercises">
+            <h2>Ejercicios de Control de Ejecución</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p style="text-align: center; margin-bottom: 2rem;">Progreso: <span id="progress-text">0/10</span></p>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 1: Cálculo de Throughput</h4>
+                    <p>Un sistema procesa 7200 transacciones en 2 horas. ¿Cuál es el throughput en transacciones por segundo (TPS)?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Throughput = Total Transactions / Time (seconds)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise1" value="a"> a) 0.5 TPS</label>
+                        <label><input type="radio" name="exercise1" value="b"> b) 1.0 TPS</label>
+                        <label><input type="radio" name="exercise1" value="c"> c) 1.5 TPS</label>
+                        <label><input type="radio" name="exercise1" value="d"> d) 2.0 TPS</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(1, 'b', 'Throughput = 7200 / (2 × 3600) = 7200 / 7200 = 1.0 TPS')">Verificar Respuesta</button>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 2: Utilización del Sistema</h4>
+                    <p>Un servidor estuvo ocupado 1440 minutos en un período de 24 horas. ¿Cuál es el porcentaje de utilización?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Utilization = (Busy Time / Total Time) × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise2" value="a"> a) 60%</label>
+                        <label><input type="radio" name="exercise2" value="b"> b) 80%</label>
+                        <label><input type="radio" name="exercise2" value="c"> c) 90%</label>
+                        <label><input type="radio" name="exercise2" value="d"> d) 100%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(2, 'd', 'Utilization = 1440 / 1440 × 100 = 100%. El servidor estuvo ocupado todo el día (24h = 1440 min).')">Verificar Respuesta</button>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 3: Ley de Little</h4>
+                    <p>Un sistema tiene una tasa de llegada de 10 requests/seg y un tiempo promedio de respuesta de 2 segundos. ¿Cuántos requests hay en el sistema en promedio?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">L = λ × W (Little's Law)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise3" value="a"> a) 5 requests</label>
+                        <label><input type="radio" name="exercise3" value="b"> b) 10 requests</label>
+                        <label><input type="radio" name="exercise3" value="c"> c) 20 requests</label>
+                        <label><input type="radio" name="exercise3" value="d"> d) 30 requests</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(3, 'c', 'L = λ × W = 10 × 2 = 20 requests en el sistema en promedio.')">Verificar Respuesta</button>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 4: Tiempo de Respuesta</h4>
+                    <p>Un trabajo tiene: tiempo de CPU = 500ms, tiempo de I/O = 300ms, tiempo de espera = 200ms. ¿Cuál es el tiempo total de respuesta?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Response Time = CPU Time + I/O Time + Wait Time</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise4" value="a"> a) 800ms</label>
+                        <label><input type="radio" name="exercise4" value="b"> b) 900ms</label>
+                        <label><input type="radio" name="exercise4" value="c"> c) 1000ms</label>
+                        <label><input type="radio" name="exercise4" value="d"> d) 1100ms</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(4, 'c', 'Response Time = 500 + 300 + 200 = 1000ms = 1 segundo total.')">Verificar Respuesta</button>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 5: Capacidad Requerida</h4>
+                    <p>Un sistema usa 60GB actualmente y crece 20% anual. ¿Cuánta capacidad necesitará en 3 años?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Future Capacity = Current × (1 + Growth Rate)^Years</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise5" value="a"> a) 96.8GB</label>
+                        <label><input type="radio" name="exercise5" value="b"> b) 103.7GB</label>
+                        <label><input type="radio" name="exercise5" value="c"> c) 108.0GB</label>
+                        <label><input type="radio" name="exercise5" value="d"> d) 115.2GB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(5, 'b', 'Capacity = 60 × (1.2)³ = 60 × 1.728 = 103.68GB ≈ 103.7GB')">Verificar Respuesta</button>
+                    <div id="feedback5" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 6: Factor de Utilización (ρ)</h4>
+                    <p>Una cola tiene tasa de llegada λ=8 jobs/min y tasa de servicio μ=10 jobs/min. ¿Cuál es el factor de utilización?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">ρ = λ / μ</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise6" value="a"> a) 0.6</label>
+                        <label><input type="radio" name="exercise6" value="b"> b) 0.7</label>
+                        <label><input type="radio" name="exercise6" value="c"> c) 0.8</label>
+                        <label><input type="radio" name="exercise6" value="d"> d) 0.9</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(6, 'c', 'ρ = λ/μ = 8/10 = 0.8 (80% de utilización del servidor).')">Verificar Respuesta</button>
+                    <div id="feedback6" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 7: Headroom Disponible</h4>
+                    <p>Un sistema tiene capacidad máxima de 1000 TPS y actualmente maneja 750 TPS. ¿Cuál es el headroom porcentual?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Headroom % = (Max - Current) / Max × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise7" value="a"> a) 20%</label>
+                        <label><input type="radio" name="exercise7" value="b"> b) 25%</label>
+                        <label><input type="radio" name="exercise7" value="c"> c) 30%</label>
+                        <label><input type="radio" name="exercise7" value="d"> d) 35%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(7, 'b', 'Headroom = (1000 - 750) / 1000 × 100 = 250/1000 × 100 = 25%')">Verificar Respuesta</button>
+                    <div id="feedback7" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 8: Longitud Promedio de Cola</h4>
+                    <p>Con λ=6 arrivals/min y μ=8 services/min, ¿cuál es la longitud promedio de cola (Lq) en sistema M/M/1?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Lq = λ² / (μ(μ-λ))</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise8" value="a"> a) 1.5 jobs</label>
+                        <label><input type="radio" name="exercise8" value="b"> b) 2.0 jobs</label>
+                        <label><input type="radio" name="exercise8" value="c"> c) 2.25 jobs</label>
+                        <label><input type="radio" name="exercise8" value="d"> d) 2.5 jobs</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(8, 'c', 'Lq = 36 / (8×2) = 36/16 = 2.25 jobs en cola promedio.')">Verificar Respuesta</button>
+                    <div id="feedback8" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 9: Eficiencia del Batch Processing</h4>
+                    <p>Un batch de 1000 trabajos tarda 5 horas. Si se paraleliza en 4 procesos con 10% overhead, ¿cuál es el nuevo tiempo?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Parallel Time = (Serial Time / N) × (1 + Overhead)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise9" value="a"> a) 1.25 horas</label>
+                        <label><input type="radio" name="exercise9" value="b"> b) 1.375 horas</label>
+                        <label><input type="radio" name="exercise9" value="c"> c) 1.5 horas</label>
+                        <label><input type="radio" name="exercise9" value="d"> d) 1.625 horas</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(9, 'b', 'Time = (5/4) × 1.1 = 1.25 × 1.1 = 1.375 horas')">Verificar Respuesta</button>
+                    <div id="feedback9" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 10: SLA Cumplimiento</h4>
+                    <p>Un SLA requiere 95% de requests bajo 500ms. De 10000 requests: 9200 < 500ms, 600 entre 500-1000ms, 200 > 1000ms. ¿Se cumple el SLA?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">SLA % = (Requests Meeting Target / Total) × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise10" value="a"> a) Sí, 92% cumple</label>
+                        <label><input type="radio" name="exercise10" value="b"> b) No, solo 92% cumple</label>
+                        <label><input type="radio" name="exercise10" value="c"> c) Sí, 96% cumple</label>
+                        <label><input type="radio" name="exercise10" value="d"> d) No, solo 94% cumple</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(10, 'b', 'SLA = 9200/10000 × 100 = 92%. No cumple el objetivo de 95%.')">Verificar Respuesta</button>
+                    <div id="feedback10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="resources">
+            <h2>Recursos y Referencias</h2>
+            
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>📚 Bibliografía Esencial</h3>
+                    <ul>
+                        <li>Performance by Design - Menascé & Almeida</li>
+                        <li>The Art of Capacity Planning - Allspaw</li>
+                        <li>Systems Performance - Brendan Gregg</li>
+                        <li>Queueing Systems - Kleinrock</li>
+                        <li>Computer System Performance Evaluation</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🛠️ Herramientas de Performance</h3>
+                    <ul>
+                        <li>APM: New Relic, AppDynamics, Dynatrace</li>
+                        <li>Monitoring: Prometheus, Grafana</li>
+                        <li>Profiling: JProfiler, YourKit, perf</li>
+                        <li>Load Testing: JMeter, Gatling, LoadRunner</li>
+                        <li>Scheduling: Control-M, Autosys, Airflow</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>📊 Métricas Clave</h3>
+                    <ul>
+                        <li>Response Time y Latencia</li>
+                        <li>Throughput y TPS</li>
+                        <li>Utilización de recursos</li>
+                        <li>Queue length y wait time</li>
+                        <li>Error rate y availability</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎓 Certificaciones</h3>
+                    <ul>
+                        <li>Certified Performance Engineering Professional</li>
+                        <li>ITIL Capacity Management</li>
+                        <li>Cloud Performance Optimization</li>
+                        <li>APM Specialist Certifications</li>
+                        <li>Load Testing Certifications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Puntos Clave para el Examen</h4>
+                <ul>
+                    <li><strong>Performance:</strong> Response time, throughput, utilización</li>
+                    <li><strong>Capacidad:</strong> Modelado, predicción, headroom</li>
+                    <li><strong>Colas:</strong> Little's Law, M/M/1, factores de utilización</li>
+                    <li><strong>Scheduling:</strong> FIFO, SJF, Round Robin, prioridades</li>
+                    <li><strong>Optimización:</strong> Bottlenecks, tuning, escalamiento</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4>Fórmulas Críticas</h4>
+                <div class="formula">Little's Law: L = λ × W</div>
+                <div class="formula">Utilization: ρ = λ / μ</div>
+                <div class="formula">Response Time = Service Time + Wait Time</div>
+                <div class="formula">Throughput = Work / Time</div>
+                <div class="formula">Capacity Growth = Current × (1 + Rate)^Years</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.add('light-theme');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.innerHTML = '<p>Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+
+            if (selectedAnswer.value === correctAnswer) {
+                feedback.innerHTML = `<p><strong>¡Correcto!</strong> ${explanation}</p>`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `<p><strong>Incorrecto.</strong> ${explanation}</p>`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        });
+
+        // Add click handlers for tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.textContent.toLowerCase()
+                        .replace('vista general', 'overview')
+                        .replace('rendimiento', 'performance')
+                        .replace('capacidad', 'capacity')
+                        .replace('carga de trabajo', 'workload')
+                        .replace('ejercicios', 'exercises')
+                        .replace('recursos', 'resources');
+                    showTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

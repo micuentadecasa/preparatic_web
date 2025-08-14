@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 6: Arquitectura Cliente-Servidor - Preparatic</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --background-color: #1a1a1a;
+            --surface-color: #2d2d2d;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --hover-color: #3a3a3a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --hover-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="light"] .feedback.correct {
+            background: var(--success-color);
+            color: white;
+        }
+        [data-theme="light"] .feedback.incorrect {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,0 1000,100 0,20"/></svg>') repeat-x;
+            background-size: 100px 100px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: var(--surface-color);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+            border: 2px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .content-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: var(--text-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.4em;
+            position: relative;
+        }
+
+        .content-section h3::before {
+            content: "▶";
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--secondary-color)10, var(--secondary-color)20);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)10, var(--warning-color)20);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)10, var(--info-color)20);
+            border-left: 4px solid var(--info-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--hover-color);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .list-checkmark li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+        }
+
+        .architecture-diagram {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .layer-box {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .exercise-container {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--background-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .exercise-question {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .exercise-options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .exercise-options li {
+            padding: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-options li:hover {
+            background: var(--hover-color);
+            padding-left: 1rem;
+        }
+
+        .hot-tip {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .hot-tip::before {
+            content: "🔥 TIP CALIENTE: ";
+            font-weight: bold;
+        }
+
+        .exam-alert {
+            background: linear-gradient(135deg, var(--warning-color), #d35400);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .exam-alert::before {
+            content: "⚠️ IMPORTANTE PARA EXAMEN: ";
+            font-weight: bold;
+        }
+
+        .exercise-container {
+            background: var(--surface-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+        }
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+        .exercise-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback.correct {
+            background: var(--success-color);
+            color: white;
+            display: block;
+        }
+        .feedback.incorrect {
+            background: var(--accent-color);
+            color: white;
+            display: block;
+        }
+        .formula-box {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .formula {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="header-content">
+            <h1>📡 Arquitectura Cliente-Servidor</h1>
+            <p>Modelos, patrones y tecnologías de sistemas distribuidos</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab('fundamentals')">🏗️ Fundamentos</button>
+                <button class="tab-button" onclick="showTab('architecture')">🎯 Arquitecturas</button>
+                <button class="tab-button" onclick="showTab('technologies')">⚡ Tecnologías</button>
+                <button class="tab-button" onclick="showTab('security')">🔒 Seguridad</button>
+                <button class="tab-button" onclick="showTab('exercises')">✏️ Ejercicios</button>
+                <button class="tab-button" onclick="showTab('performance')">🚀 Rendimiento</button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="content-section">
+                    <h2>📋 Visión General - Arquitectura Cliente-Servidor</h2>
+
+                    <div class="highlight-box">
+                        <h3>📊 Estadísticas Clave para Examen</h3>
+                        <div class="grid-container">
+                            <div class="card">
+                                <h4>🎯 Conceptos Fundamentales</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>80% de aplicaciones empresariales</strong> usan arquitectura cliente-servidor</li>
+                                    <li><strong>3 capas</strong> es el modelo más común (presentación, lógica, datos)</li>
+                                    <li><strong>N-tier</strong> permite escalabilidad horizontal</li>
+                                    <li><strong>REST</strong> es el protocolo más usado (70% de APIs)</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>⚡ Métricas de Rendimiento</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>Latencia típica:</strong> 50-200ms en LAN</li>
+                                    <li><strong>Throughput:</strong> 1000-10000 transacciones/segundo</li>
+                                    <li><strong>Escalabilidad:</strong> hasta 100,000 usuarios concurrentes</li>
+                                    <li><strong>Disponibilidad:</strong> 99.9% (8.76 horas downtime/año)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        En exámenes preguntan sobre: diferencias entre 2-tier y 3-tier, ventajas de cada modelo, protocolos de comunicación, y patrones de diseño específicos.
+                    </div>
+
+                    <h3>🏛️ Historia y Evolución</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4><strong>1960s-1970s:</strong> Mainframes y Terminales</h4>
+                            <p>Modelo centralizado con terminales "tontos" conectados a mainframes IBM System/360 y DEC PDP-11.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1980s:</strong> Primeros Clientes-Servidor</h4>
+                            <p>Novell NetWare, Oracle Database, y sistemas de archivos distribuidos como NFS (1984).</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1990s:</strong> Cliente-Servidor Moderno</h4>
+                            <p>Aparición de SQL Server (1989), Windows NT, y arquitecturas de 3 capas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2000s:</strong> Servicios Web</h4>
+                            <p>SOAP (1998), XML-RPC, y primeros servicios web distribuidos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2010s-Presente:</strong> Microservicios</h4>
+                            <p>REST APIs, GraphQL, Docker, Kubernetes, y arquitecturas serverless.</p>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        Memoriza las fechas clave: NFS (1984), SQL Server (1989), SOAP (1998). Son preguntas frecuentes en exámenes.
+                    </div>
+                </div>
+            </div>
+
+            <div id="fundamentals" class="tab-content">
+                <div class="content-section">
+                    <h2>🏗️ Fundamentos de Cliente-Servidor</h2>
+
+                    <h3>🎯 Definición y Conceptos Básicos</h3>
+                    <div class="highlight-box">
+                        <p><strong>Cliente-Servidor</strong> es un modelo de arquitectura de software donde las tareas se reparten entre los proveedores de servicios (servidores) y los demandantes de servicios (clientes).</p>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>👥 CLIENTE</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Inicia la comunicación</strong></li>
+                                <li><strong>Solicita servicios</strong></li>
+                                <li><strong>Procesa la interfaz de usuario</strong></li>
+                                <li><strong>Gestiona la presentación</strong></li>
+                                <li><strong>Valida datos localmente</strong></li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>🖥️ SERVIDOR</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Escucha peticiones</strong></li>
+                                <li><strong>Procesa solicitudes</strong></li>
+                                <li><strong>Gestiona recursos compartidos</strong></li>
+                                <li><strong>Controla acceso a datos</strong></li>
+                                <li><strong>Garantiza integridad</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        CLAVE DE EXAMEN: El cliente siempre inicia la comunicación. El servidor nunca envía datos sin ser solicitado (excepto en push notifications modernas).
+                    </div>
+
+                    <h3>📐 Modelos de Arquitectura</h3>
+
+                    <div class="architecture-diagram">
+                        <h4>🏗️ Modelo 2-Tier (Cliente Grueso)</h4>
+                        <div class="layer-box">CLIENTE (Presentación + Lógica de Negocio)</div>
+                        <div style="margin: 1rem 0;">⬇️ ⬆️</div>
+                        <div class="layer-box">SERVIDOR (Base de Datos)</div>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>2-Tier</th>
+                                <th>3-Tier</th>
+                                <th>N-Tier</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Capas</strong></td>
+                                <td>Cliente + Servidor BD</td>
+                                <td>Presentación + Lógica + Datos</td>
+                                <td>Múltiples servicios</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Escalabilidad</strong></td>
+                                <td>Limitada (50-100 usuarios)</td>
+                                <td>Media (100-1000 usuarios)</td>
+                                <td>Alta (1000+ usuarios)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mantenimiento</strong></td>
+                                <td>Difícil (cliente grueso)</td>
+                                <td>Moderado</td>
+                                <td>Complejo pero modular</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coste</strong></td>
+                                <td>Bajo inicial</td>
+                                <td>Medio</td>
+                                <td>Alto pero ROI mejor</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ejemplos</strong></td>
+                                <td>Access + SQL Server</td>
+                                <td>Aplicaciones web típicas</td>
+                                <td>Microservicios, SOA</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        En exámenes siempre preguntan: "¿Cuál es la principal diferencia entre 2-tier y 3-tier?" Respuesta: En 2-tier la lógica de negocio está en el cliente, en 3-tier está en una capa intermedia.
+                    </div>
+
+                    <h3>🔄 Patrones de Comunicación</h3>
+                    
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🔄 SÍNCRONO</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Request-Response</strong></li>
+                                <li><strong>Cliente bloquea hasta recibir respuesta</strong></li>
+                                <li><strong>Ejemplos:</strong> HTTP, RPC</li>
+                                <li><strong>Ventaja:</strong> Simple de implementar</li>
+                                <li><strong>Desventaja:</strong> Puede crear cuellos de botella</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>⚡ ASÍNCRONO</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Fire-and-Forget o Callback</strong></li>
+                                <li><strong>Cliente no bloquea</strong></li>
+                                <li><strong>Ejemplos:</strong> Message Queues, WebSockets</li>
+                                <li><strong>Ventaja:</strong> Mayor rendimiento</li>
+                                <li><strong>Desventaja:</strong> Complejidad de manejo de errores</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+// Ejemplo de comunicación síncrona (HTTP)
+GET /api/users/123
+Host: servidor.ejemplo.com
+Accept: application/json
+
+// Respuesta inmediata
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "id": 123,
+  "name": "Juan Pérez"
+}
+                    </div>
+
+                    <div class="exam-alert">
+                        PREGUNTA TÍPICA DE EXAMEN: "¿Cuándo usar comunicación síncrona vs asíncrona?" Síncrona para operaciones críticas e inmediatas, asíncrona para operaciones de larga duración y alta concurrencia.
+                    </div>
+                </div>
+            </div>
+
+            <div id="architecture" class="tab-content">
+                <div class="content-section">
+                    <h2>🎯 Arquitecturas Avanzadas</h2>
+
+                    <h3>🏗️ Arquitectura de 3 Capas Detallada</h3>
+                    <div class="architecture-diagram">
+                        <div class="layer-box">CAPA PRESENTACIÓN (UI/UX)</div>
+                        <div style="margin: 0.5rem 0;">⬇️ HTTP/HTTPS ⬆️</div>
+                        <div class="layer-box">CAPA LÓGICA DE NEGOCIO (Business Logic)</div>
+                        <div style="margin: 0.5rem 0;">⬇️ SQL/NoSQL ⬆️</div>
+                        <div class="layer-box">CAPA DATOS (Database/Storage)</div>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🎨 Capa Presentación</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Responsabilidades:</strong> UI, validación de formularios, formateo de datos</li>
+                                <li><strong>Tecnologías:</strong> React, Angular, Vue.js, HTML5/CSS3</li>
+                                <li><strong>Patrones:</strong> MVC, MVP, MVVM</li>
+                                <li><strong>Características:</strong> Stateless, responsive, accesible</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>⚙️ Capa Lógica de Negocio</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Responsabilidades:</strong> Reglas de negocio, workflows, orquestación</li>
+                                <li><strong>Tecnologías:</strong> Java EE, .NET, Node.js, Python</li>
+                                <li><strong>Patrones:</strong> Service Layer, Domain Services</li>
+                                <li><strong>Características:</strong> Stateless, transaccional, escalable</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>💾 Capa Datos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Responsabilidades:</strong> Persistencia, consultas, integridad</li>
+                                <li><strong>Tecnologías:</strong> PostgreSQL, MongoDB, Oracle, Redis</li>
+                                <li><strong>Patrones:</strong> Repository, DAO, Active Record</li>
+                                <li><strong>Características:</strong> ACID, backup, replicación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        MEMORIZA: En 3-tier, NUNCA la capa presentación habla directamente con la capa de datos. Siempre pasa por la capa de lógica de negocio.
+                    </div>
+
+                    <h3>🌐 Service-Oriented Architecture (SOA)</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Principios Fundamentales de SOA</h4>
+                        <ol>
+                            <li><strong>Reusabilidad:</strong> Servicios diseñados para ser reutilizados</li>
+                            <li><strong>Abstracción:</strong> Lógica de servicio oculta detrás de contratos</li>
+                            <li><strong>Composición:</strong> Servicios compuestos de otros servicios</li>
+                            <li><strong>Autonomía:</strong> Servicios tienen control sobre su lógica</li>
+                            <li><strong>Stateless:</strong> Servicios no mantienen estado entre llamadas</li>
+                            <li><strong>Descubribilidad:</strong> Servicios pueden ser descubiertos e interpretados</li>
+                        </ol>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Componente SOA</th>
+                                <th>Función</th>
+                                <th>Tecnologías</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Registry</strong></td>
+                                <td>Catálogo de servicios disponibles</td>
+                                <td>UDDI, Consul, Eureka</td>
+                                <td>Netflix Eureka</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Bus</strong></td>
+                                <td>Middleware de comunicación</td>
+                                <td>ESB, Apache Camel</td>
+                                <td>MuleSoft Anypoint</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Contract</strong></td>
+                                <td>Define interfaz del servicio</td>
+                                <td>WSDL, OpenAPI</td>
+                                <td>Swagger/OpenAPI 3.0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Orchestration</strong></td>
+                                <td>Coordina múltiples servicios</td>
+                                <td>BPEL, Apache Airflow</td>
+                                <td>Workflows complejos</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🚀 Microservicios</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>✅ Ventajas de Microservicios</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Escalabilidad independiente</strong> de cada servicio</li>
+                                <li><strong>Tecnologías heterogéneas</strong> por servicio</li>
+                                <li><strong>Deployment independiente</strong></li>
+                                <li><strong>Fallos aislados</strong> (fault isolation)</li>
+                                <li><strong>Equipos autónomos</strong> por servicio</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>⚠️ Desafíos de Microservicios</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Complejidad de red</strong> y latencia</li>
+                                <li><strong>Consistencia eventual</strong> de datos</li>
+                                <li><strong>Monitorización distribuida</strong></li>
+                                <li><strong>Testing de integración</strong> complejo</li>
+                                <li><strong>Overhead operacional</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        PREGUNTA DE EXAMEN: "¿Cuándo NO usar microservicios?" Respuesta: Aplicaciones pequeñas, equipos pequeños (&lt;10 personas), requisitos de consistencia fuerte, y cuando no hay experiencia en sistemas distribuidos.
+                    </div>
+
+                    <h3>📊 Patrones de Integración</h3>
+                    <div class="code-block">
+// Patrón API Gateway - Punto único de entrada
+POST /api-gateway/orders
+{
+  "customerId": 123,
+  "items": [{"productId": 456, "quantity": 2}]
+}
+
+// El API Gateway coordina múltiples servicios:
+// 1. Validar cliente -> /customer-service/validate/123
+// 2. Verificar inventario -> /inventory-service/check/456
+// 3. Crear pedido -> /order-service/create
+// 4. Procesar pago -> /payment-service/process
+                    </div>
+
+                    <div class="hot-tip">
+                        PATRÓN CLAVE PARA EXAMEN: API Gateway centraliza autenticación, rate limiting, logging, y enrutado. Es el único punto de entrada desde el exterior.
+                    </div>
+                </div>
+            </div>
+
+            <div id="technologies" class="tab-content">
+                <div class="content-section">
+                    <h2>⚡ Tecnologías y Protocolos</h2>
+
+                    <h3>🌐 Protocolos de Comunicación</h3>
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Tipo</th>
+                                <th>Puerto</th>
+                                <th>Uso Principal</th>
+                                <th>Ventajas</th>
+                                <th>Desventajas</th>
+                            </tr>
+                            <tr>
+                                <td><strong>HTTP/1.1</strong></td>
+                                <td>Texto</td>
+                                <td>80</td>
+                                <td>Web tradicional</td>
+                                <td>Simple, universalmente soportado</td>
+                                <td>Múltiples conexiones por página</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HTTP/2</strong></td>
+                                <td>Binario</td>
+                                <td>80/443</td>
+                                <td>Web moderna</td>
+                                <td>Multiplexing, server push</td>
+                                <td>Complejo de debuggear</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HTTPS</strong></td>
+                                <td>Cifrado</td>
+                                <td>443</td>
+                                <td>Web segura</td>
+                                <td>Encriptación TLS/SSL</td>
+                                <td>Overhead de CPU</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebSocket</strong></td>
+                                <td>Bidireccional</td>
+                                <td>80/443</td>
+                                <td>Tiempo real</td>
+                                <td>Full-duplex, baja latencia</td>
+                                <td>Complejo manejo de conexiones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>gRPC</strong></td>
+                                <td>Binario</td>
+                                <td>Cualquiera</td>
+                                <td>Microservicios</td>
+                                <td>Eficiente, streaming</td>
+                                <td>No nativo en browsers</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="exam-alert">
+                        MEMORIZA LOS PUERTOS: HTTP (80), HTTPS (443), FTP (21), SSH (22), Telnet (23), SMTP (25), DNS (53). Son pregunta fija en exámenes.
+                    </div>
+
+                    <h3>🔄 APIs REST vs GraphQL vs gRPC</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🌐 REST API</h4>
+                            <div class="code-block">
+GET /api/users/123
+Accept: application/json
+
+Response:
+{
+  "id": 123,
+  "name": "Juan",
+  "email": "juan@example.com"
+}
+                            </div>
+                            <ul class="list-checkmark">
+                                <li><strong>Stateless</strong> y cacheable</li>
+                                <li><strong>HTTP verbs:</strong> GET, POST, PUT, DELETE</li>
+                                <li><strong>Códigos de estado estándar</strong></li>
+                                <li><strong>Simple y bien entendido</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 GraphQL</h4>
+                            <div class="code-block">
+query {
+  user(id: 123) {
+    name
+    posts {
+      title
+      comments {
+        text
+      }
+    }
+  }
+}
+                            </div>
+                            <ul class="list-checkmark">
+                                <li><strong>Single endpoint</strong></li>
+                                <li><strong>Query específica</strong> (evita over-fetching)</li>
+                                <li><strong>Schema strongly typed</strong></li>
+                                <li><strong>Introspección automática</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>⚡ gRPC</h4>
+                            <div class="code-block">
+// Proto definition
+service UserService {
+  rpc GetUser (UserRequest) returns (User);
+  rpc StreamUsers (Empty) returns (stream User);
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+}
+                            </div>
+                            <ul class="list-checkmark">
+                                <li><strong>Protocol Buffers</strong> (binario eficiente)</li>
+                                <li><strong>HTTP/2</strong> multiplexing</li>
+                                <li><strong>Streaming bidireccional</strong></li>
+                                <li><strong>Code generation</strong> automática</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        COMPARACIÓN DE EXAMEN: REST para web pública, GraphQL para clientes móviles (menos requests), gRPC para comunicación interna entre microservicios.
+                    </div>
+
+                    <h3>💾 Middleware y Message Brokers</h3>
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Tecnología</th>
+                                <th>Tipo</th>
+                                <th>Patrón</th>
+                                <th>Throughput</th>
+                                <th>Caso de Uso</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Apache Kafka</strong></td>
+                                <td>Streaming Platform</td>
+                                <td>Pub-Sub</td>
+                                <td>Millones msg/seg</td>
+                                <td>Big Data, Event Sourcing</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RabbitMQ</strong></td>
+                                <td>Message Broker</td>
+                                <td>Queue + Pub-Sub</td>
+                                <td>Miles msg/seg</td>
+                                <td>Aplicaciones tradicionales</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Apache ActiveMQ</strong></td>
+                                <td>Message Broker</td>
+                                <td>JMS Compatible</td>
+                                <td>Miles msg/seg</td>
+                                <td>Entornos Java empresariales</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Redis Pub/Sub</strong></td>
+                                <td>In-Memory</td>
+                                <td>Pub-Sub</td>
+                                <td>Millones msg/seg</td>
+                                <td>Cache + Messaging ligero</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🏗️ Frameworks y Plataformas</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>☕ Java Enterprise</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Spring Boot:</strong> Microservicios y web</li>
+                                <li><strong>Jakarta EE:</strong> Aplicaciones empresariales</li>
+                                <li><strong>Apache Tomcat:</strong> Servlet container</li>
+                                <li><strong>JBoss/WildFly:</strong> Application server completo</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🟦 Microsoft .NET</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>ASP.NET Core:</strong> Web APIs modernas</li>
+                                <li><strong>WCF:</strong> Servicios SOAP (legacy)</li>
+                                <li><strong>IIS:</strong> Internet Information Services</li>
+                                <li><strong>Azure Service Bus:</strong> Messaging cloud</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🐍 Python</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Django:</strong> Framework web completo</li>
+                                <li><strong>Flask:</strong> Microframework minimalista</li>
+                                <li><strong>FastAPI:</strong> APIs modernas con OpenAPI</li>
+                                <li><strong>Celery:</strong> Task queue distribuido</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🟨 JavaScript/Node.js</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Express.js:</strong> Web framework minimalista</li>
+                                <li><strong>NestJS:</strong> Framework empresarial</li>
+                                <li><strong>Socket.io:</strong> WebSockets en tiempo real</li>
+                                <li><strong>PM2:</strong> Process manager para producción</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        FRAMEWORKS MÁS PREGUNTADOS EN EXAMEN: Spring Boot (Java), ASP.NET Core (.NET), Django (Python), Express.js (Node.js). Conoce sus características principales.
+                    </div>
+                </div>
+            </div>
+
+            <div id="security" class="tab-content">
+                <div class="content-section">
+                    <h2>🔒 Seguridad en Cliente-Servidor</h2>
+
+                    <h3>🛡️ Principios de Seguridad</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🔐 Autenticación</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>¿Quién eres?</strong> - Verificación de identidad</li>
+                                <li><strong>Métodos:</strong> Usuario/contraseña, certificates, biométricos</li>
+                                <li><strong>Multi-factor (MFA):</strong> Algo que sabes + tienes + eres</li>
+                                <li><strong>Single Sign-On (SSO):</strong> Una vez autenticado, acceso a múltiples sistemas</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔑 Autorización</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>¿Qué puedes hacer?</strong> - Control de acceso</li>
+                                <li><strong>RBAC:</strong> Role-Based Access Control</li>
+                                <li><strong>ABAC:</strong> Attribute-Based Access Control</li>
+                                <li><strong>ACL:</strong> Access Control Lists</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔍 Auditoría</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>¿Qué se hizo?</strong> - Registro de actividades</li>
+                                <li><strong>Logs de acceso</strong> y operaciones</li>
+                                <li><strong>Trazabilidad</strong> de cambios</li>
+                                <li><strong>Compliance</strong> regulatorio</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔒 Confidencialidad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Encriptación en tránsito:</strong> TLS/SSL</li>
+                                <li><strong>Encriptación en reposo:</strong> AES, databases cifradas</li>
+                                <li><strong>Key management:</strong> HSM, key rotation</li>
+                                <li><strong>Data masking:</strong> Ofuscación de datos sensibles</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        MEMORIZA: CIA Triad = Confidentiality (Confidencialidad), Integrity (Integridad), Availability (Disponibilidad). Base de toda seguridad informática.
+                    </div>
+
+                    <h3>🎫 Gestión de Tokens y Sesiones</h3>
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Método</th>
+                                <th>Almacenamiento</th>
+                                <th>Expiración</th>
+                                <th>Escalabilidad</th>
+                                <th>Seguridad</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Session Cookies</strong></td>
+                                <td>Servidor (memoria/BD)</td>
+                                <td>Configurable</td>
+                                <td>Limitada (sticky sessions)</td>
+                                <td>Alta (server-side)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>JWT Tokens</strong></td>
+                                <td>Cliente (localStorage)</td>
+                                <td>En el token</td>
+                                <td>Alta (stateless)</td>
+                                <td>Media (client-side)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OAuth 2.0</strong></td>
+                                <td>Authorization Server</td>
+                                <td>Access + Refresh tokens</td>
+                                <td>Muy alta</td>
+                                <td>Muy alta</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SAML</strong></td>
+                                <td>Identity Provider</td>
+                                <td>Assertion lifetime</td>
+                                <td>Alta (federación)</td>
+                                <td>Muy alta (XML signature)</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-block">
+// Ejemplo JWT Token
+Header:
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+Payload:
+{
+  "sub": "123456789",
+  "name": "Juan Pérez",
+  "iat": 1516239022,
+  "exp": 1516242622,
+  "roles": ["admin", "user"]
+}
+
+// Token final (Base64 encoded):
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikp1YW4gUMOpcmV6IiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                    </div>
+
+                    <div class="hot-tip">
+                        JWT vs Sessions: JWT para microservicios (stateless), Sessions para aplicaciones monolíticas. JWT expira automáticamente, Sessions requieren invalidación manual.
+                    </div>
+
+                    <h3>🚨 Vulnerabilidades Comunes</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🎯 SQL Injection</h4>
+                            <div class="code-block">
+// ❌ VULNERABLE
+query = "SELECT * FROM users WHERE id = " + userId;
+
+// ✅ SEGURO
+query = "SELECT * FROM users WHERE id = ?";
+stmt.setParameter(1, userId);
+                            </div>
+                            <p><strong>Prevención:</strong> Prepared statements, ORM, validación de inputs</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🕸️ Cross-Site Scripting (XSS)</h4>
+                            <div class="code-block">
+// ❌ VULNERABLE
+div.innerHTML = userInput;
+
+// ✅ SEGURO
+div.textContent = userInput;
+// O usar librerías de sanitización
+                            </div>
+                            <p><strong>Prevención:</strong> Content Security Policy, sanitización, escape de HTML</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔒 Cross-Site Request Forgery (CSRF)</h4>
+                            <div class="code-block">
+// Protección con CSRF Token
+&lt;form&gt;
+  &lt;input type="hidden" name="csrf_token" value="abc123"&gt;
+  &lt;input type="text" name="amount"&gt;
+  &lt;button type="submit"&gt;Transfer&lt;/button&gt;
+&lt;/form&gt;
+                            </div>
+                            <p><strong>Prevención:</strong> CSRF tokens, SameSite cookies, referrer checking</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>💉 Command Injection</h4>
+                            <div class="code-block">
+// ❌ VULNERABLE
+os.system("ping " + userIP);
+
+// ✅ SEGURO
+subprocess.run(["ping", userIP], shell=False);
+                            </div>
+                            <p><strong>Prevención:</strong> Validación estricta, listas blancas, sanitización</p>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        OWASP TOP 10 actualizado es pregunta recurrente. Las 3 primeras: Broken Access Control, Cryptographic Failures, Injection. Estudia las contramedidas.
+                    </div>
+
+                    <h3>🔐 Implementación de Seguridad</h3>
+                    <div class="highlight-box">
+                        <h4>🛡️ Checklist de Seguridad Cliente-Servidor</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>✅ HTTPS obligatorio</strong> (TLS 1.2 mínimo)</li>
+                            <li><strong>✅ Validación de inputs</strong> en cliente Y servidor</li>
+                            <li><strong>✅ Rate limiting</strong> para prevenir ataques DDoS</li>
+                            <li><strong>✅ Logs de seguridad</strong> centralizados</li>
+                            <li><strong>✅ Principio de menor privilegio</strong></li>
+                            <li><strong>✅ Secrets management</strong> (no hardcoded)</li>
+                            <li><strong>✅ Regular security updates</strong></li>
+                            <li><strong>✅ Penetration testing</strong> periódico</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="content-section">
+                    <h2>🧮 Ejercicios de Cliente-Servidor</h2>
+                    <p>Cálculos específicos sobre rendimiento, escalabilidad, load balancing y comunicación cliente-servidor.</p>
+
+                    <div style="background: var(--surface-color); border-radius: 10px; height: 20px; margin: 20px 0; overflow: hidden; border: 1px solid var(--border-color);">
+                        <div id="progress" style="background: linear-gradient(45deg, var(--success-color), #45a049); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+                    </div>
+                    <p style="text-align: center; margin-bottom: 2rem; color: var(--text-color);">Progreso: <span id="progress-text">0/10</span></p>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 1: Cálculo de Throughput en Arquitectura 3-Tier</h4>
+                            <p>Sistema web con 3 capas: Presentación (200 RPS), Lógica (150 RPS), Datos (100 RPS). ¿Cuál es el throughput máximo del sistema?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Throughput = MIN(Capa_1, Capa_2, Capa_3)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise1" value="a"> a) 100 RPS</label>
+                                <label><input type="radio" name="exercise1" value="b"> b) 150 RPS</label>
+                                <label><input type="radio" name="exercise1" value="c"> c) 200 RPS</label>
+                                <label><input type="radio" name="exercise1" value="d"> d) 450 RPS</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(1, 'a', 'El throughput está limitado por la capa más lenta: capa de datos con 100 RPS.')">Verificar Respuesta</button>
+                            <div id="feedback1" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 2: Load Balancer Round Robin Distribution</h4>
+                            <p>3 servidores: A(4 CPU), B(8 CPU), C(6 CPU). Round Robin con 18 requests. ¿Cuántos requests recibe cada servidor?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Round Robin = Requests / Servidores (distribución equitativa)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise2" value="a"> a) A:6, B:6, C:6</label>
+                                <label><input type="radio" name="exercise2" value="b"> b) A:4, B:8, C:6</label>
+                                <label><input type="radio" name="exercise2" value="c"> c) A:3, B:9, C:6</label>
+                                <label><input type="radio" name="exercise2" value="d"> d) A:5, B:7, C:6</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(2, 'a', 'Round Robin distribuye equitativamente sin considerar capacidad: 18 ÷ 3 = 6 requests por servidor.')">Verificar Respuesta</button>
+                            <div id="feedback2" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 3: Latencia Total en Comunicación Cliente-Servidor</h4>
+                            <p>Request: Red=25ms, Servidor=80ms, BD=45ms, Red retorno=25ms. ¿Latencia total percibida por el cliente?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Latencia Total = Red_Ida + Procesamiento + BD + Red_Vuelta</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise3" value="a"> a) 175ms</label>
+                                <label><input type="radio" name="exercise3" value="b"> b) 150ms</label>
+                                <label><input type="radio" name="exercise3" value="c"> c) 125ms</label>
+                                <label><input type="radio" name="exercise3" value="d"> d) 200ms</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(3, 'a', '25ms + 80ms + 45ms + 25ms = 175ms latencia total de extremo a extremo.')">Verificar Respuesta</button>
+                            <div id="feedback3" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 4: Escalado Horizontal vs Vertical</h4>
+                            <p>Servidor actual: 4 cores, 1000 RPS. Opción A: duplicar cores (8 cores). Opción B: añadir servidor idéntico. ¿Throughput con cada opción?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Vertical: RPS × (Cores_nuevos / Cores_actuales)</div>
+                                <div class="formula">Horizontal: RPS × Número_servidores</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise4" value="a"> a) Vertical: 2000 RPS, Horizontal: 2000 RPS</label>
+                                <label><input type="radio" name="exercise4" value="b"> b) Vertical: 1500 RPS, Horizontal: 2000 RPS</label>
+                                <label><input type="radio" name="exercise4" value="c"> c) Vertical: 2000 RPS, Horizontal: 1800 RPS</label>
+                                <label><input type="radio" name="exercise4" value="d"> d) Vertical: 1800 RPS, Horizontal: 1800 RPS</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(4, 'a', 'Vertical: 1000 × (8/4) = 2000 RPS. Horizontal: 1000 × 2 = 2000 RPS. Ambos duplican capacidad.')">Verificar Respuesta</button>
+                            <div id="feedback4" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 5: Cache Hit Ratio y Performance</h4>
+                            <p>Sistema con cache: Hit ratio 85%, cache response 5ms, DB response 100ms. 1000 requests. ¿Tiempo total de respuesta?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Tiempo = (Hits × Cache_Time) + (Misses × DB_Time)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise5" value="a"> a) 19,250ms</label>
+                                <label><input type="radio" name="exercise5" value="b"> b) 52,500ms</label>
+                                <label><input type="radio" name="exercise5" value="c"> c) 85,000ms</label>
+                                <label><input type="radio" name="exercise5" value="d"> d) 100,000ms</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(5, 'a', 'Hits: 850 × 5ms = 4,250ms. Misses: 150 × 100ms = 15,000ms. Total: 19,250ms.')">Verificar Respuesta</button>
+                            <div id="feedback5" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 6: Conexiones Simultáneas con Connection Pool</h4>
+                            <p>Pool de 20 conexiones BD, tiempo promedio consulta 50ms, llegada 800 requests/segundo. ¿Utilización del pool?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Utilización = (Requests/seg × Tiempo_consulta) / Pool_size</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise6" value="a"> a) 200% (saturado)</label>
+                                <label><input type="radio" name="exercise6" value="b"> b) 100% (completo)</label>
+                                <label><input type="radio" name="exercise6" value="c"> c) 80% (normal)</label>
+                                <label><input type="radio" name="exercise6" value="d"> d) 50% (bajo)</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(6, 'a', '(800 req/s × 0.05s) / 20 = 40/20 = 200%. Pool saturado, necesita más conexiones.')">Verificar Respuesta</button>
+                            <div id="feedback6" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 7: Bandwidth Requirements para Video Streaming</h4>
+                            <p>1000 usuarios simultáneos, video 1080p a 5 Mbps cada uno. ¿Bandwidth total requerido del servidor?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Bandwidth = Usuarios × Bitrate_por_usuario</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise7" value="a"> a) 5 Gbps</label>
+                                <label><input type="radio" name="exercise7" value="b"> b) 500 Mbps</label>
+                                <label><input type="radio" name="exercise7" value="c"> c) 1 Gbps</label>
+                                <label><input type="radio" name="exercise7" value="d"> d) 2.5 Gbps</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(7, 'a', '1000 usuarios × 5 Mbps = 5000 Mbps = 5 Gbps de bandwidth total requerido.')">Verificar Respuesta</button>
+                            <div id="feedback7" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 8: Message Queue Throughput</h4>
+                            <p>RabbitMQ procesa 10,000 msg/s, cada mensaje 2KB. Kafka procesa 100,000 msg/s, cada mensaje 1KB. ¿Cuál tiene mayor throughput en MB/s?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Throughput_MB/s = (Mensajes/s × Tamaño_KB) / 1024</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise8" value="a"> a) Kafka: 97.7 MB/s vs RabbitMQ: 19.5 MB/s</label>
+                                <label><input type="radio" name="exercise8" value="b"> b) RabbitMQ: 20 MB/s vs Kafka: 95 MB/s</label>
+                                <label><input type="radio" name="exercise8" value="c"> c) Empate: ambos 20 MB/s</label>
+                                <label><input type="radio" name="exercise8" value="d"> d) RabbitMQ: 19.5 MB/s vs Kafka: 90 MB/s</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(8, 'a', 'RabbitMQ: (10,000 × 2)/1024 = 19.5 MB/s. Kafka: (100,000 × 1)/1024 = 97.7 MB/s.')">Verificar Respuesta</button>
+                            <div id="feedback8" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 9: SSL/TLS Overhead Calculation</h4>
+                            <p>HTTP requests: 1000 RPS, latencia 50ms. HTTPS adds 15ms SSL handshake overhead. ¿Reducción de throughput por SSL?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Reducción = (SSL_Overhead / (Latencia_Original + SSL_Overhead)) × 100</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise9" value="a"> a) 23% reducción</label>
+                                <label><input type="radio" name="exercise9" value="b"> b) 30% reducción</label>
+                                <label><input type="radio" name="exercise9" value="c"> c) 15% reducción</label>
+                                <label><input type="radio" name="exercise9" value="d"> d) 10% reducción</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(9, 'a', 'Overhead: 15ms/(50ms+15ms) × 100 = 15/65 × 100 = 23% de reducción por SSL.')">Verificar Respuesta</button>
+                            <div id="feedback9" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 10: Microservices Communication Overhead</h4>
+                            <p>Monolito: 1 call interno (1ms). Microservices: 5 servicios, 4 calls red (20ms cada uno). ¿Overhead de red en microservices?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Overhead = (Tiempo_Microservices - Tiempo_Monolito) / Tiempo_Monolito × 100</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise10" value="a"> a) 7900% overhead</label>
+                                <label><input type="radio" name="exercise10" value="b"> b) 80x overhead</label>
+                                <label><input type="radio" name="exercise10" value="c"> c) 400% overhead</label>
+                                <label><input type="radio" name="exercise10" value="d"> d) 2000% overhead</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(10, 'a', 'Microservices: 4 × 20ms = 80ms. Overhead: (80-1)/1 × 100 = 7900% más tiempo por comunicación de red.')">Verificar Respuesta</button>
+                            <div id="feedback10" class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="performance" class="tab-content">
+                <div class="content-section">
+                    <h2>🚀 Rendimiento y Escalabilidad</h2>
+
+                    <h3>📊 Métricas de Rendimiento</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>⏱️ Latencia</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Definición:</strong> Tiempo entre request y response</li>
+                                <li><strong>LAN:</strong> 1-50ms típico</li>
+                                <li><strong>WAN:</strong> 50-200ms típico</li>
+                                <li><strong>Internet:</strong> 100-500ms típico</li>
+                                <li><strong>Objetivo:</strong> &lt;100ms para UX óptima</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>⚡ Throughput</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Definición:</strong> Transacciones por segundo</li>
+                                <li><strong>Web app pequeña:</strong> 100-1,000 TPS</li>
+                                <li><strong>Web app grande:</strong> 10,000-100,000 TPS</li>
+                                <li><strong>Sistema crítico:</strong> &gt;100,000 TPS</li>
+                                <li><strong>Medición:</strong> RPS (Requests Per Second)</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>👥 Concurrencia</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Usuarios simultáneos</strong> conectados</li>
+                                <li><strong>Thread pool</strong> size típico: 200-500</li>
+                                <li><strong>Connection pool:</strong> 10-50 por servidor</li>
+                                <li><strong>Load balancer:</strong> distribuye carga</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📈 Escalabilidad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Vertical:</strong> Más CPU/RAM al servidor</li>
+                                <li><strong>Horizontal:</strong> Más servidores</li>
+                                <li><strong>Auto-scaling:</strong> Dinámico por demanda</li>
+                                <li><strong>Geographic:</strong> CDN y edge computing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        LEY DE AMDAHL: La mejora de rendimiento está limitada por la parte no paralelizable del sistema. Si 10% es secuencial, máximo speedup = 10x.
+                    </div>
+
+                    <h3>⚖️ Load Balancing</h3>
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th>Algoritmo</th>
+                                <th>Descripción</th>
+                                <th>Ventajas</th>
+                                <th>Desventajas</th>
+                                <th>Uso Recomendado</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Round Robin</strong></td>
+                                <td>Secuencial circular</td>
+                                <td>Simple, distribuye uniformemente</td>
+                                <td>No considera carga real</td>
+                                <td>Servidores homogéneos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weighted Round Robin</strong></td>
+                                <td>Round robin con pesos</td>
+                                <td>Considera capacidad de servidores</td>
+                                <td>Configuración manual de pesos</td>
+                                <td>Servidores heterogéneos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Least Connections</strong></td>
+                                <td>Al servidor con menos conexiones</td>
+                                <td>Adapta a carga real</td>
+                                <td>Overhead de tracking</td>
+                                <td>Conexiones de larga duración</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IP Hash</strong></td>
+                                <td>Hash de IP cliente</td>
+                                <td>Sticky sessions naturales</td>
+                                <td>Distribución desigual posible</td>
+                                <td>Aplicaciones con estado</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        NGINX usa Round Robin por defecto. HAProxy tiene algoritmos más avanzados. AWS ALB incluye algoritmos adaptativos basados en métricas en tiempo real.
+                    </div>
+
+                    <h3>💾 Estrategias de Caching</h3>
+                    <div class="architecture-diagram">
+                        <h4>🏗️ Niveles de Cache</h4>
+                        <div class="layer-box">Browser Cache (Client-side)</div>
+                        <div style="margin: 0.5rem 0;">⬇️</div>
+                        <div class="layer-box">CDN (Content Delivery Network)</div>
+                        <div style="margin: 0.5rem 0;">⬇️</div>
+                        <div class="layer-box">Reverse Proxy Cache (Nginx, Varnish)</div>
+                        <div style="margin: 0.5rem 0;">⬇️</div>
+                        <div class="layer-box">Application Cache (Redis, Memcached)</div>
+                        <div style="margin: 0.5rem 0;">⬇️</div>
+                        <div class="layer-box">Database Query Cache</div>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🌐 Cache Patterns</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Cache-Aside (Lazy Loading):</strong> App gestiona cache</li>
+                                <li><strong>Write-Through:</strong> Escribe DB y cache simultáneamente</li>
+                                <li><strong>Write-Behind:</strong> Cache primero, DB asíncrono</li>
+                                <li><strong>Read-Through:</strong> Cache carga automáticamente</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>⏰ Cache Eviction</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>LRU (Least Recently Used):</strong> Elimina lo menos usado</li>
+                                <li><strong>LFU (Least Frequently Used):</strong> Elimina lo menos frecuente</li>
+                                <li><strong>TTL (Time To Live):</strong> Expira por tiempo</li>
+                                <li><strong>FIFO:</strong> First In, First Out</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+// Ejemplo Redis Cache-Aside Pattern
+public User getUserById(String userId) {
+    // 1. Intentar obtener del cache
+    User user = redisClient.get("user:" + userId);
+    
+    if (user == null) {
+        // 2. Cache miss: obtener de BD
+        user = database.findUserById(userId);
+        
+        if (user != null) {
+            // 3. Guardar en cache con TTL
+            redisClient.setex("user:" + userId, 3600, user);
+        }
+    }
+    
+    return user;
+}
+                    </div>
+
+                    <h3>📊 Monitorización y Observabilidad</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📈 Métricas (Metrics)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Golden Signals:</strong> Latency, Traffic, Errors, Saturation</li>
+                                <li><strong>Herramientas:</strong> Prometheus, Grafana, DataDog</li>
+                                <li><strong>SLIs:</strong> Service Level Indicators</li>
+                                <li><strong>SLOs:</strong> Service Level Objectives</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📝 Logging</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Structured logs:</strong> JSON format</li>
+                                <li><strong>Log levels:</strong> ERROR, WARN, INFO, DEBUG</li>
+                                <li><strong>Centralized:</strong> ELK Stack, Splunk</li>
+                                <li><strong>Correlation IDs:</strong> Para tracing distribuido</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔍 Distributed Tracing</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>OpenTelemetry:</strong> Estándar de instrumentación</li>
+                                <li><strong>Jaeger:</strong> Tracing distribuido</li>
+                                <li><strong>Zipkin:</strong> Alternative to Jaeger</li>
+                                <li><strong>Span context:</strong> Propagación entre servicios</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🚨 Alerting</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Alerting rules:</strong> Based on metrics/logs</li>
+                                <li><strong>PagerDuty:</strong> Incident management</li>
+                                <li><strong>Slack/Teams:</strong> Notifications</li>
+                                <li><strong>Escalation:</strong> Multi-tier alert routing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        ERROR BUDGET = (1 - SLO) × 100. Si SLO es 99.9%, error budget es 0.1% = 8.76 horas/año. Fundamental para SRE.
+                    </div>
+
+                    <div class="hot-tip">
+                        REGLA 80/20 de Performance: 80% de los problemas vienen del 20% del código. Identifica cuellos de botella con profiling antes de optimizar.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover clase active de todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.textContent = 'Por favor selecciona una respuesta.';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            if (isCorrect) {
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `❌ Incorrecto. La respuesta correcta es "${correctAnswer}". ${explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        // Efecto de escritura para el título
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('.header h1');
+            const text = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

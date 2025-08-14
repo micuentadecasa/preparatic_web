@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 26 - Instalación y Mantenimiento</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #404040;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .nav-tab {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .process-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            border-left: 2px solid var(--accent-color);
+            padding-left: 20px;
+            margin-left: 10px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .timeline-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .method-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .method-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .exercise-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .exercise-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exercise-option:hover {
+            background: var(--accent-color)20;
+            border-color: var(--accent-color);
+        }
+
+        .exercise-option input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+
+        .exercise-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .exercise-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: var(--success-color)20;
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-incorrect {
+            background: var(--error-color)20;
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .list-styled li::before {
+            content: "▶";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .strategy-card {
+            background: linear-gradient(135deg, var(--success-color)20, var(--warning-color)20);
+            border-left: 4px solid var(--success-color);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .strategy-card h4 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                border-radius: 8px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 26: Instalación y Mantenimiento</h1>
+            <p>Estrategias de sustitución, recepción, instalación y evaluación post-implementación</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="nav-tab" onclick="showTab(event, 'strategies')">Estrategias</button>
+            <button class="nav-tab" onclick="showTab(event, 'installation')">Instalación</button>
+            <button class="nav-tab" onclick="showTab(event, 'evaluation')">Evaluación</button>
+            <button class="nav-tab" onclick="showTab(event, 'maintenance')">Mantenimiento</button>
+            <button class="nav-tab" onclick="showTab(event, 'exercises')">Ejercicios</button>
+            <button class="nav-tab" onclick="showTab(event, 'resources')">Recursos</button>
+        </nav>
+
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Introducción a Instalación y Mantenimiento</h2>
+                <p>La instalación y mantenimiento de sistemas es una fase crítica que determina el éxito a largo plazo del software. Incluye la transición del sistema de desarrollo a producción y su mantenimiento continuo.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">70%</span>
+                        <span class="stat-label">Del costo total del ciclo de vida es mantenimiento</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Estrategias principales de migración</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Tipos principales de mantenimiento</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">80%</span>
+                        <span class="stat-label">De los fallos ocurren en los primeros 6 meses</span>
+                    </div>
+                </div>
+
+                <h3>Objetivos de la Instalación</h3>
+                <ul class="list-styled">
+                    <li>Transferir el sistema del entorno de desarrollo a producción</li>
+                    <li>Minimizar el impacto en las operaciones del negocio</li>
+                    <li>Asegurar la integridad y disponibilidad de los datos</li>
+                    <li>Validar el correcto funcionamiento en el entorno real</li>
+                    <li>Capacitar a los usuarios finales y personal técnico</li>
+                    <li>Establecer procedimientos de operación y mantenimiento</li>
+                </ul>
+
+                <h3>Fases del Proceso de Instalación</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Planificación</h4>
+                        <p>Definición de estrategia, cronograma y recursos necesarios para la instalación.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Preparación del Entorno</h4>
+                        <p>Configuración de infraestructura, hardware y software base necesario.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Instalación Piloto</h4>
+                        <p>Despliegue inicial en un grupo reducido para validar el proceso.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Migración de Datos</h4>
+                        <p>Transferencia y validación de datos del sistema anterior al nuevo.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Despliegue Completo</h4>
+                        <p>Implementación del sistema para todos los usuarios según la estrategia elegida.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Estabilización</h4>
+                        <p>Período de ajustes, resolución de incidencias y optimización.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Factores Críticos de Éxito</h4>
+                    <p><strong>Planificación detallada:</strong> Cronograma realista con contingencias.</p>
+                    <p><strong>Comunicación efectiva:</strong> Mantener informados a todos los stakeholders.</p>
+                    <p><strong>Gestión de riesgos:</strong> Identificar y mitigar riesgos tempranamente.</p>
+                    <p><strong>Capacitación adecuada:</strong> Usuarios preparados antes del go-live.</p>
+                    <p><strong>Soporte técnico:</strong> Equipo disponible para resolver incidencias.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="strategies" class="tab-content">
+            <div class="card">
+                <h2>Estrategias de Sustitución</h2>
+                <p>La elección de la estrategia de sustitución es crucial para minimizar riesgos y asegurar la continuidad del negocio durante la transición.</p>
+
+                <h3>Tipos de Estrategias</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Sustitución Directa (Big Bang)</h4>
+                        <p><strong>Descripción:</strong> Reemplazo inmediato del sistema anterior por el nuevo en una fecha específica.</p>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Implementación rápida</li>
+                            <li>Menor costo de transición</li>
+                            <li>No hay duplicación de sistemas</li>
+                            <li>Claridad en el cambio</li>
+                        </ul>
+                        <p><strong>Desventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Alto riesgo</li>
+                            <li>Posible interrupción del negocio</li>
+                            <li>Dificultad de rollback</li>
+                            <li>Resistencia al cambio</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Implementación Paralela</h4>
+                        <p><strong>Descripción:</strong> Operación simultánea del sistema anterior y nuevo durante un período determinado.</p>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Menor riesgo</li>
+                            <li>Validación cruzada de resultados</li>
+                            <li>Rollback inmediato posible</li>
+                            <li>Transición gradual de usuarios</li>
+                        </ul>
+                        <p><strong>Desventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Mayor costo operativo</li>
+                            <li>Duplicación de esfuerzos</li>
+                            <li>Complejidad de gestión</li>
+                            <li>Posibles inconsistencias</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Implementación por Fases</h4>
+                        <p><strong>Descripción:</strong> Sustitución gradual por módulos, funcionalidades o ubicaciones.</p>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Riesgo controlado</li>
+                            <li>Aprendizaje iterativo</li>
+                            <li>Recursos distribuidos en el tiempo</li>
+                            <li>Ajustes entre fases</li>
+                        </ul>
+                        <p><strong>Desventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Proceso más largo</li>
+                            <li>Complejidad de interfaces</li>
+                            <li>Gestión de múltiples versiones</li>
+                            <li>Resistencia prolongada</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Piloto</h4>
+                        <p><strong>Descripción:</strong> Implementación inicial en un grupo pequeño antes del despliegue general.</p>
+                        <p><strong>Ventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Validación real con bajo riesgo</li>
+                            <li>Identificación temprana de problemas</li>
+                            <li>Refinamiento del proceso</li>
+                            <li>Creación de champions</li>
+                        </ul>
+                        <p><strong>Desventajas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Mayor tiempo total</li>
+                            <li>Selección crítica del grupo piloto</li>
+                            <li>Posible retraso si hay problemas</li>
+                            <li>Costo adicional de gestión</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Criterios de Selección de Estrategia</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Criterio</th>
+                            <th>Directa</th>
+                            <th>Paralela</th>
+                            <th>Por Fases</th>
+                            <th>Piloto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nivel de Riesgo</td>
+                            <td>Alto</td>
+                            <td>Bajo</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo de Implementación</td>
+                            <td>Corto</td>
+                            <td>Medio</td>
+                            <td>Largo</td>
+                            <td>Largo</td>
+                        </tr>
+                        <tr>
+                            <td>Costo de Transición</td>
+                            <td>Bajo</td>
+                            <td>Alto</td>
+                            <td>Medio</td>
+                            <td>Alto</td>
+                        </tr>
+                        <tr>
+                            <td>Complejidad de Gestión</td>
+                            <td>Baja</td>
+                            <td>Alta</td>
+                            <td>Media</td>
+                            <td>Alta</td>
+                        </tr>
+                        <tr>
+                            <td>Facilidad de Rollback</td>
+                            <td>Difícil</td>
+                            <td>Fácil</td>
+                            <td>Medio</td>
+                            <td>Fácil</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="strategy-card">
+                    <h4>Recomendaciones por Tipo de Sistema</h4>
+                    <p><strong>Sistemas Críticos:</strong> Implementación paralela o por fases para minimizar riesgos.</p>
+                    <p><strong>Sistemas Simples:</strong> Sustitución directa si el riesgo es aceptable.</p>
+                    <p><strong>Sistemas Complejos:</strong> Piloto seguido de implementación por fases.</p>
+                    <p><strong>Organizaciones Distribuidas:</strong> Por fases geográficas o por unidades de negocio.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="installation" class="tab-content">
+            <div class="card">
+                <h2>Proceso de Instalación</h2>
+                <p>La instalación efectiva requiere una planificación meticulosa y la coordinación de múltiples actividades técnicas y organizacionales.</p>
+
+                <h3>Actividades Pre-instalación</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Preparación de Infraestructura</h4>
+                        <ul class="list-styled">
+                            <li>Configuración de servidores y hardware</li>
+                            <li>Instalación de software base y dependencias</li>
+                            <li>Configuración de red y seguridad</li>
+                            <li>Establecimiento de respaldos</li>
+                            <li>Pruebas de conectividad</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Migración de Datos</h4>
+                        <ul class="list-styled">
+                            <li>Análisis y limpieza de datos origen</li>
+                            <li>Desarrollo de scripts de migración</li>
+                            <li>Pruebas de migración en ambiente de pruebas</li>
+                            <li>Validación de integridad de datos</li>
+                            <li>Plan de rollback de datos</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Capacitación</h4>
+                        <ul class="list-styled">
+                            <li>Identificación de usuarios y roles</li>
+                            <li>Desarrollo de material de capacitación</li>
+                            <li>Sesiones de entrenamiento por grupos</li>
+                            <li>Creación de manuales y guías</li>
+                            <li>Establecimiento de usuarios power</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de Aceptación</h4>
+                        <ul class="list-styled">
+                            <li>Diseño de casos de prueba de usuario</li>
+                            <li>Ejecución de pruebas funcionales</li>
+                            <li>Validación de rendimiento</li>
+                            <li>Pruebas de integración</li>
+                            <li>Firma de aceptación formal</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Proceso de Go-Live</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Congelamiento de Sistemas</h4>
+                        <p>Suspensión de cambios en sistemas relacionados durante el período de instalación.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Backup Final</h4>
+                        <p>Respaldo completo de todos los sistemas y datos antes del cambio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Despliegue del Software</h4>
+                        <p>Instalación del nuevo sistema según los procedimientos definidos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Migración de Datos</h4>
+                        <p>Transferencia de datos del sistema anterior al nuevo con validaciones.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Pruebas de Humo</h4>
+                        <p>Verificación básica de que el sistema funciona correctamente.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Activación de Usuarios</h4>
+                        <p>Habilitación del acceso para usuarios finales y comunicación oficial.</p>
+                    </div>
+                </div>
+
+                <h3>Gestión de la Instalación</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Responsable</th>
+                            <th>Actividades Clave</th>
+                            <th>Documentos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Coordinación General</td>
+                            <td>Project Manager</td>
+                            <td>Planificación, comunicación, seguimiento</td>
+                            <td>Plan de instalación, cronograma</td>
+                        </tr>
+                        <tr>
+                            <td>Infraestructura Técnica</td>
+                            <td>Administradores de Sistema</td>
+                            <td>Configuración, instalación, monitoreo</td>
+                            <td>Procedimientos técnicos, runbooks</td>
+                        </tr>
+                        <tr>
+                            <td>Migración de Datos</td>
+                            <td>DBA/Especialistas</td>
+                            <td>Extracción, transformación, carga</td>
+                            <td>Scripts, logs de migración</td>
+                        </tr>
+                        <tr>
+                            <td>Soporte a Usuarios</td>
+                            <td>Help Desk/Support</td>
+                            <td>Resolución de incidencias, capacitación</td>
+                            <td>Manual de usuario, FAQs</td>
+                        </tr>
+                        <tr>
+                            <td>Calidad y Testing</td>
+                            <td>QA Team</td>
+                            <td>Validación, pruebas, certificación</td>
+                            <td>Planes de prueba, reportes</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Checklist de Pre-Go-Live</h4>
+                    <p>✓ Infraestructura técnica preparada y probada</p>
+                    <p>✓ Datos migrados y validados en ambiente de pruebas</p>
+                    <p>✓ Usuarios capacitados y manuales entregados</p>
+                    <p>✓ Pruebas de aceptación completadas y aprobadas</p>
+                    <p>✓ Plan de contingencia y rollback definido</p>
+                    <p>✓ Equipo de soporte disponible 24/7</p>
+                    <p>✓ Comunicación enviada a todos los stakeholders</p>
+                    <p>✓ Respaldos completos realizados</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="evaluation" class="tab-content">
+            <div class="card">
+                <h2>Evaluación Post-implementación</h2>
+                <p>La evaluación post-implementación es crucial para medir el éxito del proyecto, identificar lecciones aprendidas y planificar mejoras futuras.</p>
+
+                <h3>Objetivos de la Evaluación</h3>
+                <ul class="list-styled">
+                    <li>Verificar el cumplimiento de objetivos del proyecto</li>
+                    <li>Medir el retorno de la inversión (ROI)</li>
+                    <li>Identificar beneficios realizados vs proyectados</li>
+                    <li>Evaluar la satisfacción de usuarios</li>
+                    <li>Documentar lecciones aprendidas</li>
+                    <li>Planificar mejoras y optimizaciones</li>
+                </ul>
+
+                <h3>Métricas de Evaluación</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Métricas Técnicas</h4>
+                        <ul class="list-styled">
+                            <li><strong>Disponibilidad:</strong> Uptime del sistema</li>
+                            <li><strong>Rendimiento:</strong> Tiempos de respuesta</li>
+                            <li><strong>Capacidad:</strong> Usuarios concurrentes</li>
+                            <li><strong>Errores:</strong> Tasa de incidencias</li>
+                            <li><strong>Seguridad:</strong> Vulnerabilidades identificadas</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Negocio</h4>
+                        <ul class="list-styled">
+                            <li><strong>Productividad:</strong> Eficiencia operativa</li>
+                            <li><strong>Costos:</strong> Reducción de gastos operativos</li>
+                            <li><strong>Calidad:</strong> Reducción de errores</li>
+                            <li><strong>Tiempo:</strong> Aceleración de procesos</li>
+                            <li><strong>Satisfacción:</strong> Índice de usuarios</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Proyecto</h4>
+                        <ul class="list-styled">
+                            <li><strong>Cronograma:</strong> Cumplimiento de fechas</li>
+                            <li><strong>Presupuesto:</strong> Variación de costos</li>
+                            <li><strong>Alcance:</strong> Funcionalidades entregadas</li>
+                            <li><strong>Calidad:</strong> Defectos encontrados</li>
+                            <li><strong>Cambios:</strong> Solicitudes de modificación</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Usuarios</h4>
+                        <ul class="list-styled">
+                            <li><strong>Adopción:</strong> Porcentaje de uso</li>
+                            <li><strong>Satisfacción:</strong> Encuestas de usuarios</li>
+                            <li><strong>Capacitación:</strong> Efectividad del training</li>
+                            <li><strong>Soporte:</strong> Tickets de help desk</li>
+                            <li><strong>Productividad:</strong> Mejora en tareas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Proceso de Evaluación</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Definición de Criterios (Pre-proyecto)</h4>
+                        <p>Establecimiento de métricas y objetivos específicos antes del inicio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Línea Base (Pre-implementación)</h4>
+                        <p>Medición de métricas del sistema anterior para comparación.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Medición Inicial (1-3 meses)</h4>
+                        <p>Primera evaluación tras la estabilización del sistema.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Evaluación Intermedia (6 meses)</h4>
+                        <p>Análisis detallado con suficiente tiempo de operación.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Evaluación Final (12 meses)</h4>
+                        <p>Revisión completa con un ciclo completo de operación.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Reporte y Cierre</h4>
+                        <p>Documentación final de resultados y lecciones aprendidas.</p>
+                    </div>
+                </div>
+
+                <h3>Plantilla de Evaluación</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Objetivo</th>
+                            <th>Métrica</th>
+                            <th>Meta</th>
+                            <th>Resultado</th>
+                            <th>Cumplimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Reducir tiempo de proceso</td>
+                            <td>Tiempo promedio de transacción</td>
+                            <td>30% reducción</td>
+                            <td>35% reducción</td>
+                            <td>✅ Superado</td>
+                        </tr>
+                        <tr>
+                            <td>Mejorar disponibilidad</td>
+                            <td>Uptime del sistema</td>
+                            <td>99.5%</td>
+                            <td>99.2%</td>
+                            <td>❌ No cumplido</td>
+                        </tr>
+                        <tr>
+                            <td>Reducir costos operativos</td>
+                            <td>Costo anual de mantenimiento</td>
+                            <td>20% reducción</td>
+                            <td>22% reducción</td>
+                            <td>✅ Cumplido</td>
+                        </tr>
+                        <tr>
+                            <td>Satisfacción de usuarios</td>
+                            <td>Índice de satisfacción</td>
+                            <td>≥ 8/10</td>
+                            <td>7.5/10</td>
+                            <td>⚠️ Parcial</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="strategy-card">
+                    <h4>Recomendaciones para Evaluaciones Efectivas</h4>
+                    <p><strong>Automatización:</strong> Implementar herramientas de monitoreo automático para métricas técnicas.</p>
+                    <p><strong>Frecuencia:</strong> Establecer revisiones regulares, no solo evaluaciones puntuales.</p>
+                    <p><strong>Stakeholder Involvement:</strong> Incluir a todos los grupos afectados en la evaluación.</p>
+                    <p><strong>Transparencia:</strong> Comunicar resultados abiertamente, tanto éxitos como áreas de mejora.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="maintenance" class="tab-content">
+            <div class="card">
+                <h2>Mantenimiento de Sistemas</h2>
+                <p>El mantenimiento representa la mayor parte del ciclo de vida del software y es esencial para mantener el sistema funcionando eficientemente y adaptado a las necesidades cambiantes.</p>
+
+                <h3>Tipos de Mantenimiento</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Mantenimiento Correctivo</h4>
+                        <p><strong>Propósito:</strong> Corregir errores y defectos encontrados en el software.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="list-styled">
+                            <li>Reactivo - responde a problemas identificados</li>
+                            <li>Urgente - requiere atención inmediata</li>
+                            <li>Imprevisto - difícil de planificar</li>
+                            <li>Costoso - interrumpe otras actividades</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Bugs, errores de cálculo, fallos de sistema</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>Mantenimiento Adaptativo</h4>
+                        <p><strong>Propósito:</strong> Adaptar el software a cambios en el entorno operativo.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="list-styled">
+                            <li>Planificado - responde a cambios conocidos</li>
+                            <li>Necesario - mantiene la operatividad</li>
+                            <li>Programado - puede planificarse</li>
+                            <li>Moderado - costo controlable</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Nuevas versiones de SO, cambios normativos</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>Mantenimiento Perfectivo</h4>
+                        <p><strong>Propósito:</strong> Mejorar el rendimiento, usabilidad y funcionalidad del software.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="list-styled">
+                            <li>Proactivo - mejora continua</li>
+                            <li>Opcional - no crítico para funcionamiento</li>
+                            <li>Planificable - puede diferirse</li>
+                            <li>Beneficioso - aporta valor añadido</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Optimización de rendimiento, nuevas funcionalidades</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>Mantenimiento Preventivo</h4>
+                        <p><strong>Propósito:</strong> Prevenir futuros problemas mediante mejoras en el código.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="list-styled">
+                            <li>Preventivo - evita problemas futuros</li>
+                            <li>Técnico - mejora la arquitectura</li>
+                            <li>A largo plazo - beneficios diferidos</li>
+                            <li>Inversión - requiere recursos iniciales</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Refactoring, documentación, modularización</p>
+                    </div>
+                </div>
+
+                <h3>Distribución Típica de Esfuerzo de Mantenimiento</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">20%</span>
+                        <span class="stat-label">Mantenimiento Correctivo</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">25%</span>
+                        <span class="stat-label">Mantenimiento Adaptativo</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50%</span>
+                        <span class="stat-label">Mantenimiento Perfectivo</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5%</span>
+                        <span class="stat-label">Mantenimiento Preventivo</span>
+                    </div>
+                </div>
+
+                <h3>Proceso de Gestión del Mantenimiento</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Solicitud de Cambio</h4>
+                        <p>Recepción y registro formal de solicitudes de mantenimiento.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Análisis de Impacto</h4>
+                        <p>Evaluación del impacto técnico, funcional y económico del cambio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Priorización</h4>
+                        <p>Clasificación según urgencia, importancia y recursos disponibles.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Planificación</h4>
+                        <p>Asignación de recursos, cronograma y definición de approach técnico.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Implementación</h4>
+                        <p>Desarrollo, pruebas e implementación del cambio solicitado.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Validación</h4>
+                        <p>Verificación de que el cambio cumple los objetivos sin efectos adversos.</p>
+                    </div>
+                </div>
+
+                <h3>Factores que Afectan la Mantenibilidad</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Impacto en Mantenimiento</th>
+                            <th>Mejores Prácticas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Documentación</td>
+                            <td>Facilita comprensión del sistema</td>
+                            <td>Mantener documentación actualizada</td>
+                        </tr>
+                        <tr>
+                            <td>Modularidad</td>
+                            <td>Permite cambios localizados</td>
+                            <td>Diseño con alta cohesión, bajo acoplamiento</td>
+                        </tr>
+                        <tr>
+                            <td>Estándares de Código</td>
+                            <td>Mejora legibilidad y consistencia</td>
+                            <td>Enforcer coding standards y reviews</td>
+                        </tr>
+                        <tr>
+                            <td>Herramientas</td>
+                            <td>Automatizan tareas repetitivas</td>
+                            <td>IDEs, debuggers, profilers, versioning</td>
+                        </tr>
+                        <tr>
+                            <td>Conocimiento del Equipo</td>
+                            <td>Reduce tiempo de analysis y implementación</td>
+                            <td>Documentar conocimiento, cross-training</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Estrategias para Mantenimiento Eficiente</h4>
+                    <p><strong>Automatización:</strong> Implementar CI/CD, testing automático, deployment automático.</p>
+                    <p><strong>Monitoreo:</strong> Sistemas de alerta temprana para detectar problemas proactivamente.</p>
+                    <p><strong>Versionado:</strong> Control riguroso de versiones y gestión de configuración.</p>
+                    <p><strong>Capacitación:</strong> Mantener al equipo actualizado en tecnologías y mejores prácticas.</p>
+                    <p><strong>Métricas:</strong> Medir y analizar el costo y efectividad del mantenimiento.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos de Instalación y Mantenimiento</h2>
+                <p>Resuelve estos ejercicios para aplicar los conceptos de instalación, migración y mantenimiento de sistemas.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p>Progreso: <span id="progress-text">0/10</span> ejercicios completados</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 1:</strong> Un proyecto de instalación tiene un presupuesto de 200,000€. Si el 40% se destina a infraestructura, 30% a migración de datos y el resto a capacitación, ¿cuánto se asigna a capacitación?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="60000">
+                        <label>60,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="70000">
+                        <label>70,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="80000">
+                        <label>80,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="30000">
+                        <label>30,000€</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(1, 60000, 'Capacitación = 200,000€ - (40% + 30%) = 200,000€ × 30% = 60,000€')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 2:</strong> La migración de una base de datos de 50 GB toma 4 horas. Si se necesita migrar 200 GB, ¿cuánto tiempo tomará aproximadamente?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="8">
+                        <label>8 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="16">
+                        <label>16 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="12">
+                        <label>12 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="20">
+                        <label>20 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(2, 16, 'Tiempo = (200 GB / 50 GB) × 4 horas = 4 × 4 = 16 horas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 3:</strong> Un sistema tiene 1000 usuarios. Si se implementa por fases con 4 fases iguales, ¿cuántos usuarios se migran por fase?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="200">
+                        <label>200 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="250">
+                        <label>250 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="300">
+                        <label>300 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="400">
+                        <label>400 usuarios</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(3, 250, 'Usuarios por fase = 1000 usuarios / 4 fases = 250 usuarios por fase')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 4:</strong> El costo anual de mantenimiento de un sistema es 150,000€. Si 50% es perfectivo, 25% adaptativo, 20% correctivo y 5% preventivo, ¿cuál es el costo del mantenimiento correctivo?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="30000">
+                        <label>30,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="37500">
+                        <label>37,500€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="75000">
+                        <label>75,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="7500">
+                        <label>7,500€</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(4, 30000, 'Mantenimiento correctivo = 150,000€ × 20% = 30,000€')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 5:</strong> Un equipo de 5 personas necesita 8 horas de capacitación cada una. Si se hacen sesiones de 2 horas para 10 personas, ¿cuántas sesiones se necesitan?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="2">
+                        <label>2 sesiones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="4">
+                        <label>4 sesiones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="20">
+                        <label>20 sesiones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="1">
+                        <label>1 sesión</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(5, 2, 'Total horas = 5 × 8 = 40 horas. Sesiones = 40 horas / (2 horas × 10 personas) = 40/20 = 2 sesiones')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 6:</strong> Un sistema tiene disponibilidad del 99.2%. En un mes de 30 días, ¿cuántas horas de downtime tuvo?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="5.76">
+                        <label>5.76 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="2.4">
+                        <label>2.4 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="7.2">
+                        <label>7.2 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="0.8">
+                        <label>0.8 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(6, 5.76, 'Downtime = 30 días × 24 horas × (100% - 99.2%) = 720 × 0.8% = 5.76 horas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 7:</strong> Un piloto se realiza con el 10% de los usuarios. Si el piloto dura 2 semanas y la implementación total 8 semanas, ¿cuál es el tiempo total del proyecto?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="10">
+                        <label>10 semanas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="6">
+                        <label>6 semanas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="8">
+                        <label>8 semanas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="12">
+                        <label>12 semanas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(7, 10, 'Tiempo total = 2 semanas (piloto) + 8 semanas (implementación total) = 10 semanas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 8:</strong> El ROI esperado de un sistema era 25%. Si la inversión fue de 500,000€ y los beneficios reales fueron 100,000€, ¿cuál es el ROI real?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="20">
+                        <label>20%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="25">
+                        <label>25%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="15">
+                        <label>15%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="5">
+                        <label>5%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(8, 20, 'ROI real = (100,000€ / 500,000€) × 100 = 20%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback8"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 9:</strong> Una base de datos de 2 TB se respalda a velocidad de 100 GB/hora. ¿Cuánto tiempo toma el backup completo?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="20">
+                        <label>20 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="10">
+                        <label>10 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="200">
+                        <label>200 horas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="2">
+                        <label>2 horas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(9, 20, 'Tiempo = 2 TB / 100 GB/hora = 2000 GB / 100 GB/hora = 20 horas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 10:</strong> Un sistema procesaba 1000 transacciones/hora. Después de la mejora procesa 1500 transacciones/hora. ¿Cuál es el porcentaje de mejora?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="50">
+                        <label>50%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="150">
+                        <label>150%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="33.3">
+                        <label>33.3%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="500">
+                        <label>500%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(10, 50, 'Mejora = ((1500 - 1000) / 1000) × 100 = (500 / 1000) × 100 = 50%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback10"></div>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>Recursos y Herramientas</h2>
+                <p>Conjunto de recursos, herramientas y referencias para gestionar eficientemente la instalación y mantenimiento de sistemas.</p>
+
+                <h3>Herramientas de Despliegue</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Automatización de Despliegue</h4>
+                        <ul class="list-styled">
+                            <li><strong>Ansible:</strong> Automatización de configuración e instalación</li>
+                            <li><strong>Puppet:</strong> Gestión de configuración declarativa</li>
+                            <li><strong>Chef:</strong> Automatización de infraestructura como código</li>
+                            <li><strong>Terraform:</strong> Provisioning de infraestructura</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Contenedores y Orquestación</h4>
+                        <ul class="list-styled">
+                            <li><strong>Docker:</strong> Containerización de aplicaciones</li>
+                            <li><strong>Kubernetes:</strong> Orquestación de contenedores</li>
+                            <li><strong>OpenShift:</strong> Plataforma de contenedores empresarial</li>
+                            <li><strong>Docker Swarm:</strong> Clustering nativo de Docker</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>CI/CD</h4>
+                        <ul class="list-styled">
+                            <li><strong>Jenkins:</strong> Servidor de integración continua</li>
+                            <li><strong>GitLab CI:</strong> Integrado con control de versiones</li>
+                            <li><strong>Azure DevOps:</strong> Suite completa de Microsoft</li>
+                            <li><strong>GitHub Actions:</strong> Automatización nativa de GitHub</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Migración de Datos</h4>
+                        <ul class="list-styled">
+                            <li><strong>AWS DMS:</strong> Database Migration Service</li>
+                            <li><strong>Talend:</strong> Integración y migración de datos</li>
+                            <li><strong>Pentaho:</strong> Data integration platform</li>
+                            <li><strong>SSIS:</strong> SQL Server Integration Services</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Herramientas de Monitoreo y Mantenimiento</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Monitoreo de Aplicaciones</h4>
+                        <ul class="list-styled">
+                            <li><strong>New Relic:</strong> APM y monitoreo de rendimiento</li>
+                            <li><strong>AppDynamics:</strong> Análisis de aplicaciones empresariales</li>
+                            <li><strong>Dynatrace:</strong> Observabilidad automática</li>
+                            <li><strong>Datadog:</strong> Monitoreo de infraestructura y aplicaciones</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Gestión de Logs</h4>
+                        <ul class="list-styled">
+                            <li><strong>ELK Stack:</strong> Elasticsearch, Logstash, Kibana</li>
+                            <li><strong>Splunk:</strong> Análisis de datos de máquina</li>
+                            <li><strong>Fluentd:</strong> Collector de logs unificado</li>
+                            <li><strong>Graylog:</strong> Gestión centralizada de logs</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Monitoreo de Infraestructura</h4>
+                        <ul class="list-styled">
+                            <li><strong>Nagios:</strong> Monitoreo de red y sistemas</li>
+                            <li><strong>Zabbix:</strong> Solución de monitoreo empresarial</li>
+                            <li><strong>Prometheus:</strong> Sistema de monitoreo de código abierto</li>
+                            <li><strong>PRTG:</strong> Network monitoring solution</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Gestión de Incidencias</h4>
+                        <ul class="list-styled">
+                            <li><strong>ServiceNow:</strong> Plataforma ITSM empresarial</li>
+                            <li><strong>Jira Service Desk:</strong> Gestión de tickets ágil</li>
+                            <li><strong>Remedy:</strong> Solución ITSM de BMC</li>
+                            <li><strong>PagerDuty:</strong> Gestión de incidentes y alertas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Marcos de Referencia</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Marco</th>
+                            <th>Foco</th>
+                            <th>Aplicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ITIL</td>
+                            <td>Gestión de servicios de TI</td>
+                            <td>Procesos de mantenimiento y operación</td>
+                        </tr>
+                        <tr>
+                            <td>COBIT</td>
+                            <td>Gobierno de TI</td>
+                            <td>Control y gestión de tecnología</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 20000</td>
+                            <td>Estándar de gestión de servicios</td>
+                            <td>Certificación de procesos ITSM</td>
+                        </tr>
+                        <tr>
+                            <td>Six Sigma</td>
+                            <td>Mejora de procesos</td>
+                            <td>Optimización de mantenimiento</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Checklist de Instalación</h3>
+                <div class="strategy-card">
+                    <h4>Pre-instalación</h4>
+                    <ul class="list-styled">
+                        <li>☐ Plan de instalación aprobado</li>
+                        <li>☐ Infraestructura preparada y probada</li>
+                        <li>☐ Backups completos realizados</li>
+                        <li>☐ Scripts de migración validados</li>
+                        <li>☐ Usuarios capacitados</li>
+                        <li>☐ Equipo de soporte disponible</li>
+                        <li>☐ Comunicación enviada</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <h4>Durante la Instalación</h4>
+                    <ul class="list-styled">
+                        <li>☐ Logs de instalación capturados</li>
+                        <li>☐ Validaciones de cada paso</li>
+                        <li>☐ Comunicación de estado regular</li>
+                        <li>☐ Monitoreo de sistemas críticos</li>
+                        <li>☐ Plan de contingencia listo</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <h4>Post-instalación</h4>
+                    <ul class="list-styled">
+                        <li>☐ Pruebas de humo ejecutadas</li>
+                        <li>☐ Usuarios notificados del go-live</li>
+                        <li>☐ Monitoreo intensivo activado</li>
+                        <li>☐ Documentación actualizada</li>
+                        <li>☐ Lecciones aprendidas documentadas</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Métricas Clave de Mantenimiento</h4>
+                    <p><strong>MTTR (Mean Time To Repair):</strong> Tiempo promedio de reparación de incidencias.</p>
+                    <p><strong>MTBF (Mean Time Between Failures):</strong> Tiempo promedio entre fallos del sistema.</p>
+                    <p><strong>Disponibilidad:</strong> Porcentaje de tiempo que el sistema está operativo.</p>
+                    <p><strong>Costo de Mantenimiento:</strong> Porcentaje del presupuesto TI dedicado a mantenimiento.</p>
+                    <p><strong>Satisfacción del Usuario:</strong> Índice de satisfacción con el soporte recibido.</p>
+                </div>
+
+                <h3>Recursos de Aprendizaje</h3>
+                <ul class="list-styled">
+                    <li><strong>ITIL Foundation:</strong> Certificación base en gestión de servicios</li>
+                    <li><strong>AWS Solutions Architect:</strong> Arquitectura en la nube</li>
+                    <li><strong>Docker Certified Associate:</strong> Containerización</li>
+                    <li><strong>Certified Kubernetes Administrator:</strong> Orquestación</li>
+                    <li><strong>DevOps Institute:</strong> Certificaciones en DevOps</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('nav-tab');
+            
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.style.display = 'block';
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = '❌ Por favor selecciona una respuesta.';
+                return;
+            }
+            
+            const userAnswer = parseFloat(selectedAnswer.value);
+            const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.1;
+            
+            feedback.style.display = 'block';
+            
+            if (isCorrect) {
+                feedback.className = 'exercise-feedback feedback-correct';
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                
+                if (!selectedAnswer.closest('.exercise-container').dataset.completed) {
+                    completedExercises++;
+                    selectedAnswer.closest('.exercise-container').dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completedExercises}/10`;
+        }
+
+        // Inicializar tema
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌞 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

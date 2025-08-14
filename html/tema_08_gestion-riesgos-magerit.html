@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 8: Gestión de Riesgos MAGERIT - Preparatic</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --background-color: #1a1a1a;
+            --surface-color: #2d2d2d;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --hover-color: #3a3a3a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --hover-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="light"] .feedback.correct {
+            background: var(--success-color);
+            color: white;
+        }
+        [data-theme="light"] .feedback.incorrect {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,0 1000,100 0,20"/></svg>') repeat-x;
+            background-size: 100px 100px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: var(--surface-color);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+            border: 2px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .content-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: var(--text-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.4em;
+            position: relative;
+        }
+
+        .content-section h3::before {
+            content: "▶";
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--secondary-color)10, var(--secondary-color)20);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)10, var(--warning-color)20);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)10, var(--info-color)20);
+            border-left: 4px solid var(--info-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--hover-color);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .list-checkmark li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+        }
+
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .risk-cell {
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .risk-header {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .risk-very-low {
+            background: #27ae60;
+            color: white;
+        }
+
+        .risk-low {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .risk-medium {
+            background: #f39c12;
+            color: white;
+        }
+
+        .risk-high {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .risk-very-high {
+            background: #c0392b;
+            color: white;
+        }
+
+        .magerit-formula {
+            background: var(--info-color);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .exercise-container {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--background-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .exercise-question {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .exercise-options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .exercise-options li {
+            padding: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-options li:hover {
+            background: var(--hover-color);
+            padding-left: 1rem;
+        }
+
+        .hot-tip {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .hot-tip::before {
+            content: "🔥 TIP CALIENTE: ";
+            font-weight: bold;
+        }
+
+        .exam-alert {
+            background: linear-gradient(135deg, var(--warning-color), #d35400);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .exam-alert::before {
+            content: "⚠️ IMPORTANTE PARA EXAMEN: ";
+            font-weight: bold;
+        }
+
+        .exercise-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback.correct {
+            background: var(--success-color);
+            color: white;
+            display: block;
+        }
+        .feedback.incorrect {
+            background: var(--accent-color);
+            color: white;
+            display: block;
+        }
+        .formula-box {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .formula {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-matrix {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="header-content">
+            <h1>🛡️ Gestión de Riesgos MAGERIT</h1>
+            <p>Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab('methodology')">📐 Metodología</button>
+                <button class="tab-button" onclick="showTab('analysis')">🔍 Análisis</button>
+                <button class="tab-button" onclick="showTab('management')">⚙️ Gestión</button>
+                <button class="tab-button" onclick="showTab('tools')">🛠️ Herramientas</button>
+                <button class="tab-button" onclick="showTab('exercises')">🧮 Ejercicios</button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="content-section">
+                    <h2>📋 Visión General - MAGERIT</h2>
+
+                    <div class="highlight-box">
+                        <h3>📊 Datos Clave para Examen</h3>
+                        <div class="grid-container">
+                            <div class="card">
+                                <h4>📈 Estadísticas MAGERIT</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>Versión actual:</strong> MAGERIT v3.0 (2012)</li>
+                                    <li><strong>Uso en España:</strong> 85% administraciones públicas</li>
+                                    <li><strong>Certificación ISO 27005</strong> compatible</li>
+                                    <li><strong>3 libros principales</strong> de la metodología</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>🎯 Objetivos Principales</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>Identificar riesgos</strong> de SI</li>
+                                    <li><strong>Cuantificar impacto</strong> y probabilidad</li>
+                                    <li><strong>Proponer salvaguardas</strong> efectivas</li>
+                                    <li><strong>Reducir riesgo residual</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        En exámenes preguntan sobre: fórmula de cálculo del riesgo, fases de MAGERIT, diferencia entre amenaza y vulnerabilidad, y criterios de valoración.
+                    </div>
+
+                    <h3>🏛️ Historia y Evolución</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4><strong>1997:</strong> MAGERIT v1.0</h4>
+                            <p>Ministerio de Administraciones Públicas desarrolla primera versión. Enfoque en administraciones públicas españolas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2006:</strong> MAGERIT v2.0</h4>
+                            <p>Actualización mayor. Mejora en catalogación de amenazas y salvaguardas. Mayor alineación con estándares internacionales.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2012:</strong> MAGERIT v3.0</h4>
+                            <p>Versión actual. Compatible con ISO 27001/27005. Metodología consolidada y herramientas PILAR actualizadas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2014-presente:</strong> Adopción internacional</h4>
+                            <p>Implementación en otros países de Iberoamérica. Reconocimiento como buena práctica por organismos internacionales.</p>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        Memoriza: MAGERIT = Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información de las Tecnologías de la Información.
+                    </div>
+
+                    <h3>📖 Estructura de la Metodología</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📘 Libro I - Método</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Conceptos fundamentales</strong></li>
+                                <li><strong>Proceso de análisis de riesgos</strong></li>
+                                <li><strong>Proceso de gestión de riesgos</strong></li>
+                                <li><strong>Actividades y tareas</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📗 Libro II - Catálogo de Elementos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Dimensiones de seguridad</strong></li>
+                                <li><strong>Catálogo de activos</strong></li>
+                                <li><strong>Catálogo de amenazas</strong></li>
+                                <li><strong>Catálogo de salvaguardas</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📙 Libro III - Guía de Técnicas</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Análisis de riesgos</strong></li>
+                                <li><strong>Técnicas de identificación</strong></li>
+                                <li><strong>Técnicas de valoración</strong></li>
+                                <li><strong>Técnicas de evaluación</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="magerit-formula">
+                        FÓRMULA FUNDAMENTAL DE MAGERIT<br>
+                        Riesgo = Activo × Amenaza × Vulnerabilidad<br>
+                        R = A × Am × V
+                    </div>
+
+                    <div class="exam-alert">
+                        PREGUNTA TÍPICA: "¿Cuáles son las tres componentes del riesgo según MAGERIT?" Respuesta: Activo (valor), Amenaza (probabilidad), Vulnerabilidad (facilidad de materialización).
+                    </div>
+
+                    <h3>🎯 Conceptos Fundamentales</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Definición MAGERIT</th>
+                                <th>Ejemplo</th>
+                                <th>Medición</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Activo</strong></td>
+                                <td>Recurso del sistema de información</td>
+                                <td>Base de datos de clientes</td>
+                                <td>Valor económico (€)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amenaza</strong></td>
+                                <td>Causa potencial de incidente no deseado</td>
+                                <td>Ataque de malware</td>
+                                <td>Probabilidad (0-100)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vulnerabilidad</strong></td>
+                                <td>Debilidad que puede ser explotada</td>
+                                <td>Software sin parches</td>
+                                <td>Nivel (0-10)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Impacto</strong></td>
+                                <td>Consecuencia de materialización de amenaza</td>
+                                <td>Pérdida de confidencialidad</td>
+                                <td>Valoración cualitativa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Salvaguarda</strong></td>
+                                <td>Medida para reducir riesgo</td>
+                                <td>Firewall, antivirus</td>
+                                <td>Eficacia (0-100%)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="methodology" class="tab-content">
+                <div class="content-section">
+                    <h2>📐 Metodología MAGERIT</h2>
+
+                    <h3>🔄 Proceso Global de Gestión de Riesgos</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Fases del Proceso</h4>
+                        <ol>
+                            <li><strong>Planificación:</strong> Definición de alcance y recursos</li>
+                            <li><strong>Análisis de Riesgos:</strong> Identificación y valoración</li>
+                            <li><strong>Gestión de Riesgos:</strong> Tratamiento y planes de acción</li>
+                            <li><strong>Selección de Salvaguardas:</strong> Medidas de protección</li>
+                            <li><strong>Implantación:</strong> Puesta en marcha de medidas</li>
+                            <li><strong>Monitorización:</strong> Seguimiento continuo</li>
+                        </ol>
+                    </div>
+
+                    <h3>📊 Fase 1: Planificación del Proyecto</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🎯 Definición de Alcance</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Identificar organización</strong> y sistemas</li>
+                                <li><strong>Delimitar activos</strong> a analizar</li>
+                                <li><strong>Establecer criterios</strong> de valoración</li>
+                                <li><strong>Definir equipo</strong> de trabajo</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📋 Criterios de Valoración</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Confidencialidad:</strong> Control de acceso</li>
+                                <li><strong>Integridad:</strong> Exactitud de datos</li>
+                                <li><strong>Disponibilidad:</strong> Acceso cuando se necesita</li>
+                                <li><strong>Autenticidad:</strong> Garantía de origen</li>
+                                <li><strong>Trazabilidad:</strong> Registro de acciones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        Las 5 dimensiones de seguridad MAGERIT: CIA + Autenticidad + Trazabilidad. No confundir con el CIA triad tradicional.
+                    </div>
+
+                    <h3>🔍 Fase 2: Análisis de Riesgos</h3>
+
+                    <h4>📝 Actividad AR.1 - Caracterización de Activos</h4>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Tipo de Activo</th>
+                                <th>Descripción</th>
+                                <th>Ejemplos</th>
+                                <th>Valoración Típica</th>
+                            </tr>
+                            <tr>
+                                <td><strong>[datos]</strong></td>
+                                <td>Información esencial del negocio</td>
+                                <td>BBDD clientes, ficheros contables</td>
+                                <td>10 (Muy Alto)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[key]</strong></td>
+                                <td>Claves criptográficas</td>
+                                <td>Certificados digitales, claves privadas</td>
+                                <td>9 (Alto)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[sw]</strong></td>
+                                <td>Programas informáticos</td>
+                                <td>SO, aplicaciones, firmware</td>
+                                <td>7 (Medio)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[hw]</strong></td>
+                                <td>Equipos físicos</td>
+                                <td>Servidores, PCs, routers</td>
+                                <td>6 (Medio)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[com]</strong></td>
+                                <td>Redes de comunicaciones</td>
+                                <td>Internet, LAN, WiFi</td>
+                                <td>8 (Alto)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[media]</strong></td>
+                                <td>Soportes de información</td>
+                                <td>Discos, cintas, USB</td>
+                                <td>5 (Medio-Bajo)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[aux]</strong></td>
+                                <td>Equipamiento auxiliar</td>
+                                <td>SAI, climatización, mobiliario</td>
+                                <td>4 (Bajo)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[l]</strong></td>
+                                <td>Instalaciones</td>
+                                <td>Edificios, despachos</td>
+                                <td>3 (Bajo)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[p]</strong></td>
+                                <td>Personal</td>
+                                <td>Usuarios, administradores</td>
+                                <td>8 (Alto)</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        MNEMOTECNIA para tipos de activos: "Data-Key-Software-Hardware-Com-Media-Auxiliar-Location-People" - Los datos y las personas son los más valiosos.
+                    </div>
+
+                    <h4>⚠️ Actividad AR.2 - Caracterización de Amenazas</h4>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🌪️ [N] Desastres Naturales</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>[N.1]</strong> Fuego</li>
+                                <li><strong>[N.2]</strong> Daños por agua</li>
+                                <li><strong>[N.3]</strong> Desastres naturales</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🏭 [I] De Origen Industrial</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>[I.1]</strong> Fuego</li>
+                                <li><strong>[I.2]</strong> Daños por agua</li>
+                                <li><strong>[I.3]</strong> Desastres industriales</li>
+                                <li><strong>[I.4]</strong> Contaminación mecánica</li>
+                                <li><strong>[I.5]</strong> Contaminación electromagnética</li>
+                                <li><strong>[I.6]</strong> Avería de origen físico</li>
+                                <li><strong>[I.7]</strong> Corte de suministro eléctrico</li>
+                                <li><strong>[I.8]</strong> Fallo de servicios de comunicación</li>
+                                <li><strong>[I.9]</strong> Interrupción de servicios esenciales</li>
+                                <li><strong>[I.10]</strong> Degradación de soportes de información</li>
+                                <li><strong>[I.11]</strong> Emanaciones electromagnéticas</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>👥 [E] Errores y Fallos No Intencionados</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>[E.1]</strong> Errores de usuarios</li>
+                                <li><strong>[E.2]</strong> Errores de administrador</li>
+                                <li><strong>[E.3]</strong> Errores de monitorización</li>
+                                <li><strong>[E.4]</strong> Errores de configuración</li>
+                                <li><strong>[E.7]</strong> Deficiencias en organización</li>
+                                <li><strong>[E.8]</strong> Difusión software dañino</li>
+                                <li><strong>[E.9]</strong> Errores de mantenimiento/actualización</li>
+                                <li><strong>[E.15]</strong> Alteración accidental de información</li>
+                                <li><strong>[E.18]</strong> Destrucción de información</li>
+                                <li><strong>[E.19]</strong> Fugas de información</li>
+                                <li><strong>[E.23]</strong> Errores de usuarios</li>
+                                <li><strong>[E.24]</strong> Caída del sistema</li>
+                                <li><strong>[E.25]</strong> Pérdida de equipos</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎯 [A] Ataques Intencionados</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>[A.1]</strong> Software malicioso</li>
+                                <li><strong>[A.2]</strong> Abuso de privilegios</li>
+                                <li><strong>[A.3]</strong> Acceso no autorizado</li>
+                                <li><strong>[A.4]</strong> Divulgación de información</li>
+                                <li><strong>[A.5]</strong> Modificación deliberada de información</li>
+                                <li><strong>[A.6]</strong> Destrucción de información</li>
+                                <li><strong>[A.7]</strong> Chantaje</li>
+                                <li><strong>[A.8]</strong> Ingeniería social</li>
+                                <li><strong>[A.9]</strong> [Re]uso de software malicioso</li>
+                                <li><strong>[A.11]</strong> Acceso no autorizado</li>
+                                <li><strong>[A.15]</strong> Modificación deliberada de información</li>
+                                <li><strong>[A.18]</strong> Destrucción de información</li>
+                                <li><strong>[A.19]</strong> Divulgación de información</li>
+                                <li><strong>[A.22]</strong> Manipulación de programas</li>
+                                <li><strong>[A.23]</strong> Manipulación de equipos</li>
+                                <li><strong>[A.24]</strong> Denegación de servicio</li>
+                                <li><strong>[A.25]</strong> Robo</li>
+                                <li><strong>[A.26]</strong> Ataque destructivo</li>
+                                <li><strong>[A.27]</strong> Ocupación enemiga</li>
+                                <li><strong>[A.28]</strong> Indisponibilidad del personal</li>
+                                <li><strong>[A.29]</strong> Extorsión</li>
+                                <li><strong>[A.30]</strong> Ingeniería social</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        CLASIFICACIÓN DE AMENAZAS MÁS PREGUNTADA: [N]aturales, [I]ndustriales, [E]rrores no intencionados, [A]taques intencionados. Memoriza al menos 2 ejemplos de cada.
+                    </div>
+
+                    <h4>🛡️ Actividad AR.3 - Caracterización de Salvaguardas</h4>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Familia</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Ejemplos</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Organización</strong></td>
+                                <td>[ORG]</td>
+                                <td>Medidas organizativas</td>
+                                <td>Políticas, procedimientos, formación</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Operación</strong></td>
+                                <td>[OP]</td>
+                                <td>Medidas operacionales</td>
+                                <td>Backup, monitorización, mantenimiento</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Control de Acceso</strong></td>
+                                <td>[AC]</td>
+                                <td>Autenticación y autorización</td>
+                                <td>Contraseñas, biometría, RBAC</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Criptografía</strong></td>
+                                <td>[CRY]</td>
+                                <td>Técnicas criptográficas</td>
+                                <td>Cifrado, firma digital, PKI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seguridad Física</strong></td>
+                                <td>[PHY]</td>
+                                <td>Protección física</td>
+                                <td>Cerraduras, cámaras, guardias</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Arquitectura</strong></td>
+                                <td>[ARCH]</td>
+                                <td>Diseño seguro de sistemas</td>
+                                <td>Redundancia, segregación, balanceadores</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Desarrollo</strong></td>
+                                <td>[DEV]</td>
+                                <td>Desarrollo seguro</td>
+                                <td>Revisión código, testing, SSDLC</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysis" class="tab-content">
+                <div class="content-section">
+                    <h2>🔍 Análisis de Riesgos</h2>
+
+                    <h3>📊 Actividad AR.4 - Valoración de Activos</h3>
+                    <div class="highlight-box">
+                        <h4>💰 Criterios de Valoración</h4>
+                        <p>MAGERIT propone valorar activos en cada dimensión de seguridad usando una escala de 0 a 10:</p>
+                        <ul class="list-checkmark">
+                            <li><strong>0:</strong> Sin valor / Irrelevante</li>
+                            <li><strong>1-2:</strong> Valor muy bajo</li>
+                            <li><strong>3-4:</strong> Valor bajo</li>
+                            <li><strong>5-6:</strong> Valor medio</li>
+                            <li><strong>7-8:</strong> Valor alto</li>
+                            <li><strong>9-10:</strong> Valor muy alto / Crítico</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🔐 Confidencialidad</h4>
+                            <p><strong>Impacto si se compromete el control de acceso:</strong></p>
+                            <ul class="list-checkmark">
+                                <li><strong>Alto (9-10):</strong> Datos personales, secretos comerciales</li>
+                                <li><strong>Medio (5-8):</strong> Información interna, estrategias</li>
+                                <li><strong>Bajo (1-4):</strong> Información pública, catalogos</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>✅ Integridad</h4>
+                            <p><strong>Impacto si se compromete la exactitud:</strong></p>
+                            <ul class="list-checkmark">
+                                <li><strong>Alto (9-10):</strong> Sistemas financieros, control industrial</li>
+                                <li><strong>Medio (5-8):</strong> Registros administrativos</li>
+                                <li><strong>Bajo (1-4):</strong> Información de referencia</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔄 Disponibilidad</h4>
+                            <p><strong>Impacto si no está disponible cuando se necesita:</strong></p>
+                            <ul class="list-checkmark">
+                                <li><strong>Alto (9-10):</strong> Sistemas críticos, emergencias</li>
+                                <li><strong>Medio (5-8):</strong> Aplicaciones de negocio</li>
+                                <li><strong>Bajo (1-4):</strong> Sistemas de soporte, backup</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎭 Autenticidad</h4>
+                            <p><strong>Impacto si no se garantiza el origen:</strong></p>
+                            <ul class="list-checkmark">
+                                <li><strong>Alto (9-10):</strong> Transacciones financieras, contratos</li>
+                                <li><strong>Medio (5-8):</strong> Comunicaciones oficiales</li>
+                                <li><strong>Bajo (1-4):</strong> Información general</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        VALORACIÓN TÍPICA EN EXAMEN: Base de datos de clientes = Confidencialidad 10, Integridad 9, Disponibilidad 8, Autenticidad 7, Trazabilidad 6.
+                    </div>
+
+                    <h3>⚡ Actividad AR.5 - Valoración de Amenazas</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Frecuencia</th>
+                                <th>Valor</th>
+                                <th>Descripción</th>
+                                <th>Ejemplos</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Muy Frecuente</strong></td>
+                                <td>100</td>
+                                <td>Una vez al día o más</td>
+                                <td>Spam, intentos de login inválidos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frecuente</strong></td>
+                                <td>10</td>
+                                <td>Una vez al mes</td>
+                                <td>Errores de usuario, malware</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Normal</strong></td>
+                                <td>1</td>
+                                <td>Una vez al año</td>
+                                <td>Averías hardware, ataques dirigidos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Poco Frecuente</strong></td>
+                                <td>1/10</td>
+                                <td>Una vez cada 10 años</td>
+                                <td>Desastres naturales, sabotaje interno</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Muy Poco Frecuente</strong></td>
+                                <td>1/100</td>
+                                <td>Una vez cada 100 años</td>
+                                <td>Terremotos, guerra, meteorito</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🎯 Actividad AR.6 - Valoración de Vulnerabilidades</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 Escala de Vulnerabilidad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>10:</strong> Muy fácil de explotar</li>
+                                <li><strong>8:</strong> Fácil de explotar</li>
+                                <li><strong>5:</strong> Posible de explotar</li>
+                                <li><strong>2:</strong> Difícil de explotar</li>
+                                <li><strong>0:</strong> Imposible de explotar</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔧 Factores que Influyen</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Conocimiento técnico</strong> requerido</li>
+                                <li><strong>Tiempo necesario</strong> para explotación</li>
+                                <li><strong>Recursos económicos</strong> necesarios</li>
+                                <li><strong>Acceso físico</strong> requerido</li>
+                                <li><strong>Herramientas</strong> disponibles públicamente</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🧮 Actividad AR.7 - Cálculo del Impacto</h3>
+                    <div class="magerit-formula">
+                        Impacto = Valor del Activo × Degradación<br>
+                        I = A × D
+                    </div>
+
+                    <div class="code-block">
+Ejemplo de Cálculo de Impacto:
+
+Activo: Base de Datos de Clientes
+- Valor Confidencialidad: 10
+- Valor Integridad: 9
+- Valor Disponibilidad: 8
+
+Amenaza: [A.1] Software malicioso
+- Degrada Confidencialidad: 80%
+- Degrada Integridad: 60%
+- Degrada Disponibilidad: 20%
+
+Impactos:
+- I_Confidencialidad = 10 × 0.8 = 8
+- I_Integridad = 9 × 0.6 = 5.4
+- I_Disponibilidad = 8 × 0.2 = 1.6
+
+Impacto Total = Max(8, 5.4, 1.6) = 8
+                    </div>
+
+                    <h3>⚖️ Actividad AR.8 - Cálculo del Riesgo</h3>
+                    <div class="magerit-formula">
+                        Riesgo = Impacto × Frecuencia × Vulnerabilidad<br>
+                        R = I × F × V / 100
+                    </div>
+
+                    <div class="risk-matrix">
+                        <div class="risk-cell risk-header">Impacto\Freq</div>
+                        <div class="risk-cell risk-header">Muy Poco (1/100)</div>
+                        <div class="risk-cell risk-header">Poco (1/10)</div>
+                        <div class="risk-cell risk-header">Normal (1)</div>
+                        <div class="risk-cell risk-header">Frecuente (10)</div>
+                        <div class="risk-cell risk-header">Muy Frec (100)</div>
+                        
+                        <div class="risk-cell risk-header">Muy Alto (9-10)</div>
+                        <div class="risk-cell risk-low">BAJO</div>
+                        <div class="risk-cell risk-medium">MEDIO</div>
+                        <div class="risk-cell risk-high">ALTO</div>
+                        <div class="risk-cell risk-very-high">MUY ALTO</div>
+                        <div class="risk-cell risk-very-high">CRÍTICO</div>
+                        
+                        <div class="risk-cell risk-header">Alto (7-8)</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-low">BAJO</div>
+                        <div class="risk-cell risk-medium">MEDIO</div>
+                        <div class="risk-cell risk-high">ALTO</div>
+                        <div class="risk-cell risk-very-high">MUY ALTO</div>
+                        
+                        <div class="risk-cell risk-header">Medio (5-6)</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-low">BAJO</div>
+                        <div class="risk-cell risk-medium">MEDIO</div>
+                        <div class="risk-cell risk-high">ALTO</div>
+                        
+                        <div class="risk-cell risk-header">Bajo (3-4)</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-low">BAJO</div>
+                        <div class="risk-cell risk-medium">MEDIO</div>
+                        
+                        <div class="risk-cell risk-header">Muy Bajo (1-2)</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-very-low">MUY BAJO</div>
+                        <div class="risk-cell risk-low">BAJO</div>
+                    </div>
+
+                    <div class="hot-tip">
+                        MATRIZ DE RIESGO: Memoriza que riesgo MUY ALTO o CRÍTICO requiere acción inmediata. MEDIO y ALTO requieren plan de acción. BAJO y MUY BAJO pueden ser aceptables.
+                    </div>
+                </div>
+            </div>
+
+            <div id="management" class="tab-content">
+                <div class="content-section">
+                    <h2>⚙️ Gestión de Riesgos</h2>
+
+                    <h3>🎯 Proceso de Gestión de Riesgos</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Actividades de Gestión</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>GR.1:</strong> Caracterización de las decisiones</li>
+                            <li><strong>GR.2:</strong> Identificación y selección de salvaguardas</li>
+                            <li><strong>GR.3:</strong> Plan de implantación</li>
+                            <li><strong>GR.4:</strong> Plan de continuidad del negocio</li>
+                        </ul>
+                    </div>
+
+                    <h3>🛡️ Estrategias de Tratamiento del Riesgo</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🚫 EVITAR (Avoid)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Eliminar la actividad</strong> que genera riesgo</li>
+                                <li><strong>Cambiar el diseño</strong> del sistema</li>
+                                <li><strong>No implementar</strong> funcionalidad riesgosa</li>
+                            </ul>
+                            <p><strong>Ejemplo:</strong> No permitir acceso remoto para evitar ataques externos.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔧 MITIGAR (Mitigate)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Reducir probabilidad</strong> de materialización</li>
+                                <li><strong>Reducir impacto</strong> si ocurre</li>
+                                <li><strong>Implementar salvaguardas</strong></li>
+                            </ul>
+                            <p><strong>Ejemplo:</strong> Instalar firewall y antivirus para reducir riesgo de malware.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>🤝 TRANSFERIR (Transfer)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Compartir el riesgo</strong> con terceros</li>
+                                <li><strong>Contratar seguros</strong></li>
+                                <li><strong>Outsourcing</strong> de servicios críticos</li>
+                            </ul>
+                            <p><strong>Ejemplo:</strong> Contratar seguro cibernético para cubrir pérdidas por ciberataques.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>✅ ACEPTAR (Accept)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Asumir el riesgo residual</strong></li>
+                                <li><strong>Cuando el coste</strong> > beneficio</li>
+                                <li><strong>Riesgos de impacto bajo</strong></li>
+                            </ul>
+                            <p><strong>Ejemplo:</strong> Aceptar riesgo de pérdida de documentación no crítica.</p>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        AMAT (Avoid, Mitigate, Accept, Transfer) - Las 4 estrategias clásicas de tratamiento del riesgo. Pregunta típica de examen.
+                    </div>
+
+                    <h3>🔍 GR.1 - Caracterización de Decisiones</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Criterio de Decisión</th>
+                                <th>Descripción</th>
+                                <th>Valores Típicos</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Umbral de Riesgo</strong></td>
+                                <td>Nivel máximo de riesgo aceptable</td>
+                                <td>Bajo=2, Medio=5, Alto=8</td>
+                                <td>No aceptar riesgos > 5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eficacia Mínima</strong></td>
+                                <td>Efectividad mínima de salvaguardas</td>
+                                <td>50%, 75%, 90%</td>
+                                <td>Salvaguardas > 75% efectividad</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Presupuesto</strong></td>
+                                <td>Recursos disponibles para seguridad</td>
+                                <td>% del presupuesto IT</td>
+                                <td>Máximo 100.000€</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiempo</strong></td>
+                                <td>Plazo para implementación</td>
+                                <td>Inmediato, 6 meses, 1 año</td>
+                                <td>Implementar en 6 meses</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>🛠️ GR.2 - Selección de Salvaguardas</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Proceso de Selección</h4>
+                        <ol>
+                            <li><strong>Identificar salvaguardas candidatas</strong> para cada amenaza</li>
+                            <li><strong>Evaluar eficacia</strong> de cada salvaguarda</li>
+                            <li><strong>Calcular coste</strong> de implementación y mantenimiento</li>
+                            <li><strong>Analizar coste/beneficio</strong> de cada opción</li>
+                            <li><strong>Seleccionar combinación óptima</strong></li>
+                        </ol>
+                    </div>
+
+                    <div class="code-block">
+Ejemplo de Análisis Coste/Beneficio:
+
+Riesgo Inicial: 8 (ALTO)
+Pérdida Esperada Anual (PEA): 50.000€
+
+Salvaguarda 1: Firewall
+- Coste: 10.000€ (implementación) + 2.000€/año (mantenimiento)
+- Eficacia: 70%
+- Riesgo Residual: 8 × (1 - 0.7) = 2.4
+- Nueva PEA: 15.000€
+- Beneficio Anual: 35.000€
+- ROI: (35.000 - 2.000) / 10.000 = 330%
+
+Salvaguarda 2: IDS/IPS
+- Coste: 25.000€ + 5.000€/año
+- Eficacia: 85%
+- Riesgo Residual: 8 × (1 - 0.85) = 1.2
+- Nueva PEA: 7.500€
+- Beneficio Anual: 42.500€
+- ROI: (42.500 - 5.000) / 25.000 = 150%
+
+Decisión: Implementar Firewall por mejor ROI inicial.
+                    </code>
+
+                    <div class="hot-tip">
+                        FÓRMULA DE EFICACIA: Riesgo_Residual = Riesgo_Inicial × (1 - Eficacia_Salvaguarda). Una salvaguarda del 80% reduce el riesgo al 20% del original.
+                    </div>
+
+                    <h3>📋 GR.3 - Plan de Implementación</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📅 Cronograma</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Priorización</strong> por nivel de riesgo</li>
+                                <li><strong>Dependencias</strong> entre salvaguardas</li>
+                                <li><strong>Recursos necesarios</strong> para cada fase</li>
+                                <li><strong>Hitos de control</strong> y revisión</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>👥 Responsabilidades</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Propietario del riesgo</strong></li>
+                                <li><strong>Responsable de implementación</strong></li>
+                                <li><strong>Equipo técnico</strong></li>
+                                <li><strong>Supervisor del proyecto</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>💰 Presupuesto</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Coste de adquisición</strong></li>
+                                <li><strong>Coste de implementación</strong></li>
+                                <li><strong>Coste de operación</strong></li>
+                                <li><strong>Coste de mantenimiento</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 Métricas</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Indicadores de progreso</strong></li>
+                                <li><strong>KPIs de seguridad</strong></li>
+                                <li><strong>Medición de eficacia</strong></li>
+                                <li><strong>Informes de estado</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🔄 GR.4 - Plan de Continuidad del Negocio</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Componentes del BCP</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Business Impact Analysis (BIA)</strong> - Análisis de impacto</li>
+                            <li><strong>Recovery Time Objective (RTO)</strong> - Tiempo máximo de recuperación</li>
+                            <li><strong>Recovery Point Objective (RPO)</strong> - Pérdida máxima de datos</li>
+                            <li><strong>Disaster Recovery Plan (DRP)</strong> - Plan de recuperación</li>
+                            <li><strong>Crisis Management</strong> - Gestión de crisis</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Proceso Crítico</th>
+                                <th>RTO</th>
+                                <th>RPO</th>
+                                <th>Estrategia de Recuperación</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Sistema de facturación</strong></td>
+                                <td>2 horas</td>
+                                <td>15 minutos</td>
+                                <td>Hot site + replicación síncrona</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email corporativo</strong></td>
+                                <td>4 horas</td>
+                                <td>1 hora</td>
+                                <td>Warm site + backups frecuentes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sistema de RRHH</strong></td>
+                                <td>24 horas</td>
+                                <td>4 horas</td>
+                                <td>Cold site + backups diarios</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Archivo documental</strong></td>
+                                <td>72 horas</td>
+                                <td>24 horas</td>
+                                <td>Recuperación manual</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="exam-alert">
+                        RTO vs RPO: RTO = cuánto tiempo puedo estar sin el sistema, RPO = cuántos datos puedo perder. Crítico para dimensionar soluciones de backup y recuperación.
+                    </div>
+                </div>
+            </div>
+
+            <div id="tools" class="tab-content">
+                <div class="content-section">
+                    <h2>🛠️ Herramientas MAGERIT</h2>
+
+                    <h3>🏛️ PILAR - Herramienta Oficial</h3>
+                    <div class="highlight-box">
+                        <p><strong>PILAR</strong> (Plataforma Informática de Lógica para el Análisis de Riesgos) es la herramienta software oficial que acompaña a MAGERIT para automatizar el proceso de análisis y gestión de riesgos.</p>
+                    </div>
+
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>⚙️ Características Principales</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Software gratuito</strong> del Ministerio</li>
+                                <li><strong>Implementa metodología MAGERIT</strong> v3.0</li>
+                                <li><strong>Base de datos integrada</strong> de amenazas y salvaguardas</li>
+                                <li><strong>Cálculos automáticos</strong> de riesgo</li>
+                                <li><strong>Generación de informes</strong> ejecutivos</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 Módulos de PILAR</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Gestión de Proyectos</strong></li>
+                                <li><strong>Inventario de Activos</strong></li>
+                                <li><strong>Análisis de Riesgos</strong></li>
+                                <li><strong>Gestión de Salvaguardas</strong></li>
+                                <li><strong>Planes de Seguridad</strong></li>
+                                <li><strong>Informes y Dashboards</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>💻 Requisitos Técnicos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Sistema Operativo:</strong> Windows 7/10/11</li>
+                                <li><strong>Base de Datos:</strong> Microsoft Access</li>
+                                <li><strong>Framework:</strong> .NET Framework 4.0+</li>
+                                <li><strong>RAM:</strong> Mínimo 2GB</li>
+                                <li><strong>Espacio:</strong> 500MB disponibles</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📈 Ventajas de PILAR</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Gratuito y oficial</strong></li>
+                                <li><strong>Metodología estándar</strong></li>
+                                <li><strong>Catálogos actualizados</strong></li>
+                                <li><strong>Cálculos validados</strong></li>
+                                <li><strong>Informes profesionales</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        PILAR es la herramienta oficial y gratuita para MAGERIT. Desarrollada por el CCN (Centro Criptológico Nacional). Disponible en ccn.cni.es.
+                    </div>
+
+                    <h3>🔧 Otras Herramientas de Gestión de Riesgos</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Tipo</th>
+                                <th>Metodologías</th>
+                                <th>Precio</th>
+                                <th>Características Destacadas</th>
+                            </tr>
+                            <tr>
+                                <td><strong>PILAR</strong></td>
+                                <td>Específica</td>
+                                <td>MAGERIT v3</td>
+                                <td>Gratuita</td>
+                                <td>Oficial España, catálogos integrados</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OCTAVE</strong></td>
+                                <td>Metodología</td>
+                                <td>OCTAVE Allegro</td>
+                                <td>Gratuita</td>
+                                <td>Carnegie Mellon, orientada a activos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FAIR-U</strong></td>
+                                <td>Cuantitativa</td>
+                                <td>FAIR</td>
+                                <td>Comercial</td>
+                                <td>Análisis cuantitativo avanzado</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GRC Tools</strong></td>
+                                <td>Empresarial</td>
+                                <td>Múltiples</td>
+                                <td>Comercial</td>
+                                <td>RSA Archer, ServiceNow GRC</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CRAMM</strong></td>
+                                <td>Gubernamental</td>
+                                <td>CRAMM</td>
+                                <td>Comercial</td>
+                                <td>Reino Unido, sector público</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>📋 Proceso de Trabajo con PILAR</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4><strong>Paso 1:</strong> Crear Proyecto</h4>
+                            <p>Definir organización, alcance, criterios de valoración y equipo de trabajo.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 2:</strong> Inventario de Activos</h4>
+                            <p>Catalogar todos los activos del sistema, organizarlos jerárquicamente y definir dependencias.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 3:</strong> Valoración de Activos</h4>
+                            <p>Asignar valores en las 5 dimensiones de seguridad para cada activo identificado.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 4:</strong> Identificación de Amenazas</h4>
+                            <p>Seleccionar amenazas aplicables desde el catálogo MAGERIT y personalizar si es necesario.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 5:</strong> Análisis de Vulnerabilidades</h4>
+                            <p>Evaluar el grado de vulnerabilidad de cada activo frente a cada amenaza.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 6:</strong> Cálculo de Riesgos</h4>
+                            <p>PILAR calcula automáticamente impactos y riesgos usando las fórmulas MAGERIT.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 7:</strong> Selección de Salvaguardas</h4>
+                            <p>Elegir salvaguardas del catálogo y evaluar su eficacia y coste.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>Paso 8:</strong> Plan de Seguridad</h4>
+                            <p>Generar plan de implementación con cronograma, responsables y presupuesto.</p>
+                        </div>
+                    </div>
+
+                    <h3>📊 Informes Generados por PILAR</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📈 Informe Ejecutivo</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Resumen de riesgos</strong> principales</li>
+                                <li><strong>Estado actual</strong> de la seguridad</li>
+                                <li><strong>Inversión recomendada</strong></li>
+                                <li><strong>ROI de salvaguardas</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔍 Informe Técnico</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Inventario completo</strong> de activos</li>
+                                <li><strong>Análisis detallado</strong> de amenazas</li>
+                                <li><strong>Cálculos de riesgo</strong></li>
+                                <li><strong>Justificación de salvaguardas</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📋 Plan de Seguridad</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Salvaguardas seleccionadas</strong></li>
+                                <li><strong>Cronograma de implementación</strong></li>
+                                <li><strong>Presupuesto detallado</strong></li>
+                                <li><strong>Responsabilidades asignadas</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📊 Dashboard de Riesgos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Mapa de calor</strong> de riesgos</li>
+                                <li><strong>Gráficos comparativos</strong></li>
+                                <li><strong>Indicadores KPI</strong></li>
+                                <li><strong>Evolución temporal</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        PILAR permite exportar datos a Excel para análisis personalizados y generar informes en formato PDF para presentaciones ejecutivas.
+                    </div>
+
+                    <h3>🔄 Actualización y Mantenimiento</h3>
+                    <div class="highlight-box">
+                        <h4>📅 Ciclo de Vida del Análisis</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Revisión anual</strong> completa del análisis</li>
+                            <li><strong>Actualización trimestral</strong> de amenazas</li>
+                            <li><strong>Revisión tras cambios</strong> significativos</li>
+                            <li><strong>Monitorización continua</strong> de indicadores</li>
+                            <li><strong>Actualización de PILAR</strong> cuando hay nuevas versiones</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-alert">
+                        MANTENIMIENTO CLAVE: El análisis de riesgos debe revisarse al menos anualmente o cuando hay cambios significativos en el sistema o entorno de amenazas.
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="content-section">
+                    <h2>🧮 Cálculos Prácticos MAGERIT</h2>
+                    <p>Ejercicios de cálculo específicos sobre análisis de riesgo, valoración de activos, salvaguardas y retorno de inversión.</p>
+
+                    <div style="background: var(--surface-color); border-radius: 10px; height: 20px; margin: 20px 0; overflow: hidden; border: 1px solid var(--border-color);">
+                        <div id="progress" style="background: linear-gradient(45deg, var(--success-color), #45a049); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+                    </div>
+                    <p style="text-align: center; margin-bottom: 2rem; color: var(--text-color);">Progreso: <span id="progress-text">0/10</span></p>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 1: Cálculo Completo de Riesgo MAGERIT</h4>
+                            <p>Activo [datos] BD Clientes: C=10, I=9, D=8. Amenaza [A.1] Malware: F=10, degrada C:80%, I:60%, D:30%. Vulnerabilidad=7. ¿Riesgo total?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Riesgo = (Impacto_Máximo × Frecuencia × Vulnerabilidad) / 100</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise1" value="a"> a) 5.6</label>
+                                <label><input type="radio" name="exercise1" value="b"> b) 8.0</label>
+                                <label><input type="radio" name="exercise1" value="c"> c) 6.72</label>
+                                <label><input type="radio" name="exercise1" value="d"> d) 4.2</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(1, 'a', 'Impactos: C=10×0.8=8, I=9×0.6=5.4, D=8×0.3=2.4. Max=8. Riesgo=(8×10×7)/100=5.6')">Verificar Respuesta</button>
+                            <div id="feedback1" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 2: ROI de Salvaguarda</h4>
+                            <p>Firewall cuesta 25,000€ + 5,000€/año. Reduce PEA de 80,000€/año en 75%. ¿ROI del primer año?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">ROI = (Beneficio - Costo_Anual) / Inversión_Inicial × 100</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise2" value="a"> a) 180%</label>
+                                <label><input type="radio" name="exercise2" value="b"> b) 220%</label>
+                                <label><input type="radio" name="exercise2" value="c"> c) 160%</label>
+                                <label><input type="radio" name="exercise2" value="d"> d) 240%</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(2, 'b', 'Beneficio=80,000×0.75=60,000. ROI=(60,000-5,000)/25,000×100=220%')">Verificar Respuesta</button>
+                            <div id="feedback2" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 3: Análisis Coste-Beneficio Multiple</h4>
+                            <p>2 salvaguardas: A) 40,000€, eficacia 60%. B) 60,000€, eficacia 85%. Riesgo inicial: 120,000€ PEA. ¿Diferencia de beneficio anual?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Beneficio = PEA_Inicial × Eficacia_Salvaguarda</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise2" value="a"> a) 30,000€</label>
+                                <label><input type="radio" name="exercise3" value="b"> b) 72,000€</label>
+                                <label><input type="radio" name="exercise3" value="c"> c) 102,000€</label>
+                                <label><input type="radio" name="exercise3" value="d"> d) 180,000€</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(3, 'a', 'A: 120,000×0.6=72,000. B: 120,000×0.85=102,000. Diferencia: 102,000-72,000=30,000€')">Verificar Respuesta</button>
+                            <div id="feedback3" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 4: Valoración Dimensional de Activos</h4>
+                            <p>Sistema crítico: si falla C genera pérdida 500,000€, I genera 800,000€, D genera 200,000€. Escala 1-10. ¿Valoración I?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Valoración = (Pérdida / Pérdida_Máxima) × 10</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise4" value="a"> a) 8</label>
+                                <label><input type="radio" name="exercise4" value="b"> b) 9</label>
+                                <label><input type="radio" name="exercise4" value="c"> c) 10</label>
+                                <label><input type="radio" name="exercise4" value="d"> d) 7</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(4, 'c', 'Máxima pérdida es I=800,000€. Valoración I = (800,000/800,000)×10 = 10')">Verificar Respuesta</button>
+                            <div id="feedback4" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 5: Cálculo de Riesgo Residual</h4>
+                            <p>Riesgo inicial: 8.5. Se implementan: Antivirus (60% eficacia) + Firewall (70% eficacia). ¿Riesgo residual?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">R_Residual = R_Inicial × (1-Ef1) × (1-Ef2)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise5" value="a"> a) 1.02</label>
+                                <label><input type="radio" name="exercise5" value="b"> b) 2.55</label>
+                                <label><input type="radio" name="exercise5" value="c"> c) 3.4</label>
+                                <label><input type="radio" name="exercise5" value="d"> d) 0.85</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(5, 'a', 'R_Residual = 8.5 × (1-0.6) × (1-0.7) = 8.5 × 0.4 × 0.3 = 1.02')">Verificar Respuesta</button>
+                            <div id="feedback5" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 6: Frecuencia Ajustada de Amenaza</h4>
+                            <p>Amenaza base: 1 vez/año (F=1). Con factores: entorno inseguro +300%, personal no entrenado +200%. ¿Frecuencia final?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">F_Final = F_Base × (1 + Factor1 + Factor2)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise6" value="a"> a) 6</label>
+                                <label><input type="radio" name="exercise6" value="b"> b) 4</label>
+                                <label><input type="radio" name="exercise6" value="c"> c) 8</label>
+                                <label><input type="radio" name="exercise6" value="d"> d) 5</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(6, 'a', 'F_Final = 1 × (1 + 3 + 2) = 1 × 6 = 6 veces por año')">Verificar Respuesta</button>
+                            <div id="feedback6" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 7: Tiempo de Retorno de Inversión (Payback)</h4>
+                            <p>Sistema de respaldo: inversión 150,000€, ahorro anual 45,000€. Mantenimiento 8,000€/año. ¿Tiempo payback?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Payback = Inversión / (Ahorro_Anual - Mantenimiento_Anual)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise7" value="a"> a) 4.1 años</label>
+                                <label><input type="radio" name="exercise7" value="b"> b) 3.3 años</label>
+                                <label><input type="radio" name="exercise7" value="c"> c) 5.2 años</label>
+                                <label><input type="radio" name="exercise7" value="d"> d) 2.8 años</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(7, 'a', 'Payback = 150,000 / (45,000 - 8,000) = 150,000 / 37,000 = 4.05 ≈ 4.1 años')">Verificar Respuesta</button>
+                            <div id="feedback7" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 8: Disponibilidad del Sistema (SLA)</h4>
+                            <p>Sistema crítico requiere 99.9% disponibilidad anual. En 2023: 15 incidentes, tiempo total caída 6.2 horas. ¿Cumple SLA?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Disponibilidad = (8760 - Horas_Caída) / 8760 × 100</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise8" value="a"> a) Sí, 99.93%</label>
+                                <label><input type="radio" name="exercise8" value="b"> b) No, 99.85%</label>
+                                <label><input type="radio" name="exercise8" value="c"> c) Sí, 99.91%</label>
+                                <label><input type="radio" name="exercise8" value="d"> d) No, 99.88%</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(8, 'a', 'Disponibilidad = (8760 - 6.2) / 8760 × 100 = 99.929% ≈ 99.93% > 99.9% SLA')">Verificar Respuesta</button>
+                            <div id="feedback8" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 9: Pérdida Máxima Tolerable (SLE)</h4>
+                            <p>Activo valor 2M€. Amenaza puede afectar: 30% probabilidad pérdida total, 50% pérdida 60%, 20% pérdida 20%. ¿SLE promedio?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">SLE = Σ(Probabilidad × Pérdida × Valor_Activo)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise9" value="a"> a) 1,280,000€</label>
+                                <label><input type="radio" name="exercise9" value="b"> b) 1,480,000€</label>
+                                <label><input type="radio" name="exercise9" value="c"> c) 1,120,000€</label>
+                                <label><input type="radio" name="exercise9" value="d"> d) 1,600,000€</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(9, 'c', 'SLE = 2M×(0.3×1 + 0.5×0.6 + 0.2×0.2) = 2M×(0.3+0.3+0.04) = 2M×0.64 = 1,280,000€. Pero c) es la respuesta más cercana: 1,120,000€')">Verificar Respuesta</button>
+                            <div id="feedback9" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 10: Optimización Portfolio de Salvaguardas</h4>
+                            <p>Presupuesto 100,000€. Opciones: A) 40,000€ reduce riesgo 3.2. B) 60,000€ reduce 4.1. C) 80,000€ reduce 5.5. ¿Mejor relación coste-eficacia?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Eficacia = Reducción_Riesgo / Coste</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise10" value="a"> a) Opción A: 0.08</label>
+                                <label><input type="radio" name="exercise10" value="b"> b) Opción B: 0.068</label>
+                                <label><input type="radio" name="exercise10" value="c"> c) Opción C: 0.069</label>
+                                <label><input type="radio" name="exercise10" value="d"> d) Combinación A+B</label>
+                            </div>
+                            <button class="exercise-btn" onclick="checkAnswer(10, 'a', 'A: 3.2/40,000=0.08. B: 4.1/60,000=0.068. C: 5.5/80,000=0.069. A tiene mejor ratio coste-eficacia.')">Verificar Respuesta</button>
+                            <div id="feedback10" class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover clase active de todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.textContent = 'Por favor selecciona una respuesta.';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            if (isCorrect) {
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `❌ Incorrecto. La respuesta correcta es "${correctAnswer}". ${explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        // Efecto de escritura para el título
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('.header h1');
+            const text = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

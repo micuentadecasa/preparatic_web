@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 37 - Gestión de Configuración</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-tertiary: #3d3d3d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --accent-hover: #357abd;
+            --border-color: #555;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .tab-container {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-nav {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--bg-tertiary);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background: var(--bg-secondary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .exercise-container {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .exercise-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+
+        .exercise-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .exercise-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .exercise-result.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .exercise-result.incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--info-color));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .workflow-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--info-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+
+        .change-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: #000;
+        }
+
+        .status-approved {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-rejected {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tool-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+        🌓
+    </button>
+
+    <div class="container">
+        <header class="header">
+            <h1>⚙️ Tema 37: Gestión de Configuración</h1>
+            <p>Gestión de la configuración. Gestión de librerías de programas y de medios magnéticos. Control de cambios y de versiones. Los lenguajes de control de trabajos. Las técnicas y herramientas de operación automática.</p>
+        </header>
+
+        <div class="tab-container">
+            <nav class="tab-nav">
+                <button class="tab-btn active" onclick="openTab(event, 'overview')">📖 Resumen</button>
+                <button class="tab-btn" onclick="openTab(event, 'fundamentals')">🔧 Fundamentos</button>
+                <button class="tab-btn" onclick="openTab(event, 'change-control')">📋 Control de Cambios</button>
+                <button class="tab-btn" onclick="openTab(event, 'version-control')">🔄 Control de Versiones</button>
+                <button class="tab-btn" onclick="openTab(event, 'automation')">🤖 Automatización</button>
+                <button class="tab-btn" onclick="openTab(event, 'exercises')">🧮 Ejercicios</button>
+                <button class="tab-btn" onclick="openTab(event, 'resources')">📚 Recursos</button>
+            </nav>
+
+            <div id="overview" class="tab-content active">
+                <h2>📖 Resumen General</h2>
+
+                <div class="info-card">
+                    <h3>🎯 ¿Qué es la Gestión de Configuración?</h3>
+                    <p>La Gestión de Configuración (CM) es un proceso sistemático para controlar los cambios en el software y hardware, asegurando la integridad, trazabilidad y consistencia del sistema a lo largo de su ciclo de vida.</p>
+                </div>
+
+                <div class="grid-container">
+                    <div class="metric-card">
+                        <h4>Reducción de Errores</h4>
+                        <div class="metric-value">85%</div>
+                        <p>Con CM implementado correctamente</p>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Tiempo de Despliegue</h4>
+                        <div class="metric-value">-60%</div>
+                        <p>Reducción con automatización</p>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Rollback Exitoso</h4>
+                        <div class="metric-value">99%</div>
+                        <p>Con versionado adecuado</p>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Compliance</h4>
+                        <div class="metric-value">100%</div>
+                        <p>Trazabilidad de cambios</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔍 Objetivos Principales</h3>
+                    <ul>
+                        <li><strong>Control de cambios:</strong> Gestionar modificaciones de forma controlada</li>
+                        <li><strong>Integridad del sistema:</strong> Mantener consistencia entre componentes</li>
+                        <li><strong>Trazabilidad:</strong> Registro completo de todos los cambios</li>
+                        <li><strong>Reproducibilidad:</strong> Capacidad de recrear cualquier versión</li>
+                        <li><strong>Automatización:</strong> Reducir errores manuales y aumentar eficiencia</li>
+                        <li><strong>Compliance:</strong> Cumplir requisitos normativos y de auditoría</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Beneficios Clave</h3>
+                    <ul>
+                        <li><strong>Reducción de riesgos:</strong> Control sobre cambios críticos</li>
+                        <li><strong>Mayor calidad:</strong> Procesos estandarizados y validados</li>
+                        <li><strong>Eficiencia operacional:</strong> Automatización de tareas repetitivas</li>
+                        <li><strong>Cumplimiento normativo:</strong> Auditorías y controles documentados</li>
+                        <li><strong>Recuperación rápida:</strong> Rollback automático ante fallos</li>
+                        <li><strong>Colaboración mejorada:</strong> Visibilidad de cambios entre equipos</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📋 Componentes del Sistema CM</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>📦 CMDB</h4>
+                            <p>Configuration Management Database - Base de datos de elementos de configuración</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>🔄 SCM</h4>
+                            <p>Software Configuration Management - Control de versiones de código</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>📋 CAB</h4>
+                            <p>Change Advisory Board - Comité de aprobación de cambios</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>🤖 CI/CD</h4>
+                            <p>Continuous Integration/Deployment - Integración y despliegue continuo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fundamentals" class="tab-content">
+                <h2>🔧 Fundamentos de la Gestión de Configuración</h2>
+
+                <div class="info-card">
+                    <h3>📦 Elementos de Configuración (CIs)</h3>
+                    <p>Los Configuration Items son los componentes individuales de un sistema que están bajo control de gestión de configuración.</p>
+                    <ul>
+                        <li><strong>Hardware:</strong> Servidores, routers, switches, dispositivos de almacenamiento</li>
+                        <li><strong>Software:</strong> Aplicaciones, sistemas operativos, middleware, bases de datos</li>
+                        <li><strong>Documentación:</strong> Manuales, procedimientos, especificaciones técnicas</li>
+                        <li><strong>Personal:</strong> Roles, responsabilidades, competencias</li>
+                        <li><strong>Servicios:</strong> Servicios IT, procesos de negocio</li>
+                        <li><strong>Ubicaciones:</strong> Centros de datos, oficinas, sitios remotos</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔗 Relaciones entre CIs</h3>
+                    <ul>
+                        <li><strong>Dependencias:</strong> Un CI requiere otro para funcionar</li>
+                        <li><strong>Conectividad:</strong> CIs conectados física o lógicamente</li>
+                        <li><strong>Ubicación:</strong> CIs en la misma localización física</li>
+                        <li><strong>Uso:</strong> Un CI utiliza los servicios de otro</li>
+                        <li><strong>Propiedad:</strong> Relación de pertenencia o responsabilidad</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Identificación</h4>
+                        <p>Catalogación de todos los elementos de configuración del sistema, estableciendo una línea base completa.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Control</h4>
+                        <p>Establecimiento de procedimientos para gestionar cambios en los elementos de configuración.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Contabilidad del Estado</h4>
+                        <p>Registro y reporte del estado actual de todos los elementos y sus cambios históricos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Verificación y Auditoría</h4>
+                        <p>Validación de que la configuración real coincide con la documentada y cumple requisitos.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 CMDB - Configuration Management Database</h3>
+                    <p>Base de datos centralizada que almacena información sobre todos los CIs y sus relaciones.</p>
+                    <div class="code-block">
+# Ejemplo de estructura CMDB
+CI_Record:
+  ID: CI-SRV-001
+  Name: "Servidor Web Principal"
+  Type: "Physical Server"
+  Status: "Operational"
+  Owner: "Equipo Infraestructura"
+  Location: "Datacenter Madrid"
+  Specifications:
+    CPU: "Intel Xeon E5-2690 v4"
+    RAM: "64GB DDR4"
+    Storage: "2x 1TB SSD RAID1"
+    OS: "CentOS 8.4"
+  Dependencies:
+    - CI-NET-001 (Network Switch)
+    - CI-STR-001 (Storage System)
+  Related_Services:
+    - SRV-WEB-001 (Web Service)
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎯 Líneas Base (Baselines)</h3>
+                    <ul>
+                        <li><strong>Línea Base Funcional:</strong> Especificaciones de requisitos</li>
+                        <li><strong>Línea Base de Diseño:</strong> Documentos de arquitectura y diseño</li>
+                        <li><strong>Línea Base de Producto:</strong> Configuración final del sistema</li>
+                        <li><strong>Línea Base Operacional:</strong> Estado actual en producción</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="change-control" class="tab-content">
+                <h2>📋 Control de Cambios</h2>
+
+                <div class="info-card">
+                    <h3>🔄 Proceso de Gestión de Cambios</h3>
+                    <p>Proceso estructurado para evaluar, aprobar, implementar y revisar cambios en el sistema.</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h3>📝 Flujo de Trabajo de Cambios</h3>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Solicitud de Cambio (RFC)</h4>
+                            <p>Iniciación formal del cambio con justificación y detalles técnicos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Evaluación de Impacto</h4>
+                            <p>Análisis de riesgos, recursos necesarios y sistemas afectados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Aprobación</h4>
+                            <p>Revisión por CAB (Change Advisory Board) y autorización</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Planificación</h4>
+                            <p>Programación del cambio, asignación de recursos y preparación</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>Implementación</h4>
+                            <p>Ejecución del cambio siguiendo el plan establecido</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>Validación</h4>
+                            <p>Verificación de que el cambio cumple objetivos y no causa problemas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">7</div>
+                        <div>
+                            <h4>Cierre</h4>
+                            <p>Documentación de resultados y actualización de registros</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Tipos de Cambios</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>🚨 Cambios de Emergencia</h4>
+                            <div class="change-status status-pending">Crítico</div>
+                            <p>Respuesta inmediata a incidentes críticos</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>⚡ Cambios Expeditos</h4>
+                            <div class="change-status status-approved">Rápido</div>
+                            <p>Cambios de bajo riesgo preaprobados</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>📋 Cambios Estándar</h4>
+                            <div class="change-status status-approved">Normal</div>
+                            <p>Cambios rutinarios con procedimiento establecido</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>🔄 Cambios Normales</h4>
+                            <div class="change-status status-pending">Evaluación</div>
+                            <p>Cambios que requieren evaluación completa</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎯 Change Advisory Board (CAB)</h3>
+                    <ul>
+                        <li><strong>Change Manager:</strong> Responsable del proceso de cambios</li>
+                        <li><strong>Representantes técnicos:</strong> Expertos en sistemas afectados</li>
+                        <li><strong>Propietarios de servicios:</strong> Responsables de servicios de negocio</li>
+                        <li><strong>Seguridad:</strong> Evaluación de impacto en seguridad</li>
+                        <li><strong>Riesgos:</strong> Análisis y mitigación de riesgos</li>
+                        <li><strong>Usuario final:</strong> Representación de usuarios impactados</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📝 RFC - Request for Change</h3>
+                    <div class="code-block">
+RFC-2024-001:
+  Title: "Actualización del Sistema de Base de Datos"
+  Requester: "Juan García - DBA Senior"
+  Priority: "Medium"
+  Category: "Normal Change"
+  Description: "Actualización de PostgreSQL 13.x a 15.x"
+  Business_Justification: "Mejoras de seguridad y rendimiento"
+  Impact_Assessment:
+    Risk: "Medium"
+    Effort: "40 horas"
+    Downtime: "2 horas planificadas"
+    Systems_Affected: ["DB-PROD-01", "APP-WEB-01"]
+  Implementation_Plan:
+    - Backup completo de la base de datos
+    - Instalación de PostgreSQL 15.x
+    - Migración de datos y configuración
+    - Pruebas de funcionalidad
+    - Go-live y monitorización
+  Rollback_Plan: "Restauración desde backup en caso de fallo"
+  Approval_Date: "2024-02-15"
+  Implementation_Date: "2024-02-20 02:00 AM"
+                    </div>
+                </div>
+            </div>
+
+            <div id="version-control" class="tab-content">
+                <h2>🔄 Control de Versiones</h2>
+
+                <div class="info-card">
+                    <h3>📚 Sistemas de Control de Versiones</h3>
+                    <p>Herramientas que gestionan los cambios en archivos a lo largo del tiempo, permitiendo recuperar versiones específicas y colaborar eficientemente.</p>
+                </div>
+
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🔧</div>
+                        <h4>Git</h4>
+                        <p>Sistema distribuido más popular. Usado para código fuente, documentación y configuraciones.</p>
+                        <div class="version-badge">v2.44</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📦</div>
+                        <h4>Subversion (SVN)</h4>
+                        <p>Sistema centralizado tradicional. Común en entornos empresariales legacy.</p>
+                        <div class="version-badge">v1.14</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🏢</div>
+                        <h4>Perforce</h4>
+                        <p>Solución empresarial para proyectos grandes con archivos binarios.</p>
+                        <div class="version-badge">v2023.1</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🌐</div>
+                        <h4>Team Foundation Server</h4>
+                        <p>Solución de Microsoft integrada con Visual Studio y Azure DevOps.</p>
+                        <div class="version-badge">v2022</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🏗️ Estrategias de Branching</h3>
+                    <ul>
+                        <li><strong>Git Flow:</strong> Modelo con ramas master, develop, feature, release, hotfix</li>
+                        <li><strong>GitHub Flow:</strong> Flujo simplificado con rama main y feature branches</li>
+                        <li><strong>GitLab Flow:</strong> Combina feature-driven y environment branches</li>
+                        <li><strong>Trunk-based Development:</strong> Desarrollo directo en rama principal</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+# Ejemplo de workflow Git
+# Crear nueva funcionalidad
+git checkout -b feature/nueva-funcionalidad
+git add .
+git commit -m "feat: implementar nueva funcionalidad"
+
+# Fusionar a develop
+git checkout develop
+git merge feature/nueva-funcionalidad
+
+# Crear release
+git checkout -b release/v2.1.0
+git tag -a v2.1.0 -m "Release version 2.1.0"
+
+# Deploy a producción
+git checkout master
+git merge release/v2.1.0
+git push origin master --tags
+                </div>
+
+                <div class="info-card">
+                    <h3>🏷️ Nomenclatura de Versiones</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Semantic Versioning</h4>
+                            <div class="metric-value">X.Y.Z</div>
+                            <p>Major.Minor.Patch<br>ej: 2.1.3</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Calendar Versioning</h4>
+                            <div class="metric-value">YYYY.MM</div>
+                            <p>Año.Mes<br>ej: 2024.02</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Build Versioning</h4>
+                            <div class="metric-value">1.0.BUILD</div>
+                            <p>Major.Minor.Build<br>ej: 1.0.2547</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📦 Gestión de Artefactos</h3>
+                    <ul>
+                        <li><strong>Repositorios de binarios:</strong> Nexus, Artifactory, Azure Artifacts</li>
+                        <li><strong>Registros de contenedores:</strong> Docker Hub, Harbor, ECR, ACR</li>
+                        <li><strong>Gestores de paquetes:</strong> npm, Maven, NuGet, PyPI</li>
+                        <li><strong>Almacenamiento de releases:</strong> GitHub Releases, GitLab Releases</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Desarrollo</h4>
+                        <p>Código en ramas de características (feature branches) con commits frecuentes y descriptivos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Integración</h4>
+                        <p>Merge a rama de desarrollo con revisión de código (pull/merge requests).</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Release</h4>
+                        <p>Creación de rama de release, testing final y tagging de versión.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Despliegue</h4>
+                        <p>Promoción a producción con trazabilidad completa de cambios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="automation" class="tab-content">
+                <h2>🤖 Automatización y Herramientas</h2>
+
+                <div class="info-card">
+                    <h3>⚡ CI/CD - Integración y Despliegue Continuo</h3>
+                    <p>Prácticas que permiten a los equipos entregar cambios de código de forma frecuente y confiable mediante automatización.</p>
+                </div>
+
+                <div class="grid-container">
+                    <div class="metric-card">
+                        <h4>Continuous Integration</h4>
+                        <p>Integración frecuente de código con validación automática</p>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li>Builds automáticos</li>
+                            <li>Pruebas unitarias</li>
+                            <li>Análisis de calidad</li>
+                            <li>Notificaciones</li>
+                        </ul>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Continuous Delivery</h4>
+                        <p>Preparación automática para despliegue a producción</p>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li>Builds automatizados</li>
+                            <li>Testing de integración</li>
+                            <li>Staging automático</li>
+                            <li>Aprobación manual</li>
+                        </ul>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Continuous Deployment</h4>
+                        <p>Despliegue automático a producción sin intervención manual</p>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li>Despliegue automático</li>
+                            <li>Monitorización</li>
+                            <li>Rollback automático</li>
+                            <li>Feature flags</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🚀</div>
+                        <h4>Jenkins</h4>
+                        <p>Plataforma de automatización open source con ecosistema extenso de plugins</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔄</div>
+                        <h4>GitLab CI</h4>
+                        <p>CI/CD integrado en GitLab con pipelines como código</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🏃</div>
+                        <h4>GitHub Actions</h4>
+                        <p>Automatización nativa de GitHub con workflows flexibles</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">☁️</div>
+                        <h4>Azure DevOps</h4>
+                        <p>Suite completa de Microsoft con pipelines, repos y boards</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🚢</div>
+                        <h4>TeamCity</h4>
+                        <p>Servidor CI/CD de JetBrains con potentes características empresariales</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🌊</div>
+                        <h4>Bamboo</h4>
+                        <p>Solución de Atlassian integrada con Jira y Bitbucket</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📝 Infrastructure as Code (IaC)</h3>
+                    <ul>
+                        <li><strong>Terraform:</strong> Herramienta de aprovisionamiento multi-cloud</li>
+                        <li><strong>Ansible:</strong> Automatización de configuración y orquestación</li>
+                        <li><strong>Puppet:</strong> Gestión declarativa de configuraciones</li>
+                        <li><strong>Chef:</strong> Automatización de infraestructura basada en Ruby</li>
+                        <li><strong>CloudFormation:</strong> Templates nativos de AWS</li>
+                        <li><strong>ARM Templates:</strong> Plantillas nativas de Azure</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+# Ejemplo de pipeline CI/CD (GitLab CI)
+stages:
+  - build
+  - test
+  - security
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+build:
+  stage: build
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    - main
+    - develop
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm run test:unit
+    - npm run test:integration
+  coverage: '/Coverage: \d+\.\d+%/'
+
+security_scan:
+  stage: security
+  script:
+    - docker run --rm -v $(pwd):/app security-scanner
+  allow_failure: false
+
+deploy_staging:
+  stage: deploy
+  script:
+    - kubectl set image deployment/app app=$IMAGE_TAG
+  environment:
+    name: staging
+  only:
+    - develop
+
+deploy_production:
+  stage: deploy
+  script:
+    - kubectl set image deployment/app app=$IMAGE_TAG
+  environment:
+    name: production
+  when: manual
+  only:
+    - main
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Métricas de Automatización</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Deployment Frequency</h4>
+                            <div class="metric-value">Daily</div>
+                            <p>Frecuencia de despliegues</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Lead Time</h4>
+                            <div class="metric-value">< 1 day</div>
+                            <p>Tiempo desde commit hasta producción</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>MTTR</h4>
+                            <div class="metric-value">< 1 hour</div>
+                            <p>Tiempo medio de recuperación</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Change Failure Rate</h4>
+                            <div class="metric-value">< 15%</div>
+                            <p>Tasa de fallos en cambios</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔧 Lenguajes de Control de Trabajos</h3>
+                    <ul>
+                        <li><strong>JCL (Job Control Language):</strong> IBM Mainframes</li>
+                        <li><strong>Shell Scripts:</strong> Unix/Linux automation</li>
+                        <li><strong>PowerShell:</strong> Windows automation y cloud</li>
+                        <li><strong>Python:</strong> Scripts de automatización multipropósito</li>
+                        <li><strong>YAML:</strong> Definición de pipelines CI/CD</li>
+                        <li><strong>JSON:</strong> Configuración de herramientas y APIs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <h2>🧮 Ejercicios Prácticos</h2>
+                
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        1. Si un equipo implementa 50 cambios por mes y 8 fallan, ¿cuál es la tasa de fallos (Change Failure Rate)?
+                    </div>
+                    <input type="number" id="ex1" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(1, 16, 'ex1')">Verificar</button>
+                    <div id="result1" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        2. Calcular el tiempo de despliegue si se procesan 120 cambios en 40 horas de ventana de mantenimiento.
+                    </div>
+                    <input type="number" id="ex2" class="exercise-input" placeholder="Introduce el resultado (minutos)">
+                    <button class="exercise-btn" onclick="checkAnswer(2, 20, 'ex2')">Verificar</button>
+                    <div id="result2" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        3. Si el MTTR es 2 horas y se producen 24 incidentes al año, ¿cuántas horas totales de downtime hay?
+                    </div>
+                    <input type="number" id="ex3" class="exercise-input" placeholder="Introduce el resultado (horas)">
+                    <button class="exercise-btn" onclick="checkAnswer(3, 48, 'ex3')">Verificar</button>
+                    <div id="result3" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        4. Calcular el ROI de automatización: inversión 100.000€, ahorro anual 35.000€, período 5 años.
+                    </div>
+                    <input type="number" id="ex4" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(4, 75, 'ex4')">Verificar</button>
+                    <div id="result4" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        5. Si un repositorio tiene 1500 commits y 12 releases, ¿cuántos commits promedio por release?
+                    </div>
+                    <input type="number" id="ex5" class="exercise-input" placeholder="Introduce el resultado">
+                    <button class="exercise-btn" onclick="checkAnswer(5, 125, 'ex5')">Verificar</button>
+                    <div id="result5" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        6. Calcular la eficiencia de automatización si de 200 tareas mensuales, 170 son automatizadas.
+                    </div>
+                    <input type="number" id="ex6" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(6, 85, 'ex6')">Verificar</button>
+                    <div id="result6" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        7. Si el Lead Time promedio es 6 días y se quiere reducir a 2 días, ¿cuál es la mejora porcentual?
+                    </div>
+                    <input type="number" id="ex7" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(7, 66.67, 'ex7')">Verificar</button>
+                    <div id="result7" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        8. Calcular el número de versiones si se liberan cada 2 semanas durante 1 año (52 semanas).
+                    </div>
+                    <input type="number" id="ex8" class="exercise-input" placeholder="Introduce el resultado">
+                    <button class="exercise-btn" onclick="checkAnswer(8, 26, 'ex8')">Verificar</button>
+                    <div id="result8" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        9. Si el costo manual de un despliegue es 500€ y el automatizado 50€, ¿cuál es el ahorro por despliegue?
+                    </div>
+                    <input type="number" id="ex9" class="exercise-input" placeholder="Introduce el resultado (€)">
+                    <button class="exercise-btn" onclick="checkAnswer(9, 450, 'ex9')">Verificar</button>
+                    <div id="result9" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        10. Calcular la disponibilidad si el sistema funciona 8640 horas de 8760 horas anuales.
+                    </div>
+                    <input type="number" id="ex10" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(10, 98.63, 'ex10')">Verificar</button>
+                    <div id="result10" class="exercise-result"></div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Progreso de Ejercicios</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress" style="width: 0%"></div>
+                    </div>
+                    <p>Ejercicios completados: <span id="completed">0</span>/10</p>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <h2>📚 Recursos y Referencias</h2>
+
+                <div class="info-card">
+                    <h3>📖 Normativas y Estándares</h3>
+                    <ul>
+                        <li><strong>ITIL v4:</strong> Service Management y Configuration Management</li>
+                        <li><strong>ISO/IEC 20000:</strong> Service Management System requirements</li>
+                        <li><strong>COBIT:</strong> Control Objectives for IT and Related Technologies</li>
+                        <li><strong>IEEE 828:</strong> Standard for Configuration Management</li>
+                        <li><strong>ISO/IEC 12207:</strong> Software lifecycle processes</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔧 Herramientas Principales</h3>
+                    <ul>
+                        <li><strong>Control de Versiones:</strong> Git, SVN, Perforce, TFS</li>
+                        <li><strong>CI/CD:</strong> Jenkins, GitLab CI, GitHub Actions, Azure DevOps</li>
+                        <li><strong>CMDB:</strong> ServiceNow, BMC Remedy, Lansweeper</li>
+                        <li><strong>IaC:</strong> Terraform, Ansible, Puppet, Chef</li>
+                        <li><strong>Containerización:</strong> Docker, Kubernetes, OpenShift</li>
+                        <li><strong>Monitorización:</strong> Nagios, Zabbix, Prometheus, Grafana</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📚 Metodologías y Frameworks</h3>
+                    <ul>
+                        <li><strong>DevOps:</strong> Integración desarrollo y operaciones</li>
+                        <li><strong>Agile:</strong> Desarrollo iterativo e incremental</li>
+                        <li><strong>ITIL:</strong> Best practices para gestión de servicios IT</li>
+                        <li><strong>Lean:</strong> Eliminación de desperdicios en procesos</li>
+                        <li><strong>SRE:</strong> Site Reliability Engineering</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎓 Certificaciones</h3>
+                    <ul>
+                        <li><strong>ITIL Foundation:</strong> Fundamentos de ITIL v4</li>
+                        <li><strong>DevOps Foundation:</strong> Principios y prácticas DevOps</li>
+                        <li><strong>AWS DevOps Engineer:</strong> Professional certification</li>
+                        <li><strong>Azure DevOps Engineer:</strong> Expert certification</li>
+                        <li><strong>Jenkins Engineer:</strong> Certified Jenkins Engineer</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Métricas de Referencia</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Elite Performers</h4>
+                            <p>Deploy Frequency: On-demand<br>
+                            Lead Time: < 1 hour<br>
+                            MTTR: < 1 hour<br>
+                            Change Failure: 0-15%</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>High Performers</h4>
+                            <p>Deploy Frequency: Weekly<br>
+                            Lead Time: 1 day - 1 week<br>
+                            MTTR: < 1 day<br>
+                            Change Failure: 0-15%</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Low Performers</h4>
+                            <p>Deploy Frequency: Monthly<br>
+                            Lead Time: 1-6 months<br>
+                            MTTR: 1-6 months<br>
+                            Change Failure: 46-60%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><strong>DORA Research:</strong> DevOps metrics and research</li>
+                        <li><strong>GitLab DevOps Reports:</strong> State of DevOps annual report</li>
+                        <li><strong>ITIL Official:</strong> Service management guidance</li>
+                        <li><strong>DevOps Institute:</strong> Learning and certification</li>
+                        <li><strong>Configuration Management Database:</strong> CMDB best practices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function checkAnswer(questionNum, correctAnswer, inputId) {
+            const userAnswer = parseFloat(document.getElementById(inputId).value);
+            const resultDiv = document.getElementById('result' + questionNum);
+            const tolerance = 0.1;
+            
+            if (Math.abs(userAnswer - correctAnswer) <= tolerance) {
+                resultDiv.textContent = '¡Correcto! ✓';
+                resultDiv.className = 'exercise-result correct';
+                if (!resultDiv.dataset.completed) {
+                    completedExercises++;
+                    resultDiv.dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                resultDiv.textContent = `Incorrecto. La respuesta correcta es ${correctAnswer}`;
+                resultDiv.className = 'exercise-result incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progress');
+            const completedSpan = document.getElementById('completed');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            completedSpan.textContent = completedExercises;
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+</html>

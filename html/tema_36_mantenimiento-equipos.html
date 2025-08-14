@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 36 - Mantenimiento de Equipos</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-tertiary: #3d3d3d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --accent-hover: #357abd;
+            --border-color: #555;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .tab-container {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-nav {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--bg-tertiary);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background: var(--bg-secondary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .code-block {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .exercise-container {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .exercise-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+
+        .exercise-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .exercise-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .exercise-result.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .exercise-result.incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--info-color));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .maintenance-type {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .maintenance-type.preventive {
+            border-left-color: var(--success-color);
+        }
+
+        .maintenance-type.corrective {
+            border-left-color: var(--danger-color);
+        }
+
+        .maintenance-type.predictive {
+            border-left-color: var(--info-color);
+        }
+
+        .maintenance-type.adaptive {
+            border-left-color: var(--warning-color);
+        }
+
+        .maintenance-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .kpi-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--info-color));
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+        🌓
+    </button>
+
+    <div class="container">
+        <header class="header">
+            <h1>📋 Tema 36: Mantenimiento de Equipos</h1>
+            <p>Prácticas de mantenimiento de equipos e instalaciones. Tipos de mantenimiento. Monitorización y gestión de capacidad.</p>
+        </header>
+
+        <div class="tab-container">
+            <nav class="tab-nav">
+                <button class="tab-btn active" onclick="openTab(event, 'overview')">📖 Resumen</button>
+                <button class="tab-btn" onclick="openTab(event, 'types')">🔧 Tipos de Mantenimiento</button>
+                <button class="tab-btn" onclick="openTab(event, 'practices')">⚙️ Mejores Prácticas</button>
+                <button class="tab-btn" onclick="openTab(event, 'monitoring')">📊 Monitorización</button>
+                <button class="tab-btn" onclick="openTab(event, 'capacity')">📈 Gestión de Capacidad</button>
+                <button class="tab-btn" onclick="openTab(event, 'exercises')">🧮 Ejercicios</button>
+                <button class="tab-btn" onclick="openTab(event, 'resources')">📚 Recursos</button>
+            </nav>
+
+            <div id="overview" class="tab-content active">
+                <h2>📖 Resumen General</h2>
+
+                <div class="info-card">
+                    <h3>🎯 Objetivos del Mantenimiento</h3>
+                    <p>El mantenimiento de equipos e instalaciones busca maximizar la disponibilidad, confiabilidad y vida útil de los sistemas IT, minimizando costos y riesgos operacionales.</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <h4>Disponibilidad Objetivo</h4>
+                        <div class="kpi-value">99.9%</div>
+                        <p>Uptime típico para sistemas críticos</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>MTBF Esperado</h4>
+                        <div class="kpi-value">8760</div>
+                        <p>Horas entre fallos (1 año)</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>MTTR Objetivo</h4>
+                        <div class="kpi-value">< 4h</div>
+                        <p>Tiempo medio de reparación</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>Costo de Downtime</h4>
+                        <div class="kpi-value">5000€</div>
+                        <p>Por hora en sistemas críticos</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔍 Estadísticas Clave</h3>
+                    <ul>
+                        <li><strong>70%</strong> de las fallas son predecibles con monitorización adecuada</li>
+                        <li><strong>30%</strong> reducción de costos con mantenimiento preventivo</li>
+                        <li><strong>25%</strong> de mejora en disponibilidad con mantenimiento predictivo</li>
+                        <li><strong>50%</strong> de las fallas se deben a factores humanos</li>
+                        <li><strong>20%</strong> de los equipos causan el 80% de los problemas (Principio de Pareto)</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📋 Marco Normativo</h3>
+                    <ul>
+                        <li><strong>UNE-EN 13306:</strong> Terminología de mantenimiento</li>
+                        <li><strong>ISO 14224:</strong> Recopilación e intercambio de datos de confiabilidad</li>
+                        <li><strong>IEC 60300:</strong> Gestión de la dependabilidad</li>
+                        <li><strong>ITIL v4:</strong> Mejores prácticas para gestión de servicios IT</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="types" class="tab-content">
+                <h2>🔧 Tipos de Mantenimiento</h2>
+
+                <div class="maintenance-type preventive">
+                    <div class="maintenance-icon">🛡️</div>
+                    <div>
+                        <h3>Mantenimiento Preventivo</h3>
+                        <p><strong>Definición:</strong> Actividades planificadas para prevenir fallos antes de que ocurran.</p>
+                        <ul>
+                            <li>Basado en tiempo (calendario)</li>
+                            <li>Basado en uso (horas de funcionamiento, ciclos)</li>
+                            <li>Inspecciones regulares</li>
+                            <li>Limpieza y lubricación</li>
+                            <li>Reemplazo de componentes según vida útil</li>
+                        </ul>
+                        <p><strong>Ventajas:</strong> Reduce fallos inesperados, prolonga vida útil, planificable.</p>
+                        <p><strong>Desventajas:</strong> Puede generar sobre-mantenimiento, costos fijos altos.</p>
+                    </div>
+                </div>
+
+                <div class="maintenance-type corrective">
+                    <div class="maintenance-icon">🚨</div>
+                    <div>
+                        <h3>Mantenimiento Correctivo</h3>
+                        <p><strong>Definición:</strong> Reparación o restauración después de que se produce un fallo.</p>
+                        <ul>
+                            <li><strong>No planificado:</strong> Respuesta a fallos inesperados</li>
+                            <li><strong>Planificado:</strong> Permitir que componentes fallen hasta reemplazo</li>
+                            <li>Reparación de emergencia</li>
+                            <li>Diagnóstico y resolución de problemas</li>
+                            <li>Restauración de la funcionalidad</li>
+                        </ul>
+                        <p><strong>Ventajas:</strong> Costos bajos iniciales, uso completo de vida útil.</p>
+                        <p><strong>Desventajas:</strong> Impredecible, puede causar daños secundarios.</p>
+                    </div>
+                </div>
+
+                <div class="maintenance-type predictive">
+                    <div class="maintenance-icon">🔮</div>
+                    <div>
+                        <h3>Mantenimiento Predictivo</h3>
+                        <p><strong>Definición:</strong> Basado en monitorización continua del estado para predecir fallos.</p>
+                        <ul>
+                            <li>Análisis de vibraciones</li>
+                            <li>Termografía infrarroja</li>
+                            <li>Análisis de aceites</li>
+                            <li>Monitorización de rendimiento</li>
+                            <li>Machine Learning para predicciones</li>
+                            <li>IoT y sensores inteligentes</li>
+                        </ul>
+                        <p><strong>Ventajas:</strong> Optimiza intervalos de mantenimiento, máxima disponibilidad.</p>
+                        <p><strong>Desventajas:</strong> Inversión inicial alta en tecnología y formación.</p>
+                    </div>
+                </div>
+
+                <div class="maintenance-type adaptive">
+                    <div class="maintenance-icon">🔄</div>
+                    <div>
+                        <h3>Mantenimiento Adaptativo</h3>
+                        <p><strong>Definición:</strong> Modificaciones para adaptar equipos a nuevos requisitos o condiciones.</p>
+                        <ul>
+                            <li>Actualizaciones de software/firmware</li>
+                            <li>Modificaciones de configuración</li>
+                            <li>Adaptación a nuevos estándares</li>
+                            <li>Mejoras de seguridad</li>
+                            <li>Optimización de rendimiento</li>
+                        </ul>
+                        <p><strong>Ventajas:</strong> Mantiene equipos actualizados, mejora capacidades.</p>
+                        <p><strong>Desventajas:</strong> Puede introducir nuevos riesgos, requiere planificación.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎯 Estrategia de Mantenimiento Óptima</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Equipos Críticos</h4>
+                            <div class="metric-value">70%</div>
+                            <p>Mantenimiento Predictivo</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Equipos Importantes</h4>
+                            <div class="metric-value">25%</div>
+                            <p>Mantenimiento Preventivo</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Equipos No Críticos</h4>
+                            <div class="metric-value">5%</div>
+                            <p>Mantenimiento Correctivo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="practices" class="tab-content">
+                <h2>⚙️ Mejores Prácticas</h2>
+
+                <div class="info-card">
+                    <h3>📝 Planificación y Programación</h3>
+                    <ul>
+                        <li><strong>Inventario de activos:</strong> Registro completo de todos los equipos</li>
+                        <li><strong>Criticidad de equipos:</strong> Clasificación por impacto en el negocio</li>
+                        <li><strong>Calendarios de mantenimiento:</strong> Programación optimizada de actividades</li>
+                        <li><strong>Recursos necesarios:</strong> Personal, herramientas, repuestos</li>
+                        <li><strong>Ventanas de mantenimiento:</strong> Períodos de menor impacto</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Gestión de Información</h3>
+                    <ul>
+                        <li><strong>CMMS (Computerized Maintenance Management System)</strong></li>
+                        <li><strong>Histórico de mantenimientos:</strong> Registro de todas las actividades</li>
+                        <li><strong>Análisis de tendencias:</strong> Patrones de fallos y degradación</li>
+                        <li><strong>Indicadores clave (KPIs):</strong> Métricas de rendimiento</li>
+                        <li><strong>Documentación técnica:</strong> Manuales, procedimientos, esquemas</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>👥 Gestión del Personal</h3>
+                    <ul>
+                        <li><strong>Formación especializada:</strong> Certificaciones técnicas</li>
+                        <li><strong>Procedimientos estándar:</strong> Instrucciones de trabajo claras</li>
+                        <li><strong>Seguridad laboral:</strong> Protocolos de seguridad y EPI</li>
+                        <li><strong>Competencias técnicas:</strong> Evaluación y desarrollo de habilidades</li>
+                        <li><strong>Turnos de guardia:</strong> Cobertura 24/7 para sistemas críticos</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Fase 1: Análisis y Diagnóstico</h4>
+                        <p>Evaluación del estado actual de los equipos, identificación de necesidades y definición de estrategias de mantenimiento.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Fase 2: Planificación</h4>
+                        <p>Desarrollo de planes de mantenimiento, programación de actividades y asignación de recursos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Fase 3: Ejecución</h4>
+                        <p>Implementación de las actividades de mantenimiento según los planes establecidos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Fase 4: Control y Mejora</h4>
+                        <p>Monitorización de resultados, análisis de desviaciones y optimización continua.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔧 Herramientas y Tecnologías</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>CMMS/EAM</h4>
+                            <p>Sistemas de gestión integral del mantenimiento y activos</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>IoT Sensors</h4>
+                            <p>Monitorización continua en tiempo real</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Big Data Analytics</h4>
+                            <p>Análisis predictivo avanzado</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>AR/VR</h4>
+                            <p>Formación y asistencia remota</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Machine Learning</h4>
+                            <p>Optimización automática de estrategias</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Mobile Apps</h4>
+                            <p>Gestión móvil y órdenes de trabajo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="monitoring" class="tab-content">
+                <h2>📊 Monitorización y Control</h2>
+
+                <div class="info-card">
+                    <h3>📈 Indicadores Clave de Rendimiento (KPIs)</h3>
+                    <ul>
+                        <li><strong>MTBF (Mean Time Between Failures):</strong> Tiempo medio entre fallos</li>
+                        <li><strong>MTTR (Mean Time To Repair):</strong> Tiempo medio de reparación</li>
+                        <li><strong>Disponibilidad del equipo:</strong> % de tiempo operativo</li>
+                        <li><strong>OEE (Overall Equipment Effectiveness):</strong> Eficiencia global del equipo</li>
+                        <li><strong>Costo por hora de mantenimiento</strong></li>
+                        <li><strong>Ratio de mantenimiento planificado vs no planificado</strong></li>
+                    </ul>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <h4>Disponibilidad</h4>
+                        <div class="kpi-value">99.2%</div>
+                        <p>Tiempo operativo / Tiempo total</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>MTBF</h4>
+                        <div class="kpi-value">720h</div>
+                        <p>Confiabilidad del sistema</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>MTTR</h4>
+                        <div class="kpi-value">2.5h</div>
+                        <p>Eficiencia de reparación</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4>OEE</h4>
+                        <div class="kpi-value">85%</div>
+                        <p>Eficiencia global</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔍 Técnicas de Monitorización</h3>
+                    <ul>
+                        <li><strong>Análisis de vibraciones:</strong> Detección de desbalances, desalineaciones</li>
+                        <li><strong>Termografía:</strong> Identificación de puntos calientes</li>
+                        <li><strong>Análisis de aceites:</strong> Estado de lubricantes y desgaste</li>
+                        <li><strong>Ultrasonido:</strong> Detección de fugas y fricciones</li>
+                        <li><strong>Corrientes eléctricas:</strong> Estado de motores eléctricos</li>
+                        <li><strong>Monitorización de rendimiento:</strong> Métricas operacionales</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🌐 Sistemas de Monitorización</h3>
+                    <div class="code-block">
+// Ejemplo de configuración de monitorización
+{
+  "monitoring": {
+    "intervals": {
+      "critical_systems": "1min",
+      "important_systems": "5min",
+      "standard_systems": "15min"
+    },
+    "thresholds": {
+      "cpu_usage": 80,
+      "memory_usage": 85,
+      "disk_usage": 90,
+      "temperature": 70,
+      "network_latency": 100
+    },
+    "alerts": {
+      "email": ["admin@company.com"],
+      "sms": ["+34600000000"],
+      "slack": "#operations"
+    }
+  }
+}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📱 Dashboard de Monitorización</h3>
+                    <p>Un dashboard efectivo debe incluir:</p>
+                    <ul>
+                        <li><strong>Vista en tiempo real:</strong> Estado actual de todos los sistemas</li>
+                        <li><strong>Alertas activas:</strong> Problemas que requieren atención</li>
+                        <li><strong>Tendencias históricas:</strong> Análisis de patrones</li>
+                        <li><strong>Predicciones:</strong> Fallos potenciales identificados</li>
+                        <li><strong>Métricas de rendimiento:</strong> KPIs principales</li>
+                        <li><strong>Planificación:</strong> Próximas actividades de mantenimiento</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="capacity" class="tab-content">
+                <h2>📈 Gestión de Capacidad</h2>
+
+                <div class="info-card">
+                    <h3>🎯 Objetivos de la Gestión de Capacidad</h3>
+                    <ul>
+                        <li><strong>Asegurar capacidad suficiente:</strong> Para cumplir requisitos de servicio</li>
+                        <li><strong>Optimizar costos:</strong> Balance entre capacidad y inversión</li>
+                        <li><strong>Planificar crecimiento:</strong> Expansión futura de infraestructura</li>
+                        <li><strong>Identificar cuellos de botella:</strong> Puntos de congestión</li>
+                        <li><strong>Mejorar rendimiento:</strong> Optimización continua</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Tipos de Capacidad</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Capacidad de Procesamiento</h4>
+                            <p>CPU, memoria, almacenamiento</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <p>Utilización: 75%</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Capacidad de Red</h4>
+                            <p>Ancho de banda, latencia</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <p>Utilización: 60%</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Capacidad de Almacenamiento</h4>
+                            <p>Espacio en disco, IOPS</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%"></div>
+                            </div>
+                            <p>Utilización: 82%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📋 Proceso de Gestión de Capacidad</h3>
+                    <ul>
+                        <li><strong>Monitorización continua:</strong> Recopilación de métricas de uso</li>
+                        <li><strong>Análisis de tendencias:</strong> Patrones de crecimiento y uso</li>
+                        <li><strong>Modelado de capacidad:</strong> Predicción de necesidades futuras</li>
+                        <li><strong>Planificación:</strong> Estrategia de expansión y optimización</li>
+                        <li><strong>Implementación:</strong> Ejecución de mejoras de capacidad</li>
+                        <li><strong>Revisión:</strong> Evaluación de resultados y ajustes</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📈 Técnicas de Planificación</h3>
+                    <ul>
+                        <li><strong>Análisis de tendencias:</strong> Proyección basada en históricos</li>
+                        <li><strong>Modelado matemático:</strong> Algoritmos de predicción</li>
+                        <li><strong>Simulación:</strong> Escenarios de carga futura</li>
+                        <li><strong>Benchmarking:</strong> Comparación con estándares</li>
+                        <li><strong>Análisis de riesgos:</strong> Evaluación de impactos</li>
+                        <li><strong>Planificación de escenarios:</strong> Múltiples casos de uso</li>
+                    </ul>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Recopilación de Datos</h4>
+                        <p>Monitorización continua de métricas de rendimiento y utilización de recursos en tiempo real.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Análisis de Capacidad Actual</h4>
+                        <p>Evaluación del estado actual, identificación de limitaciones y puntos de mejora.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Predicción de Necesidades</h4>
+                        <p>Modelado de crecimiento futuro basado en tendencias y planes de negocio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Plan de Acción</h4>
+                        <p>Desarrollo de estrategias de expansión, optimización y mejora de la infraestructura.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔧 Herramientas de Gestión de Capacidad</h3>
+                    <div class="code-block">
+// Ejemplo de configuración de límites de capacidad
+capacity_limits: {
+  cpu_threshold: 80,      // Alertar si CPU > 80%
+  memory_threshold: 85,   // Alertar si RAM > 85%
+  disk_threshold: 90,     // Alertar si disco > 90%
+  network_threshold: 70,  // Alertar si red > 70%
+  
+  auto_scaling: {
+    enabled: true,
+    scale_up_threshold: 75,
+    scale_down_threshold: 30,
+    cooldown_period: 300    // 5 minutos
+  }
+}
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <h2>🧮 Ejercicios Prácticos</h2>
+                
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        1. Calcular la disponibilidad de un sistema que estuvo operativo 8520 horas en un año (8760 horas total).
+                    </div>
+                    <input type="number" id="ex1" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(1, 97.26, 'ex1')">Verificar</button>
+                    <div id="result1" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        2. Si un equipo tiene un MTBF de 500 horas y un MTTR de 4 horas, ¿cuál es su disponibilidad?
+                    </div>
+                    <input type="number" id="ex2" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(2, 99.21, 'ex2')">Verificar</button>
+                    <div id="result2" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        3. Calcular el OEE si la disponibilidad es 95%, la eficiencia de rendimiento es 88% y la calidad es 97%.
+                    </div>
+                    <input type="number" id="ex3" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(3, 81.05, 'ex3')">Verificar</button>
+                    <div id="result3" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        4. Si el costo de downtime es 2000€/hora y se evitan 20 horas de paradas al año con mantenimiento preventivo que cuesta 30000€, ¿cuál es el ahorro neto?
+                    </div>
+                    <input type="number" id="ex4" class="exercise-input" placeholder="Introduce el resultado (€)">
+                    <button class="exercise-btn" onclick="checkAnswer(4, 10000, 'ex4')">Verificar</button>
+                    <div id="result4" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        5. Calcular la tasa de fallos (λ) en fallos por millón de horas si el MTBF es 50000 horas.
+                    </div>
+                    <input type="number" id="ex5" class="exercise-input" placeholder="Introduce el resultado">
+                    <button class="exercise-btn" onclick="checkAnswer(5, 20, 'ex5')">Verificar</button>
+                    <div id="result5" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        6. Si un servidor consume 800W y funciona 24/7, ¿cuál es el costo energético anual a 0.12€/kWh?
+                    </div>
+                    <input type="number" id="ex6" class="exercise-input" placeholder="Introduce el resultado (€)">
+                    <button class="exercise-btn" onclick="checkAnswer(6, 841.34, 'ex6')">Verificar</button>
+                    <div id="result6" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        7. Calcular el tiempo de backup si se necesita respaldar 500GB a una velocidad de 25MB/s.
+                    </div>
+                    <input type="number" id="ex7" class="exercise-input" placeholder="Introduce el resultado (horas)">
+                    <button class="exercise-btn" onclick="checkAnswer(7, 5.68, 'ex7')">Verificar</button>
+                    <div id="result7" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        8. Si la utilización de CPU es 75% y se quiere mantener bajo 80%, ¿cuánta capacidad adicional se necesita?
+                    </div>
+                    <input type="number" id="ex8" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(8, 6.67, 'ex8')">Verificar</button>
+                    <div id="result8" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        9. Calcular el ROI de una mejora de mantenimiento: inversión 50000€, ahorros anuales 15000€, período 5 años.
+                    </div>
+                    <input type="number" id="ex9" class="exercise-input" placeholder="Introduce el resultado (%)">
+                    <button class="exercise-btn" onclick="checkAnswer(9, 50, 'ex9')">Verificar</button>
+                    <div id="result9" class="exercise-result"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise-question">
+                        10. Si un disco duro tiene una tasa de fallos de 0.5% anual, ¿cuántos discos fallarán en un array de 1000 discos?
+                    </div>
+                    <input type="number" id="ex10" class="exercise-input" placeholder="Introduce el resultado">
+                    <button class="exercise-btn" onclick="checkAnswer(10, 5, 'ex10')">Verificar</button>
+                    <div id="result10" class="exercise-result"></div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 Progreso de Ejercicios</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress" style="width: 0%"></div>
+                    </div>
+                    <p>Ejercicios completados: <span id="completed">0</span>/10</p>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <h2>📚 Recursos y Referencias</h2>
+
+                <div class="info-card">
+                    <h3>📖 Normativas y Estándares</h3>
+                    <ul>
+                        <li><strong>UNE-EN 13306:</strong> Mantenimiento - Terminología del mantenimiento</li>
+                        <li><strong>ISO 14224:</strong> Industrias del petróleo y del gas natural</li>
+                        <li><strong>ISO 55000:</strong> Gestión de activos - Vocabulario</li>
+                        <li><strong>IEC 60300:</strong> Gestión de la dependabilidad</li>
+                        <li><strong>ISO/IEC 27001:</strong> Seguridad de la información</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔧 Herramientas Principales</h3>
+                    <ul>
+                        <li><strong>CMMS:</strong> IBM Maximo, SAP PM, Oracle EAM</li>
+                        <li><strong>Monitorización:</strong> Nagios, Zabbix, PRTG, SolarWinds</li>
+                        <li><strong>Análisis Predictivo:</strong> GE Predix, Siemens MindSphere</li>
+                        <li><strong>IoT Platforms:</strong> AWS IoT, Azure IoT, Google Cloud IoT</li>
+                        <li><strong>Analytics:</strong> Tableau, Power BI, Grafana</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📚 Metodologías</h3>
+                    <ul>
+                        <li><strong>TPM (Total Productive Maintenance):</strong> Mantenimiento productivo total</li>
+                        <li><strong>RCM (Reliability Centered Maintenance):</strong> Mantenimiento centrado en confiabilidad</li>
+                        <li><strong>ITIL v4:</strong> Mejores prácticas para servicios IT</li>
+                        <li><strong>Lean Maintenance:</strong> Eliminación de desperdicios</li>
+                        <li><strong>Six Sigma:</strong> Mejora de calidad y reducción de defectos</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>🎓 Certificaciones</h3>
+                    <ul>
+                        <li><strong>CMRP:</strong> Certified Maintenance & Reliability Professional</li>
+                        <li><strong>CRE:</strong> Certified Reliability Engineer</li>
+                        <li><strong>ITIL Foundation:</strong> Fundamentos de ITIL</li>
+                        <li><strong>PMI:</strong> Project Management Professional</li>
+                        <li><strong>ISO 55001:</strong> Lead Auditor Asset Management</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📊 KPIs de Referencia</h3>
+                    <div class="grid-container">
+                        <div class="metric-card">
+                            <h4>Clase Mundial</h4>
+                            <p>Disponibilidad > 99%<br>
+                            OEE > 85%<br>
+                            MTTR < 2h</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Promedio Industrial</h4>
+                            <p>Disponibilidad 95-97%<br>
+                            OEE 60-80%<br>
+                            MTTR 4-8h</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Necesita Mejora</h4>
+                            <p>Disponibilidad < 90%<br>
+                            OEE < 60%<br>
+                            MTTR > 8h</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><strong>AENOR:</strong> Normas españolas de mantenimiento</li>
+                        <li><strong>EFNMS:</strong> European Federation of National Maintenance Societies</li>
+                        <li><strong>SMRP:</strong> Society for Maintenance & Reliability Professionals</li>
+                        <li><strong>Plant Engineering:</strong> Revista técnica de mantenimiento</li>
+                        <li><strong>Maintenance World:</strong> Portal de mantenimiento industrial</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function checkAnswer(questionNum, correctAnswer, inputId) {
+            const userAnswer = parseFloat(document.getElementById(inputId).value);
+            const resultDiv = document.getElementById('result' + questionNum);
+            const tolerance = 0.1;
+            
+            if (Math.abs(userAnswer - correctAnswer) <= tolerance) {
+                resultDiv.textContent = '¡Correcto! ✓';
+                resultDiv.className = 'exercise-result correct';
+                if (!resultDiv.dataset.completed) {
+                    completedExercises++;
+                    resultDiv.dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                resultDiv.textContent = `Incorrecto. La respuesta correcta es ${correctAnswer}`;
+                resultDiv.className = 'exercise-result incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progress');
+            const completedSpan = document.getElementById('completed');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            completedSpan.textContent = completedExercises;
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+</html>

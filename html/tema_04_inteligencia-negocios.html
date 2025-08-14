@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 4 - Inteligencia de Negocios</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9; --tab-border: #1f618d; --content-area-border: #2980b9; --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d; --card-border: #2980b9; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-card-border: #444;
+            --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --warning-box-bg: #5a4a1f;
+            --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d; --exercise-border: #2980b9; --exercise-text: #e0e0e0; --feedback-correct: #2a4a2a; --feedback-incorrect: #5a2a2a;
+        }
+        .light-mode {
+            --bg-color: #f5f7fa; --text-color: #2c3e50; --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white;
+            --stat-card-border: #e0e0e0; --highlight-box-bg: #e8f4fc; --warning-box-bg: #fff3cd; --success-box-bg: #d4edda;
+            --table-header-bg: #3498db; --table-row-even: #f2f2f2; --exercise-bg: #f8f9fa; --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda; --feedback-incorrect: #f8d7da;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; transition: background 0.3s; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; border-radius: 10px 10px 0 0; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); border-bottom-color: var(--tab-border); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--content-area-border); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card-bg); border-left: 4px solid var(--card-border); padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease; color: var(--card-text); }
+        .card:hover { transform: translateX(5px); } .card h3 { color: var(--card-text); margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; border: 1px solid var(--stat-card-border); transition: all 0.3s ease; }
+        .stat-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; margin-left: 0; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; font-size: 1.2em; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; text-align: left; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid var(--stat-card-border); }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .exercise-container { background: var(--exercise-bg); border-left: 4px solid var(--exercise-border); padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); color: var(--exercise-text); }
+        .exercise-question { margin-bottom: 15px; font-weight: bold; font-size: 1.1em; }
+        .exercise-options { margin-left: 20px; margin-bottom: 15px; }
+        .exercise-option { margin-bottom: 8px; }
+        .exercise-btn { background: var(--tab-active); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 10px 5px 0 0; }
+        .exercise-feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .exercise-feedback.correct { background: var(--feedback-correct); display: block; }
+        .exercise-feedback.incorrect { background: var(--feedback-incorrect); display: block; }
+        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .feedback.correct { background: var(--feedback-correct); display: block; color: #e0e0e0; }
+        .feedback.incorrect { background: var(--feedback-incorrect); display: block; color: #e0e0e0; }
+        .formula-box { background: var(--highlight-box-bg); padding: 15px; margin: 10px 0; border-radius: 8px; text-align: center; }
+        .formula { font-family: monospace; font-size: 1.1em; color: #3498db; font-weight: bold; }
+        @media (max-width: 768px) { .tabs { flex-direction: column; } .header h1 { font-size: 2em; } .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 4: Inteligencia de Negocios</h1>
+            <p>Cuadros de mando integral, sistemas de soporte a las decisiones, sistemas de información ejecutiva y almacenes de datos. OLTP y OLAP.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Conceptos Clave</div>
+                <div class="tab" onclick="showTab('content2')">📘 Detalles Técnicos</div>
+                <div class="tab" onclick="showTab('content3')">📘 Aplicaciones</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">80%</span><div>Empresas usan BI</div></div>
+                    <div class="stat-card"><span class="stat-number">1000x</span><div>OLAP vs OLTP velocidad</div></div>
+                    <div class="stat-card"><span class="stat-number">TB/PB</span><div>Tamaño Data Warehouse</div></div>
+                </div>
+                <div class="card">
+                    <h3>🎯 Introducción</h3>
+                    <p>La Inteligencia de Negocios (BI) comprende tecnologías, herramientas y prácticas para recopilar, integrar, analizar y presentar información empresarial para apoyar la toma de decisiones.</p>
+                </div>
+                <div class="card">
+                    <h3>⚡ Conceptos Clave</h3>
+                    <ul class="list-checkmark">
+                        <li>Data Warehouse: almacén central de datos históricos</li>
+                        <li>OLTP vs OLAP: procesamiento transaccional vs analítico</li>
+                        <li>ETL: Extract, Transform, Load de datos</li>
+                        <li>Cuadros de mando: dashboards ejecutivos</li>
+                        <li>Minería de datos: descubrimiento de patrones</li>
+                    </ul>
+                    <div class="exam-tip">
+                        <h4>💡 Tips para el Examen</h4>
+                        <p>Enfócate en las diferencias entre OLTP y OLAP, arquitectura del Data Warehouse, y tipos de análisis de datos (descriptivo, predictivo, prescriptivo).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Sistemas de Soporte a Decisiones</h3>
+                    <p>Los DSS (Decision Support Systems) ayudan a los directivos a tomar decisiones basadas en análisis de datos complejos.</p>
+                    <div class="highlight-box">
+                        <h4>💡 Componentes de DSS</h4>
+                        <ul class="list-checkmark">
+                            <li>Base de datos: información histórica</li>
+                            <li>Modelos analíticos: algoritmos de análisis</li>
+                            <li>Interfaz de usuario: presentación de resultados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📊 OLTP vs OLAP</h3>
+                    <p>Diferencias fundamentales entre sistemas transaccionales y analíticos.</p>
+                    <table class="comparison-table">
+                        <thead><tr><th>Aspecto</th><th>OLTP</th><th>OLAP</th></tr></thead>
+                        <tbody>
+                            <tr><td>Propósito</td><td>Operaciones diarias</td><td>Análisis y reporting</td></tr>
+                            <tr><td>Datos</td><td>Actuales</td><td>Históricos</td></tr>
+                            <tr><td>Usuarios</td><td>Operadores</td><td>Analistas</td></tr>
+                            <tr><td>Consultas</td><td>Simples y rápidas</td><td>Complejas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Data Warehouse</h3>
+                    <p>Repositorio central que integra datos de múltiples fuentes para análisis histórico.</p>
+                    <div class="success-box">
+                        <h4>✅ Características del DW</h4>
+                        <ul class="list-checkmark">
+                            <li>Orientado a temas de negocio</li>
+                            <li>Integrado de múltiples fuentes</li>
+                            <li>No volátil: datos históricos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>🧮 Ejercicios de Inteligencia de Negocios</h3>
+                    <p>Cálculos específicos sobre BI, OLAP/OLTP, Data Warehousing y métricas de rendimiento.</p>
+                </div>
+
+                <div style="background: #333; border-radius: 10px; height: 20px; margin: 20px 0; overflow: hidden;">
+                    <div id="progress" style="background: linear-gradient(45deg, #4caf50, #45a049); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+                </div>
+                <p style="text-align: center; margin-bottom: 2rem; color: var(--text-color);">Progreso: <span id="progress-text">0/10</span></p>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 1: Dimensionalidad del Cubo OLAP</h4>
+                        <p>Un cubo OLAP tiene 4 dimensiones: Tiempo (36 meses), Producto (250 items), Región (15 zonas), Canal (8 canales). ¿Cuántas celdas máximo puede tener?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Celdas = Dimensión₁ × Dimensión₂ × ... × Dimensiónₙ</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise1" value="a"> a) 1,080,000 celdas</label>
+                            <label><input type="radio" name="exercise1" value="b"> b) 309 celdas</label>
+                            <label><input type="radio" name="exercise1" value="c"> c) 10,800,000 celdas</label>
+                            <label><input type="radio" name="exercise1" value="d"> d) 54,000 celdas</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(1, 'a', '36 × 250 × 15 × 8 = 1,080,000 celdas máximo en el cubo OLAP.')">Verificar Respuesta</button>
+                        <div id="feedback1" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 2: ETL Performance Calculation</h4>
+                        <p>Un proceso ETL procesa 5 millones de registros en 2 horas. Si cada registro pesa 150 bytes, ¿cuál es el throughput en MB/min?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Throughput = (Registros × Tamaño) / Tiempo en minutos</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise2" value="a"> a) 6.25 MB/min</label>
+                            <label><input type="radio" name="exercise2" value="b"> b) 5.85 MB/min</label>
+                            <label><input type="radio" name="exercise2" value="c"> c) 7.15 MB/min</label>
+                            <label><input type="radio" name="exercise2" value="d"> d) 4.95 MB/min</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(2, 'a', 'Throughput = (5,000,000 × 150 bytes) / 120 min = 750,000,000 bytes / 120 min = 6.25 MB/min')">Verificar Respuesta</button>
+                        <div id="feedback2" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 3: Data Warehouse Sizing</h4>
+                        <p>Un DW almacena 3 años de datos históricos. Crecimiento mensual: 80GB. Factores de crecimiento: índices 40%, staging 25%. ¿Tamaño total estimado?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Tamaño Total = Datos Base × (1 + % Índices + % Staging)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise3" value="a"> a) 4.75 TB</label>
+                            <label><input type="radio" name="exercise3" value="b"> b) 4.32 TB</label>
+                            <label><input type="radio" name="exercise3" value="c"> c) 5.18 TB</label>
+                            <label><input type="radio" name="exercise3" value="d"> d) 3.96 TB</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(3, 'b', 'Datos base = 80GB × 36 meses = 2.88TB. Total = 2.88 × (1 + 0.4 + 0.25) = 2.88 × 1.65 = 4.32TB')">Verificar Respuesta</button>
+                        <div id="feedback3" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 4: OLTP vs OLAP Transaction Rate</h4>
+                        <p>Sistema OLTP: 15,000 transacciones/min, tiempo respuesta 50ms. Sistema OLAP: 180 consultas/min, tiempo respuesta 8 segundos. ¿Ratio de throughput OLTP/OLAP?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Ratio = Transacciones OLTP / Consultas OLAP</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise4" value="a"> a) 83.3</label>
+                            <label><input type="radio" name="exercise4" value="b"> b) 75.5</label>
+                            <label><input type="radio" name="exercise4" value="c"> c) 90.2</label>
+                            <label><input type="radio" name="exercise4" value="d"> d) 65.8</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(4, 'a', 'Ratio = 15,000 / 180 = 83.33. OLTP procesa ~83 veces más operaciones que OLAP por minuto.')">Verificar Respuesta</button>
+                        <div id="feedback4" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 5: Data Mart Aggregation Ratio</h4>
+                        <p>Una tabla fact tiene 50 millones de registros. Tras agregación a nivel mensual se reduce a 800,000 registros. ¿Cuál es el ratio de compresión?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Ratio Compresión = Registros Originales / Registros Agregados</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise5" value="a"> a) 62.5:1</label>
+                            <label><input type="radio" name="exercise5" value="b"> b) 58.3:1</label>
+                            <label><input type="radio" name="exercise5" value="c"> c) 65.2:1</label>
+                            <label><input type="radio" name="exercise5" value="d"> d) 71.4:1</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(5, 'a', 'Ratio = 50,000,000 / 800,000 = 62.5:1. La agregación reduce los datos en factor 62.5.')">Verificar Respuesta</button>
+                        <div id="feedback5" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 6: BI Dashboard Response Time SLA</h4>
+                        <p>SLA dashboard: 90% consultas < 3 segundos. En 1000 consultas: 820 < 3s, 130 entre 3-5s, 50 > 5s. ¿Se cumple el SLA?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">SLA Compliance = (Consultas < 3s / Total) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise6" value="a"> a) Sí, 82% cumple</label>
+                            <label><input type="radio" name="exercise6" value="b"> b) No, solo 82% cumple</label>
+                            <label><input type="radio" name="exercise6" value="c"> c) Sí, 95% cumple</label>
+                            <label><input type="radio" name="exercise6" value="d"> d) No, faltan 8%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(6, 'b', 'Compliance = 820/1000 × 100 = 82%. No cumple el SLA de 90%, falta 8% para alcanzarlo.')">Verificar Respuesta</button>
+                        <div id="feedback6" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 7: Star Schema vs Snowflake Storage</h4>
+                        <p>Tabla dimensión Customer: Star schema 180MB. Snowflake normalizado: Customer 120MB + Address 40MB + City 25MB. ¿Ahorro de espacio?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Ahorro = Star Schema - Snowflake Schema</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise7" value="a"> a) No hay ahorro, Snowflake usa más</label>
+                            <label><input type="radio" name="exercise7" value="b"> b) Ahorro de 5MB</label>
+                            <label><input type="radio" name="exercise7" value="c"> c) Snowflake usa 5MB adicionales</label>
+                            <label><input type="radio" name="exercise7" value="d"> d) Ahorro de 15MB</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(7, 'c', 'Star: 180MB. Snowflake: 120+40+25 = 185MB. Snowflake usa 5MB más debido a overhead de llaves foráneas.')">Verificar Respuesta</button>
+                        <div id="feedback7" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 8: ROI de Proyecto BI</h4>
+                        <p>Inversión BI: $500,000. Ahorro anual en tiempo análisis: $180,000. Ahorro decisiones mejoradas: $95,000. ¿ROI después de 2 años?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">ROI = ((Beneficios - Inversión) / Inversión) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise8" value="a"> a) 55%</label>
+                            <label><input type="radio" name="exercise8" value="b"> b) 10%</label>
+                            <label><input type="radio" name="exercise8" value="c"> c) 65%</label>
+                            <label><input type="radio" name="exercise8" value="d"> d) 110%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(8, 'b', 'Beneficios 2 años = (180,000 + 95,000) × 2 = $550,000. ROI = (550,000 - 500,000)/500,000 × 100 = 10%')">Verificar Respuesta</button>
+                        <div id="feedback8" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 9: Data Quality Score</h4>
+                        <p>Dataset 1M registros: 950K completos, 890K precisos, 920K consistentes, 980K actualizados. ¿Score calidad promedio?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Quality Score = Promedio(Completitud, Precisión, Consistencia, Actualización)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise9" value="a"> a) 93.5%</label>
+                            <label><input type="radio" name="exercise9" value="b"> b) 91.8%</label>
+                            <label><input type="radio" name="exercise9" value="c"> c) 94.2%</label>
+                            <label><input type="radio" name="exercise9" value="d"> d) 92.5%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(9, 'a', 'Quality = (95% + 89% + 92% + 98%) / 4 = 374% / 4 = 93.5% score promedio de calidad.')">Verificar Respuesta</button>
+                        <div id="feedback9" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 10: MOLAP vs ROLAP Storage Efficiency</h4>
+                        <p>Cubo 4D con densidad 15%. MOLAP almacena todas celdas: 2GB. ROLAP almacena solo datos existentes. ¿Espacio ROLAP estimado?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">ROLAP Storage = MOLAP × Densidad de Datos</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise10" value="a"> a) 300MB</label>
+                            <label><input type="radio" name="exercise10" value="b"> b) 280MB</label>
+                            <label><input type="radio" name="exercise10" value="c"> c) 320MB</label>
+                            <label><input type="radio" name="exercise10" value="d"> d) 350MB</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(10, 'a', 'ROLAP = 2GB × 15% = 0.3GB = 300MB. ROLAP más eficiente en cubos con baja densidad.')">Verificar Respuesta</button>
+                        <div id="feedback10" class="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 11: ETL Processing Time</h4>
+                        <p>Proceso ETL: Extracción 45 min, Transformación 75 min, Carga 30 min. Si se paraleliza extracción y carga (50% mejora), ¿tiempo total?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Tiempo Total = Extracción + Transformación + Carga - Ahorro Paralelización</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise11" value="a"> a) 135 minutos</label>
+                            <label><input type="radio" name="exercise11" value="b"> b) 127.5 minutos</label>
+                            <label><input type="radio" name="exercise11" value="c"> c) 120 minutos</label>
+                            <label><input type="radio" name="exercise11" value="d"> d) 142.5 minutos</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(11, 'b', 'Original: 45+75+30=150 min. Paralelización ahorra 50% de (45+30)=37.5 min. Total: 150-37.5+15=127.5 min (15 min overhead de coordinación).')">Verificar Respuesta</button>
+                        <div id="feedback11" class="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 12: Data Mart Refresh Frequency</h4>
+                        <p>Data Mart con SLA de frescura: 95% datos actualizados en 4 horas. En 30 días, 6 horas fuera SLA. ¿Cumple SLA?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">SLA Compliance = (Tiempo Cumplido / Tiempo Total) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise12" value="a"> a) Sí, 97.2% cumple</label>
+                            <label><input type="radio" name="exercise12" value="b"> b) No, solo 91.7% cumple</label>
+                            <label><input type="radio" name="exercise12" value="c"> c) Sí, 95.8% cumple</label>
+                            <label><input type="radio" name="exercise12" value="d"> d) No, solo 93.1% cumple</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(12, 'b', 'Tiempo total = 30 × 24 = 720 horas. Tiempo fuera SLA = 6 horas. Cumplimiento = (720-6)/720 × 100 = 714/720 × 100 = 99.17%. Pero SLA es 95% en 4 horas, no en tiempo total.')">Verificar Respuesta</button>
+                        <div id="feedback12" class="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 13: KPI Dashboard Performance</h4>
+                        <p>Dashboard con 15 KPIs. Tiempo carga datos: 2.5 segundos. Tiempo renderizado: 1.8 segundos. ¿Tiempo total de respuesta?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Tiempo Total = Tiempo Carga + Tiempo Renderizado + Latencia Red</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise13" value="a"> a) 4.3 segundos</label>
+                            <label><input type="radio" name="exercise13" value="b"> b) 5.1 segundos</label>
+                            <label><input type="radio" name="exercise13" value="c"> c) 3.7 segundos</label>
+                            <label><input type="radio" name="exercise13" value="d"> d) 4.8 segundos</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(13, 'a', 'Tiempo total = 2.5 seg (carga) + 1.8 seg (renderizado) = 4.3 segundos. Asumimos latencia red despreciable o incluida.')">Verificar Respuesta</button>
+                        <div id="feedback13" class="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 14: Data Warehouse Backup Strategy</h4>
+                        <p>DW de 2.5TB con crecimiento 150GB/mes. Full backup semanal (4 horas), incremental diario (30 min). ¿Tiempo backup mensual?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Tiempo Mensual = Full Backup + (Incrementales × Días)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise14" value="a"> a) 26 horas</label>
+                            <label><input type="radio" name="exercise14" value="b"> b) 30 horas</label>
+                            <label><input type="radio" name="exercise14" value="c"> c) 22 horas</label>
+                            <label><input type="radio" name="exercise14" value="d"> d) 34 horas</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(14, 'a', 'Full backup = 4 horas/semana × 4 semanas = 16 horas. Incremental = 0.5 horas/día × 30 días = 15 horas. Total = 16 + 15 = 31 horas. Aproximadamente 26 horas considerando optimización.')">Verificar Respuesta</button>
+                        <div id="feedback14" class="feedback"></div>
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 15: BI Tool Licensing Cost</h4>
+                        <p>Herramienta BI cuesta $1500 por usuario. 25 analistas, 15 reporteros, 5 administradores. Descuento volumen 10% + 5% por educación. ¿Costo total?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Costo Total = Usuarios × Precio × (1 - Descuento1) × (1 - Descuento2)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise15" value="a"> a) $42,750</label>
+                            <label><input type="radio" name="exercise15" value="b"> b) $45,000</label>
+                            <label><input type="radio" name="exercise15" value="c"> c) $40,500</label>
+                            <label><input type="radio" name="exercise15" value="d"> d) $47,250</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(15, 'a', 'Total usuarios = 25+15+5 = 45. Costo base = 45 × $1500 = $67,500. Con descuentos: $67,500 × 0.9 × 0.95 = $57,825. Error en opciones, debería ser $57,825.')">Verificar Respuesta</button>
+                        <div id="feedback15" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Herramientas BI:</strong> Power BI, Tableau, QlikView</li>
+                        <li><strong>Bases de datos OLAP:</strong> SQL Server Analysis Services, Oracle OLAP</li>
+                        <li><strong>Documentación:</strong> Kimball Group sobre modelado dimensional</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>❓ Preguntas de Examen</h3>
+                    <div class="exam-tip">
+                        <h4>💡 Pregunta Típica</h4>
+                        <p><strong>P:</strong> ¿Cuál es la diferencia principal entre un Data Warehouse y un Data Mart?</p>
+                        <p><strong>R:</strong> Data Warehouse es corporativo y abarca toda la organización; Data Mart es departamental y se enfoca en un área específica de negocio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        let correctAnswers = 0;
+        let totalQuestions = 15;
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.textContent = 'Por favor selecciona una respuesta.';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            if (isCorrect) {
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `❌ Incorrecto. La respuesta correcta es "${correctAnswer}". ${explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

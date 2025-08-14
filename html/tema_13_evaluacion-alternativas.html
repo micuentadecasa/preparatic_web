@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 13: Evaluación de alternativas - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        :root,
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --border: #555555;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .alert-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg-secondary);
+        }
+
+        .highlight {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            transition: width 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px var(--shadow);
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-header {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .comparison-cell {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .method-card {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        .formula-box {
+            background: var(--bg-primary);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .criteria-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .criteria-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .criteria-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>📊 Evaluación de alternativas</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="subtitle">Métodos y técnicas para la selección de soluciones óptimas</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📋 Visión General</button>
+            <button class="tab" onclick="showTab('methods')">🔍 Métodos Cualitativos</button>
+            <button class="tab" onclick="showTab('quantitative')">📊 Métodos Cuantitativos</button>
+            <button class="tab" onclick="showTab('multicriteria')">⚖️ Análisis Multicriterio</button>
+            <button class="tab" onclick="showTab('economic')">💰 Evaluación Económica</button>
+            <button class="tab" onclick="showTab('application')">🎯 Aplicación Práctica</button>
+        </div>
+
+        <div id="overview" class="tab-content">
+            <div class="alert alert-info">
+                <strong>📚 Concepto Clave:</strong> La evaluación de alternativas es el proceso sistemático de comparar y seleccionar la mejor opción entre varias posibles para resolver un problema o satisfacer una necesidad.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div>Fases Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">12+</span>
+                    <div>Métodos de Evaluación</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">85%</span>
+                    <div>Éxito con Metodología</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3-7</span>
+                    <div>Alternativas Óptimas</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivos de la Evaluación</h3>
+                <ul>
+                    <li><strong>Identificar la mejor solución:</strong> Seleccionar la alternativa que mejor satisfaga los objetivos</li>
+                    <li><strong>Minimizar riesgos:</strong> Evaluar posibles consecuencias negativas</li>
+                    <li><strong>Optimizar recursos:</strong> Maximizar el retorno de inversión</li>
+                    <li><strong>Justificar decisiones:</strong> Proporcionar base objetiva para la elección</li>
+                    <li><strong>Facilitar implementación:</strong> Asegurar viabilidad práctica</li>
+                </ul>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🔍 1. Identificación del Problema</h4>
+                    <p>Definición clara del problema a resolver, objetivos específicos y restricciones existentes. Esta fase es crucial para enmarcar correctamente la evaluación.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>💡 2. Generación de Alternativas</h4>
+                    <p>Brainstorming, investigación de mercado, consulta con expertos y análisis de mejores prácticas para identificar todas las opciones viables.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>📊 3. Establecimiento de Criterios</h4>
+                    <p>Definición de criterios de evaluación, ponderaciones relativas y métricas específicas para cada criterio de decisión.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>⚖️ 4. Evaluación y Selección</h4>
+                    <p>Aplicación de métodos de evaluación, comparación sistemática y selección de la alternativa óptima basada en los criterios establecidos.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Errores Comunes:</strong>
+                <ul>
+                    <li>No definir claramente los criterios de evaluación</li>
+                    <li>Sesgo hacia la primera alternativa identificada</li>
+                    <li>Ignorar restricciones presupuestarias o temporales</li>
+                    <li>No considerar el coste de oportunidad</li>
+                    <li>Falta de participación de stakeholders clave</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="methods" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🔍 Métodos Cualitativos:</strong> Se basan en criterios subjetivos y experiencia para evaluar alternativas cuando la cuantificación precisa es difícil.
+            </div>
+
+            <div class="grid">
+                <div class="method-card">
+                    <h3>🧠 Método Delphi</h3>
+                    <p><strong>Descripción:</strong> Consulta estructurada a expertos mediante rondas sucesivas hasta alcanzar consenso.</p>
+                    <div class="alert alert-success">
+                        <strong>Ventajas:</strong>
+                        <ul>
+                            <li>Elimina influencia de personalidades dominantes</li>
+                            <li>Aprovecha conocimiento de múltiples expertos</li>
+                            <li>Permite participación remota</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Limitaciones:</strong> Proceso lento, posible sesgo en selección de expertos
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>💭 Brainstorming Estructurado</h3>
+                    <p><strong>Descripción:</strong> Generación y evaluación colaborativa de ideas siguiendo reglas específicas.</p>
+                    <div class="badge">Fase 1: Generación</div>
+                    <div class="badge">Fase 2: Clarificación</div>
+                    <div class="badge">Fase 3: Evaluación</div>
+                    <div class="badge">Fase 4: Priorización</div>
+                </div>
+
+                <div class="method-card">
+                    <h3>🎯 Análisis DAFO</h3>
+                    <p><strong>Descripción:</strong> Evaluación de Debilidades, Amenazas, Fortalezas y Oportunidades de cada alternativa.</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Interno</th>
+                                <th>Positivo</th>
+                                <th>Negativo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Interno</td>
+                                <td class="highlight">Fortalezas</td>
+                                <td>Debilidades</td>
+                            </tr>
+                            <tr>
+                                <td>Externo</td>
+                                <td class="highlight">Oportunidades</td>
+                                <td>Amenazas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="method-card">
+                    <h3>🔄 Método de Comparación por Pares</h3>
+                    <p><strong>Descripción:</strong> Comparación sistemática entre cada par de alternativas.</p>
+                    <div class="formula-box">
+                        Consistencia = 1 - (Contradicciones / Total Comparaciones)
+                    </div>
+                    <p><strong>Proceso:</strong></p>
+                    <ol>
+                        <li>Crear matriz de comparación n×n</li>
+                        <li>Comparar cada par (A vs B, A vs C, etc.)</li>
+                        <li>Asignar puntuaciones relativas</li>
+                        <li>Verificar consistencia de juicios</li>
+                        <li>Calcular ranking final</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>💡 Hot Tip de Examen:</strong> En métodos cualitativos, siempre documentar el proceso de toma de decisiones y los criterios utilizados. Esto es clave para la trazabilidad y auditabilía.
+            </div>
+
+            <div class="card">
+                <h3>📋 Criterios de Selección de Método</h3>
+                <div class="criteria-grid">
+                    <div class="criteria-card">
+                        <span class="criteria-icon">⏰</span>
+                        <h4>Tiempo Disponible</h4>
+                        <p>Métodos rápidos vs. exhaustivos</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">👥</span>
+                        <h4>Disponibilidad Expertos</h4>
+                        <p>Acceso a conocimiento especializado</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">📊</span>
+                        <h4>Complejidad Problema</h4>
+                        <p>Simple vs. multidimensional</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">💰</span>
+                        <h4>Recursos Disponibles</h4>
+                        <p>Presupuesto para evaluación</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quantitative" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>📊 Métodos Cuantitativos:</strong> Utilizan datos numéricos y modelos matemáticos para evaluar alternativas de forma objetiva y medible.
+            </div>
+
+            <div class="grid">
+                <div class="method-card">
+                    <h3>💰 Análisis Coste-Beneficio</h3>
+                    <div class="formula-box">
+                        Ratio C/B = Beneficios Totales / Costes Totales
+                    </div>
+                    <p><strong>Criterio de Decisión:</strong> Ratio > 1 indica alternativa viable</p>
+                    <div class="card">
+                        <h4>Componentes del Análisis:</h4>
+                        <ul>
+                            <li><strong>Costes Directos:</strong> Inversión inicial, operación, mantenimiento</li>
+                            <li><strong>Costes Indirectos:</strong> Oportunidad, formación, transición</li>
+                            <li><strong>Beneficios Tangibles:</strong> Ahorro de costes, incremento ingresos</li>
+                            <li><strong>Beneficios Intangibles:</strong> Mejora imagen, satisfacción cliente</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Consideraciones:</strong> Dificultad para cuantificar beneficios intangibles, necesidad de proyecciones a largo plazo.
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>📈 Valor Actual Neto (VAN)</h3>
+                    <div class="formula-box">
+                        VAN = Σ [Ft / (1+r)^t] - I₀
+                    </div>
+                    <p><strong>Donde:</strong></p>
+                    <ul>
+                        <li>Ft = Flujo de caja en período t</li>
+                        <li>r = Tasa de descuento</li>
+                        <li>t = Período de tiempo</li>
+                        <li>I₀ = Inversión inicial</li>
+                    </ul>
+                    <div class="alert alert-success">
+                        <strong>Criterio:</strong> VAN > 0 → Alternativa rentable
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>⏱️ Tasa Interna de Retorno (TIR)</h3>
+                    <div class="formula-box">
+                        0 = Σ [Ft / (1+TIR)^t] - I₀
+                    </div>
+                    <p><strong>Interpretación:</strong> Tasa de descuento que hace VAN = 0</p>
+                    <div class="comparison-table">
+                        <div class="comparison-header">TIR vs Coste Capital</div>
+                        <div class="comparison-header">Decisión</div>
+                        <div class="comparison-header">Interpretación</div>
+                        <div class="comparison-cell">TIR > Coste Capital</div>
+                        <div class="comparison-cell highlight">✅ ACEPTAR</div>
+                        <div class="comparison-cell">Proyecto rentable</div>
+                        <div class="comparison-cell">TIR < Coste Capital</div>
+                        <div class="comparison-cell">❌ RECHAZAR</div>
+                        <div class="comparison-cell">Proyecto no viable</div>
+                        <div class="comparison-cell">TIR = Coste Capital</div>
+                        <div class="comparison-cell">⚪ INDIFERENTE</div>
+                        <div class="comparison-cell">Punto de equilibrio</div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>📊 Período de Recuperación (Payback)</h3>
+                    <div class="formula-box">
+                        Payback = Inversión Inicial / Flujo Anual Promedio
+                    </div>
+                    <p><strong>Ventajas:</strong></p>
+                    <ul>
+                        <li>Simplicidad de cálculo</li>
+                        <li>Enfoque en liquidez</li>
+                        <li>Útil para primeras evaluaciones</li>
+                    </ul>
+                    <p><strong>Limitaciones:</strong></p>
+                    <ul>
+                        <li>Ignora flujos después del payback</li>
+                        <li>No considera valor temporal del dinero</li>
+                        <li>Puede favorecer proyectos a corto plazo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Análisis de Sensibilidad</h3>
+                <p>Evaluación del impacto de cambios en variables clave sobre la decisión.</p>
+                <div class="table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Escenario Pesimista</th>
+                                <th>Escenario Base</th>
+                                <th>Escenario Optimista</th>
+                                <th>Impacto VAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tasa Descuento</td>
+                                <td>12%</td>
+                                <td>8%</td>
+                                <td>5%</td>
+                                <td class="highlight">Alto</td>
+                            </tr>
+                            <tr>
+                                <td>Costes Operativos</td>
+                                <td>+20%</td>
+                                <td>Base</td>
+                                <td>-15%</td>
+                                <td>Medio</td>
+                            </tr>
+                            <tr>
+                                <td>Ingresos</td>
+                                <td>-25%</td>
+                                <td>Base</td>
+                                <td>+30%</td>
+                                <td class="highlight">Alto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Para Examen:</strong> 
+                <ul>
+                    <li><strong>VAN:</strong> Método preferido para decisiones de inversión</li>
+                    <li><strong>TIR:</strong> Útil para comparar rentabilidades</li>
+                    <li><strong>Payback:</strong> Complementario para evaluar riesgo de liquidez</li>
+                    <li><strong>Sensibilidad:</strong> Identifica variables críticas</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="multicriteria" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>⚖️ Análisis Multicriterio:</strong> Métodos para evaluar alternativas considerando múltiples criterios simultáneamente, tanto cuantitativos como cualitativos.
+            </div>
+
+            <div class="method-card">
+                <h3>🎯 Proceso Analítico Jerárquico (AHP)</h3>
+                <p>Desarrollado por Thomas Saaty, descompone decisiones complejas en jerarquías.</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Estructuración del Problema</h4>
+                        <p>Objetivo → Criterios → Subcriterios → Alternativas</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2. Comparaciones Por Pares</h4>
+                        <p>Escala 1-9 de Saaty para importancia relativa</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>3. Cálculo de Prioridades</h4>
+                        <p>Eigenvector principal de matrices de comparación</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>4. Verificación de Consistencia</h4>
+                        <p>Ratio de Consistencia (CR) < 0.10</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📊 Escala de Saaty</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Valor</th>
+                                <th>Definición</th>
+                                <th>Explicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">1</td>
+                                <td>Igual importancia</td>
+                                <td>Ambos criterios contribuyen igualmente</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">3</td>
+                                <td>Moderadamente importante</td>
+                                <td>Experiencia favorece ligeramente uno</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">5</td>
+                                <td>Fuertemente importante</td>
+                                <td>Experiencia favorece fuertemente uno</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">7</td>
+                                <td>Muy fuertemente importante</td>
+                                <td>Un criterio es muy favorecido</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">9</td>
+                                <td>Extremadamente importante</td>
+                                <td>Evidencia absoluta a favor de uno</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="formula-box">
+                    RC = (λmax - n) / (n - 1)
+                    <br>CR = RC / RI
+                </div>
+                <p><strong>Donde:</strong> λmax = valor propio máximo, n = tamaño matriz, RI = índice aleatorio</p>
+            </div>
+
+            <div class="grid">
+                <div class="method-card">
+                    <h3>📈 TOPSIS</h3>
+                    <p><strong>Technique for Order Performance by Similarity to Ideal Solution</strong></p>
+                    <div class="alert alert-info">
+                        <strong>Principio:</strong> La mejor alternativa es la más cercana a la solución ideal positiva y más lejana a la negativa.
+                    </div>
+                    
+                    <h4>🔧 Proceso TOPSIS:</h4>
+                    <ol>
+                        <li><strong>Normalización:</strong> Matriz de decisión normalizada</li>
+                        <li><strong>Ponderación:</strong> Aplicar pesos a criterios</li>
+                        <li><strong>Soluciones Ideales:</strong> Identificar A+ y A-</li>
+                        <li><strong>Distancias:</strong> Calcular distancias euclidianas</li>
+                        <li><strong>Coeficiente:</strong> Ci = Di- / (Di+ + Di-)</li>
+                    </ol>
+                </div>
+
+                <div class="method-card">
+                    <h3>⚡ ELECTRE</h3>
+                    <p><strong>Elimination Et Choix Traduisant la REalité</strong></p>
+                    <div class="alert alert-success">
+                        <strong>Fortaleza:</strong> Maneja incomparabilidades entre alternativas de forma explícita.
+                    </div>
+                    
+                    <h4>📊 Conceptos Clave:</h4>
+                    <ul>
+                        <li><strong>Concordancia:</strong> Grado de acuerdo con preferencia</li>
+                        <li><strong>Discordancia:</strong> Grado de desacuerdo</li>
+                        <li><strong>Umbrales:</strong> Límites para comparaciones</li>
+                        <li><strong>Kernel:</strong> Conjunto de alternativas no dominadas</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h3>🎲 Teoría de la Utilidad Multi-atributo (MAUT)</h3>
+                    <div class="formula-box">
+                        U(x) = Σ wi × ui(xi)
+                    </div>
+                    <p><strong>Donde:</strong></p>
+                    <ul>
+                        <li>U(x) = Utilidad total de alternativa x</li>
+                        <li>wi = Peso del criterio i</li>
+                        <li>ui(xi) = Utilidad parcial del criterio i</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h3>📊 Método de Suma Ponderada (WSM)</h3>
+                    <div class="formula-box">
+                        Ai = Σ wj × rij
+                    </div>
+                    <p><strong>Proceso Simplificado:</strong></p>
+                    <ol>
+                        <li>Normalizar matriz de decisión</li>
+                        <li>Multiplicar por pesos de criterios</li>
+                        <li>Sumar valores ponderados</li>
+                        <li>Ranking por mayor puntuación</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Consideraciones de Implementación:</strong>
+                <ul>
+                    <li><strong>AHP:</strong> Mejor para estructuras jerárquicas complejas</li>
+                    <li><strong>TOPSIS:</strong> Útil cuando existe clara noción de "ideal"</li>
+                    <li><strong>ELECTRE:</strong> Maneja bien la incomparabilidad</li>
+                    <li><strong>WSM:</strong> Simple pero asume independencia de criterios</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Ejemplo Práctico - Selección de Software</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Alternativa</th>
+                            <th>Coste (30%)</th>
+                            <th>Funcionalidad (40%)</th>
+                            <th>Usabilidad (20%)</th>
+                            <th>Soporte (10%)</th>
+                            <th class="highlight">Puntuación Final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Software A</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td class="highlight">8.2</td>
+                        </tr>
+                        <tr>
+                            <td>Software B</td>
+                            <td>6</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>7</td>
+                            <td class="highlight">7.7</td>
+                        </tr>
+                        <tr>
+                            <td>Software C</td>
+                            <td>9</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td class="highlight">7.8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="economic" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>💰 Evaluación Económica:</strong> Análisis financiero detallado para determinar la viabilidad económica y comparar alternativas desde perspectiva monetaria.
+            </div>
+
+            <div class="grid">
+                <div class="method-card">
+                    <h3>💹 Análisis de Flujos de Caja</h3>
+                    <p>Base fundamental para todos los métodos de evaluación económica.</p>
+                    
+                    <div class="card">
+                        <h4>📊 Estructura de Flujos de Caja</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Año 0</th>
+                                    <th>Año 1</th>
+                                    <th>Año 2</th>
+                                    <th>Año 3</th>
+                                    <th>Año N</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Inversión Inicial</td>
+                                    <td class="highlight">-100.000</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Ingresos</td>
+                                    <td>-</td>
+                                    <td>+50.000</td>
+                                    <td>+55.000</td>
+                                    <td>+60.000</td>
+                                    <td>+...</td>
+                                </tr>
+                                <tr>
+                                    <td>Costes Operativos</td>
+                                    <td>-</td>
+                                    <td>-20.000</td>
+                                    <td>-22.000</td>
+                                    <td>-24.000</td>
+                                    <td>-...</td>
+                                </tr>
+                                <tr>
+                                    <td>Valor Residual</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td class="highlight">+20.000</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Flujo Neto</strong></td>
+                                    <td class="highlight">-100.000</td>
+                                    <td class="highlight">+30.000</td>
+                                    <td class="highlight">+33.000</td>
+                                    <td class="highlight">+36.000</td>
+                                    <td class="highlight">+...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>📈 VAN vs TIR - Comparación Detallada</h3>
+                    <div class="comparison-table">
+                        <div class="comparison-header">Aspecto</div>
+                        <div class="comparison-header">VAN</div>
+                        <div class="comparison-header">TIR</div>
+                        <div class="comparison-cell">Concepto</div>
+                        <div class="comparison-cell">Valor presente neto</div>
+                        <div class="comparison-cell">Tasa de rentabilidad</div>
+                        <div class="comparison-cell">Unidades</div>
+                        <div class="comparison-cell">Monetarias (€)</div>
+                        <div class="comparison-cell">Porcentuales (%)</div>
+                        <div class="comparison-cell">Decisión</div>
+                        <div class="comparison-cell">VAN > 0</div>
+                        <div class="comparison-cell">TIR > Coste Capital</div>
+                        <div class="comparison-cell">Múltiples TIR</div>
+                        <div class="comparison-cell">No es problema</div>
+                        <div class="comparison-cell">Sí puede ocurrir</div>
+                        <div class="comparison-cell">Proyectos mutuamente excluyentes</div>
+                        <div class="comparison-cell highlight">Preferible</div>
+                        <div class="comparison-cell">Puede confundir</div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>🎯 Análisis de Punto de Equilibrio</h3>
+                    <div class="formula-box">
+                        PE = Costes Fijos / (Precio - Coste Variable Unitario)
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📊 Componentes del Análisis</h4>
+                        <ul>
+                            <li><strong>Costes Fijos (CF):</strong> No varían con el volumen de producción</li>
+                            <li><strong>Costes Variables (CV):</strong> Proporcionales al volumen</li>
+                            <li><strong>Costes Totales (CT):</strong> CF + CV</li>
+                            <li><strong>Ingresos Totales (IT):</strong> Precio × Cantidad</li>
+                            <li><strong>Margen Contribución:</strong> IT - CV</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong>💡 Aplicación en TI:</strong>
+                        <ul>
+                            <li>Licencias de software (CF) vs. usuarios adicionales (CV)</li>
+                            <li>Infraestructura cloud: coste base + uso</li>
+                            <li>Proyectos de desarrollo: equipo fijo + recursos variables</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>⏰ Valor del Dinero en el Tiempo</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>🔮 Valor Futuro (VF)</h4>
+                            <div class="formula-box">
+                                VF = VP × (1 + r)^n
+                            </div>
+                            <p><strong>Ejemplo:</strong> 1.000€ al 5% anual durante 3 años</p>
+                            <p>VF = 1.000 × (1.05)³ = 1.157,63€</p>
+                        </div>
+                        <div class="card">
+                            <h4>💰 Valor Presente (VP)</h4>
+                            <div class="formula-box">
+                                VP = VF / (1 + r)^n
+                            </div>
+                            <p><strong>Ejemplo:</strong> 1.000€ en 3 años al 5%</p>
+                            <p>VP = 1.000 / (1.05)³ = 863,84€</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Análisis de Riesgo Financiero</h3>
+                <div class="criteria-grid">
+                    <div class="criteria-card">
+                        <span class="criteria-icon">📈</span>
+                        <h4>Riesgo de Mercado</h4>
+                        <p>Fluctuaciones en demanda, precios, competencia</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">💱</span>
+                        <h4>Riesgo Financiero</h4>
+                        <p>Tipos de interés, liquidez, financiación</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">⚙️</span>
+                        <h4>Riesgo Operacional</h4>
+                        <p>Procesos, tecnología, recursos humanos</p>
+                    </div>
+                    <div class="criteria-card">
+                        <span class="criteria-icon">⚖️</span>
+                        <h4>Riesgo Regulatorio</h4>
+                        <p>Cambios normativos, cumplimiento</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>🔧 Técnicas de Mitigación:</strong>
+                    <ul>
+                        <li><strong>Diversificación:</strong> No poner todos los recursos en una alternativa</li>
+                        <li><strong>Cobertura:</strong> Instrumentos financieros de protección</li>
+                        <li><strong>Seguros:</strong> Transferencia de riesgos específicos</li>
+                        <li><strong>Reservas:</strong> Fondos de contingencia</li>
+                        <li><strong>Monitoreo:</strong> Sistema de alertas tempranas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <h3>🧮 Ejemplo Práctico - Migración Cloud</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">€500K</span>
+                        <div>Inversión Inicial</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">€150K/año</span>
+                        <div>Ahorro Operativo</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5 años</span>
+                        <div>Período Análisis</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">8%</span>
+                        <div>Tasa Descuento</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📊 Resultados del Análisis</h4>
+                    <ul>
+                        <li><strong>VAN:</strong> €99.553 (proyecto viable)</li>
+                        <li><strong>TIR:</strong> 15,24% (superior al coste del capital)</li>
+                        <li><strong>Payback:</strong> 3,33 años</li>
+                        <li><strong>Índice Rentabilidad:</strong> 1,20 (cada euro invertido genera 1,20€)</li>
+                    </ul>
+                    <div class="alert alert-success">
+                        <strong>✅ Recomendación:</strong> Proceder con la migración cloud
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="application" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🎯 Aplicación Práctica:</strong> Implementación de metodologías de evaluación en proyectos reales de administraciones públicas.
+            </div>
+
+            <div class="method-card">
+                <h3>🏛️ Marco Normativo en la Administración Pública</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📋 Ley 9/2017 de Contratos del Sector Público</h4>
+                        <p><strong>Art. 145-146:</strong> Criterios de adjudicación y evaluación de ofertas</p>
+                        <ul>
+                            <li>Mejor relación calidad-precio</li>
+                            <li>Coste del ciclo de vida</li>
+                            <li>Criterios sociales y medioambientales</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📊 Real Decreto 3/2011 - ENS</h4>
+                        <p><strong>Seguridad:</strong> Evaluación de riesgos y controles de seguridad</p>
+                        <ul>
+                            <li>Análisis y gestión de riesgos</li>
+                            <li>Categorización de sistemas</li>
+                            <li>Medidas de seguridad proporcionales</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🔄 Metodología MÉTRICA v3</h4>
+                        <p><strong>Proceso MSI:</strong> Estudio de viabilidad del sistema</p>
+                        <ul>
+                            <li>Análisis de alternativas de solución</li>
+                            <li>Evaluación técnica y económica</li>
+                            <li>Selección de la solución</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="method-card">
+                    <h3>🏥 Caso Estudio: Sistema de Gestión Hospitalaria</h3>
+                    <div class="card">
+                        <h4>📋 Contexto del Proyecto</h4>
+                        <ul>
+                            <li><strong>Organismo:</strong> Servicio Regional de Salud</li>
+                            <li><strong>Presupuesto:</strong> €2.5M</li>
+                            <li><strong>Plazo:</strong> 18 meses</li>
+                            <li><strong>Usuarios:</strong> 1.500 profesionales</li>
+                            <li><strong>Pacientes:</strong> 350.000 anuales</li>
+                        </ul>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Peso (%)</th>
+                                <th>Opción A</th>
+                                <th>Opción B</th>
+                                <th>Opción C</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Precio Total</td>
+                                <td class="highlight">40</td>
+                                <td>8.5</td>
+                                <td>9.0</td>
+                                <td>7.0</td>
+                            </tr>
+                            <tr>
+                                <td>Funcionalidad</td>
+                                <td class="highlight">30</td>
+                                <td>9.0</td>
+                                <td>8.0</td>
+                                <td>9.5</td>
+                            </tr>
+                            <tr>
+                                <td>Experiencia</td>
+                                <td class="highlight">15</td>
+                                <td>7.5</td>
+                                <td>9.5</td>
+                                <td>8.0</td>
+                            </tr>
+                            <tr>
+                                <td>Soporte</td>
+                                <td class="highlight">10</td>
+                                <td>8.0</td>
+                                <td>9.0</td>
+                                <td>7.5</td>
+                            </tr>
+                            <tr>
+                                <td>Plazo</td>
+                                <td class="highlight">5</td>
+                                <td>9.0</td>
+                                <td>8.0</td>
+                                <td>8.5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Puntuación Final</strong></td>
+                                <td>-</td>
+                                <td class="highlight">8.45</td>
+                                <td class="highlight">8.65</td>
+                                <td class="highlight">8.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-success">
+                        <strong>🏆 Resultado:</strong> Opción B seleccionada por mejor puntuación global
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>🎓 Caso Estudio: Plataforma Educativa</h3>
+                    <div class="card">
+                        <h4>🎯 Objetivos del Proyecto</h4>
+                        <ul>
+                            <li>Digitalizar procesos educativos</li>
+                            <li>Mejorar experiencia de aprendizaje</li>
+                            <li>Reducir costes operativos</li>
+                            <li>Cumplir normativa de accesibilidad</li>
+                        </ul>
+                    </div>
+
+                    <div class="criteria-grid">
+                        <div class="criteria-card">
+                            <span class="criteria-icon">💰</span>
+                            <h4>Análisis Económico</h4>
+                            <p>VAN: €450.000</p>
+                            <p>TIR: 18,5%</p>
+                            <p>Payback: 2,8 años</p>
+                        </div>
+                        <div class="criteria-card">
+                            <span class="criteria-icon">👥</span>
+                            <h4>Impacto Social</h4>
+                            <p>25.000 estudiantes</p>
+                            <p>1.200 profesores</p>
+                            <p>Accesibilidad AAA</p>
+                        </div>
+                        <div class="criteria-card">
+                            <span class="criteria-icon">⚡</span>
+                            <h4>Eficiencia</h4>
+                            <p>30% reducción tiempo</p>
+                            <p>50% menos papel</p>
+                            <p>24/7 disponibilidad</p>
+                        </div>
+                        <div class="criteria-card">
+                            <span class="criteria-icon">🔒</span>
+                            <h4>Seguridad</h4>
+                            <p>ENS Categoría Media</p>
+                            <p>RGPD compliant</p>
+                            <p>ISO 27001</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Lista de Verificación para Evaluación</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>🎯 Antes del Análisis</h4>
+                        <ul>
+                            <li>☑️ Objetivos claramente definidos</li>
+                            <li>☑️ Stakeholders identificados</li>
+                            <li>☑️ Restricciones documentadas</li>
+                            <li>☑️ Criterios de evaluación acordados</li>
+                            <li>☑️ Metodología seleccionada</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>⚙️ Durante el Proceso</h4>
+                        <ul>
+                            <li>☑️ Datos completos y fiables</li>
+                            <li>☑️ Evaluadores competentes</li>
+                            <li>☑️ Consistencia en valoraciones</li>
+                            <li>☑️ Documentación del proceso</li>
+                            <li>☑️ Análisis de sensibilidad</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>✅ Después del Análisis</h4>
+                        <ul>
+                            <li>☑️ Resultados validados</li>
+                            <li>☑️ Recomendaciones claras</li>
+                            <li>☑️ Plan de implementación</li>
+                            <li>☑️ Métricas de seguimiento</li>
+                            <li>☑️ Lecciones aprendidas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <h3>🚨 Errores Frecuentes y Cómo Evitarlos</h3>
+                <div class="alert alert-warning">
+                    <h4>⚠️ Error 1: Sesgo de Confirmación</h4>
+                    <p><strong>Problema:</strong> Buscar datos que confirmen decisión predeterminada</p>
+                    <p><strong>Solución:</strong> Evaluación ciega, múltiples evaluadores, Devil's advocate</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h4>⚠️ Error 2: Exceso de Criterios</h4>
+                    <p><strong>Problema:</strong> Demasiados criterios diluyen la decisión</p>
+                    <p><strong>Solución:</strong> Máximo 7±2 criterios principales, agrupar subcategorías</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h4>⚠️ Error 3: Pesos Arbitrarios</h4>
+                    <p><strong>Problema:</strong> Asignación de pesos sin justificación</p>
+                    <p><strong>Solución:</strong> Métodos estructurados (AHP, Swing weighting)</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h4>⚠️ Error 4: Análisis Superficial</h4>
+                    <p><strong>Problema:</strong> No considerar efectos a largo plazo</p>
+                    <p><strong>Solución:</strong> Análisis de ciclo de vida completo, TCO</p>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Resumen para Examen - Evaluación de Alternativas:</strong>
+                <ul>
+                    <li><strong>Métodos Cualitativos:</strong> Delphi, DAFO, comparación por pares</li>
+                    <li><strong>Métodos Cuantitativos:</strong> VAN, TIR, Payback, análisis C/B</li>
+                    <li><strong>Multicriterio:</strong> AHP, TOPSIS, ELECTRE, MAUT</li>
+                    <li><strong>Marco Legal:</strong> LCSP, ENS, MÉTRICA v3</li>
+                    <li><strong>Buenas Prácticas:</strong> Documentación, trazabilidad, análisis sensibilidad</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (savedTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card, .method-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

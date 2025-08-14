@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 25 - Pruebas de Sistemas</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #404040;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .nav-tab {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .process-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            border-left: 2px solid var(--accent-color);
+            padding-left: 20px;
+            margin-left: 10px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .timeline-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .method-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .method-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .exercise-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .exercise-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exercise-option:hover {
+            background: var(--accent-color)20;
+            border-color: var(--accent-color);
+        }
+
+        .exercise-option input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+
+        .exercise-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .exercise-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: var(--success-color)20;
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-incorrect {
+            background: var(--error-color)20;
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .list-styled li::before {
+            content: "▶";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                border-radius: 8px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 25: Pruebas de Sistemas</h1>
+            <p>Planificación, documentación y tipos de pruebas en el desarrollo de software</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="nav-tab" onclick="showTab(event, 'planning')">Planificación</button>
+            <button class="nav-tab" onclick="showTab(event, 'types')">Tipos de Pruebas</button>
+            <button class="nav-tab" onclick="showTab(event, 'documentation')">Documentación</button>
+            <button class="nav-tab" onclick="showTab(event, 'data')">Datos de Prueba</button>
+            <button class="nav-tab" onclick="showTab(event, 'exercises')">Ejercicios</button>
+            <button class="nav-tab" onclick="showTab(event, 'resources')">Recursos</button>
+        </nav>
+
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Introducción a las Pruebas de Sistemas</h2>
+                <p>Las pruebas de sistemas son un proceso fundamental en el desarrollo de software que permite verificar que el sistema funciona correctamente según los requisitos especificados. Este proceso incluye la planificación, ejecución y documentación de diferentes tipos de pruebas.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">80%</span>
+                        <span class="stat-label">Reducción de errores con pruebas adecuadas</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50%</span>
+                        <span class="stat-label">Del tiempo de desarrollo dedicado a pruebas</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <span class="stat-label">Principios fundamentales de testing</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Niveles principales de pruebas</span>
+                    </div>
+                </div>
+
+                <h3>Objetivos de las Pruebas</h3>
+                <ul class="list-styled">
+                    <li>Detectar defectos antes de la entrega del software</li>
+                    <li>Verificar que el sistema cumple los requisitos especificados</li>
+                    <li>Validar que el sistema satisface las necesidades del usuario</li>
+                    <li>Evaluar la calidad del software desarrollado</li>
+                    <li>Proporcionar información sobre el riesgo del software</li>
+                    <li>Aumentar la confianza en el sistema</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Principios Fundamentales del Testing</h4>
+                    <p><strong>1. Las pruebas muestran la presencia de defectos:</strong> No pueden probar que no existen errores.</p>
+                    <p><strong>2. Pruebas exhaustivas son imposibles:</strong> Se debe usar análisis de riesgo para priorizar.</p>
+                    <p><strong>3. Pruebas tempranas:</strong> Detectar errores cuanto antes es más económico.</p>
+                    <p><strong>4. Agrupación de defectos:</strong> Los errores tienden a concentrarse en módulos específicos.</p>
+                    <p><strong>5. Paradoja del pesticida:</strong> Los mismos casos de prueba repetidos pierden efectividad.</p>
+                    <p><strong>6. Las pruebas dependen del contexto:</strong> Se adaptan al tipo de aplicación.</p>
+                    <p><strong>7. Falacia de ausencia de errores:</strong> Un sistema sin errores puede no satisfacer necesidades.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="planning" class="tab-content">
+            <div class="card">
+                <h2>Planificación de Pruebas</h2>
+                <p>La planificación de pruebas es crucial para el éxito del proceso de testing. Define qué, cómo, cuándo y quién realizará las pruebas.</p>
+
+                <h3>Proceso de Planificación</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Análisis del Producto</h4>
+                        <p>Estudio de la documentación de requisitos, arquitectura y diseño del sistema.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Estrategia de Pruebas</h4>
+                        <p>Definición del enfoque, niveles, tipos y técnicas de prueba a utilizar.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Criterios de Entrada y Salida</h4>
+                        <p>Establecimiento de condiciones para iniciar y finalizar las pruebas.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Estimación de Recursos</h4>
+                        <p>Cálculo de tiempo, personal y herramientas necesarias para las pruebas.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Cronograma</h4>
+                        <p>Planificación temporal de todas las actividades de testing.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Gestión de Riesgos</h4>
+                        <p>Identificación y mitigación de riesgos del proceso de pruebas.</p>
+                    </div>
+                </div>
+
+                <h3>Plan de Pruebas - Contenido</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sección</th>
+                            <th>Descripción</th>
+                            <th>Elementos Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Introducción</td>
+                            <td>Contexto y objetivos del plan</td>
+                            <td>Propósito, alcance, referencias</td>
+                        </tr>
+                        <tr>
+                            <td>Elementos de Prueba</td>
+                            <td>Componentes a probar</td>
+                            <td>Módulos, interfaces, funciones</td>
+                        </tr>
+                        <tr>
+                            <td>Características</td>
+                            <td>Funcionalidades a verificar</td>
+                            <td>Requisitos funcionales/no funcionales</td>
+                        </tr>
+                        <tr>
+                            <td>Estrategia</td>
+                            <td>Enfoque de testing</td>
+                            <td>Niveles, técnicas, herramientas</td>
+                        </tr>
+                        <tr>
+                            <td>Recursos</td>
+                            <td>Personal y equipamiento</td>
+                            <td>Roles, responsabilidades, hardware</td>
+                        </tr>
+                        <tr>
+                            <td>Cronograma</td>
+                            <td>Planificación temporal</td>
+                            <td>Hitos, dependencias, fechas</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Técnicas de Estimación</h4>
+                    <p><strong>Puntos de Función:</strong> Basada en la funcionalidad del sistema.</p>
+                    <p><strong>Experiencia Histórica:</strong> Uso de datos de proyectos anteriores.</p>
+                    <p><strong>Juicio de Expertos:</strong> Estimación basada en la experiencia del equipo.</p>
+                    <p><strong>Análisis de Riesgos:</strong> Ajuste de estimaciones según el riesgo identificado.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="types" class="tab-content">
+            <div class="card">
+                <h2>Tipos de Pruebas</h2>
+                <p>Existen múltiples clasificaciones de pruebas según diferentes criterios. Es fundamental conocer cada tipo para aplicar la estrategia adecuada.</p>
+
+                <h3>Clasificación por Niveles</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Pruebas Unitarias</h4>
+                        <p><strong>Objetivo:</strong> Verificar componentes individuales del software.</p>
+                        <p><strong>Responsable:</strong> Desarrolladores</p>
+                        <p><strong>Herramientas:</strong> JUnit, NUnit, pytest</p>
+                        <ul class="list-styled">
+                            <li>Aislamiento de dependencias</li>
+                            <li>Cobertura de código</li>
+                            <li>Ejecución automatizada</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de Integración</h4>
+                        <p><strong>Objetivo:</strong> Verificar interfaces entre componentes.</p>
+                        <p><strong>Enfoques:</strong> Big Bang, Top-down, Bottom-up, Sandwich</p>
+                        <p><strong>Aspectos clave:</strong></p>
+                        <ul class="list-styled">
+                            <li>Comunicación entre módulos</li>
+                            <li>Transferencia de datos</li>
+                            <li>Interfaces de usuario</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de Sistema</h4>
+                        <p><strong>Objetivo:</strong> Verificar el sistema completo integrado.</p>
+                        <p><strong>Ambiente:</strong> Similar al productivo</p>
+                        <ul class="list-styled">
+                            <li>Requisitos funcionales</li>
+                            <li>Requisitos no funcionales</li>
+                            <li>Casos de uso completos</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de Aceptación</h4>
+                        <p><strong>Objetivo:</strong> Validar que el sistema satisface necesidades del usuario.</p>
+                        <p><strong>Tipos:</strong> Aceptación del usuario, operacional, contractual</p>
+                        <ul class="list-styled">
+                            <li>Criterios de aceptación</li>
+                            <li>Escenarios reales</li>
+                            <li>Aprobación final</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Clasificación por Técnicas</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Caja Negra (Black Box)</h4>
+                        <p>Pruebas basadas en especificaciones sin conocer la estructura interna.</p>
+                        <p><strong>Técnicas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Partición equivalente</li>
+                            <li>Análisis de valores límite</li>
+                            <li>Tablas de decisión</li>
+                            <li>Transición de estados</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Caja Blanca (White Box)</h4>
+                        <p>Pruebas basadas en la estructura interna del código.</p>
+                        <p><strong>Criterios de Cobertura:</strong></p>
+                        <ul class="list-styled">
+                            <li>Cobertura de sentencias</li>
+                            <li>Cobertura de ramas</li>
+                            <li>Cobertura de condiciones</li>
+                            <li>Cobertura de rutas</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Caja Gris (Grey Box)</h4>
+                        <p>Combinación de técnicas de caja negra y caja blanca.</p>
+                        <ul class="list-styled">
+                            <li>Conocimiento parcial del código</li>
+                            <li>Pruebas de integración</li>
+                            <li>Pruebas de regresión</li>
+                            <li>Pruebas de penetración</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas No Funcionales</h4>
+                        <p>Verifican aspectos de calidad y rendimiento del sistema.</p>
+                        <ul class="list-styled">
+                            <li>Rendimiento y carga</li>
+                            <li>Seguridad</li>
+                            <li>Usabilidad</li>
+                            <li>Compatibilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="documentation" class="tab-content">
+            <div class="card">
+                <h2>Documentación de Pruebas</h2>
+                <p>La documentación es fundamental para la trazabilidad, mantenimiento y mejora continua del proceso de pruebas.</p>
+
+                <h3>Tipos de Documentos</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Plan de Pruebas</h4>
+                        <p>Documento maestro que define la estrategia general de testing.</p>
+                        <ul class="list-styled">
+                            <li>Objetivos y alcance</li>
+                            <li>Estrategia y enfoque</li>
+                            <li>Recursos y cronograma</li>
+                            <li>Criterios de entrada/salida</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Especificación de Casos de Prueba</h4>
+                        <p>Detalle específico de cada caso de prueba a ejecutar.</p>
+                        <ul class="list-styled">
+                            <li>Identificador único</li>
+                            <li>Precondiciones</li>
+                            <li>Pasos de ejecución</li>
+                            <li>Resultado esperado</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Reporte de Ejecución</h4>
+                        <p>Registro de la ejecución de pruebas y sus resultados.</p>
+                        <ul class="list-styled">
+                            <li>Estado de ejecución</li>
+                            <li>Resultados obtenidos</li>
+                            <li>Defectos encontrados</li>
+                            <li>Observaciones</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Reporte de Defectos</h4>
+                        <p>Documentación detallada de los errores encontrados.</p>
+                        <ul class="list-styled">
+                            <li>Descripción del defecto</li>
+                            <li>Pasos para reproducir</li>
+                            <li>Severidad y prioridad</li>
+                            <li>Estado y asignación</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Plantilla de Caso de Prueba</h3>
+                <div class="code-block">
+ID: TC_001
+Título: Validar login con credenciales válidas
+Descripción: Verificar que un usuario puede ingresar con credenciales correctas
+Precondiciones: 
+- Sistema disponible
+- Usuario registrado en la base de datos
+Pasos:
+1. Navegar a la página de login
+2. Ingresar usuario válido
+3. Ingresar contraseña válida  
+4. Hacer clic en "Ingresar"
+Resultado Esperado: El usuario accede al dashboard principal
+Datos de Prueba: usuario: test@email.com, password: Test123!
+Postcondiciones: Usuario autenticado en el sistema
+                </div>
+
+                <h3>Métricas de Documentación</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Fórmula</th>
+                            <th>Objetivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cobertura de Requisitos</td>
+                            <td>(Requisitos probados / Total requisitos) × 100</td>
+                            <td>Verificar completitud</td>
+                        </tr>
+                        <tr>
+                            <td>Densidad de Defectos</td>
+                            <td>Defectos encontrados / Tamaño del software</td>
+                            <td>Evaluar calidad</td>
+                        </tr>
+                        <tr>
+                            <td>Efectividad de Pruebas</td>
+                            <td>Defectos en pruebas / Total defectos</td>
+                            <td>Medir eficacia</td>
+                        </tr>
+                        <tr>
+                            <td>Progreso de Ejecución</td>
+                            <td>(Casos ejecutados / Total casos) × 100</td>
+                            <td>Seguimiento avance</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Herramientas de Gestión</h4>
+                    <p><strong>TestRail:</strong> Gestión completa de casos de prueba y ejecución.</p>
+                    <p><strong>Jira + Xray:</strong> Integración con gestión de proyectos.</p>
+                    <p><strong>Azure Test Plans:</strong> Solución integrada de Microsoft.</p>
+                    <p><strong>TestLink:</strong> Herramienta open source para gestión de pruebas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="data" class="tab-content">
+            <div class="card">
+                <h2>Datos de Prueba</h2>
+                <p>Los datos de prueba son fundamentales para la efectividad del testing. Su selección, generación y gestión requieren estrategias específicas.</p>
+
+                <h3>Tipos de Datos de Prueba</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Datos Válidos</h4>
+                        <p>Datos que cumplen con todas las validaciones del sistema.</p>
+                        <ul class="list-styled">
+                            <li>Valores dentro de rangos permitidos</li>
+                            <li>Formatos correctos</li>
+                            <li>Tipos de datos apropiados</li>
+                            <li>Reglas de negocio satisfechas</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Datos Inválidos</h4>
+                        <p>Datos que violan las reglas de validación del sistema.</p>
+                        <ul class="list-styled">
+                            <li>Valores fuera de rango</li>
+                            <li>Formatos incorrectos</li>
+                            <li>Tipos de datos erróneos</li>
+                            <li>Violación de reglas de negocio</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Datos Límite</h4>
+                        <p>Valores en los bordes de los rangos permitidos.</p>
+                        <ul class="list-styled">
+                            <li>Valores mínimos y máximos</li>
+                            <li>Primero y último de una lista</li>
+                            <li>Justo dentro/fuera del rango</li>
+                            <li>Valores nulos o vacíos</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Datos de Volumen</h4>
+                        <p>Grandes cantidades de datos para pruebas de rendimiento.</p>
+                        <ul class="list-styled">
+                            <li>Datasets masivos</li>
+                            <li>Múltiples usuarios concurrentes</li>
+                            <li>Transacciones simultáneas</li>
+                            <li>Stress del sistema</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Técnicas de Generación de Datos</h3>
+                <div class="process-timeline">
+                    <div class="timeline-item">
+                        <h4>Datos de Producción Anonimizados</h4>
+                        <p>Uso de datos reales con información sensible enmascarada o eliminada.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Generación Sintética</h4>
+                        <p>Creación de datos artificiales que mantienen las características estadísticas.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Datos Aleatorios</h4>
+                        <p>Generación automática usando algoritmos para crear valores diversos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Datos Manuales</h4>
+                        <p>Creación específica de datasets para casos de prueba particulares.</p>
+                    </div>
+                </div>
+
+                <h3>Gestión de Datos de Prueba</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Consideraciones</th>
+                            <th>Buenas Prácticas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Privacidad</td>
+                            <td>Protección de datos personales</td>
+                            <td>Anonimización, enmascaramiento</td>
+                        </tr>
+                        <tr>
+                            <td>Consistencia</td>
+                            <td>Integridad referencial</td>
+                            <td>Validación de relaciones</td>
+                        </tr>
+                        <tr>
+                            <td>Versionado</td>
+                            <td>Control de cambios</td>
+                            <td>Repositorio centralizado</td>
+                        </tr>
+                        <tr>
+                            <td>Reutilización</td>
+                            <td>Optimización de recursos</td>
+                            <td>Datasets compartidos</td>
+                        </tr>
+                        <tr>
+                            <td>Limpieza</td>
+                            <td>Estado inicial conocido</td>
+                            <td>Scripts de reset automático</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Herramientas de Generación de Datos</h4>
+                    <p><strong>Faker:</strong> Librería para generar datos sintéticos en múltiples idiomas.</p>
+                    <p><strong>Mockaroo:</strong> Servicio web para generar datos de prueba personalizados.</p>
+                    <p><strong>IBM InfoSphere Optim:</strong> Gestión empresarial de datos de prueba.</p>
+                    <p><strong>Redgate SQL Data Generator:</strong> Generación de datos para bases de datos SQL.</p>
+                </div>
+
+                <div class="code-block">
+# Ejemplo de generación de datos con Python Faker
+from faker import Faker
+
+fake = Faker('es_ES')
+
+# Generar datos de usuario
+usuario = {
+    'nombre': fake.first_name(),
+    'apellido': fake.last_name(),
+    'email': fake.email(),
+    'telefono': fake.phone_number(),
+    'fecha_nacimiento': fake.date_of_birth(minimum_age=18, maximum_age=65)
+}
+
+# Generar datos de prueba para rangos específicos
+precio = fake.pydecimal(left_digits=3, right_digits=2, positive=True)
+codigo_postal = fake.postcode()
+                </div>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos de Pruebas</h2>
+                <p>Resuelve estos ejercicios para aplicar los conceptos de planificación y ejecución de pruebas.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p>Progreso: <span id="progress-text">0/10</span> ejercicios completados</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 1:</strong> Un proyecto tiene 150 requisitos funcionales. Se han creado 450 casos de prueba que cubren 120 requisitos. ¿Cuál es el porcentaje de cobertura de requisitos?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="75">
+                        <label>75%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="80">
+                        <label>80%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="300">
+                        <label>300%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="26.7">
+                        <label>26.7%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(1, 80, 'Cobertura de requisitos = (120 requisitos cubiertos / 150 requisitos totales) × 100 = 80%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 2:</strong> En un sistema se encontraron 25 defectos durante las pruebas y 5 defectos adicionales en producción. ¿Cuál es la efectividad de las pruebas?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="20">
+                        <label>20%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="83.3">
+                        <label>83.3%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="80">
+                        <label>80%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="500">
+                        <label>500%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(2, 83.3, 'Efectividad = (25 defectos en pruebas / 30 defectos totales) × 100 = 83.3%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 3:</strong> Un equipo planea ejecutar 200 casos de prueba en 10 días. Si cada tester puede ejecutar 8 casos por día, ¿cuántos testers se necesitan?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="2">
+                        <label>2 testers</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="2.5">
+                        <label>2.5 testers</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="3">
+                        <label>3 testers</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="4">
+                        <label>4 testers</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(3, 2.5, 'Testers necesarios = 200 casos / (10 días × 8 casos/día) = 200/80 = 2.5 testers')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 4:</strong> Para pruebas de carga, se requiere simular 1000 usuarios concurrentes. Si cada máquina virtual puede simular 50 usuarios, ¿cuántas VMs se necesitan?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="20">
+                        <label>20 VMs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="15">
+                        <label>15 VMs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="25">
+                        <label>25 VMs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="50">
+                        <label>50 VMs</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(4, 20, 'VMs necesarias = 1000 usuarios / 50 usuarios por VM = 20 VMs')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 5:</strong> Un sistema tiene 10,000 líneas de código. Si se espera una densidad de defectos de 2 defectos por 100 líneas de código, ¿cuántos defectos se estiman encontrar?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="200">
+                        <label>200 defectos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="100">
+                        <label>100 defectos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="500">
+                        <label>500 defectos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="50">
+                        <label>50 defectos</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(5, 200, 'Defectos estimados = (10,000 líneas / 100) × 2 defectos = 100 × 2 = 200 defectos')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 6:</strong> En pruebas de integración bottom-up de 5 módulos, se necesitan drivers y stubs. ¿Cuántos stubs se requieren como máximo?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="4">
+                        <label>4 stubs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="5">
+                        <label>5 stubs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="10">
+                        <label>10 stubs</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="0">
+                        <label>0 stubs</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(6, 4, 'En bottom-up se necesitan drivers (no stubs). Máximo 4 drivers para probar módulos de nivel inferior.')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 7:</strong> Para una aplicación web con 8 navegadores soportados y 3 sistemas operativos, ¿cuántas combinaciones de pruebas de compatibilidad se requieren?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="11">
+                        <label>11 combinaciones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="24">
+                        <label>24 combinaciones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="64">
+                        <label>64 combinaciones</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="8">
+                        <label>8 combinaciones</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(7, 24, 'Combinaciones = 8 navegadores × 3 sistemas operativos = 24 combinaciones')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 8:</strong> Un caso de prueba falla el 20% de las veces debido a problemas de timing. Si se ejecuta 15 veces, ¿cuántas veces se espera que falle?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="3">
+                        <label>3 veces</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="2">
+                        <label>2 veces</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="4">
+                        <label>4 veces</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="12">
+                        <label>12 veces</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(8, 3, 'Fallos esperados = 15 ejecuciones × 20% = 15 × 0.20 = 3 veces')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback8"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 9:</strong> Para cobertura de sentencias del 85% en un módulo de 200 líneas de código ejecutable, ¿cuántas líneas deben ser ejecutadas?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="170">
+                        <label>170 líneas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="150">
+                        <label>150 líneas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="85">
+                        <label>85 líneas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="200">
+                        <label>200 líneas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(9, 170, 'Líneas ejecutadas = 200 líneas × 85% = 200 × 0.85 = 170 líneas')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 10:</strong> Un proyecto tiene presupuesto de 100,000€ para testing. Si las pruebas cuestan 50€ por caso ejecutado, ¿cuántos casos de prueba se pueden ejecutar?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="2000">
+                        <label>2000 casos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="5000">
+                        <label>5000 casos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="1000">
+                        <label>1000 casos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="500">
+                        <label>500 casos</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(10, 2000, 'Casos ejecutables = 100,000€ / 50€ por caso = 2000 casos de prueba')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback10"></div>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>Recursos y Herramientas</h2>
+                <p>Conjunto de recursos, herramientas y referencias para profundizar en las pruebas de sistemas.</p>
+
+                <h3>Herramientas de Testing</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Automatización de Pruebas</h4>
+                        <ul class="list-styled">
+                            <li><strong>Selenium:</strong> Automatización de pruebas web</li>
+                            <li><strong>Cypress:</strong> Testing moderno para aplicaciones web</li>
+                            <li><strong>JUnit/TestNG:</strong> Frameworks para Java</li>
+                            <li><strong>pytest:</strong> Framework de testing para Python</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de Rendimiento</h4>
+                        <ul class="list-styled">
+                            <li><strong>JMeter:</strong> Pruebas de carga y rendimiento</li>
+                            <li><strong>LoadRunner:</strong> Solución empresarial de HP</li>
+                            <li><strong>Gatling:</strong> Herramienta moderna de carga</li>
+                            <li><strong>K6:</strong> Testing de rendimiento como código</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Gestión de Pruebas</h4>
+                        <ul class="list-styled">
+                            <li><strong>TestRail:</strong> Gestión completa de casos de prueba</li>
+                            <li><strong>Xray:</strong> Plugin de testing para Jira</li>
+                            <li><strong>Azure Test Plans:</strong> Integrado con Azure DevOps</li>
+                            <li><strong>TestLink:</strong> Solución open source</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Pruebas de API</h4>
+                        <ul class="list-styled">
+                            <li><strong>Postman:</strong> Testing y documentación de APIs</li>
+                            <li><strong>RestAssured:</strong> Framework para Java</li>
+                            <li><strong>Insomnia:</strong> Cliente REST alternativo</li>
+                            <li><strong>SoapUI:</strong> Testing de servicios web</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Estándares y Metodologías</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Estándar</th>
+                            <th>Descripción</th>
+                            <th>Aplicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IEEE 829</td>
+                            <td>Documentación de pruebas de software</td>
+                            <td>Plantillas para documentos de testing</td>
+                        </tr>
+                        <tr>
+                            <td>ISO/IEC 29119</td>
+                            <td>Estándar internacional de testing</td>
+                            <td>Procesos, documentación, técnicas</td>
+                        </tr>
+                        <tr>
+                            <td>ISTQB</td>
+                            <td>Certificación en testing de software</td>
+                            <td>Conocimientos y mejores prácticas</td>
+                        </tr>
+                        <tr>
+                            <td>TMMi</td>
+                            <td>Modelo de madurez en testing</td>
+                            <td>Evaluación y mejora de procesos</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Métricas Clave de Testing</h3>
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>Métricas de Progreso</h4>
+                        <ul class="list-styled">
+                            <li>Casos ejecutados vs planificados</li>
+                            <li>Porcentaje de casos pasados/fallidos</li>
+                            <li>Cobertura de requisitos</li>
+                            <li>Velocidad de ejecución</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Calidad</h4>
+                        <ul class="list-styled">
+                            <li>Densidad de defectos</li>
+                            <li>Efectividad de detección</li>
+                            <li>Tasa de escape de defectos</li>
+                            <li>Tiempo medio de resolución</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Productividad</h4>
+                        <ul class="list-styled">
+                            <li>Casos diseñados por día</li>
+                            <li>Casos ejecutados por hora</li>
+                            <li>Costo por defecto encontrado</li>
+                            <li>Retorno de inversión en testing</li>
+                        </ul>
+                    </div>
+                    <div class="method-card">
+                        <h4>Métricas de Cobertura</h4>
+                        <ul class="list-styled">
+                            <li>Cobertura de código</li>
+                            <li>Cobertura de ramas</li>
+                            <li>Cobertura de requisitos</li>
+                            <li>Cobertura de riesgos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Recursos de Aprendizaje</h4>
+                    <p><strong>ISTQB Syllabus:</strong> Fundamentos y certificaciones en testing.</p>
+                    <p><strong>Ministry of Testing:</strong> Comunidad y recursos de testing.</p>
+                    <p><strong>Testing Excellence:</strong> Artículos y mejores prácticas.</p>
+                    <p><strong>IEEE Computer Society:</strong> Estándares y publicaciones técnicas.</p>
+                </div>
+
+                <h3>Checklist de Planificación de Pruebas</h3>
+                <ul class="list-styled">
+                    <li>¿Están definidos claramente los objetivos de las pruebas?</li>
+                    <li>¿Se ha identificado el alcance y las exclusiones?</li>
+                    <li>¿Están definidos los criterios de entrada y salida?</li>
+                    <li>¿Se ha estimado correctamente el esfuerzo requerido?</li>
+                    <li>¿Están asignados los roles y responsabilidades?</li>
+                    <li>¿Se han identificado y mitigado los riesgos?</li>
+                    <li>¿Está definida la estrategia de datos de prueba?</li>
+                    <li>¿Se han seleccionado las herramientas apropiadas?</li>
+                    <li>¿Está planificada la gestión de defectos?</li>
+                    <li>¿Se han definido las métricas a recopilar?</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('nav-tab');
+            
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.style.display = 'block';
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = '❌ Por favor selecciona una respuesta.';
+                return;
+            }
+            
+            const userAnswer = parseFloat(selectedAnswer.value);
+            const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.1;
+            
+            feedback.style.display = 'block';
+            
+            if (isCorrect) {
+                feedback.className = 'exercise-feedback feedback-correct';
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                
+                if (!selectedAnswer.closest('.exercise-container').dataset.completed) {
+                    completedExercises++;
+                    selectedAnswer.closest('.exercise-container').dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completedExercises}/10`;
+        }
+
+        // Inicializar tema
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌞 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

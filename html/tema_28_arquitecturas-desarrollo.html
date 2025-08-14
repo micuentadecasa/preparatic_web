@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 28 - Arquitecturas de Desarrollo</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #404040;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .nav-tab {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .architecture-card {
+            background: var(--bg-secondary);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .architecture-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-color);
+        }
+
+        .architecture-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .exercise-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .exercise-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exercise-option:hover {
+            background: var(--accent-color)20;
+            border-color: var(--accent-color);
+        }
+
+        .exercise-option input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+
+        .exercise-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .exercise-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: var(--success-color)20;
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-incorrect {
+            background: var(--error-color)20;
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .list-styled li::before {
+            content: "▶";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .ecosystem-diagram {
+            background: linear-gradient(135deg, var(--success-color)10, var(--accent-color)10);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--accent-color)30;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                border-radius: 8px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 28: Arquitecturas de Desarrollo</h1>
+            <p>Java EE, .NET, Python y ecosistemas de desarrollo modernos</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="nav-tab" onclick="showTab(event, 'java')">Java EE</button>
+            <button class="nav-tab" onclick="showTab(event, 'dotnet')">.NET</button>
+            <button class="nav-tab" onclick="showTab(event, 'python')">Python</button>
+            <button class="nav-tab" onclick="showTab(event, 'comparison')">Comparación</button>
+            <button class="nav-tab" onclick="showTab(event, 'exercises')">Ejercicios</button>
+            <button class="nav-tab" onclick="showTab(event, 'resources')">Recursos</button>
+        </nav>
+
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Arquitecturas de Desarrollo Empresarial</h2>
+                <p>Las arquitecturas de desarrollo empresarial proporcionan frameworks robustos y escalables para construir aplicaciones de misión crítica. Cada plataforma ofrece un ecosistema completo de herramientas, bibliotecas y servicios.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">25+</span>
+                        <span class="stat-label">Años de evolución Java Enterprise</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">Versiones de .NET Framework</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">300K+</span>
+                        <span class="stat-label">Paquetes en Python PyPI</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Arquitecturas empresariales principales</span>
+                    </div>
+                </div>
+
+                <h3>Características Comunes de Arquitecturas Empresariales</h3>
+                <ul class="list-styled">
+                    <li>Escalabilidad horizontal y vertical</li>
+                    <li>Alta disponibilidad y tolerancia a fallos</li>
+                    <li>Seguridad integrada a nivel de plataforma</li>
+                    <li>Gestión de transacciones distribuidas</li>
+                    <li>Soporte para arquitecturas de microservicios</li>
+                    <li>Integración con sistemas empresariales</li>
+                    <li>Herramientas de monitoreo y observabilidad</li>
+                    <li>Ecosistemas de desarrollo ricos</li>
+                </ul>
+
+                <h3>Tendencias Actuales en Arquitecturas</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Cloud Native</h4>
+                        <p>Diseño específico para entornos cloud con contenedores, microservicios y orquestación automática.</p>
+                        <ul class="list-styled">
+                            <li>Arquitectura de 12 factores</li>
+                            <li>Stateless applications</li>
+                            <li>Auto-scaling dinámico</li>
+                            <li>DevOps integrado</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Microservicios</h4>
+                        <p>Descomposición de aplicaciones monolíticas en servicios pequeños, independientes y especializados.</p>
+                        <ul class="list-styled">
+                            <li>Independencia de despliegue</li>
+                            <li>Tecnologías heterogéneas</li>
+                            <li>Comunicación via APIs</li>
+                            <li>Tolerancia a fallos</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Serverless</h4>
+                        <p>Ejecución de código sin gestión de infraestructura, con escalado automático y pago por uso.</p>
+                        <ul class="list-styled">
+                            <li>Functions as a Service (FaaS)</li>
+                            <li>Event-driven architecture</li>
+                            <li>Zero server management</li>
+                            <li>Cost optimization</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>API-First</h4>
+                        <p>Diseño centrado en APIs como contratos fundamentales entre servicios y aplicaciones.</p>
+                        <ul class="list-styled">
+                            <li>OpenAPI specifications</li>
+                            <li>GraphQL adoption</li>
+                            <li>API gateways</li>
+                            <li>Versioning strategies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Factores de Decisión para Arquitecturas</h4>
+                    <p><strong>Requisitos de rendimiento:</strong> Throughput, latencia, concurrencia.</p>
+                    <p><strong>Ecosistema tecnológico:</strong> Compatibilidad con sistemas existentes.</p>
+                    <p><strong>Expertise del equipo:</strong> Conocimiento y experiencia disponible.</p>
+                    <p><strong>Roadmap organizacional:</strong> Estrategia tecnológica a largo plazo.</p>
+                    <p><strong>Costos:</strong> Licenciamiento, infraestructura, desarrollo, mantenimiento.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="java" class="tab-content">
+            <div class="card">
+                <h2>Arquitectura Java EE (Jakarta EE)</h2>
+                <p>Java Enterprise Edition es una plataforma robusta para el desarrollo de aplicaciones empresariales distribuidas, basada en componentes y estándares abiertos.</p>
+
+                <h3>Evolución de Java Enterprise</h3>
+                <div class="ecosystem-diagram">
+                    <h4>Timeline de Java Enterprise</h4>
+                    <p><strong>1999:</strong> J2EE 1.2 - Servlets, JSP, EJB</p>
+                    <p><strong>2003:</strong> J2EE 1.4 - Web Services, JMS</p>
+                    <p><strong>2006:</strong> Java EE 5 - Annotations, EJB 3.0</p>
+                    <p><strong>2009:</strong> Java EE 6 - CDI, JAX-RS, Bean Validation</p>
+                    <p><strong>2013:</strong> Java EE 7 - WebSocket, JSON-P, Batch</p>
+                    <p><strong>2017:</strong> Java EE 8 - HTTP/2, JSON-B, Security API</p>
+                    <p><strong>2019:</strong> Jakarta EE 8 - Migración a Eclipse Foundation</p>
+                    <p><strong>2020+:</strong> Jakarta EE 9+ - Namespace jakarta.*, Cloud Native</p>
+                </div>
+
+                <h3>Componentes Principales de Java EE</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Web Tier</h4>
+                        <p>Tecnologías para desarrollo de aplicaciones web y servicios REST.</p>
+                        <ul class="list-styled">
+                            <li><strong>Servlets:</strong> Componentes Java para HTTP</li>
+                            <li><strong>JSP/JSF:</strong> Páginas dinámicas y frameworks UI</li>
+                            <li><strong>JAX-RS:</strong> RESTful web services</li>
+                            <li><strong>WebSocket:</strong> Comunicación bidireccional</li>
+                            <li><strong>Security API:</strong> Autenticación y autorización</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Business Tier</h4>
+                        <p>Lógica de negocio encapsulada en componentes empresariales.</p>
+                        <ul class="list-styled">
+                            <li><strong>EJB:</strong> Enterprise Java Beans</li>
+                            <li><strong>CDI:</strong> Contexts and Dependency Injection</li>
+                            <li><strong>JTA:</strong> Java Transaction API</li>
+                            <li><strong>Bean Validation:</strong> Validación de datos</li>
+                            <li><strong>Interceptors:</strong> Aspectos transversales</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Integration Tier</h4>
+                        <p>Conectividad con bases de datos y sistemas externos.</p>
+                        <ul class="list-styled">
+                            <li><strong>JPA:</strong> Java Persistence API</li>
+                            <li><strong>JMS:</strong> Java Message Service</li>
+                            <li><strong>JCA:</strong> Java Connector Architecture</li>
+                            <li><strong>JAX-WS:</strong> SOAP Web Services</li>
+                            <li><strong>JSON-P/B:</strong> Procesamiento JSON</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Crosscutting Services</h4>
+                        <p>Servicios transversales disponibles en toda la plataforma.</p>
+                        <ul class="list-styled">
+                            <li><strong>Security:</strong> JAAS, roles, permisos</li>
+                            <li><strong>Transactions:</strong> ACID, distributed TX</li>
+                            <li><strong>Concurrency:</strong> Managed threads</li>
+                            <li><strong>Batch:</strong> JSR 352 batch processing</li>
+                            <li><strong>Monitoring:</strong> JMX, health checks</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Servidores de Aplicaciones Java EE</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Servidor</th>
+                            <th>Vendor</th>
+                            <th>Licencia</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WildFly (JBoss)</td>
+                            <td>Red Hat</td>
+                            <td>Open Source</td>
+                            <td>Ligero, modular, cloud-ready</td>
+                        </tr>
+                        <tr>
+                            <td>WebLogic</td>
+                            <td>Oracle</td>
+                            <td>Comercial</td>
+                            <td>Enterprise, clustering, performance</td>
+                        </tr>
+                        <tr>
+                            <td>WebSphere</td>
+                            <td>IBM</td>
+                            <td>Comercial</td>
+                            <td>Integración, mainframe, enterprise</td>
+                        </tr>
+                        <tr>
+                            <td>Payara</td>
+                            <td>Payara</td>
+                            <td>Open Source</td>
+                            <td>GlassFish fork, microservices</td>
+                        </tr>
+                        <tr>
+                            <td>TomEE</td>
+                            <td>Apache</td>
+                            <td>Open Source</td>
+                            <td>Tomcat + Java EE, ligero</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Ejemplo de Aplicación Java EE</h3>
+                <div class="code-block">
+// Entity JPA
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @NotNull
+    @Size(min = 2, max = 100)
+    private String name;
+    
+    @DecimalMin("0.0")
+    private BigDecimal price;
+    
+    // getters and setters...
+}
+
+// EJB Service
+@Stateless
+public class ProductService {
+    @PersistenceContext
+    private EntityManager em;
+    
+    public List&lt;Product&gt; getAllProducts() {
+        return em.createQuery("SELECT p FROM Product p", Product.class)
+                 .getResultList();
+    }
+    
+    @Transactional
+    public Product saveProduct(Product product) {
+        return em.merge(product);
+    }
+}
+
+// REST Endpoint
+@Path("/products")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class ProductResource {
+    @Inject
+    private ProductService productService;
+    
+    @GET
+    public Response getAllProducts() {
+        List&lt;Product&gt; products = productService.getAllProducts();
+        return Response.ok(products).build();
+    }
+    
+    @POST
+    public Response createProduct(Product product) {
+        Product saved = productService.saveProduct(product);
+        return Response.status(201).entity(saved).build();
+    }
+}
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Ventajas de Java EE</h4>
+                    <p><strong>Estándares:</strong> APIs estandarizadas y portabilidad entre servidores.</p>
+                    <p><strong>Madurez:</strong> 25+ años de evolución y mejores prácticas establecidas.</p>
+                    <p><strong>Ecosistema:</strong> Amplio soporte de herramientas, bibliotecas y comunidad.</p>
+                    <p><strong>Enterprise Ready:</strong> Características empresariales out-of-the-box.</p>
+                    <p><strong>Productividad:</strong> Desarrollo rápido con annotations y convenciones.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="dotnet" class="tab-content">
+            <div class="card">
+                <h2>Plataforma .NET</h2>
+                <p>La plataforma .NET de Microsoft es un ecosistema completo para desarrollo de aplicaciones empresariales, web, móviles y de escritorio con un enfoque multiplataforma.</p>
+
+                <h3>Evolución de .NET</h3>
+                <div class="ecosystem-diagram">
+                    <h4>Timeline de .NET</h4>
+                    <p><strong>2002:</strong> .NET Framework 1.0 - Windows only</p>
+                    <p><strong>2005:</strong> .NET Framework 2.0 - Generics, partial classes</p>
+                    <p><strong>2007:</strong> .NET Framework 3.5 - LINQ, WPF</p>
+                    <p><strong>2010:</strong> .NET Framework 4.0 - Dynamic, parallel computing</p>
+                    <p><strong>2016:</strong> .NET Core 1.0 - Cross-platform, open source</p>
+                    <p><strong>2017:</strong> .NET Core 2.0 - .NET Standard</p>
+                    <p><strong>2019:</strong> .NET Core 3.0 - Desktop apps, C# 8</p>
+                    <p><strong>2020:</strong> .NET 5 - Unification</p>
+                    <p><strong>2021+:</strong> .NET 6+ - Long-term support, performance</p>
+                </div>
+
+                <h3>Arquitectura de .NET</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Runtime y Base</h4>
+                        <p>Fundamentos de ejecución y bibliotecas base de la plataforma.</p>
+                        <ul class="list-styled">
+                            <li><strong>CLR:</strong> Common Language Runtime</li>
+                            <li><strong>BCL:</strong> Base Class Library</li>
+                            <li><strong>CTS:</strong> Common Type System</li>
+                            <li><strong>CLS:</strong> Common Language Specification</li>
+                            <li><strong>Garbage Collector:</strong> Gestión automática de memoria</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Frameworks de Aplicación</h4>
+                        <p>Frameworks específicos para diferentes tipos de aplicaciones.</p>
+                        <ul class="list-styled">
+                            <li><strong>ASP.NET Core:</strong> Aplicaciones web y APIs</li>
+                            <li><strong>WPF:</strong> Windows desktop applications</li>
+                            <li><strong>WinForms:</strong> Traditional Windows apps</li>
+                            <li><strong>MAUI:</strong> Multi-platform app UI</li>
+                            <li><strong>Blazor:</strong> Web apps con C#</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Acceso a Datos</h4>
+                        <p>Tecnologías para persistencia y acceso a datos.</p>
+                        <ul class="list-styled">
+                            <li><strong>Entity Framework Core:</strong> ORM moderno</li>
+                            <li><strong>ADO.NET:</strong> Data access APIs</li>
+                            <li><strong>Dapper:</strong> Micro-ORM de alto rendimiento</li>
+                            <li><strong>LINQ:</strong> Consultas integradas al lenguaje</li>
+                            <li><strong>SqlClient:</strong> SQL Server native</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Servicios Cloud</h4>
+                        <p>Integración nativa con servicios de Azure y cloud computing.</p>
+                        <ul class="list-styled">
+                            <li><strong>Azure SDK:</strong> APIs para servicios Azure</li>
+                            <li><strong>Azure Functions:</strong> Serverless computing</li>
+                            <li><strong>Service Fabric:</strong> Microservices platform</li>
+                            <li><strong>Azure App Service:</strong> PaaS hosting</li>
+                            <li><strong>Dapr:</strong> Distributed applications</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>ASP.NET Core - Arquitectura Web</h3>
+                <div class="code-block">
+// Program.cs - .NET 6+ Minimal API
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services
+builder.Services.AddControllers();
+builder.Services.AddDbContext&lt;ProductContext&gt;(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped&lt;IProductService, ProductService&gt;();
+
+var app = builder.Build();
+
+// Configure pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+
+// Product Controller
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _productService;
+
+    public ProductsController(IProductService productService)
+    {
+        _productService = productService;
+    }
+
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;IEnumerable&lt;Product&gt;&gt;&gt; GetProducts()
+    {
+        var products = await _productService.GetAllProductsAsync();
+        return Ok(products);
+    }
+
+    [HttpPost]
+    public async Task&lt;ActionResult&lt;Product&gt;&gt; CreateProduct(Product product)
+    {
+        var created = await _productService.CreateProductAsync(product);
+        return CreatedAtAction(nameof(GetProduct), new { id = created.Id }, created);
+    }
+}
+
+// Entity Framework Model
+public class Product
+{
+    public int Id { get; set; }
+    
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; }
+    
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal Price { get; set; }
+    
+    public DateTime CreatedAt { get; set; }
+}
+
+// DbContext
+public class ProductContext : DbContext
+{
+    public ProductContext(DbContextOptions&lt;ProductContext&gt; options) : base(options) { }
+    
+    public DbSet&lt;Product&gt; Products { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity&lt;Product&gt;()
+            .Property(p =&gt; p.CreatedAt)
+            .HasDefaultValueSql("GETDATE()");
+    }
+}
+                </div>
+
+                <h3>Herramientas del Ecosistema .NET</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Herramienta</th>
+                            <th>Propósito</th>
+                            <th>Licencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IDE</td>
+                            <td>Visual Studio</td>
+                            <td>IDE completo para desarrollo</td>
+                            <td>Comercial/Community</td>
+                        </tr>
+                        <tr>
+                            <td>Editor</td>
+                            <td>Visual Studio Code</td>
+                            <td>Editor ligero multiplataforma</td>
+                            <td>Gratuito</td>
+                        </tr>
+                        <tr>
+                            <td>Build</td>
+                            <td>MSBuild</td>
+                            <td>Sistema de construcción</td>
+                            <td>Open Source</td>
+                        </tr>
+                        <tr>
+                            <td>Packages</td>
+                            <td>NuGet</td>
+                            <td>Gestor de paquetes</td>
+                            <td>Open Source</td>
+                        </tr>
+                        <tr>
+                            <td>Testing</td>
+                            <td>xUnit/NUnit/MSTest</td>
+                            <td>Frameworks de testing</td>
+                            <td>Open Source</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Ventajas de .NET</h4>
+                    <p><strong>Performance:</strong> Compilación JIT optimizada y AOT en .NET 7+.</p>
+                    <p><strong>Productividad:</strong> Herramientas excepcionales y IntelliSense avanzado.</p>
+                    <p><strong>Cross-platform:</strong> Windows, Linux, macOS desde .NET Core.</p>
+                    <p><strong>Unified Platform:</strong> Un runtime para web, desktop, mobile, cloud.</p>
+                    <p><strong>Enterprise:</strong> Soporte empresarial robusto y roadmap claro.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="python" class="tab-content">
+            <div class="card">
+                <h2>Ecosistema Python</h2>
+                <p>Python se ha consolidado como una plataforma versátil para desarrollo web, análisis de datos, inteligencia artificial y automatización empresarial, con un ecosistema rico y en constante crecimiento.</p>
+
+                <h3>Frameworks Web de Python</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Django</h4>
+                        <p>Framework web de alto nivel con filosofía "batteries included" para desarrollo rápido.</p>
+                        <ul class="list-styled">
+                            <li><strong>ORM:</strong> Object-relational mapping integrado</li>
+                            <li><strong>Admin Interface:</strong> Panel de administración automático</li>
+                            <li><strong>Security:</strong> Protección CSRF, XSS, SQL injection</li>
+                            <li><strong>Scalability:</strong> Usado por Instagram, Pinterest</li>
+                            <li><strong>REST Framework:</strong> APIs robustas con DRF</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Flask</h4>
+                        <p>Micro-framework minimalista y flexible para aplicaciones web personalizadas.</p>
+                        <ul class="list-styled">
+                            <li><strong>Lightweight:</strong> Core mínimo, extensible</li>
+                            <li><strong>Flexibility:</strong> Libertad en estructura y componentes</li>
+                            <li><strong>Werkzeug:</strong> WSGI toolkit robusto</li>
+                            <li><strong>Jinja2:</strong> Template engine potente</li>
+                            <li><strong>Extensions:</strong> Ecosistema rico de plugins</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>FastAPI</h4>
+                        <p>Framework moderno para APIs con tipado estático y performance excepcional.</p>
+                        <ul class="list-styled">
+                            <li><strong>Type Hints:</strong> Validación automática de tipos</li>
+                            <li><strong>Async/Await:</strong> Soporte nativo para async</li>
+                            <li><strong>OpenAPI:</strong> Documentación automática</li>
+                            <li><strong>Performance:</strong> Comparable con Node.js</li>
+                            <li><strong>Starlette:</strong> Base ASGI de alto rendimiento</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Tornado</h4>
+                        <p>Framework asíncrono para aplicaciones que requieren conexiones de larga duración.</p>
+                        <ul class="list-styled">
+                            <li><strong>Async I/O:</strong> Non-blocking network I/O</li>
+                            <li><strong>WebSockets:</strong> Soporte nativo</li>
+                            <li><strong>Real-time:</strong> Ideal para chat, gaming</li>
+                            <li><strong>Scalability:</strong> Manejo de miles de conexiones</li>
+                            <li><strong>Template Engine:</strong> Sistema propio de templates</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Ejemplo con Django REST Framework</h3>
+                <div class="code-block">
+# models.py
+from django.db import models
+from django.core.validators import MinValueValidator
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.name
+
+# serializers.py
+from rest_framework import serializers
+from .models import Product
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Price must be greater than 0")
+        return value
+
+# views.py
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+from .models import Product
+from .serializers import ProductSerializer
+
+class ProductListCreateView(generics.ListCreateAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) | Q(description__icontains=search)
+            )
+        return queryset
+
+# urls.py
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
+
+urlpatterns = [
+    path('api/products/', views.ProductListCreateView.as_view(), name='product-list'),
+    path('api/products/&lt;int:pk&gt;/', views.ProductDetailView.as_view(), name='product-detail'),
+]
+
+# settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'rest_framework',
+    'products',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
+                </div>
+
+                <h3>Ejemplo con FastAPI</h3>
+                <div class="code-block">
+# main.py
+from fastapi import FastAPI, HTTPException, Depends, Query
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from typing import List, Optional
+import uvicorn
+
+from database import SessionLocal, engine
+from models import Product, Base
+from schemas import ProductCreate, ProductResponse
+
+# Create tables
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Product API", version="1.0.0")
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Dependency to get DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.get("/products/", response_model=List[ProductResponse])
+async def get_products(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    search: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Product)
+    if search:
+        query = query.filter(Product.name.contains(search))
+    products = query.offset(skip).limit(limit).all()
+    return products
+
+@app.post("/products/", response_model=ProductResponse, status_code=201)
+async def create_product(
+    product: ProductCreate, 
+    db: Session = Depends(get_db)
+):
+    db_product = Product(**product.dict())
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@app.get("/products/{product_id}", response_model=ProductResponse)
+async def get_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+# schemas.py - Pydantic models
+from pydantic import BaseModel, validator
+from datetime import datetime
+from decimal import Decimal
+
+class ProductBase(BaseModel):
+    name: str
+    description: str = ""
+    price: Decimal
+    
+    @validator('price')
+    def price_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError('Price must be positive')
+        return v
+
+class ProductCreate(ProductBase):
+    pass
+
+class ProductResponse(ProductBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        orm_mode = True
+                </div>
+
+                <h3>Bibliotecas del Ecosistema Python</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Biblioteca</th>
+                            <th>Propósito</th>
+                            <th>Popularidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Web Framework</td>
+                            <td>Django/Flask/FastAPI</td>
+                            <td>Desarrollo web y APIs</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Data Science</td>
+                            <td>Pandas/NumPy/SciPy</td>
+                            <td>Análisis de datos</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Machine Learning</td>
+                            <td>TensorFlow/PyTorch/Scikit-learn</td>
+                            <td>Inteligencia artificial</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>SQLAlchemy/Peewee</td>
+                            <td>Object-Relational Mapping</td>
+                            <td>★★★★☆</td>
+                        </tr>
+                        <tr>
+                            <td>Testing</td>
+                            <td>pytest/unittest</td>
+                            <td>Testing frameworks</td>
+                            <td>★★★★☆</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>Ventajas de Python</h4>
+                    <p><strong>Simplicidad:</strong> Sintaxis clara y legible, curva de aprendizaje suave.</p>
+                    <p><strong>Versatilidad:</strong> Web, data science, AI, automatización, DevOps.</p>
+                    <p><strong>Ecosistema:</strong> 300K+ paquetes en PyPI, comunidad activa.</p>
+                    <p><strong>Prototipado rápido:</strong> Desarrollo iterativo y experimental eficiente.</p>
+                    <p><strong>Integración:</strong> Excelente para integrar sistemas y automatización.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="comparison" class="tab-content">
+            <div class="card">
+                <h2>Comparación de Arquitecturas</h2>
+                <p>Análisis comparativo de Java EE, .NET y Python para ayudar en la toma de decisiones arquitectónicas según el contexto y requisitos del proyecto.</p>
+
+                <h3>Comparación General</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Java EE</th>
+                            <th>.NET</th>
+                            <th>Python</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td>Excelente en aplicaciones enterprise</td>
+                            <td>Muy alto, especialmente .NET 5+</td>
+                            <td>Bueno, limitado por GIL en CPU-intensive</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Escalabilidad</strong></td>
+                            <td>Muy alta, arquitectura empresarial</td>
+                            <td>Muy alta, cloud-native ready</td>
+                            <td>Alta con frameworks async</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ecosistema</strong></td>
+                            <td>Maduro, stable, enterprise-focused</td>
+                            <td>Completo, moderno, Microsoft-backed</td>
+                            <td>Enorme, diverso, innovador</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Curva de Aprendizaje</strong></td>
+                            <td>Moderada a alta</td>
+                            <td>Moderada</td>
+                            <td>Baja a moderada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Costo de Licencias</strong></td>
+                            <td>Variable (servidores comerciales)</td>
+                            <td>Gratuito (.NET Core+) / Comercial (VS)</td>
+                            <td>Completamente gratuito</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multiplataforma</strong></td>
+                            <td>Sí (JVM)</td>
+                            <td>Sí (.NET Core+)</td>
+                            <td>Nativo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Soporte Empresarial</strong></td>
+                            <td>Excelente</td>
+                            <td>Excelente (Microsoft)</td>
+                            <td>Bueno (Python Software Foundation)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desarrollo de APIs</strong></td>
+                            <td>JAX-RS, Spring Boot</td>
+                            <td>ASP.NET Core Web API</td>
+                            <td>FastAPI, Django REST, Flask</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Casos de Uso Recomendados</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Java EE - Ideal para:</h4>
+                        <ul class="list-styled">
+                            <li>Aplicaciones empresariales complejas</li>
+                            <li>Sistemas transaccionales críticos</li>
+                            <li>Arquitecturas de microservicios</li>
+                            <li>Integración con sistemas legacy</li>
+                            <li>Equipos con experiencia Java</li>
+                            <li>Requisitos de alta disponibilidad</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Banca, seguros, ERP, e-commerce enterprise</p>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>.NET - Ideal para:</h4>
+                        <ul class="list-styled">
+                            <li>Ecosistema Microsoft existente</li>
+                            <li>Aplicaciones de alto rendimiento</li>
+                            <li>Desarrollo rápido de prototipos</li>
+                            <li>Integración con Azure</li>
+                            <li>Aplicaciones desktop (WPF, WinForms)</li>
+                            <li>APIs modernas con ASP.NET Core</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> Aplicaciones corporativas, CRM, APIs empresariales</p>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Python - Ideal para:</h4>
+                        <ul class="list-styled">
+                            <li>Prototipado rápido y MVP</li>
+                            <li>Análisis de datos y ML/AI</li>
+                            <li>APIs REST simples y eficientes</li>
+                            <li>Automatización y scripts</li>
+                            <li>Integración de sistemas</li>
+                            <li>Startups y desarrollo ágil</li>
+                        </ul>
+                        <p><strong>Ejemplos:</strong> APIs de ML, dashboards, automatización, IoT</p>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Consideraciones de Selección:</h4>
+                        <ul class="list-styled">
+                            <li><strong>Team expertise:</strong> Conocimiento existente</li>
+                            <li><strong>Performance requirements:</strong> Latencia, throughput</li>
+                            <li><strong>Scalability needs:</strong> Usuarios concurrentes</li>
+                            <li><strong>Integration complexity:</strong> Sistemas existentes</li>
+                            <li><strong>Time to market:</strong> Velocidad de desarrollo</li>
+                            <li><strong>Maintenance burden:</strong> Costo a largo plazo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Tendencias y Futuro</h3>
+                <div class="ecosystem-diagram">
+                    <h4>Direcciones Futuras</h4>
+                    <p><strong>Java:</strong> Project Loom (virtual threads), GraalVM (native compilation), Cloud Native Java</p>
+                    <p><strong>.NET:</strong> Performance optimizations, AOT compilation, unified platform (.NET 8+)</p>
+                    <p><strong>Python:</strong> Faster CPython, async/await adoption, type hints standardization</p>
+                    <p><strong>Común:</strong> Serverless, containers, microservices, observability, AI/ML integration</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Recomendaciones de Decisión</h4>
+                    <p><strong>Para empresas establecidas:</strong> Java EE o .NET según stack existente.</p>
+                    <p><strong>Para nuevos proyectos cloud:</strong> Evaluar los tres según expertise del team.</p>
+                    <p><strong>Para startups:</strong> Python o .NET Core para desarrollo rápido.</p>
+                    <p><strong>Para performance crítico:</strong> Java o .NET con optimizaciones específicas.</p>
+                    <p><strong>Para data-driven apps:</strong> Python con frameworks web como FastAPI.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos de Arquitecturas</h2>
+                <p>Resuelve estos ejercicios para aplicar conceptos de arquitecturas de desarrollo Java EE, .NET y Python.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p>Progreso: <span id="progress-text">0/10</span> ejercicios completados</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 1:</strong> Una aplicación Java EE maneja 1000 requests/segundo. Si cada request consume 50MB de memoria durante 2 segundos, ¿cuál es la memoria mínima requerida para el heap?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="50">
+                        <label>50 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="100">
+                        <label>100 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="200">
+                        <label>200 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="25">
+                        <label>25 GB</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(1, 100, 'Memoria = 1000 req/s × 50MB × 2s = 100,000MB = 100GB')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 2:</strong> Un servidor .NET Core maneja 500 requests concurrentes. Si cada request usa un thread pool thread durante 100ms, ¿cuántos threads mínimos se necesitan en el pool?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="50">
+                        <label>50 threads</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="500">
+                        <label>500 threads</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="100">
+                        <label>100 threads</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="250">
+                        <label>250 threads</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(2, 500, 'Para 500 requests concurrentes se necesitan 500 threads (cada request ocupa un thread durante su ejecución)')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 3:</strong> Una aplicación Django procesa 200 requests/minuto. Si cada request toma 300ms, ¿cuál es el porcentaje de utilización del servidor?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="100">
+                        <label>100%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="10">
+                        <label>10%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="50">
+                        <label>50%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="30">
+                        <label>30%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(3, 10, 'Utilización = (200 req/min × 0.3s) / 60s = 60/60 = 100% ❌ Error: 60s/60s = 10%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 4:</strong> Un microservicio Java consume 2GB de RAM. Si se despliegan 5 instancias y se añade 20% de overhead del contenedor, ¿cuánta memoria total se requiere?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="10">
+                        <label>10 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="12">
+                        <label>12 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="15">
+                        <label>15 GB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="8">
+                        <label>8 GB</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(4, 12, 'Memoria total = 5 instancias × 2GB × 1.20 = 12GB')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 5:</strong> Una API .NET Core tiene tiempo de respuesta promedio de 150ms. Si se optimiza y reduce a 100ms, ¿cuál es la mejora porcentual?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="33.3">
+                        <label>33.3%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="50">
+                        <label>50%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="25">
+                        <label>25%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="66.7">
+                        <label>66.7%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(5, 33.3, 'Mejora = ((150 - 100) / 150) × 100 = (50/150) × 100 = 33.3%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 6:</strong> Un sistema Python con FastAPI maneja 100 requests/segundo síncronas. Si se migra a async y mejora 4x, ¿cuántos requests/segundo podrá manejar?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="400">
+                        <label>400 requests/segundo</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="200">
+                        <label>200 requests/segundo</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="500">
+                        <label>500 requests/segundo</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="300">
+                        <label>300 requests/segundo</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(6, 400, 'Throughput mejorado = 100 req/s × 4 = 400 req/s')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 7:</strong> Un cluster Java EE tiene 4 nodos. Si cada nodo puede manejar 250 usuarios concurrentes, ¿cuál es la capacidad total del cluster?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="1000">
+                        <label>1000 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="750">
+                        <label>750 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="500">
+                        <label>500 usuarios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="1250">
+                        <label>1250 usuarios</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(7, 1000, 'Capacidad total = 4 nodos × 250 usuarios = 1000 usuarios concurrentes')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 8:</strong> Una aplicación .NET consume 500MB de memoria base + 2MB por usuario activo. Con 200 usuarios, ¿cuál es el consumo total de memoria?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="900">
+                        <label>900 MB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="700">
+                        <label>700 MB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="1000">
+                        <label>1000 MB</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="800">
+                        <label>800 MB</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(8, 900, 'Memoria total = 500MB base + (200 usuarios × 2MB) = 500 + 400 = 900MB')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback8"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 9:</strong> Un servicio Python procesa 1000 mensajes en 10 segundos. Si se optimiza y procesa la misma cantidad en 6 segundos, ¿cuál es la mejora en throughput?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="66.7">
+                        <label>66.7%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="40">
+                        <label>40%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="60">
+                        <label>60%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="33.3">
+                        <label>33.3%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(9, 66.7, 'Throughput inicial: 100 msg/s, optimizado: 166.7 msg/s. Mejora: ((166.7-100)/100) × 100 = 66.7%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 10:</strong> Un proyecto tiene costos: Java EE (licencias 50K€/año), .NET (0€ licencias + Azure 30K€/año), Python (0€ + hosting 20K€/año). ¿Cuál es el ahorro anual eligiendo la opción más económica?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="30000">
+                        <label>30,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="20000">
+                        <label>20,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="10000">
+                        <label>10,000€</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="50000">
+                        <label>50,000€</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(10, 30000, 'Costos: Java EE 50K€, .NET 30K€, Python 20K€. Ahorro vs más caro: 50K - 20K = 30,000€')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback10"></div>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>Recursos y Herramientas</h2>
+                <p>Conjunto completo de recursos, herramientas y referencias para el desarrollo con Java EE, .NET y Python.</p>
+
+                <h3>Herramientas de Desarrollo</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Java EE / Jakarta EE</h4>
+                        <ul class="list-styled">
+                            <li><strong>IDEs:</strong> IntelliJ IDEA, Eclipse, NetBeans</li>
+                            <li><strong>Build:</strong> Maven, Gradle, Ant</li>
+                            <li><strong>Testing:</strong> JUnit, TestNG, Mockito, Arquillian</li>
+                            <li><strong>Servers:</strong> WildFly, Payara, OpenLiberty, TomEE</li>
+                            <li><strong>Monitoring:</strong> JVisualVM, JProfiler, AppDynamics</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>.NET Ecosystem</h4>
+                        <ul class="list-styled">
+                            <li><strong>IDEs:</strong> Visual Studio, VS Code, JetBrains Rider</li>
+                            <li><strong>CLI:</strong> .NET CLI, PowerShell, Azure CLI</li>
+                            <li><strong>Testing:</strong> xUnit, NUnit, MSTest, Moq</li>
+                            <li><strong>Deployment:</strong> Docker, Azure App Service, IIS</li>
+                            <li><strong>Monitoring:</strong> Application Insights, PerfView</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Python Development</h4>
+                        <ul class="list-styled">
+                            <li><strong>IDEs:</strong> PyCharm, VS Code, Sublime Text</li>
+                            <li><strong>Package Management:</strong> pip, conda, pipenv, poetry</li>
+                            <li><strong>Testing:</strong> pytest, unittest, nose2</li>
+                            <li><strong>WSGI/ASGI:</strong> Gunicorn, uWSGI, Uvicorn</li>
+                            <li><strong>Deployment:</strong> Docker, Heroku, AWS Lambda</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>DevOps y CI/CD</h4>
+                        <ul class="list-styled">
+                            <li><strong>Containers:</strong> Docker, Podman, Kubernetes</li>
+                            <li><strong>CI/CD:</strong> Jenkins, GitHub Actions, Azure DevOps</li>
+                            <li><strong>Infrastructure:</strong> Terraform, Ansible, Helm</li>
+                            <li><strong>Monitoring:</strong> Prometheus, Grafana, ELK Stack</li>
+                            <li><strong>APM:</strong> New Relic, Datadog, Dynatrace</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Recursos de Aprendizaje</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Plataforma</th>
+                            <th>Documentación Oficial</th>
+                            <th>Certificaciones</th>
+                            <th>Comunidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Java EE</td>
+                            <td>Oracle Java EE Docs, Jakarta EE Specs</td>
+                            <td>Oracle Certified Professional Java EE</td>
+                            <td>Jakarta EE Community, Java User Groups</td>
+                        </tr>
+                        <tr>
+                            <td>.NET</td>
+                            <td>Microsoft .NET Documentation</td>
+                            <td>Microsoft Certified: .NET Developer</td>
+                            <td>.NET Foundation, Stack Overflow</td>
+                        </tr>
+                        <tr>
+                            <td>Python</td>
+                            <td>Python.org, Framework-specific docs</td>
+                            <td>PCAP, PCPP (Python Institute)</td>
+                            <td>Python Software Foundation, PyPI</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Arquitecturas de Referencia</h3>
+                <div class="highlight-box">
+                    <h4>Patrones Arquitectónicos Recomendados</h4>
+                    <p><strong>Microservicios:</strong> Descomposición por dominio de negocio, APIs RESTful/GraphQL.</p>
+                    <p><strong>Event-Driven:</strong> Comunicación asíncrona via message brokers.</p>
+                    <p><strong>CQRS:</strong> Separación de comandos y consultas para optimización.</p>
+                    <p><strong>API Gateway:</strong> Punto único de entrada para microservicios.</p>
+                    <p><strong>Database per Service:</strong> Cada servicio tiene su propia base de datos.</p>
+                </div>
+
+                <h3>Mejores Prácticas de Desarrollo</h3>
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Código Limpio</h4>
+                        <ul class="list-styled">
+                            <li>Naming conventions consistentes</li>
+                            <li>Funciones pequeñas y especializadas</li>
+                            <li>Comentarios solo cuando sea necesario</li>
+                            <li>Principios SOLID aplicados</li>
+                            <li>Refactoring continuo</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Testing Strategy</h4>
+                        <ul class="list-styled">
+                            <li>Test pyramid: Unit → Integration → E2E</li>
+                            <li>Test-driven development (TDD)</li>
+                            <li>Mocking para dependencias externas</li>
+                            <li>Coverage mínimo del 80%</li>
+                            <li>Tests como documentación</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Security</h4>
+                        <ul class="list-styled">
+                            <li>HTTPS/TLS en todas las comunicaciones</li>
+                            <li>Authentication y authorization robustos</li>
+                            <li>Input validation y sanitization</li>
+                            <li>Secrets management apropiado</li>
+                            <li>Security scanning en CI/CD</li>
+                        </ul>
+                    </div>
+                    <div class="architecture-card">
+                        <h4>Performance</h4>
+                        <ul class="list-styled">
+                            <li>Profiling regular de aplicaciones</li>
+                            <li>Caching strategies apropiadas</li>
+                            <li>Database optimization</li>
+                            <li>Async programming cuando aplique</li>
+                            <li>Load testing en preproducción</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Roadmap de Aprendizaje</h3>
+                <div class="ecosystem-diagram">
+                    <h4>Ruta Sugerida para Arquitecturas Enterprise</h4>
+                    <p><strong>1. Fundamentos:</strong> HTTP, REST, SQL, Git, Docker básico</p>
+                    <p><strong>2. Lenguaje específico:</strong> Java/C#/Python + framework principal</p>
+                    <p><strong>3. Base de datos:</strong> Relacional (PostgreSQL/SQL Server) + NoSQL básico</p>
+                    <p><strong>4. Testing:</strong> Unit testing, integration testing, TDD</p>
+                    <p><strong>5. Arquitectura:</strong> Microservicios, patterns, clean architecture</p>
+                    <p><strong>6. DevOps:</strong> CI/CD, Kubernetes, monitoring, observability</p>
+                    <p><strong>7. Cloud:</strong> AWS/Azure/GCP, serverless, managed services</p>
+                    <p><strong>8. Especialización:</strong> Security, performance, specific domains</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('nav-tab');
+            
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.style.display = 'block';
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = '❌ Por favor selecciona una respuesta.';
+                return;
+            }
+            
+            const userAnswer = parseFloat(selectedAnswer.value);
+            const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.1;
+            
+            feedback.style.display = 'block';
+            
+            if (isCorrect) {
+                feedback.className = 'exercise-feedback feedback-correct';
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                
+                if (!selectedAnswer.closest('.exercise-container').dataset.completed) {
+                    completedExercises++;
+                    selectedAnswer.closest('.exercise-container').dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completedExercises}/10`;
+        }
+
+        // Inicializar tema
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌞 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

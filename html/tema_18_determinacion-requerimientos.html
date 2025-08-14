@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 18: Determinación de Requerimientos - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+            --shadow: rgba(0,0,0,0.1);
+            --card-bg: #ffffff;
+            --code-bg: #f8f9fa;
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d3748;
+            --bg-tertiary: #374151;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #a0aec0;
+            --border: #4a5568;
+            --shadow: rgba(0,0,0,0.3);
+            --card-bg: #2d3748;
+            --code-bg: #1a202c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .tabs-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: var(--bg-tertiary);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .card {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .technique-card {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .technique-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .technique-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        .stakeholder-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stakeholder-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .stakeholder-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .stakeholder-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .requirements-hierarchy {
+            margin: 2rem 0;
+        }
+
+        .hierarchy-level {
+            margin-left: 2rem;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .hierarchy-item {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .hierarchy-item:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, var(--success), #229954);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .best-practices h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .practice-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .code-example {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .tabs-nav {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: auto;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            border-radius: 15px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">18</div>
+                    <div class="logo-text">
+                        <h1>Determinación de Requerimientos</h1>
+                        <p>Análisis y captura de necesidades del sistema</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Modo Oscuro</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="tabs-container">
+            <nav class="tabs-nav">
+                <button class="tab-button active" onclick="showTab('overview')">Resumen</button>
+                <button class="tab-button" onclick="showTab('fundamentals')">Fundamentos</button>
+                <button class="tab-button" onclick="showTab('techniques')">Técnicas</button>
+                <button class="tab-button" onclick="showTab('stakeholders')">Interesados</button>
+                <button class="tab-button" onclick="showTab('documentation')">Documentación</button>
+                <button class="tab-button" onclick="showTab('validation')">Validación</button>
+            </nav>
+
+            <div id="overview" class="tab-content active">
+                <div class="section-title">
+                    <div class="section-icon">📋</div>
+                    <span>Resumen de Determinación de Requerimientos</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>¿Qué es la Determinación de Requerimientos?</h3>
+                    <p>La determinación de requerimientos es el proceso sistemático de identificar, documentar, analizar y validar las necesidades que debe satisfacer un sistema de software. Es una fase crítica en el desarrollo de software que establece las bases para todo el proyecto.</p>
+                </div>
+
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-value">70%</div>
+                        <div class="metric-label">Fallos por req. incorrectos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">5-10x</div>
+                        <div class="metric-label">Costo de cambios tardíos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">45%</div>
+                        <div class="metric-label">Proyectos con req. inadecuados</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">25%</div>
+                        <div class="metric-label">Tiempo ideal del proyecto</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Objetivos Principales</h3>
+                        <ul>
+                            <li>Identificar necesidades reales del negocio</li>
+                            <li>Definir funcionalidades del sistema</li>
+                            <li>Establecer restricciones y limitaciones</li>
+                            <li>Crear base para diseño y desarrollo</li>
+                            <li>Facilitar comunicación entre stakeholders</li>
+                            <li>Minimizar cambios durante desarrollo</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Beneficios Clave</h3>
+                        <ul>
+                            <li>Reducción de costos de desarrollo</li>
+                            <li>Mejora en satisfacción del cliente</li>
+                            <li>Disminución de defectos</li>
+                            <li>Mejor estimación de tiempos</li>
+                            <li>Mayor probabilidad de éxito</li>
+                            <li>Comunicación más efectiva</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="process-flow">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 Proceso General</h3>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Planificación</strong>
+                            <p>Definir alcance, objetivos y metodología de captura</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Elicitación</strong>
+                            <p>Obtener requerimientos de stakeholders y fuentes</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Análisis</strong>
+                            <p>Evaluar, priorizar y refinar requerimientos</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Especificación</strong>
+                            <p>Documentar formalmente los requerimientos</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <strong>Validación</strong>
+                            <p>Verificar que los requerimientos son correctos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚨 Desafíos Comunes</h3>
+                    <div class="grid grid-3">
+                        <div>
+                            <strong>Comunicación</strong>
+                            <ul>
+                                <li>Diferentes lenguajes técnicos</li>
+                                <li>Interpretaciones erróneas</li>
+                                <li>Asunciones no expresadas</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>Cambios</strong>
+                            <ul>
+                                <li>Requerimientos volátiles</li>
+                                <li>Nuevas necesidades</li>
+                                <li>Cambios regulatorios</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>Complejidad</strong>
+                            <ul>
+                                <li>Sistemas integrados</li>
+                                <li>Multiple stakeholders</li>
+                                <li>Interdependencias</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fundamentals" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🏗️</div>
+                    <span>Fundamentos de Requerimientos</span>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Tipos de Requerimientos</h3>
+                    
+                    <div class="requirements-hierarchy">
+                        <div class="hierarchy-level">
+                            <h4 style="color: var(--primary);">Requerimientos Funcionales</h4>
+                            <div class="hierarchy-item">
+                                <strong>Definición:</strong> Especifican QUÉ debe hacer el sistema
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>Características:</strong> Comportamientos, servicios, funciones específicas
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>Ejemplos:</strong> "El sistema debe permitir login con email y contraseña"
+                            </div>
+                        </div>
+
+                        <div class="hierarchy-level">
+                            <h4 style="color: var(--primary);">Requerimientos No Funcionales</h4>
+                            <div class="hierarchy-item">
+                                <strong>Definición:</strong> Especifican CÓMO debe funcionar el sistema
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>Categorías:</strong> Rendimiento, seguridad, usabilidad, fiabilidad
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>Ejemplos:</strong> "El sistema debe responder en menos de 2 segundos"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>📊 Características de Buenos Requerimientos</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--primary);">Claros y Específicos</strong>
+                                <p>Sin ambigüedades, lenguaje preciso</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--primary);">Completos</strong>
+                                <p>Toda la información necesaria presente</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--primary);">Consistentes</strong>
+                                <p>No contradicen otros requerimientos</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--primary);">Verificables</strong>
+                                <p>Se pueden probar objetivamente</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--primary);">Trazables</strong>
+                                <p>Origen y dependencias identificables</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚠️ Problemas Comunes</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--accent);">Ambigüedad</strong>
+                                <p>Términos vagos como "rápido", "fácil"</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--accent);">Incompletitud</strong>
+                                <p>Funcionalidades o restricciones omitidas</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--accent);">Inconsistencia</strong>
+                                <p>Requerimientos contradictorios</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--accent);">Irrealidad</strong>
+                                <p>Técnica o económicamente imposibles</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: var(--accent);">No Verificables</strong>
+                                <p>Imposibles de probar objetivamente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Nivel</th>
+                                <th>Descripción</th>
+                                <th>Responsable</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Negocio</strong></td>
+                                <td>Objetivos y metas organizacionales</td>
+                                <td>Stakeholders de negocio</td>
+                                <td>"Aumentar ventas en 15%"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Usuario</strong></td>
+                                <td>Necesidades específicas de usuarios</td>
+                                <td>Usuarios finales</td>
+                                <td>"Generar reportes mensuales"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sistema</strong></td>
+                                <td>Funcionalidades del software</td>
+                                <td>Analistas de sistemas</td>
+                                <td>"Validar formato de email"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Técnico</strong></td>
+                                <td>Restricciones de implementación</td>
+                                <td>Arquitectos técnicos</td>
+                                <td>"Usar base de datos PostgreSQL"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Lenguaje Natural Estructurado</strong>
+                            <p>Usar plantillas y formatos consistentes</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Priorización Clara</strong>
+                            <p>Clasificar por importancia y urgencia</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Criterios de Aceptación</strong>
+                            <p>Definir condiciones de cumplimiento</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Revisiones Regulares</strong>
+                            <p>Validar periódicamente con stakeholders</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Gestión de Cambios</h3>
+                    <p>Los requerimientos evolucionan durante el desarrollo. Es esencial tener un proceso formal para gestionar cambios:</p>
+                    
+                    <div class="grid grid-2" style="margin-top: 1.5rem;">
+                        <div>
+                            <h4 style="color: var(--primary);">Proceso de Cambio</h4>
+                            <ol>
+                                <li>Solicitud formal de cambio</li>
+                                <li>Análisis de impacto</li>
+                                <li>Evaluación costo-beneficio</li>
+                                <li>Aprobación por stakeholders</li>
+                                <li>Actualización de documentación</li>
+                                <li>Comunicación a equipo</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Control de Versiones</h4>
+                            <ul>
+                                <li>Versionado de documentos</li>
+                                <li>Trazabilidad de cambios</li>
+                                <li>Historial de decisiones</li>
+                                <li>Estados de requerimientos</li>
+                                <li>Matriz de dependencias</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="techniques" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🛠️</div>
+                    <span>Técnicas de Elicitación</span>
+                </div>
+
+                <div class="technique-grid">
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">🗣️</div>
+                            <div>
+                                <h3>Entrevistas</h3>
+                                <p>Conversaciones estructuradas</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Información detallada, contexto complejo<br>
+                            <strong>Ventajas:</strong> Profundidad, clarificación inmediata<br>
+                            <strong>Desventajas:</strong> Tiempo intensivo, subjetivo
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">📊</div>
+                            <div>
+                                <h3>Encuestas</h3>
+                                <p>Cuestionarios estructurados</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Muchos stakeholders, datos cuantitativos<br>
+                            <strong>Ventajas:</strong> Escalable, análisis estadístico<br>
+                            <strong>Desventajas:</strong> Menos detalle, no interactive
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">👁️</div>
+                            <div>
+                                <h3>Observación</h3>
+                                <p>Análisis de procesos actuales</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Procesos existentes, flujos de trabajo<br>
+                            <strong>Ventajas:</strong> Realidad objetiva, procesos implícitos<br>
+                            <strong>Desventajas:</strong> Tiempo, no muestra excepciones
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">🧠</div>
+                            <div>
+                                <h3>Brainstorming</h3>
+                                <p>Sesiones creativas grupales</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Sistemas nuevos, ideas innovadoras<br>
+                            <strong>Ventajas:</strong> Creatividad, participación grupal<br>
+                            <strong>Desventajas:</strong> Puede ser caótico, ideas irreales
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">🎭</div>
+                            <div>
+                                <h3>Role Playing</h3>
+                                <p>Simulación de escenarios</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Procesos complejos, múltiples roles<br>
+                            <strong>Ventajas:</strong> Comprensión experiencial, interacciones<br>
+                            <strong>Desventajas:</strong> Requiere preparación, artificioso
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <div class="technique-header">
+                            <div class="technique-icon">🔍</div>
+                            <div>
+                                <h3>Análisis de Documentos</h3>
+                                <p>Revisión de material existente</p>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Cuándo usar:</strong> Sistemas de reemplazo, regulaciones<br>
+                            <strong>Ventajas:</strong> Información formal, sin sesgo<br>
+                            <strong>Desventajas:</strong> Puede estar desactualizada
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Técnicas Avanzadas</h3>
+                    
+                    <div class="grid grid-2" style="margin-top: 1.5rem;">
+                        <div>
+                            <h4 style="color: var(--primary);">Joint Application Development (JAD)</h4>
+                            <p>Sesiones estructuradas con stakeholders clave para definir requerimientos colaborativamente.</p>
+                            <ul>
+                                <li>Facilitador neutral</li>
+                                <li>Participación activa</li>
+                                <li>Decisiones consensuadas</li>
+                                <li>Documentación inmediata</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Prototipado</h4>
+                            <p>Desarrollo de versiones simplificadas para validar requerimientos.</p>
+                            <ul>
+                                <li>Feedback temprano</li>
+                                <li>Visualización concreta</li>
+                                <li>Validación de usabilidad</li>
+                                <li>Refinamiento iterativo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Técnica</th>
+                                <th>Esfuerzo</th>
+                                <th>Costo</th>
+                                <th>Calidad Info</th>
+                                <th>Escalabilidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Entrevistas</strong></td>
+                                <td>Alto</td>
+                                <td>Alto</td>
+                                <td>Muy Alta</td>
+                                <td>Baja</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Encuestas</strong></td>
+                                <td>Medio</td>
+                                <td>Bajo</td>
+                                <td>Media</td>
+                                <td>Muy Alta</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Observación</strong></td>
+                                <td>Alto</td>
+                                <td>Medio</td>
+                                <td>Alta</td>
+                                <td>Baja</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Brainstorming</strong></td>
+                                <td>Bajo</td>
+                                <td>Bajo</td>
+                                <td>Variable</td>
+                                <td>Media</td>
+                            </tr>
+                            <tr>
+                                <td><strong>JAD</strong></td>
+                                <td>Alto</td>
+                                <td>Alto</td>
+                                <td>Muy Alta</td>
+                                <td>Media</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prototipado</strong></td>
+                                <td>Muy Alto</td>
+                                <td>Alto</td>
+                                <td>Muy Alta</td>
+                                <td>Baja</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Selección de Técnicas</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Tipo de Stakeholder</strong>
+                            <p>Técnicos vs usuarios finales vs ejecutivos</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Complejidad del Dominio</strong>
+                            <p>Simple vs complejo vs crítico</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Disponibilidad</strong>
+                            <p>Tiempo y recursos disponibles</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Tipo de Información</strong>
+                            <p>Cuantitativa vs cualitativa vs exploratoria</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Preparación de Sesiones</h3>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Planificación</strong>
+                                <p>Objetivos, agenda, participantes, materiales</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Preparación</strong>
+                                <p>Documentos previos, cuestionarios, herramientas</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Ejecución</strong>
+                                <p>Facilitación, documentación, gestión de tiempo</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Seguimiento</strong>
+                                <p>Resumen, acciones, validación con participantes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stakeholders" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">👥</div>
+                    <span>Gestión de Interesados</span>
+                </div>
+
+                <div class="stakeholder-matrix">
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">👨‍💼</div>
+                        <h3>Sponsors</h3>
+                        <p>Financian el proyecto</p>
+                        <strong>Interés:</strong> ROI, cronograma<br>
+                        <strong>Influencia:</strong> Muy alta
+                    </div>
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">👥</div>
+                        <h3>Usuarios Finales</h3>
+                        <p>Utilizan el sistema</p>
+                        <strong>Interés:</strong> Usabilidad, eficiencia<br>
+                        <strong>Influencia:</strong> Media-Alta
+                    </div>
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">🏢</div>
+                        <h3>Dueños de Proceso</h3>
+                        <p>Responsables de procesos</p>
+                        <strong>Interés:</strong> Optimización, control<br>
+                        <strong>Influencia:</strong> Alta
+                    </div>
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">🔧</div>
+                        <h3>Equipo Técnico</h3>
+                        <p>Desarrollan el sistema</p>
+                        <strong>Interés:</strong> Factibilidad técnica<br>
+                        <strong>Influencia:</strong> Media
+                    </div>
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">⚖️</div>
+                        <h3>Reguladores</h3>
+                        <p>Establecen normas</p>
+                        <strong>Interés:</strong> Cumplimiento<br>
+                        <strong>Influencia:</strong> Alta
+                    </div>
+                    <div class="stakeholder-card">
+                        <div class="stakeholder-icon">🛡️</div>
+                        <h3>Seguridad/Auditores</h3>
+                        <p>Evalúan riesgos</p>
+                        <strong>Interés:</strong> Seguridad, conformidad<br>
+                        <strong>Influencia:</strong> Media-Alta
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Matriz de Poder-Interés</h3>
+                    <p>Herramienta para clasificar stakeholders según su nivel de poder e interés en el proyecto:</p>
+                    
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Categoría</th>
+                                    <th>Poder</th>
+                                    <th>Interés</th>
+                                    <th>Estrategia</th>
+                                    <th>Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Gestionar de cerca</strong></td>
+                                    <td>Alto</td>
+                                    <td>Alto</td>
+                                    <td>Colaboración activa</td>
+                                    <td>Sponsor principal</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mantener satisfecho</strong></td>
+                                    <td>Alto</td>
+                                    <td>Bajo</td>
+                                    <td>Comunicación regular</td>
+                                    <td>CEO, directores</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mantener informado</strong></td>
+                                    <td>Bajo</td>
+                                    <td>Alto</td>
+                                    <td>Comunicación frecuente</td>
+                                    <td>Usuarios finales</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Monitorear</strong></td>
+                                    <td>Bajo</td>
+                                    <td>Bajo</td>
+                                    <td>Comunicación mínima</td>
+                                    <td>Personal administrativo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Identificación de Stakeholders</h3>
+                        <h4 style="color: var(--primary);">Métodos:</h4>
+                        <ul>
+                            <li><strong>Análisis organizacional:</strong> Organigramas, roles</li>
+                            <li><strong>Técnica de bola de nieve:</strong> Cada stakeholder identifica otros</li>
+                            <li><strong>Análisis de procesos:</strong> Quién participa en cada proceso</li>
+                            <li><strong>Análisis de impacto:</strong> Quién se ve afectado</li>
+                            <li><strong>Revisión de documentos:</strong> Políticas, procedimientos</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Criterios:</h4>
+                        <ul>
+                            <li>Autoridad para tomar decisiones</li>
+                            <li>Responsabilidad en procesos</li>
+                            <li>Experiencia domain-específica</li>
+                            <li>Impacto del proyecto en su trabajo</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>💬 Estrategias de Comunicación</h3>
+                        <h4 style="color: var(--primary);">Por Tipo de Stakeholder:</h4>
+                        <div style="margin-top: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Ejecutivos:</strong>
+                                <p>Resúmenes ejecutivos, métricas de negocio</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Usuarios:</strong>
+                                <p>Demos, prototipos, casos de uso</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Técnicos:</strong>
+                                <p>Especificaciones detalladas, diagramas</p>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Operaciones:</strong>
+                                <p>Procedimientos, manuales, capacitación</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🤝 Gestión de Conflictos</h3>
+                    <p>Los stakeholders pueden tener intereses conflictivos. Estrategias para resolverlos:</p>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Facilitación</strong>
+                            <p>Sesiones estructuradas para encontrar consenso</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Priorización</strong>
+                            <p>Técnicas como MoSCoW, matrices de decisión</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Compromiso</strong>
+                            <p>Soluciones que satisfagan parcialmente a todos</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Escalación</strong>
+                            <p>Elevar decisiones difíciles a niveles superiores</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Plan de Involucramiento</h3>
+                    <p>Documento que define cómo y cuándo involucrar a cada stakeholder:</p>
+                    
+                    <div class="code-example">
+                        <pre>
+EJEMPLO DE PLAN DE INVOLUCRAMIENTO:
+
+Stakeholder: Director de Operaciones
+- Rol: Sponsor funcional
+- Responsabilidades: Aprobación de requerimientos, resolución de conflictos
+- Frecuencia comunicación: Semanal
+- Método preferido: Email + reuniones presenciales
+- Entregables requeridos: Resúmenes ejecutivos, reportes de progreso
+- Criterios de éxito: Mejora 20% eficiencia operativa
+
+Stakeholder: Supervisor de Ventas  
+- Rol: Usuario experto
+- Responsabilidades: Definición procesos, validación casos de uso
+- Frecuencia comunicación: Bi-semanal
+- Método preferido: Workshops, demos
+- Entregables requeridos: Casos de uso, prototipos
+- Criterios de éxito: Reducción 30% tiempo procesamiento ventas
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Ciclo de Vida del Involucramiento</h3>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Identificación</strong>
+                                <p>Quien son los stakeholders relevantes</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Análisis</strong>
+                                <p>Intereses, poder, influencia, actitud</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Planificación</strong>
+                                <p>Estrategia de involucramiento por stakeholder</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Ejecución</strong>
+                                <p>Aplicar estrategias, recopilar input</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">5</div>
+                            <div>
+                                <strong>Monitoreo</strong>
+                                <p>Evaluar efectividad, ajustar estrategias</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="documentation" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">📄</div>
+                    <span>Documentación de Requerimientos</span>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Especificación de Requerimientos de Software (SRS)</h3>
+                    <p>Documento principal que contiene todos los requerimientos del sistema de manera formal y estructurada.</p>
+                    
+                    <div class="requirements-hierarchy">
+                        <h4 style="color: var(--primary);">Estructura IEEE 830:</h4>
+                        <div class="hierarchy-level">
+                            <div class="hierarchy-item">
+                                <strong>1. Introducción</strong> - Propósito, alcance, definiciones, referencias
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>2. Descripción General</strong> - Perspectiva del producto, funciones, características de usuarios
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>3. Requerimientos Específicos</strong> - Funcionales, rendimiento, interfaces, restricciones
+                            </div>
+                            <div class="hierarchy-item">
+                                <strong>4. Apéndices</strong> - Modelos, prototipos, casos de uso detallados
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>📝 Formatos de Documentación</h3>
+                        <h4 style="color: var(--primary);">Lenguaje Natural Estructurado:</h4>
+                        <div class="code-example">
+                            <pre>
+REQ-001: Autenticación de Usuario
+Prioridad: Alta
+Tipo: Funcional
+
+DADO que un usuario no autenticado accede al sistema
+CUANDO introduce credenciales válidas  
+ENTONCES el sistema debe autenticar al usuario
+Y redirigir a la página principal
+Y registrar el evento en el log de auditoría
+
+Criterios de Aceptación:
+- Email válido (formato)
+- Contraseña mínimo 8 caracteres
+- Máximo 3 intentos fallidos
+- Bloqueo temporal tras fallos
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🎯 Casos de Uso</h3>
+                        <div class="code-example">
+                            <pre>
+Caso de Uso: Procesar Pedido
+Actor Principal: Cliente
+Precondiciones: Usuario autenticado, carrito con items
+
+Flujo Básico:
+1. Cliente selecciona "Procesar Pedido"
+2. Sistema muestra resumen del pedido
+3. Cliente confirma información de envío
+4. Sistema calcula costos totales
+5. Cliente selecciona método de pago
+6. Sistema procesa pago
+7. Sistema genera número de pedido
+8. Sistema envía confirmación por email
+
+Flujos Alternativos:
+3a. Información envío incompleta
+   3a.1 Sistema solicita información faltante
+   3a.2 Retorna al paso 3
+
+6a. Pago rechazado
+   6a.1 Sistema muestra error
+   6a.2 Retorna al paso 5
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Matriz de Trazabilidad</h3>
+                    <p>Herramienta para rastrear la relación entre requerimientos y otros artefactos del proyecto:</p>
+                    
+                    <div class="comparison-table">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID Req</th>
+                                    <th>Descripción</th>
+                                    <th>Caso de Uso</th>
+                                    <th>Diseño</th>
+                                    <th>Código</th>
+                                    <th>Prueba</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>REQ-001</td>
+                                    <td>Autenticación usuario</td>
+                                    <td>UC-001</td>
+                                    <td>MOD-Auth</td>
+                                    <td>Auth.java</td>
+                                    <td>TC-001</td>
+                                    <td>✅ Implementado</td>
+                                </tr>
+                                <tr>
+                                    <td>REQ-002</td>
+                                    <td>Gestión perfiles</td>
+                                    <td>UC-002</td>
+                                    <td>MOD-Profile</td>
+                                    <td>Profile.java</td>
+                                    <td>TC-002</td>
+                                    <td>🔄 En desarrollo</td>
+                                </tr>
+                                <tr>
+                                    <td>REQ-003</td>
+                                    <td>Reportes ventas</td>
+                                    <td>UC-003</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>⏳ Pendiente</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas de Documentación</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Consistencia</strong>
+                            <p>Usar plantillas y terminología uniformes</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Granularidad Apropiada</strong>
+                            <p>Ni muy general ni excesivamente detallado</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Identificación Única</strong>
+                            <p>Cada requerimiento con ID único</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Control de Versiones</strong>
+                            <p>Historial de cambios y aprobaciones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Revisión Peer</strong>
+                            <p>Validación cruzada por múltiples personas</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Accesibilidad</strong>
+                            <p>Disponible para todos los stakeholders</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🔄 Gestión de Versiones</h3>
+                        <h4 style="color: var(--primary);">Estados de Requerimientos:</h4>
+                        <ul>
+                            <li><strong>Propuesto:</strong> Identificado pero no aprobado</li>
+                            <li><strong>Aprobado:</strong> Validado por stakeholders</li>
+                            <li><strong>En Desarrollo:</strong> Siendo implementado</li>
+                            <li><strong>Implementado:</strong> Codificado y probado</li>
+                            <li><strong>Verificado:</strong> Cumple criterios de aceptación</li>
+                            <li><strong>Cancelado:</strong> No será implementado</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Control de Cambios:</h4>
+                        <ul>
+                            <li>Versionado semántico (v1.0.0)</li>
+                            <li>Log de cambios detallado</li>
+                            <li>Aprobaciones formales</li>
+                            <li>Notificaciones automáticas</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🛠️ Herramientas de Documentación</h3>
+                        <h4 style="color: var(--primary);">Herramientas Especializadas:</h4>
+                        <ul>
+                            <li><strong>IBM DOORS:</strong> Gestión avanzada de requerimientos</li>
+                            <li><strong>Jama Connect:</strong> Colaboración y trazabilidad</li>
+                            <li><strong>Azure DevOps:</strong> Integración con desarrollo</li>
+                            <li><strong>Confluence:</strong> Documentación colaborativa</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Herramientas Generales:</h4>
+                        <ul>
+                            <li><strong>Word/Google Docs:</strong> Documentos estructurados</li>
+                            <li><strong>Excel/Sheets:</strong> Matrices y listas</li>
+                            <li><strong>Visio/Draw.io:</strong> Diagramas y modelos</li>
+                            <li><strong>Wiki/Notion:</strong> Bases de conocimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Plantillas de Requerimientos</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+PLANTILLA DE REQUERIMIENTO FUNCIONAL
+
+ID: REQ-[NÚMERO]
+Nombre: [Nombre descriptivo del requerimiento]
+Versión: [Versión actual]
+Fecha: [Fecha de creación/última modificación]
+Autor: [Responsable del requerimiento]
+Estado: [Propuesto/Aprobado/En Desarrollo/Implementado/Verificado]
+
+Descripción:
+[Descripción clara y concisa del requerimiento]
+
+Justificación:
+[Por qué es necesario este requerimiento]
+
+Prioridad: [Crítica/Alta/Media/Baja]
+Complejidad: [Alta/Media/Baja]
+Riesgo: [Alto/Medio/Bajo]
+
+Criterios de Aceptación:
+1. [Criterio 1]
+2. [Criterio 2]
+3. [Criterio 3]
+
+Dependencias:
+- REQ-XXX: [Descripción de la dependencia]
+- REQ-YYY: [Descripción de la dependencia]
+
+Restricciones:
+[Limitaciones técnicas, de tiempo, presupuesto, etc.]
+
+Casos de Prueba:
+- TC-XXX: [Descripción del caso de prueba]
+
+Notas:
+[Información adicional relevante]
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="validation" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">✅</div>
+                    <span>Validación y Verificación</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>🔍 Diferencia: Validación vs Verificación</h3>
+                    <div class="grid grid-2" style="margin-top: 1rem;">
+                        <div>
+                            <h4>Validación</h4>
+                            <p><strong>"¿Estamos construyendo el producto correcto?"</strong></p>
+                            <ul>
+                                <li>Requerimientos satisfacen necesidades reales</li>
+                                <li>Alineación con objetivos de negocio</li>
+                                <li>Involucra a usuarios finales</li>
+                                <li>Enfoque en valor y utilidad</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Verificación</h4>
+                            <p><strong>"¿Estamos construyendo el producto correctamente?"</strong></p>
+                            <ul>
+                                <li>Requerimientos están bien escritos</li>
+                                <li>Completitud y consistencia</li>
+                                <li>Cumplimiento de estándares</li>
+                                <li>Enfoque en calidad técnica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔬 Técnicas de Verificación</h3>
+                    
+                    <div class="technique-grid">
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">👁️</div>
+                                <div>
+                                    <h4>Inspecciones</h4>
+                                    <p>Revisión formal estructurada</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Proceso:</strong> Preparación → Inspección → Corrección<br>
+                                <strong>Roles:</strong> Moderador, autor, inspectores<br>
+                                <strong>Focus:</strong> Defectos, inconsistencias, omisiones
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">📝</div>
+                                <div>
+                                    <h4>Revisiones por Pares</h4>
+                                    <p>Evaluación colaborativa</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Ventajas:</strong> Múltiples perspectivas<br>
+                                <strong>Método:</strong> Round-robin, checklist<br>
+                                <strong>Énfasis:</strong> Claridad, completitud
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">🤖</div>
+                                <div>
+                                    <h4>Análisis Automatizado</h4>
+                                    <p>Herramientas de verificación</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Herramientas:</strong> RQA, ReqIF, DOORS<br>
+                                <strong>Verifica:</strong> Sintaxis, enlaces, consistencia<br>
+                                <strong>Límites:</strong> No detecta errores semánticos
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">🎯</div>
+                                <div>
+                                    <h4>Trazabilidad</h4>
+                                    <p>Seguimiento de dependencias</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Hacia Adelante:</strong> Req → Diseño → Código<br>
+                                <strong>Hacia Atrás:</strong> Código → Req → Necesidad<br>
+                                <strong>Beneficio:</strong> Análisis de impacto
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>✅ Técnicas de Validación</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Prototipado</h4>
+                            <ul>
+                                <li><strong>Baja Fidelidad:</strong> Wireframes, mockups</li>
+                                <li><strong>Alta Fidelidad:</strong> Prototipos interactivos</li>
+                                <li><strong>Ventajas:</strong> Feedback temprano, visualización</li>
+                                <li><strong>Desventajas:</strong> Tiempo, costo de desarrollo</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Simulación</h4>
+                            <ul>
+                                <li>Modelado matemático de procesos</li>
+                                <li>Análisis de rendimiento esperado</li>
+                                <li>Validación de requerimientos cuantitativos</li>
+                                <li>Identificación de cuellos de botella</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Revisiones con Usuario</h4>
+                            <ul>
+                                <li><strong>Walkthrough:</strong> Revisión informal guiada</li>
+                                <li><strong>Focus Groups:</strong> Sesiones grupales estructuradas</li>
+                                <li><strong>Entrevistas:</strong> Validación uno-a-uno</li>
+                                <li><strong>Observación:</strong> Usuarios en su entorno</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Análisis de Escenarios</h4>
+                            <ul>
+                                <li>Casos de uso detallados</li>
+                                <li>Escenarios de error y excepción</li>
+                                <li>Análisis de flujos alternos</li>
+                                <li>Validación de integración</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Criterio de Verificación</th>
+                                <th>Descripción</th>
+                                <th>Pregunta Clave</th>
+                                <th>Método de Verificación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Completitud</strong></td>
+                                <td>Todos los aspectos cubiertos</td>
+                                <td>¿Falta algo importante?</td>
+                                <td>Checklist, matriz de funciones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Consistencia</strong></td>
+                                <td>Sin contradicciones internas</td>
+                                <td>¿Hay conflictos entre requisitos?</td>
+                                <td>Análisis de dependencias</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Claridad</strong></td>
+                                <td>Interpretación única</td>
+                                <td>¿Es ambiguo el lenguaje?</td>
+                                <td>Revisión de terminología</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Verificabilidad</strong></td>
+                                <td>Puede ser probado</td>
+                                <td>¿Cómo se puede verificar?</td>
+                                <td>Definición de criterios</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Factibilidad</strong></td>
+                                <td>Técnica y económicamente viable</td>
+                                <td>¿Es posible implementarlo?</td>
+                                <td>Análisis técnico y de costo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Necesidad</strong></td>
+                                <td>Justificación válida</td>
+                                <td>¿Por qué es necesario?</td>
+                                <td>Análisis de valor de negocio</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Lista de Verificación (Checklist)</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Estructura</strong>
+                            <p>✓ ID único ✓ Descripción clara ✓ Prioridad definida</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Contenido</strong>
+                            <p>✓ Funcionalidad específica ✓ Criterios aceptación ✓ Restricciones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Calidad</strong>
+                            <p>✓ Sin ambigüedades ✓ Medible ✓ Testeable</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Relaciones</strong>
+                            <p>✓ Dependencias claras ✓ Trazabilidad ✓ No conflictos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Proceso de Validación Formal</h3>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Preparación</strong>
+                                <p>Definir criterios, seleccionar validadores, preparar materiales</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Ejecución</strong>
+                                <p>Realizar revisiones, documentar hallazgos, categorizar issues</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Análisis</strong>
+                                <p>Evaluar criticidad, priorizar correcciones, planificar soluciones</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Corrección</strong>
+                                <p>Implementar cambios, re-documentar, notificar stakeholders</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">5</div>
+                            <div>
+                                <strong>Verificación</strong>
+                                <p>Confirmar correcciones, validar con stakeholders, aprobar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🚨 Tipos de Defectos</h3>
+                        <h4 style="color: var(--accent);">Defectos de Contenido:</h4>
+                        <ul>
+                            <li>Omisión de funcionalidades</li>
+                            <li>Información incorrecta</li>
+                            <li>Hechos inconsistentes</li>
+                            <li>Especificaciones irrelevantes</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--accent); margin-top: 1.5rem;">Defectos de Documentación:</h4>
+                        <ul>
+                            <li>Ambigüedad en lenguaje</li>
+                            <li>Información duplicada</li>
+                            <li>Estructura pobre</li>
+                            <li>Referencias incorrectas</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Métricas de Calidad</h3>
+                        <div class="metrics-dashboard">
+                            <div class="metric-card">
+                                <div class="metric-value">95%</div>
+                                <div class="metric-label">Req. verificados</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">2.3</div>
+                                <div class="metric-label">Defectos/página</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">87%</div>
+                                <div class="metric-label">Req. trazables</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">15%</div>
+                                <div class="metric-label">Cambios post-aprobación</div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: var(--primary);">Indicadores de Progreso:</h4>
+                        <ul>
+                            <li>% Requerimientos aprobados</li>
+                            <li>Número de defectos por categoría</li>
+                            <li>Tiempo promedio de resolución</li>
+                            <li>Satisfacción de stakeholders</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Auditoría de Requerimientos</h3>
+                    <p>Evaluación sistemática y formal de la calidad de los requerimientos:</p>
+                    
+                    <div class="code-example">
+                        <pre>
+CHECKLIST DE AUDITORÍA:
+
+📋 ESTRUCTURA Y ORGANIZACIÓN
+□ Documento sigue estándares establecidos
+□ Numeración y referencias consistentes  
+□ Índices y tabla de contenidos actualizados
+□ Control de versiones implementado
+
+📝 CALIDAD DEL CONTENIDO
+□ Requerimientos claramente definidos
+□ Criterios de aceptación especificados
+□ Prioridades asignadas correctamente
+□ Sin contradicciones entre requerimientos
+
+🔗 TRAZABILIDAD
+□ Enlaces a necesidades de negocio
+□ Mapeo a casos de uso
+□ Conexión con pruebas de aceptación
+□ Relaciones de dependencia documentadas
+
+✅ VERIFICABILIDAD
+□ Requerimientos son testeable
+□ Criterios de éxito medibles
+□ Condiciones de fallo definidas
+□ Procedimientos de verificación claros
+
+👥 STAKEHOLDER APPROVAL
+□ Revisión y aprobación documentada
+□ Conflictos resueltos
+□ Cambios autorizados
+□ Comunicación de actualizaciones
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Preparatic - Tema 18: Determinación de Requerimientos | Guía de Estudio para Administración Pública</p>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab and mark button as active
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            html.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+            }
+        });
+
+        // Add smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey && e.key >= '1' && e.key <= '6') {
+                e.preventDefault();
+                const tabNames = ['overview', 'fundamentals', 'techniques', 'stakeholders', 'documentation', 'validation'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabIndex < tabNames.length) {
+                    const tabButton = document.querySelector(`[onclick="showTab('${tabNames[tabIndex]}')"]`);
+                    if (tabButton) {
+                        tabButton.click();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

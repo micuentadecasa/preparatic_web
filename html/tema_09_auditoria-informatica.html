@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 9 - Auditoría Informática</title>
+    <style>
+        :root {--bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530); --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2); --tab-active: #2980b9; --content-bg: #2c2c2c; --card-bg: #2d2d2d; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a;}
+        .light-mode {--bg-color: #f5f7fa; --text-color: #2c3e50; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white; --highlight-box-bg: #e8f4fc; --success-box-bg: #d4edda; --table-row-even: #f2f2f2;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--tab-active); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; } .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--card-text); }
+        .card h3 { margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid #555; }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .hot-tip { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .norm-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .ens-box { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .exercise-container { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); color: var(--card-text); }
+        .exercise-question { margin-bottom: 15px; font-weight: bold; font-size: 1.1em; }
+        .exercise-options { margin-left: 20px; margin-bottom: 15px; }
+        .exercise-option { margin-bottom: 8px; }
+        .exercise-btn { background: var(--tab-active); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 10px 5px 0 0; }
+        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .feedback.correct { background: #2a4a2a; color: #e0e0e0; display: block; }
+        .feedback.incorrect { background: #5a2a2a; color: #e0e0e0; display: block; }
+        .formula-box { background: var(--highlight-box-bg); padding: 15px; margin: 10px 0; border-radius: 8px; text-align: center; }
+        .formula { font-family: monospace; font-size: 1.1em; color: #3498db; font-weight: bold; }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 9: Auditoría Informática</h1>
+            <p>Objetivos, alcance y metodología. Técnicas y herramientas. Normas y estándares. Auditoría del ENS y de protección de datos. Auditoría de seguridad física.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('methodology')">📘 Metodología</div>
+                <div class="tab" onclick="showTab('standards')">📘 Normas y ENS</div>
+                <div class="tab" onclick="showTab('techniques')">📘 Técnicas</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: Auditoría ≠ Consultoría. Auditor INDEPENDIENTE, OBJETIVO, emite DICTAMEN. Consultor asesora y ayuda a implementar.
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">1977</span><div>Primera norma auditoría IT (EDP)</div></div>
+                    <div class="stat-card"><span class="stat-number">ISO 27001</span><div>Estándar SGSI</div></div>
+                    <div class="stat-card"><span class="stat-number">2010</span><div>ENS Real Decreto 3/2010</div></div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Definición y Objetivos (FUNDAMENTAL EXAMEN)</h3>
+                    <div class="highlight-box">
+                        <h4>📋 Definición Auditoría Informática:</h4>
+                        <p>Proceso sistemático, independiente y documentado para obtener <strong>evidencias objetivas</strong> y evaluarlas de manera imparcial con el fin de determinar el grado de cumplimiento de criterios establecidos.</p>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 Objetivos Principales:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Verificar cumplimiento</strong> de políticas, normas y procedimientos</li>
+                            <li><strong>Evaluar eficacia</strong> de controles implementados</li>
+                            <li><strong>Identificar riesgos</strong> y vulnerabilidades</li>
+                            <li><strong>Asegurar integridad</strong> de la información</li>
+                            <li><strong>Optimizar recursos</strong> tecnológicos</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA TÍPICA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Cuál es la principal característica que debe tener un auditor?</p>
+                        <p><strong>R:</strong> INDEPENDENCIA - no puede auditar sistemas que haya diseñado o en los que tenga intereses</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Tipos de Auditoría IT (CLASIFICACIÓN EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Tipo</th><th>Enfoque</th><th>Objetivo</th><th>Frecuencia</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Operativa</strong></td><td>Procesos y eficiencia</td><td>Optimización recursos</td><td>Anual</td></tr>
+                            <tr><td><strong>Seguridad</strong></td><td>Controles y riesgos</td><td>Protección activos</td><td>Semestral</td></tr>
+                            <tr><td><strong>Cumplimiento</strong></td><td>Normativas</td><td>Compliance legal</td><td>Según normativa</td></tr>
+                            <tr><td><strong>Desarrollo</strong></td><td>Proyectos software</td><td>Calidad código</td><td>Por proyecto</td></tr>
+                            <tr><td><strong>Forense</strong></td><td>Incidentes</td><td>Investigación</td><td>Ad-hoc</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="methodology" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Fases auditoría: Planificación → Ejecución → Informe → Seguimiento. Cada fase tiene entregables específicos.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Metodología de Auditoría (PROCESO COMPLETO)</h3>
+                    
+                    <div class="highlight-box">
+                        <h4>🎯 Fase 1: Planificación</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Carta de encargo:</strong> Alcance, objetivos, recursos</li>
+                            <li><strong>Análisis preliminar:</strong> Conocimiento del negocio</li>
+                            <li><strong>Evaluación de riesgos:</strong> Identificación de áreas críticas</li>
+                            <li><strong>Plan de auditoría:</strong> Cronograma y recursos</li>
+                        </ul>
+                        <p><strong>EXAMEN:</strong> La carta de encargo es FUNDAMENTAL - define todo el trabajo</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🎯 Fase 2: Ejecución</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Recopilación evidencias:</strong> Documentos, entrevistas, pruebas</li>
+                            <li><strong>Evaluación controles:</strong> Diseño y eficacia operativa</li>
+                            <li><strong>Pruebas sustantivas:</strong> Verificación detallada</li>
+                            <li><strong>Documentación hallazgos:</strong> Papel de trabajo</li>
+                        </ul>
+                        <p><strong>EXAMEN:</strong> Evidencias deben ser SUFICIENTES, APROPIADAS y COMPETENTES</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🎯 Fase 3: Informe</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Hallazgos:</strong> Desviaciones identificadas</li>
+                            <li><strong>Recomendaciones:</strong> Medidas correctivas</li>
+                            <li><strong>Opinión/Dictamen:</strong> Conclusión profesional</li>
+                            <li><strong>Plan de acción:</strong> Responsables y plazos</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🎯 Fase 4: Seguimiento</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Verificación implementación:</strong> Cumplimiento recomendaciones</li>
+                            <li><strong>Auditoría de seguimiento:</strong> Efectividad medidas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Técnicas de Muestreo Auditoría</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Técnica</th><th>Cuándo usar</th><th>Ventajas</th><th>Limitaciones</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Aleatorio simple</strong></td><td>Población homogénea</td><td>Unbiased, estadísticamente válido</td><td>Puede perder elementos críticos</td></tr>
+                            <tr><td><strong>Estratificado</strong></td><td>Población heterogénea</td><td>Representa todos los grupos</td><td>Más complejo de implementar</td></tr>
+                            <tr><td><strong>Por juicio</strong></td><td>Ítems específicos</td><td>Focalizado en riesgo</td><td>Sesgado, no estadístico</td></tr>
+                            <tr><td><strong>Sistemático</strong></td><td>Datos ordenados</td><td>Simple de aplicar</td><td>Puede haber sesgos periódicos</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CÁLCULO TAMAÑO MUESTRA</h4>
+                        <p>n = (Z² × p × q × N) / (e² × (N-1) + Z² × p × q)</p>
+                        <p><strong>Z=1.96 (95% confianza), p=q=0.5, e=error tolerado</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="standards" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: ENS (RD 3/2010) es OBLIGATORIO para AAPP. ISO 27001 es internacional. COBIT para gobierno IT. COSO para control interno.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Normas y Estándares Auditoría</h3>
+                    
+                    <div class="norm-box">
+                        <h4>🎯 ISO 27001:2013 - SGSI</h4>
+                        <p><strong>Objetivo:</strong> Sistema de Gestión Seguridad de la Información</p>
+                        <p><strong>Controles:</strong> Anexo A - 114 controles en 14 dominios</p>
+                        <p><strong>Ciclo:</strong> Plan-Do-Check-Act (PDCA)</p>
+                        <p><strong>EXAMEN:</strong> Certificación internacional más reconocida</p>
+                    </div>
+
+                    <div class="ens-box">
+                        <h4>🎯 ENS - Real Decreto 3/2010</h4>
+                        <p><strong>Ámbito:</strong> Administraciones Públicas españolas</p>
+                        <p><strong>Categorías:</strong> BÁSICA, MEDIA, ALTA (según impacto)</p>
+                        <p><strong>Dimensiones:</strong> Confidencialidad, Integridad, Disponibilidad</p>
+                        <p><strong>Medidas:</strong> 75 medidas de seguridad organizativas y técnicas</p>
+                        <p><strong>EXAMEN:</strong> Obligatorio AAPP, auditoría cada 2 años categoría ALTA</p>
+                    </div>
+
+                    <div class="norm-box">
+                        <h4>🎯 COBIT 2019</h4>
+                        <p><strong>Enfoque:</strong> Gobierno y gestión de TI empresarial</p>
+                        <p><strong>Procesos:</strong> 37 procesos de gobierno y gestión</p>
+                        <p><strong>Principios:</strong> 6 principios de gobierno empresarial</p>
+                        <p><strong>EXAMEN:</strong> Marco de referencia para gobierno IT</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Auditoría ENS - Categorización</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Dimensión</th><th>BÁSICA</th><th>MEDIA</th><th>ALTA</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Confidencialidad</strong></td><td>Información pública</td><td>Información interna</td><td>Información clasificada</td></tr>
+                            <tr><td><strong>Integridad</strong></td><td>Errores menores</td><td>Errores graves</td><td>Errores muy graves</td></tr>
+                            <tr><td><strong>Disponibilidad</strong></td><td>>4 horas parada</td><td>1-4 horas parada</td><td><1 hora parada</td></tr>
+                            <tr><td><strong>Auditoría</strong></td><td>Autoauditoría</td><td>Cada 3 años</td><td>Cada 2 años</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CATEGORIZACIÓN ENS EXAMEN</h4>
+                        <p>Categoría del sistema = MÁXIMO de las 3 dimensiones. Si una es ALTA, todo el sistema es ALTA.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Auditoría Protección de Datos (RGPD)</h3>
+                    <div class="success-box">
+                        <h4>✅ Aspectos Clave Auditoría RGPD:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Base legal:</strong> Consentimiento, interés legítimo, obligación legal</li>
+                            <li><strong>Principios:</strong> Licitud, lealtad, transparencia, limitación finalidad</li>
+                            <li><strong>Derechos:</strong> Acceso, rectificación, supresión, portabilidad</li>
+                            <li><strong>DPO:</strong> Delegado Protección de Datos (obligatorio AAPP)</li>
+                            <li><strong>EIPD:</strong> Evaluación Impacto Protección Datos</li>
+                            <li><strong>Registro:</strong> Tratamientos de datos personales</li>
+                        </ul>
+
+                        <div class="exam-tip">
+                            <h4>💡 SANCIONES RGPD</h4>
+                            <p><strong>Tier 1:</strong> Hasta 10M€ o 2% facturación anual</p>
+                            <p><strong>Tier 2:</strong> Hasta 20M€ o 4% facturación anual</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="techniques" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: CAATTs (Computer Assisted Audit Tools & Techniques). Herramientas: ACL, IDEA, Pentesting tools, Log analyzers.
+                </div>
+
+                <div class="card">
+                    <h3>📘 Técnicas y Herramientas Auditoría</h3>
+                    
+                    <div class="highlight-box">
+                        <h4>🎯 Técnicas de Auditoría</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Inspección:</strong> Examen documentos y registros</li>
+                            <li><strong>Observación:</strong> Seguimiento de procesos</li>
+                            <li><strong>Indagación:</strong> Entrevistas y cuestionarios</li>
+                            <li><strong>Confirmación:</strong> Verificación con terceros</li>
+                            <li><strong>Re-cálculo:</strong> Verificación aritmética</li>
+                            <li><strong>Re-ejecución:</strong> Repetir procedimientos</li>
+                            <li><strong>Analítica:</strong> Comparaciones y ratios</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 CAATTs - Herramientas Informáticas</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>ACL Analytics:</strong> Análisis y extracción de datos</li>
+                            <li><strong>IDEA:</strong> Interactive Data Extraction and Analysis</li>
+                            <li><strong>Nmap:</strong> Network discovery y security auditing</li>
+                            <li><strong>Nessus:</strong> Vulnerability scanner</li>
+                            <li><strong>Wireshark:</strong> Network protocol analyzer</li>
+                            <li><strong>SIEM:</strong> Security Information Event Management</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Auditoría Seguridad Física</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Área</th><th>Controles a Auditar</th><th>Evidencias</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Perímetro</strong></td><td>Vallas, cámaras, iluminación</td><td>Inspección visual, registros acceso</td></tr>
+                            <tr><td><strong>Accesos</strong></td><td>Tarjetas, biometría, doble factor</td><td>Logs de acceso, pruebas funcionales</td></tr>
+                            <tr><td><strong>CPD</strong></td><td>Climatización, alimentación, extinción</td><td>Alarmas, mantenimientos, pruebas</td></tr>
+                            <tr><td><strong>Equipos</strong></td><td>Anclajes, etiquetado, inventario</td><td>Registro activos, ubicaciones</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 AUDITORÍA CPD EXAMEN</h4>
+                        <p>Verificar: Redundancia eléctrica (N+1), Climatización (temperatura 18-24°C, humedad 45-65%), Extinción (gas inerte, no agua).</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Matriz de Riesgos y Controles</h3>
+                    <div class="highlight-box">
+                        <h4>💡 Evaluación Controles:</h4>
+                        <p><strong>Diseño:</strong> ¿El control está bien diseñado?</p>
+                        <p><strong>Implementación:</strong> ¿El control está implementado?</p>
+                        <p><strong>Eficacia Operativa:</strong> ¿El control funciona efectivamente?</p>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 Tipos de Controles:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Preventivos:</strong> Evitan que ocurra el riesgo</li>
+                            <li><strong>Detectivos:</strong> Identifican cuando ocurre</li>
+                            <li><strong>Correctivos:</strong> Corrigen después de ocurrir</li>
+                            <li><strong>Compensatorios:</strong> Mitigan cuando otros fallan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>🧮 Ejercicios de Auditoría Informática</h3>
+                    <p>Cálculos específicos sobre muestreo estadístico, auditoría de ENS, evaluación de controles y análisis de riesgos.</p>
+                </div>
+
+                <div style="background: #333; border-radius: 10px; height: 20px; margin: 20px 0; overflow: hidden;">
+                    <div id="progress" style="background: linear-gradient(45deg, #4caf50, #45a049); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+                </div>
+                <p style="text-align: center; margin-bottom: 2rem; color: var(--text-color);">Progreso: <span id="progress-text">0/10</span></p>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 1: Cálculo Tamaño de Muestra Estadística</h4>
+                        <p>Población N=10,000 transacciones. Nivel confianza 95% (Z=1.96), error tolerado 5%, p=q=0.5. ¿Tamaño muestra requerido?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">n = (Z² × p × q × N) / (e² × (N-1) + Z² × p × q)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise1" value="a"> a) 370 transacciones</label>
+                            <label><input type="radio" name="exercise1" value="b"> b) 384 transacciones</label>
+                            <label><input type="radio" name="exercise1" value="c"> c) 400 transacciones</label>
+                            <label><input type="radio" name="exercise1" value="d"> d) 350 transacciones</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(1, 'a', 'n = (1.96²×0.5×0.5×10000) / (0.05²×9999 + 1.96²×0.5×0.5) = 9604 / 25.96 = 370')">Verificar Respuesta</button>
+                        <div id="feedback1" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 2: Evaluación de Controles - Eficacia Operativa</h4>
+                        <p>Control de acceso: 95 accesos autorizados de 100 intentos. Control de logs: 88 eventos registrados de 100. ¿Eficacia promedio ponderada (50%-50%)?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Eficacia = (Control1 × Peso1) + (Control2 × Peso2)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise2" value="a"> a) 91.5%</label>
+                            <label><input type="radio" name="exercise2" value="b"> b) 89.2%</label>
+                            <label><input type="radio" name="exercise2" value="c"> c) 93.1%</label>
+                            <label><input type="radio" name="exercise2" value="d"> d) 90.8%</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(2, 'a', 'Eficacia = (95% × 0.5) + (88% × 0.5) = 47.5% + 44% = 91.5%')">Verificar Respuesta</button>
+                        <div id="feedback2" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 3: Auditoría ENS - Cálculo de Categorización</h4>
+                        <p>Sistema AAPP: Confidencialidad MEDIA, Integridad ALTA, Disponibilidad MEDIA. ¿Categoría final del sistema?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Categoría_Sistema = MAX(Confidencialidad, Integridad, Disponibilidad)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise3" value="a"> a) ALTA</label>
+                            <label><input type="radio" name="exercise3" value="b"> b) MEDIA</label>
+                            <label><input type="radio" name="exercise3" value="c"> c) BÁSICA</label>
+                            <label><input type="radio" name="exercise3" value="d"> d) MUY ALTA</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(3, 'a', 'Categoría = MAX(MEDIA, ALTA, MEDIA) = ALTA. En ENS se toma la dimensión más restrictiva.')">Verificar Respuesta</button>
+                        <div id="feedback3" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 4: Análisis de Segregación de Funciones</h4>
+                        <p>Departamento IT: 12 empleados. Funciones críticas: Desarrollo(4), Operaciones(3), Seguridad(2), Administración(3). ¿Porcentaje segregación adecuada?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Segregación = (Funciones_Separadas / Total_Funciones) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise4" value="a"> a) 100% segregación</label>
+                            <label><input type="radio" name="exercise4" value="b"> b) 83% segregación</label>
+                            <label><input type="radio" name="exercise4" value="c"> c) 75% segregación</label>
+                            <label><input type="radio" name="exercise4" value="d"> d) 67% segregación</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(4, 'a', '4 funciones críticas completamente separadas con personal dedicado = 100% segregación adecuada.')">Verificar Respuesta</button>
+                        <div id="feedback4" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 5: Cálculo MTTR (Mean Time To Repair)</h4>
+                        <p>En 6 meses: 8 incidentes con tiempos de resolución: 2h, 4h, 1h, 6h, 3h, 2h, 5h, 1h. ¿MTTR promedio?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">MTTR = Σ(Tiempos_Resolución) / Número_Incidentes</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise5" value="a"> a) 3 horas</label>
+                            <label><input type="radio" name="exercise5" value="b"> b) 2.5 horas</label>
+                            <label><input type="radio" name="exercise5" value="c"> c) 3.5 horas</label>
+                            <label><input type="radio" name="exercise5" value="d"> d) 4 horas</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(5, 'a', 'MTTR = (2+4+1+6+3+2+5+1) / 8 = 24 / 8 = 3 horas promedio')">Verificar Respuesta</button>
+                        <div id="feedback5" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 6: Eficiencia de Proceso de Auditoría</h4>
+                        <p>Auditoría planificada: 80 horas. Real: 95 horas. Hallazgos planificados: 15. Hallazgos reales: 18. ¿Eficiencia de tiempo y efectividad?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Eficiencia = Planificado/Real × 100; Efectividad = Real/Planificado × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise6" value="a"> a) 84% eficiencia, 120% efectividad</label>
+                            <label><input type="radio" name="exercise6" value="b"> b) 80% eficiencia, 115% efectividad</label>
+                            <label><input type="radio" name="exercise6" value="c"> c) 85% eficiencia, 125% efectividad</label>
+                            <label><input type="radio" name="exercise6" value="d"> d) 75% eficiencia, 110% efectividad</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(6, 'a', 'Eficiencia = 80/95 × 100 = 84%. Efectividad = 18/15 × 100 = 120%')">Verificar Respuesta</button>
+                        <div id="feedback6" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 7: Riesgo de Auditoría - Materialidad</h4>
+                        <p>Activos totales: 10M€. Umbral materialidad: 2%. Error detectado: 150,000€. ¿Supera umbral de materialidad?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Materialidad = Activos_Totales × Umbral_Porcentaje</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise7" value="a"> a) No, 150K < 200K umbral</label>
+                            <label><input type="radio" name="exercise7" value="b"> b) Sí, 150K > 100K umbral</label>
+                            <label><input type="radio" name="exercise7" value="c"> c) No, 150K < 300K umbral</label>
+                            <label><input type="radio" name="exercise7" value="d"> d) Sí, 150K > 50K umbral</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(7, 'a', 'Umbral = 10M × 2% = 200,000€. Error 150,000€ < 200,000€ umbral, no es material.')">Verificar Respuesta</button>
+                        <div id="feedback7" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 8: Cobertura de Auditoría de Controles</h4>
+                        <p>150 controles totales. Testados: Organizativos(25/40), Técnicos(35/60), Físicos(30/50). ¿Porcentaje cobertura total?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Cobertura = (Controles_Testados / Controles_Totales) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise8" value="a"> a) 60% cobertura</label>
+                            <label><input type="radio" name="exercise8" value="b"> b) 65% cobertura</label>
+                            <label><input type="radio" name="exercise8" value="c"> c) 58% cobertura</label>
+                            <label><input type="radio" name="exercise8" value="d"> d) 70% cobertura</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(8, 'a', 'Testados = 25+35+30 = 90. Cobertura = 90/150 × 100 = 60%')">Verificar Respuesta</button>
+                        <div id="feedback8" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 9: SLA de Disponibilidad - Cálculo Anual</h4>
+                        <p>Sistema crítico: objetivo 99.5% disponibilidad anual. Paradas planificadas: 20h. No planificadas: 16h. ¿Cumple objetivo?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Disponibilidad = (8760 - Paradas_Totales) / 8760 × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise9" value="a"> a) Sí, 99.59%</label>
+                            <label><input type="radio" name="exercise9" value="b"> b) No, 99.41%</label>
+                            <label><input type="radio" name="exercise9" value="c"> c) Sí, 99.52%</label>
+                            <label><input type="radio" name="exercise9" value="d"> d) No, 99.31%</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(9, 'b', 'Paradas totales = 20+16 = 36h. Disponibilidad = (8760-36)/8760 × 100 = 99.41% < 99.5% objetivo')">Verificar Respuesta</button>
+                        <div id="feedback9" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 10: Costo-Beneficio Implementación Recomendaciones</h4>
+                        <p>Recomendación auditoría: inversión 200,000€. Reduce riesgo anual de 500,000€ a 150,000€. ¿Tiempo recuperación inversión?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Payback = Inversión / (Riesgo_Antes - Riesgo_Después)</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise10" value="a"> a) 0.57 años</label>
+                            <label><input type="radio" name="exercise10" value="b"> b) 1.33 años</label>
+                            <label><input type="radio" name="exercise10" value="c"> c) 0.8 años</label>
+                            <label><input type="radio" name="exercise10" value="d"> d) 2.5 años</label>
+                        </div>
+                        <button class="exercise-btn" onclick="checkAnswer(10, 'a', 'Ahorro anual = 500,000 - 150,000 = 350,000€. Payback = 200,000 / 350,000 = 0.57 años')">Verificar Respuesta</button>
+                        <div id="feedback10" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 REPASO FINAL: Auditor INDEPENDIENTE. ENS obligatorio AAPP (RD 3/2010). ISO 27001 internacional. RGPD sanciones hasta 4% facturación. CAATTs herramientas informáticas.
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Fechas y Normativas Clave</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">2010</span>
+                            <div>ENS RD 3/2010</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2016</span>
+                            <div>RGPD entrada vigor</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2018</span>
+                            <div>RGPD aplicación</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">27001</span>
+                            <div>ISO SGSI</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Cuál es el principio fundamental que debe cumplir un auditor?</p>
+                        <p><strong>R:</strong> INDEPENDENCIA - debe ser objetivo e imparcial, no puede auditar sistemas que haya diseñado</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿Cada cuánto tiempo se debe auditar un sistema ENS de categoría ALTA?</p>
+                        <p><strong>R:</strong> Cada 2 años (categoría MEDIA cada 3 años, BÁSICA autoauditoría)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Qué son los CAATTs en auditoría?</p>
+                        <p><strong>R:</strong> Computer Assisted Audit Tools & Techniques - herramientas informáticas para auditoría</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 4</h4>
+                        <p><strong>P:</strong> ¿Cómo se determina la categoría ENS de un sistema?</p>
+                        <p><strong>R:</strong> Por el MÁXIMO de las 3 dimensiones (confidencialidad, integridad, disponibilidad)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 5</h4>
+                        <p><strong>P:</strong> ¿Cuáles son las fases principales de una auditoría?</p>
+                        <p><strong>R:</strong> Planificación → Ejecución → Informe → Seguimiento</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> Auditor puede auditar sus propios sistemas - ¡FALSO! Debe ser independiente</li>
+                        <li><strong>Error:</strong> ENS es voluntario para AAPP - ¡FALSO! Es obligatorio</li>
+                        <li><strong>Error:</strong> RGPD solo aplica en Europa - ¡FALSO! Aplica a tratamiento datos de ciudadanos UE</li>
+                        <li><strong>Error:</strong> CAATTs solo incluyen software - ¡FALSO! También técnicas y metodologías</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.textContent = 'Por favor selecciona una respuesta.';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            if (isCorrect) {
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `❌ Incorrecto. La respuesta correcta es "${correctAnswer}". ${explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

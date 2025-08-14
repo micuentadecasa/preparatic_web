@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 14: Documática - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        :root,
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --border: #555555;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .alert-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg-secondary);
+        }
+
+        .highlight {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px var(--shadow);
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-header {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .comparison-cell {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 0.5rem;
+            min-width: 150px;
+            position: relative;
+            border-top: 3px solid var(--primary);
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .technology-card {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .technology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .technology-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        .workflow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .workflow-step {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            text-align: center;
+            position: relative;
+        }
+
+        .security-level {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+
+        .security-low {
+            background: rgba(39, 174, 96, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .security-medium {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .security-high {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step:not(:last-child)::after {
+                content: '↓';
+                right: 50%;
+                bottom: -15px;
+                top: auto;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>📄 Documática</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="subtitle">Gestión electrónica de documentos en la Administración Pública</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📋 Visión General</button>
+            <button class="tab" onclick="showTab('concepts')">📚 Conceptos Fundamentales</button>
+            <button class="tab" onclick="showTab('systems')">💻 Sistemas y Tecnologías</button>
+            <button class="tab" onclick="showTab('legal')">⚖️ Marco Normativo</button>
+            <button class="tab" onclick="showTab('implementation')">🚀 Implementación</button>
+            <button class="tab" onclick="showTab('future')">🔮 Tendencias y Futuro</button>
+        </div>
+
+        <div id="overview" class="tab-content">
+            <div class="alert alert-info">
+                <strong>📚 Definición:</strong> La Documática es la aplicación de las tecnologías de la información y la comunicación a la gestión de documentos, abarcando su creación, tratamiento, almacenamiento, recuperación y difusión de forma automatizada.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">2030</span>
+                    <div>Meta Administración Digital</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">75%</span>
+                    <div>Reducción Costes</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <div>Disponibilidad Servicios</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">99.9%</span>
+                    <div>Disponibilidad Sistema</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivos de la Documática</h3>
+                <ul>
+                    <li><strong>Eficiencia operativa:</strong> Automatización de procesos documentales</li>
+                    <li><strong>Reducción de costes:</strong> Eliminación del papel y optimización de recursos</li>
+                    <li><strong>Mejora del servicio:</strong> Acceso inmediato a la información</li>
+                    <li><strong>Transparencia:</strong> Facilitar el acceso a la información pública</li>
+                    <li><strong>Sostenibilidad:</strong> Reducción del impacto medioambiental</li>
+                    <li><strong>Seguridad jurídica:</strong> Conservación y autenticidad documental</li>
+                </ul>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>📝 Creación</h4>
+                    <p>Captura y digitalización de documentos</p>
+                </div>
+                <div class="process-step">
+                    <h4>🗂️ Clasificación</h4>
+                    <p>Organización y metadatado</p>
+                </div>
+                <div class="process-step">
+                    <h4>💾 Almacenamiento</h4>
+                    <p>Repositorios seguros y escalables</p>
+                </div>
+                <div class="process-step">
+                    <h4>🔍 Búsqueda</h4>
+                    <p>Recuperación inteligente</p>
+                </div>
+                <div class="process-step">
+                    <h4>📤 Distribución</h4>
+                    <p>Difusión controlada</p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>🏛️ Era Pre-Digital (hasta 1990)</h4>
+                    <p>Gestión documental tradicional basada en papel. Archivos físicos, sistemas manuales de clasificación y recuperación de información.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>💻 Informatización Básica (1990-2000)</h4>
+                    <p>Primeros sistemas de gestión documental. Digitalización básica y bases de datos documentales.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🌐 Era Internet (2000-2010)</h4>
+                    <p>Desarrollo de portales web, servicios online y primeros sistemas de gestión electrónica de expedientes.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>📱 Transformación Digital (2010-2020)</h4>
+                    <p>Administración Electrónica, interoperabilidad, firma electrónica y servicios móviles.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🤖 Era de la IA (2020-presente)</h4>
+                    <p>Inteligencia artificial, procesamiento de lenguaje natural, automatización inteligente y blockchain.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>🚨 Desafíos Actuales:</strong>
+                <ul>
+                    <li>Interoperabilidad entre sistemas heredados y modernos</li>
+                    <li>Resistencia al cambio organizacional</li>
+                    <li>Garantía de conservación a largo plazo</li>
+                    <li>Ciberseguridad y protección de datos</li>
+                    <li>Brecha digital en ciudadanos y funcionarios</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📊 Beneficios Cuantificables</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">-80%</span>
+                        <div>Tiempo de Tramitación</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">-60%</span>
+                        <div>Coste por Expediente</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">+95%</span>
+                        <div>Satisfacción Ciudadana</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">-90%</span>
+                        <div>Espacio de Archivo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="concepts" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>📚 Conceptos Fundamentales:</strong> Elementos esenciales que conforman el ecosistema de la gestión electrónica de documentos.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📄 Documento Electrónico</h3>
+                    <p><strong>Definición (Art. 26 Ley 39/2015):</strong> Información de cualquier naturaleza en forma electrónica, archivada en un soporte electrónico según un formato determinado y susceptible de identificación y tratamiento diferenciado.</p>
+                    <div class="alert alert-success">
+                        <strong>Características:</strong>
+                        <ul>
+                            <li>Integridad: no alteración del contenido</li>
+                            <li>Autenticidad: identificación del autor</li>
+                            <li>Confidencialidad: acceso controlado</li>
+                            <li>No repudio: imposibilidad de negar autoría</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔐 Firma Electrónica</h3>
+                    <div class="comparison-table">
+                        <div class="comparison-header">Tipo</div>
+                        <div class="comparison-header">Características</div>
+                        <div class="comparison-header">Uso</div>
+                        <div class="comparison-cell">Simple</div>
+                        <div class="comparison-cell">Datos básicos de identificación</div>
+                        <div class="comparison-cell">Comunicaciones internas</div>
+                        <div class="comparison-cell highlight">Avanzada</div>
+                        <div class="comparison-cell">Certificado cualificado + control exclusivo</div>
+                        <div class="comparison-cell">Procedimientos administrativos</div>
+                        <div class="comparison-cell highlight">Cualificada</div>
+                        <div class="comparison-cell">Dispositivo seguro de creación</div>
+                        <div class="comparison-cell">Equivalente manuscrita</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Expediente Electrónico</h3>
+                    <p><strong>Concepto:</strong> Conjunto ordenado de documentos y actuaciones que sirven de antecedente y fundamento a la resolución administrativa.</p>
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🎯 Iniciación</h4>
+                            <p>Apertura y asignación de número de expediente</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📝 Instrucción</h4>
+                            <p>Alegaciones, informes y documentación</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>⚖️ Resolución</h4>
+                            <p>Decisión administrativa motivada</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📤 Notificación</h4>
+                            <p>Comunicación al interesado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗂️ Archivo Electrónico</h3>
+                    <p>Conjunto orgánico de documentos electrónicos producidos y tratados conforme a los principios y técnicas archivísticas.</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fase</th>
+                                <th>Período</th>
+                                <th>Características</th>
+                                <th>Acceso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Archivo de Gestión</td>
+                                <td>0-5 años</td>
+                                <td>Documentos activos</td>
+                                <td>Frecuente</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Archivo Central</td>
+                                <td>5-25 años</td>
+                                <td>Documentos semiactivos</td>
+                                <td>Ocasional</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Archivo Histórico</td>
+                                <td>+25 años</td>
+                                <td>Valor permanente</td>
+                                <td>Investigación</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="technology-card">
+                <h3>🏗️ Esquema Nacional de Interoperabilidad (ENI)</h3>
+                <div class="alert alert-info">
+                    <strong>Real Decreto 4/2010:</strong> Marco para la interoperabilidad de los sistemas de información de las Administraciones Públicas.
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h4>📋 Dimensiones de Interoperabilidad</h4>
+                        <ul>
+                            <li><strong>Organizativa:</strong> Coordinación de procesos</li>
+                            <li><strong>Semántica:</strong> Significado de la información</li>
+                            <li><strong>Técnica:</strong> Sistemas y comunicaciones</li>
+                            <li><strong>Tiempo:</strong> Disponibilidad cuando se necesite</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🎯 Principios Básicos</h4>
+                        <ul>
+                            <li>Accesibilidad y neutralidad tecnológica</li>
+                            <li>Reutilización y transferencia de tecnología</li>
+                            <li>Seguridad y conservación</li>
+                            <li>Uso de estándares abiertos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Metadatos</h3>
+                <p>Información estructurada que describe, explica, localiza o facilita la recuperación de un documento.</p>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Elementos</th>
+                            <th>Ejemplo</th>
+                            <th>Obligatoriedad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Identificación</td>
+                            <td>Identificador, título, descripción</td>
+                            <td>ES_L01_140001_2024_EXP001</td>
+                            <td>Obligatorio</td>
+                        </tr>
+                        <tr>
+                            <td>Contexto</td>
+                            <td>Productor, fecha, lugar</td>
+                            <td>Ayuntamiento de Madrid</td>
+                            <td>Recomendado</td>
+                        </tr>
+                        <tr>
+                            <td>Contenido</td>
+                            <td>Tipo documento, formato</td>
+                            <td>Resolución, PDF/A</td>
+                            <td>Obligatorio</td>
+                        </tr>
+                        <tr>
+                            <td>Acceso</td>
+                            <td>Derechos, restricciones</td>
+                            <td>Público, confidencial</td>
+                            <td>Obligatorio</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>💡 Hot Tip de Examen:</strong> La correcta aplicación de metadatos es fundamental para la recuperación eficiente de documentos. El esquema de metadatos debe seguir estándares como Dublin Core o e-EMGDE (Estructura de Metadatos para la Gestión del Documento Electrónico).
+            </div>
+        </div>
+
+        <div id="systems" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>💻 Sistemas y Tecnologías:</strong> Herramientas tecnológicas que permiten la implementación efectiva de la gestión documental electrónica.
+            </div>
+
+            <div class="grid">
+                <div class="technology-card">
+                    <h3>📚 Gestores de Contenido Empresarial (ECM)</h3>
+                    <p><strong>Enterprise Content Management:</strong> Plataformas integrales para la gestión del ciclo completo de vida documental.</p>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>📥 Capture</h4>
+                            <p>Digitalización y ingesta de documentos</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🗄️ Manage</h4>
+                            <p>Organización y control de versiones</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📤 Store</h4>
+                            <p>Almacenamiento seguro y escalable</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🔄 Process</h4>
+                            <p>Workflows y automatización</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📊 Deliver</h4>
+                            <p>Distribución y acceso</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>🏆 Líderes del Mercado</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Solución</th>
+                                    <th>Fortalezas</th>
+                                    <th>Sector Objetivo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Microsoft SharePoint</td>
+                                    <td>Integración Office 365, colaboración</td>
+                                    <td>Empresas Microsoft-centric</td>
+                                </tr>
+                                <tr>
+                                    <td>IBM FileNet</td>
+                                    <td>Escalabilidad, procesos complejos</td>
+                                    <td>Grandes organizaciones</td>
+                                </tr>
+                                <tr>
+                                    <td>OpenText Documentum</td>
+                                    <td>Gestión documental avanzada</td>
+                                    <td>Sectores regulados</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Alfresco</td>
+                                    <td>Open source, flexibilidad</td>
+                                    <td>Administraciones públicas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="technology-card">
+                    <h3>🤖 Tecnologías de Automatización</h3>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>🔍 OCR (Optical Character Recognition)</h4>
+                            <ul>
+                                <li><strong>OCR Tradicional:</strong> Reconocimiento básico de caracteres</li>
+                                <li><strong>ICR:</strong> Intelligent Character Recognition</li>
+                                <li><strong>OMR:</strong> Optical Mark Recognition</li>
+                                <li><strong>OCR con IA:</strong> Machine Learning para mayor precisión</li>
+                            </ul>
+                            <div class="alert alert-success">
+                                <strong>Precisión:</strong> >99% en documentos estructurados
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🧠 Procesamiento de Lenguaje Natural (NLP)</h4>
+                            <ul>
+                                <li>Extracción automática de entidades</li>
+                                <li>Clasificación automática de documentos</li>
+                                <li>Análisis de sentimientos</li>
+                                <li>Resumen automático de textos</li>
+                                <li>Traducción automática</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔄 RPA (Robotic Process Automation)</h4>
+                            <div class="process-flow">
+                                <div class="process-step">
+                                    <h5>📥 Recepción</h5>
+                                    <p>Email/Portal</p>
+                                </div>
+                                <div class="process-step">
+                                    <h5>📝 Extracción</h5>
+                                    <p>Datos clave</p>
+                                </div>
+                                <div class="process-step">
+                                    <h5>✅ Validación</h5>
+                                    <p>Reglas negocio</p>
+                                </div>
+                                <div class="process-step">
+                                    <h5>📂 Archivo</h5>
+                                    <p>Sistema destino</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="technology-card">
+                    <h3>🔗 Blockchain para Documentos</h3>
+                    <div class="alert alert-info">
+                        <strong>Aplicación:</strong> Garantía de integridad y trazabilidad mediante tecnología de registro distribuido.
+                    </div>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>✅ Ventajas</h4>
+                            <ul>
+                                <li><strong>Inmutabilidad:</strong> Documentos no pueden alterarse</li>
+                                <li><strong>Trazabilidad:</strong> Historial completo de cambios</li>
+                                <li><strong>Descentralización:</strong> No hay punto único de fallo</li>
+                                <li><strong>Transparencia:</strong> Auditoría en tiempo real</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>⚠️ Limitaciones</h4>
+                            <ul>
+                                <li>Consumo energético elevado</li>
+                                <li>Escalabilidad limitada</li>
+                                <li>Complejidad técnica</li>
+                                <li>Regulación aún en desarrollo</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>🎯 Casos de Uso:</strong> Registro de títulos académicos, certificados médicos, actas notariales, contratos públicos.
+                    </div>
+                </div>
+
+                <div class="technology-card">
+                    <h3>☁️ Infraestructura Cloud</h3>
+                    
+                    <div class="comparison-table">
+                        <div class="comparison-header">Modelo</div>
+                        <div class="comparison-header">Características</div>
+                        <div class="comparison-header">Casos de Uso</div>
+                        <div class="comparison-cell">IaaS</div>
+                        <div class="comparison-cell">Infraestructura virtualizada</div>
+                        <div class="comparison-cell">Migración lift-and-shift</div>
+                        <div class="comparison-cell">PaaS</div>
+                        <div class="comparison-cell">Plataforma desarrollo</div>
+                        <div class="comparison-cell">Aplicaciones custom</div>
+                        <div class="comparison-cell highlight">SaaS</div>
+                        <div class="comparison-cell">Software como servicio</div>
+                        <div class="comparison-cell">Gestión documental</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">99.9%</span>
+                            <div>Disponibilidad SLA</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">-40%</span>
+                            <div>Reducción Costes</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">∞</span>
+                            <div>Escalabilidad</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">24/7</span>
+                            <div>Monitorización</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔒 Seguridad en Sistemas Documentales</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>🛡️ Controles de Acceso</h4>
+                        <ul>
+                            <li><strong>RBAC:</strong> Control basado en roles</li>
+                            <li><strong>ABAC:</strong> Control basado en atributos</li>
+                            <li><strong>MFA:</strong> Autenticación multifactor</li>
+                            <li><strong>SSO:</strong> Single Sign-On</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔐 Cifrado</h4>
+                        <ul>
+                            <li><strong>En tránsito:</strong> TLS 1.3+</li>
+                            <li><strong>En reposo:</strong> AES-256</li>
+                            <li><strong>En uso:</strong> Enclaves seguros</li>
+                            <li><strong>Gestión de claves:</strong> HSM</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Auditoría</h4>
+                        <ul>
+                            <li>Logs de acceso y modificación</li>
+                            <li>Trazabilidad completa</li>
+                            <li>Monitorización en tiempo real</li>
+                            <li>Alertas de seguridad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="security-level security-high">ALTO: Información clasificada</div>
+                <div class="security-level security-medium">MEDIO: Datos personales</div>
+                <div class="security-level security-low">BAJO: Información pública</div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Para Examen - Tecnologías Clave:</strong>
+                <ul>
+                    <li><strong>ECM:</strong> Plataformas integrales de gestión documental</li>
+                    <li><strong>OCR/IA:</strong> Automatización de procesamiento documental</li>
+                    <li><strong>Blockchain:</strong> Integridad y trazabilidad</li>
+                    <li><strong>Cloud:</strong> Escalabilidad y disponibilidad</li>
+                    <li><strong>Seguridad:</strong> Cifrado, control de acceso, auditoría</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="legal" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>⚖️ Marco Normativo:</strong> Conjunto de leyes y regulaciones que rigen la gestión electrónica de documentos en la Administración Pública española.
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📜 Ley 11/2007 - Acceso Electrónico</h4>
+                    <p><strong>Hito histórico:</strong> Primera ley que reconoce el derecho de los ciudadanos a relacionarse electrónicamente con las Administraciones Públicas.</p>
+                    <div class="badge">Derogada</div>
+                    <ul>
+                        <li>Derecho a la administración electrónica</li>
+                        <li>Equivalencia entre medios electrónicos y papel</li>
+                        <li>Archivo electrónico de documentos</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>⚖️ Ley 39/2015 - Procedimiento Administrativo Común</h4>
+                    <p><strong>Revolución digital:</strong> Obligatoriedad de medios electrónicos para personas jurídicas y profesionales.</p>
+                    
+                    <div class="card">
+                        <h5>📋 Principales Novedades</h5>
+                        <ul>
+                            <li><strong>Art. 14:</strong> Derecho y obligación de relacionarse electrónicamente</li>
+                            <li><strong>Art. 26:</strong> Documentos electrónicos</li>
+                            <li><strong>Art. 27:</strong> Copias electrónicas</li>
+                            <li><strong>Art. 17:</strong> Archivo electrónico de documentos</li>
+                            <li><strong>Art. 42-45:</strong> Notificación electrónica</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-table">
+                        <div class="comparison-header">Sujeto Obligado</div>
+                        <div class="comparison-header">Medio Preferente</div>
+                        <div class="comparison-header">Excepciones</div>
+                        <div class="comparison-cell">Personas jurídicas</div>
+                        <div class="comparison-cell highlight">Electrónico</div>
+                        <div class="comparison-cell">Imposibilidad técnica acreditada</div>
+                        <div class="comparison-cell">Profesionales/Autónomos</div>
+                        <div class="comparison-cell highlight">Electrónico</div>
+                        <div class="comparison-cell">Actividad ocasional</div>
+                        <div class="comparison-cell">Personas físicas</div>
+                        <div class="comparison-cell">Opcional</div>
+                        <div class="comparison-cell">Pueden elegir</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🏛️ Ley 40/2015 - Régimen Jurídico del Sector Público</h4>
+                    <p><strong>Organización interna:</strong> Funcionamiento electrónico interno de las Administraciones.</p>
+                    <ul>
+                        <li><strong>Art. 155-158:</strong> Archivo electrónico único</li>
+                        <li><strong>Art. 159:</strong> Intercambio electrónico de datos</li>
+                        <li><strong>Art. 160:</strong> Reutilización de la información</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Real Decreto 203/2021 - Reglamento de Actuación</h3>
+                    <p><strong>Desarrollo reglamentario:</strong> Normas técnicas y de seguridad para la administración electrónica.</p>
+                    
+                    <div class="alert alert-success">
+                        <strong>📋 Aspectos Destacados:</strong>
+                        <ul>
+                            <li>Gestión de documentos y archivos electrónicos</li>
+                            <li>Política de gestión de documentos electrónicos</li>
+                            <li>Instrumentos de descripción archivística</li>
+                            <li>Conservación a largo plazo</li>
+                        </ul>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Documento</th>
+                                <th>Conservación Mínima</th>
+                                <th>Formato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Expedientes administrativos</td>
+                                <td class="highlight">Permanente</td>
+                                <td>PDF/A, XML</td>
+                            </tr>
+                            <tr>
+                                <td>Resoluciones</td>
+                                <td class="highlight">Permanente</td>
+                                <td>PDF/A</td>
+                            </tr>
+                            <tr>
+                                <td>Comunicaciones</td>
+                                <td>5-10 años</td>
+                                <td>PDF/A</td>
+                            </tr>
+                            <tr>
+                                <td>Logs de auditoría</td>
+                                <td class="highlight">10 años</td>
+                                <td>CSV, XML</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔒 Esquema Nacional de Seguridad (ENS)</h3>
+                    <p><strong>Real Decreto 311/2022:</strong> Actualización para nuevas amenazas cibernéticas.</p>
+                    
+                    <div class="grid">
+                        <div class="security-level security-low">
+                            <strong>BÁSICA</strong>
+                            <ul>
+                                <li>Servicios básicos sin impacto crítico</li>
+                                <li>Medidas de seguridad mínimas</li>
+                                <li>Autoevaluación anual</li>
+                            </ul>
+                        </div>
+                        <div class="security-level security-medium">
+                            <strong>MEDIA</strong>
+                            <ul>
+                                <li>Servicios con impacto medio</li>
+                                <li>Medidas adicionales de seguridad</li>
+                                <li>Auditoría cada 2 años</li>
+                            </ul>
+                        </div>
+                        <div class="security-level security-high">
+                            <strong>ALTA</strong>
+                            <ul>
+                                <li>Servicios críticos</li>
+                                <li>Medidas reforzadas</li>
+                                <li>Auditoría anual</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🌐 Esquema Nacional de Interoperabilidad (ENI)</h3>
+                    <p><strong>Real Decreto 4/2010:</strong> Marco técnico y organizativo para la interoperabilidad.</p>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🎯 Organizativa</h4>
+                            <p>Coordinación de procesos y procedimientos</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📝 Semántica</h4>
+                            <p>Vocabularios y ontologías comunes</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>⚙️ Técnica</h4>
+                            <p>Estándares y protocolos de comunicación</p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>🎯 Estándares Obligatorios:</strong>
+                        <ul>
+                            <li><strong>Documentos:</strong> PDF/A-1, ODF, XML</li>
+                            <li><strong>Comunicaciones:</strong> HTTPS, WS-Security</li>
+                            <li><strong>Metadatos:</strong> Dublin Core, PREMIS</li>
+                            <li><strong>Firmas:</strong> XAdES, PAdES, CAdES</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="technology-card">
+                <h3>🛡️ RGPD y Protección de Datos</h3>
+                <div class="alert alert-danger">
+                    <strong>⚠️ Obligaciones Específicas:</strong> La gestión documental debe cumplir estrictamente con el Reglamento General de Protección de Datos.
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>📋 Principios RGPD</h4>
+                        <ul>
+                            <li><strong>Licitud:</strong> Base jurídica para el tratamiento</li>
+                            <li><strong>Minimización:</strong> Solo datos necesarios</li>
+                            <li><strong>Exactitud:</strong> Datos actualizados y correctos</li>
+                            <li><strong>Limitación temporal:</strong> Conservación no excesiva</li>
+                            <li><strong>Integridad:</strong> Seguridad adecuada</li>
+                            <li><strong>Responsabilidad proactiva:</strong> Demostrar cumplimiento</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔒 Privacy by Design</h4>
+                        <ul>
+                            <li>Privacidad desde el diseño</li>
+                            <li>Configuración por defecto</li>
+                            <li>Funcionalidad completa</li>
+                            <li>Seguridad end-to-end</li>
+                            <li>Transparencia y visibilidad</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>⚖️ Derechos del Interesado</h4>
+                        <ul>
+                            <li><strong>Acceso:</strong> Copia de datos personales</li>
+                            <li><strong>Rectificación:</strong> Corrección de inexactitudes</li>
+                            <li><strong>Supresión:</strong> Derecho al olvido</li>
+                            <li><strong>Limitación:</strong> Restricción del tratamiento</li>
+                            <li><strong>Portabilidad:</strong> Transferencia de datos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">72h</span>
+                        <div>Notificación Brechas</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">€20M</span>
+                        <div>Multa Máxima</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4%</span>
+                        <div>Facturación Anual</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">30 días</span>
+                        <div>Respuesta Derechos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>📚 Resumen Normativo para Examen:</strong>
+                <ul>
+                    <li><strong>Ley 39/2015:</strong> Obligatoriedad electrónica, documentos y notificaciones</li>
+                    <li><strong>Ley 40/2015:</strong> Funcionamiento interno, archivo único</li>
+                    <li><strong>RD 203/2021:</strong> Desarrollo reglamentario de administración electrónica</li>
+                    <li><strong>ENS:</strong> Categorización y medidas de seguridad</li>
+                    <li><strong>ENI:</strong> Interoperabilidad técnica, semántica y organizativa</li>
+                    <li><strong>RGPD:</strong> Protección de datos personales en documentos</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="implementation" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🚀 Implementación:</strong> Metodología y mejores prácticas para la puesta en marcha de proyectos de transformación digital documental.
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>🔍 Análisis</h4>
+                    <p>Situación actual y requerimientos</p>
+                </div>
+                <div class="process-step">
+                    <h4>📋 Diseño</h4>
+                    <p>Arquitectura y procesos</p>
+                </div>
+                <div class="process-step">
+                    <h4>🛠️ Desarrollo</h4>
+                    <p>Implementación técnica</p>
+                </div>
+                <div class="process-step">
+                    <h4>🎓 Formación</h4>
+                    <p>Capacitación usuarios</p>
+                </div>
+                <div class="process-step">
+                    <h4>🚀 Despliegue</h4>
+                    <p>Puesta en producción</p>
+                </div>
+                <div class="process-step">
+                    <h4>📈 Mejora</h4>
+                    <p>Optimización continua</p>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Fase 1: Análisis de Situación</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>📊 Diagnóstico Actual</h4>
+                            <ul>
+                                <li>Inventario de procesos documentales</li>
+                                <li>Volumen y tipos de documentos</li>
+                                <li>Flujos de trabajo existentes</li>
+                                <li>Sistemas legacy utilizados</li>
+                                <li>Nivel de digitalización actual</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🎪 Análisis de Stakeholders</h4>
+                            <ul>
+                                <li><strong>Usuarios finales:</strong> Funcionarios, ciudadanos</li>
+                                <li><strong>Responsables TI:</strong> Arquitectos, administradores</li>
+                                <li><strong>Gestores:</strong> Directores, responsables de área</li>
+                                <li><strong>Auditores:</strong> Cumplimiento normativo</li>
+                                <li><strong>Proveedores:</strong> Integradores, consultoras</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>💰 Análisis Coste-Beneficio</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Año 1</th>
+                                        <th>Año 2</th>
+                                        <th>Año 3</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Inversión inicial</td>
+                                        <td class="highlight">500K€</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>500K€</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Costes operativos</td>
+                                        <td>150K€</td>
+                                        <td>160K€</td>
+                                        <td>170K€</td>
+                                        <td>480K€</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ahorros</td>
+                                        <td class="highlight">200K€</td>
+                                        <td class="highlight">300K€</td>
+                                        <td class="highlight">350K€</td>
+                                        <td class="highlight">850K€</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ROI</strong></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td class="highlight">+37%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ Fase 2: Diseño de Arquitectura</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🎨 Capa Presentación</h4>
+                            <p>Portal web, aplicaciones móviles</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>⚙️ Capa Servicios</h4>
+                            <p>APIs REST, microservicios</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>📋 Capa Lógica</h4>
+                            <p>Workflows, reglas de negocio</p>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>💾 Capa Datos</h4>
+                            <p>Repositorios, bases de datos</p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>🏗️ Principios Arquitectónicos:</strong>
+                        <ul>
+                            <li><strong>Modularidad:</strong> Componentes independientes y reutilizables</li>
+                            <li><strong>Escalabilidad:</strong> Crecimiento horizontal y vertical</li>
+                            <li><strong>Interoperabilidad:</strong> Cumplimiento ENI/ENS</li>
+                            <li><strong>Disponibilidad:</strong> Alta disponibilidad 99.9%</li>
+                            <li><strong>Seguridad:</strong> Defensa en profundidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="technology-card">
+                <h3>📋 Metodología de Implementación</h3>
+                
+                <div class="comparison-table">
+                    <div class="comparison-header">Enfoque</div>
+                    <div class="comparison-header">Big Bang</div>
+                    <div class="comparison-header">Fases (Recomendado)</div>
+                    <div class="comparison-cell">Duración</div>
+                    <div class="comparison-cell">6-12 meses</div>
+                    <div class="comparison-cell">18-36 meses</div>
+                    <div class="comparison-cell">Riesgo</div>
+                    <div class="comparison-cell">Alto</div>
+                    <div class="comparison-cell">Bajo</div>
+                    <div class="comparison-cell">Impacto organizacional</div>
+                    <div class="comparison-cell">Alto</div>
+                    <div class="comparison-cell">Gradual</div>
+                    <div class="comparison-cell">Retorno inversión</div>
+                    <div class="comparison-cell">Tardío</div>
+                    <div class="comparison-cell highlight">Temprano</div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>✅ Enfoque Recomendado - Implementación por Fases:</strong>
+                    <ol>
+                        <li><strong>Fase Piloto:</strong> Área específica, 50-100 usuarios</li>
+                        <li><strong>Fase de Extensión:</strong> Departamentos relacionados</li>
+                        <li><strong>Fase de Consolidación:</strong> Toda la organización</li>
+                        <li><strong>Fase de Optimización:</strong> Mejoras y nuevas funcionalidades</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎓 Gestión del Cambio</h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">70%</span>
+                            <div>Proyectos Fallan por Resistencia</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">6x</span>
+                            <div>Más Exitosos con Gestión Cambio</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">20%</span>
+                            <div>Tiempo Dedicar a Formación</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">90%</span>
+                            <div>Adopción con Champions</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>🎯 Creación de Urgencia</h4>
+                            <p>Comunicar la necesidad del cambio y sus beneficios</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>👥 Coalición Directiva</h4>
+                            <p>Equipo de líderes comprometidos con el proyecto</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>📢 Comunicación Visión</h4>
+                            <p>Mensajes claros y consistentes sobre objetivos</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🚀 Empoderamiento</h4>
+                            <p>Dar autonomía y recursos a los equipos</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🏆 Victorias Tempranas</h4>
+                            <p>Celebrar éxitos parciales y aprendizajes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Plan de Formación</h3>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Audiencia</th>
+                                <th>Duración</th>
+                                <th>Modalidad</th>
+                                <th>Contenidos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Directivos</td>
+                                <td>4h</td>
+                                <td>Presencial</td>
+                                <td>Visión estratégica, beneficios</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Usuarios finales</td>
+                                <td>16h</td>
+                                <td>Mixta</td>
+                                <td>Operativa diaria del sistema</td>
+                            </tr>
+                            <tr>
+                                <td>Administradores</td>
+                                <td>40h</td>
+                                <td>Técnica</td>
+                                <td>Configuración, mantenimiento</td>
+                            </tr>
+                            <tr>
+                                <td>Champions</td>
+                                <td>24h</td>
+                                <td>Especializada</td>
+                                <td>Soporte a usuarios, mejores prácticas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-warning">
+                        <strong>📚 Materiales de Formación:</strong>
+                        <ul>
+                            <li>Manuales de usuario paso a paso</li>
+                            <li>Videos tutoriales interactivos</li>
+                            <li>Entorno de pruebas para práctica</li>
+                            <li>FAQ y base de conocimiento</li>
+                            <li>Sistema de tickets y soporte</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="technology-card">
+                <h3>📊 Métricas de Éxito</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>📈 KPIs Técnicos</h4>
+                        <ul>
+                            <li><strong>Disponibilidad:</strong> >99.5%</li>
+                            <li><strong>Tiempo respuesta:</strong> <3 segundos</li>
+                            <li><strong>Capacidad almacenamiento:</strong> Utilización <80%</li>
+                            <li><strong>Errores sistema:</strong> <0.1%</li>
+                            <li><strong>Tiempo backup:</strong> <4 horas</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>👥 KPIs Usuario</h4>
+                        <ul>
+                            <li><strong>Adopción:</strong> >90% usuarios activos</li>
+                            <li><strong>Satisfacción:</strong> >8/10</li>
+                            <li><strong>Tiempo formación:</strong> <16 horas</li>
+                            <li><strong>Tickets soporte:</strong> <5% usuarios/mes</li>
+                            <li><strong>Productividad:</strong> +30%</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>💰 KPIs Negocio</h4>
+                        <ul>
+                            <li><strong>Reducción costes:</strong> 40%</li>
+                            <li><strong>Tiempo tramitación:</strong> -60%</li>
+                            <li><strong>Documentos digitalizados:</strong> >95%</li>
+                            <li><strong>ROI:</strong> >25%</li>
+                            <li><strong>Cumplimiento SLA:</strong> >98%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎯 Factores Críticos de Éxito:</strong>
+                <ul>
+                    <li><strong>Liderazgo ejecutivo:</strong> Compromiso visible y continuo</li>
+                    <li><strong>Gestión del cambio:</strong> Plan estructurado de adopción</li>
+                    <li><strong>Formación intensiva:</strong> Capacitación antes y después</li>
+                    <li><strong>Comunicación:</strong> Transparencia en todo el proceso</li>
+                    <li><strong>Soporte técnico:</strong> Resolución rápida de incidencias</li>
+                    <li><strong>Medición continua:</strong> KPIs y feedback constante</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="future" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>🔮 Tendencias y Futuro:</strong> Evolución de la documática hacia tecnologías emergentes y nuevos paradigmas de gestión documental.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">2030</span>
+                    <div>Administración 100% Digital</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80%</span>
+                    <div>Procesos Automatizados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">AI-First</span>
+                    <div>Estrategia por Defecto</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Zero-Paper</span>
+                    <div>Oficina Completamente Digital</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="technology-card">
+                    <h3>🤖 Inteligencia Artificial Aplicada</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <h4>🧠 NLP Avanzado</h4>
+                            <p>Comprensión contextual de documentos</p>
+                            <ul>
+                                <li>Resumen automático inteligente</li>
+                                <li>Extracción de entidades complejas</li>
+                                <li>Análisis de sentimientos</li>
+                                <li>Traducción automática contextual</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>👁️ Computer Vision</h4>
+                            <p>Análisis visual de documentos</p>
+                            <ul>
+                                <li>OCR con >99.9% precisión</li>
+                                <li>Reconocimiento de firmas</li>
+                                <li>Detección de alteraciones</li>
+                                <li>Análisis de layout automático</li>
+                            </ul>
+                        </div>
+                        <div class="workflow-step">
+                            <h4>🎯 ML Predictivo</h4>
+                            <p>Anticipación y optimización</p>
+                            <ul>
+                                <li>Predicción de tiempos tramitación</li>
+                                <li>Detección proactiva de errores</li>
+                                <li>Optimización de workflows</li>
+                                <li>Recomendaciones inteligentes</li>
+                            </ul>
+                        </div>
+                    </workflow-diagram>
+
+                    <div class="alert alert-success">
+                        <strong>🎯 Casos de Uso Emergentes:</strong>
+                        <ul>
+                            <li><strong>Asistente virtual jurídico:</strong> Consultas automáticas de normativa</li>
+                            <li><strong>Clasificación inteligente:</strong> Categorización automática por contexto</li>
+                            <li><strong>Detección de fraude:</strong> Análisis de patrones sospechosos</li>
+                            <li><strong>Compliance automático:</strong> Verificación de cumplimiento normativo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="technology-card">
+                    <h3>⛓️ Blockchain y Tecnologías Distribuidas</h3>
+                    
+                    <div class="card">
+                        <h4>🔗 Blockchain Público vs Privado</h4>
+                        <div class="comparison-table">
+                            <div class="comparison-header">Aspecto</div>
+                            <div class="comparison-header">Blockchain Público</div>
+                            <div class="comparison-header">Blockchain Privado</div>
+                            <div class="comparison-cell">Control</div>
+                            <div class="comparison-cell">Descentralizado</div>
+                            <div class="comparison-cell highlight">Centralizado</div>
+                            <div class="comparison-cell">Velocidad</div>
+                            <div class="comparison-cell">Lenta</div>
+                            <div class="comparison-cell highlight">Rápida</div>
+                            <div class="comparison-cell">Privacidad</div>
+                            <div class="comparison-cell">Limitada</div>
+                            <div class="comparison-cell highlight">Alta</div>
+                            <div class="comparison-cell">Costes</div>
+                            <div class="comparison-cell">Altos</div>
+                            <div class="comparison-cell highlight">Bajos</div>
+                            <div class="comparison-cell">Uso AAPP</div>
+                            <div class="comparison-cell">Certificados públicos</div>
+                            <div class="comparison-cell highlight">Gestión interna</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>🏛️ Proyectos Piloto en España:</strong>
+                        <ul>
+                            <li><strong>Alastria:</strong> Red blockchain española para administraciones</li>
+                            <li><strong>EBSI:</strong> European Blockchain Services Infrastructure</li>
+                            <li><strong>Red Sara:</strong> Integración de blockchain en servicios públicos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="technology-card">
+                    <h3>☁️ Cloud Native y Edge Computing</h3>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>🏗️ Arquitectura Cloud Native</h4>
+                            <ul>
+                                <li><strong>Microservicios:</strong> Componentes independientes</li>
+                                <li><strong>Contenedores:</strong> Docker y Kubernetes</li>
+                                <li><strong>API-First:</strong> Integración nativa</li>
+                                <li><strong>DevOps:</strong> CI/CD automatizado</li>
+                                <li><strong>Observabilidad:</strong> Monitorización completa</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>📍 Edge Computing</h4>
+                            <ul>
+                                <li>Procesamiento local en oficinas</li>
+                                <li>Reducción de latencia</li>
+                                <li>Continuidad sin conectividad</li>
+                                <li>Cumplimiento residencia datos</li>
+                                <li>Costes de ancho de banda</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">-50%</span>
+                            <div>Latencia con Edge</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">-30%</span>
+                            <div>Costes Bandwidth</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">99.9%</span>
+                            <div>Disponibilidad Local</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">GDPR</span>
+                            <div>Compliance Automático</div>
+                        </div>
+                    </stats-grid>
+                </div>
+            </div>
+
+            <div class="technology-card">
+                <h3>🔮 Tecnologías Emergentes</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🥽 Realidad Aumentada/Virtual</h4>
+                        <p><strong>2024-2026:</strong> Interfaces inmersivas para revisión de documentos complejos</p>
+                        <ul>
+                            <li>Visualización 3D de planos y esquemas</li>
+                            <li>Colaboración virtual en tiempo real</li>
+                            <li>Training inmersivo para usuarios</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🧬 Computación Cuántica</h4>
+                        <p><strong>2027-2030:</strong> Criptografía cuántica y procesamiento masivo</p>
+                        <ul>
+                            <li>Cifrado inquebrantable cuánticamente</li>
+                            <li>Búsquedas instantáneas en petabytes</li>
+                            <li>Optimización de workflows complejos</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🤖 AGI (Artificial General Intelligence)</h4>
+                        <p><strong>2030+:</strong> Asistentes con comprensión general</p>
+                        <ul>
+                            <li>Comprensión contextual completa</li>
+                            <li>Redacción automática de documentos</li>
+                            <li>Toma de decisiones automatizada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🌍 Iniciativas Europeas</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🇪🇺 Digital Europe Programme</h4>
+                        <p><strong>Presupuesto:</strong> €7.5B (2021-2027)</p>
+                        <ul>
+                            <li>Supercomputación y datos</li>
+                            <li>Inteligencia artificial</li>
+                            <li>Ciberseguridad</li>
+                            <li>Capacidades digitales avanzadas</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📜 eIDAS 2.0</h4>
+                        <p><strong>Entrada vigor:</strong> 2025</p>
+                        <ul>
+                            <li>Identidad digital europea</li>
+                            <li>Wallet digital universal</li>
+                            <li>Interoperabilidad total</li>
+                            <li>Servicios transfronterizos</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🎯 Once Only Principle</h4>
+                        <p><strong>Objetivo:</strong> Datos una sola vez</p>
+                        <ul>
+                            <li>Reutilización automática de datos</li>
+                            <li>Interoperabilidad semántica</li>
+                            <li>Reducción carga administrativa</li>
+                            <li>Mejora experiencia ciudadano</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Desafíos del Futuro:</strong>
+                <ul>
+                    <li><strong>Ethical AI:</strong> Algoritmos transparentes y justos</li>
+                    <li><strong>Digital Skills Gap:</strong> Formación continua de funcionarios</li>
+                    <li><strong>Ciberseguridad:</strong> Amenazas cada vez más sofisticadas</li>
+                    <li><strong>Sostenibilidad:</strong> Impacto ambiental de la tecnología</li>
+                    <li><strong>Privacidad:</strong> Balance entre eficiencia y protección</li>
+                </ul>
+            </div>
+
+            <div class="technology-card">
+                <h3>📊 Roadmap Tecnológico 2024-2030</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>2024-2025: Consolidación IA</h4>
+                        <ul>
+                            <li>Despliegue masivo de OCR inteligente</li>
+                            <li>Automatización de clasificación</li>
+                            <li>Chatbots especializados</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2025-2027: Blockchain Mainstream</h4>
+                        <ul>
+                            <li>Redes privadas institucionales</li>
+                            <li>Certificados inmutables</li>
+                            <li>Trazabilidad end-to-end</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2027-2030: Convergencia Tecnológica</h4>
+                        <ul>
+                            <li>AI + Blockchain + IoT</li>
+                            <li>Documentos autoejecutables</li>
+                            <li>Administración completamente autónoma</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🚀 Preparación para el Futuro:</strong>
+                <ul>
+                    <li><strong>Inversión en formación:</strong> Capacidades digitales avanzadas</li>
+                    <li><strong>Arquitectura flexible:</strong> Preparada para nuevas tecnologías</li>
+                    <li><strong>Cultura de innovación:</strong> Experimentación continua</li>
+                    <li><strong>Colaboración público-privada:</strong> Ecosistema de innovación</li>
+                    <li><strong>Estándares abiertos:</strong> Evitar vendor lock-in</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (savedTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card, .technology-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

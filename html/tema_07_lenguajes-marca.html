@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 7: Lenguajes de Marca - Preparatic</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --background-color: #1a1a1a;
+            --surface-color: #2d2d2d;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --hover-color: #3a3a3a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --hover-color: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,0 1000,100 0,20"/></svg>') repeat-x;
+            background-size: 100px 100px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: var(--surface-color);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+            border: 2px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .content-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: var(--text-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.4em;
+            position: relative;
+        }
+
+        .content-section h3::before {
+            content: "▶";
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--secondary-color)10, var(--secondary-color)20);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)10, var(--warning-color)20);
+            border-left: 4px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)10, var(--info-color)20);
+            border-left: 4px solid var(--info-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--hover-color);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .list-checkmark li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+        }
+
+        .xml-example {
+            background: #2d3142;
+            color: #bfc7d5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid #f39c12;
+        }
+
+        .xml-tag {
+            color: #e06c75;
+        }
+
+        .xml-attribute {
+            color: #d19a66;
+        }
+
+        .xml-value {
+            color: #98c379;
+        }
+
+        .xml-comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .hot-tip {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .hot-tip::before {
+            content: "🔥 TIP CALIENTE: ";
+            font-weight: bold;
+        }
+
+        .exam-alert {
+            background: linear-gradient(135deg, var(--warning-color), #d35400);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .exam-alert::before {
+            content: "⚠️ IMPORTANTE PARA EXAMEN: ";
+            font-weight: bold;
+        }
+
+        .exercise-box {
+            background: var(--surface-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .exercise-box .solution {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .exercise-box .solution h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .exercise-box .solution p {
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .language-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .language-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="header-content">
+            <h1>📝 Lenguajes de Marca</h1>
+            <p>XML, HTML, SGML y tecnologías de marcado estructurado</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Visión General</button>
+                <button class="tab-button" onclick="showTab('html')">🌐 HTML</button>
+                <button class="tab-button" onclick="showTab('xml')">📄 XML</button>
+                <button class="tab-button" onclick="showTab('advanced')">⚡ Avanzados</button>
+                <button class="tab-button" onclick="showTab('processing')">🔄 Procesamiento</button>
+                <button class="tab-button" onclick="showTab('applications')">🎯 Aplicaciones</button>
+                <button class="tab-button" onclick="showTab('exercises')">✏️ Ejercicios</button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="content-section">
+                    <h2>📋 Visión General - Lenguajes de Marca</h2>
+
+                    <div class="highlight-box">
+                        <h3>📊 Estadísticas Clave para Examen</h3>
+                        <div class="grid-container">
+                            <div class="card">
+                                <h4>🌐 Uso Global</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>100%</strong> de páginas web usan HTML</li>
+                                    <li><strong>80%</strong> de intercambio de datos usa XML</li>
+                                    <li><strong>95%</strong> de APIs REST devuelven JSON o XML</li>
+                                    <li><strong>70%</strong> de documentos corporativos usan markup</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>📈 Evolución Histórica</h4>
+                                <ul class="list-checkmark">
+                                    <li><strong>SGML (1986):</strong> Primer estándar ISO</li>
+                                    <li><strong>HTML (1993):</strong> Primer navegador web</li>
+                                    <li><strong>XML (1998):</strong> Recomendación W3C</li>
+                                    <li><strong>XHTML (2000):</strong> HTML como XML</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        En exámenes preguntan sobre: diferencias entre SGML/XML/HTML, reglas de validación, DTD vs XSD, y transformaciones XSLT.
+                    </div>
+
+                    <h3>🏛️ Historia y Evolución</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4><strong>1986:</strong> SGML (Standard Generalized Markup Language)</h4>
+                            <p>IBM desarrolla SGML como estándar ISO 8879. Permite crear lenguajes de marcado personalizados. Usado en documentación técnica compleja.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1989:</strong> Invención de la World Wide Web</h4>
+                            <p>Tim Berners-Lee en CERN crea HTML basado en SGML. Primer navegador WorldWideWeb.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1993:</strong> HTML 1.0</h4>
+                            <p>Primera especificación HTML informal. 18 elementos básicos incluían &lt;title&gt;, &lt;h1&gt; a &lt;h6&gt;, &lt;p&gt;, &lt;a&gt;.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1995:</strong> HTML 2.0</h4>
+                            <p>RFC 1866. Introdujo formularios (&lt;form&gt;, &lt;input&gt;), tablas básicas, y elementos multimedia.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1997:</strong> HTML 3.2</h4>
+                            <p>W3C estandariza HTML. Añade tablas complejas, applets, scripts, y hojas de estilo.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1998:</strong> XML 1.0</h4>
+                            <p>Recomendación W3C. Simplificación de SGML para intercambio de datos en web. Sintaxis estricta.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>1999:</strong> HTML 4.01</h4>
+                            <p>Separación de contenido y presentación. Deprecación de elementos presentacionales. CSS recomendado.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2000:</strong> XHTML 1.0</h4>
+                            <p>HTML reformulado como aplicación XML. Sintaxis más estricta. Elementos deben cerrarse.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4><strong>2014:</strong> HTML5</h4>
+                            <p>Elementos semánticos, APIs JavaScript, multimedia nativo, almacenamiento local.</p>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        Memoriza: SGML (1986) → HTML (1993) → XML (1998) → XHTML (2000) → HTML5 (2014). Cronología clave para exámenes.
+                    </div>
+
+                    <h3>🎯 Conceptos Fundamentales</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📝 ¿Qué es un Lenguaje de Marca?</h4>
+                            <p>Sistema de anotación de texto que utiliza etiquetas (tags) para definir estructura, semántica y presentación de documentos.</p>
+                            <ul class="list-checkmark">
+                                <li><strong>Separación:</strong> Contenido vs Presentación</li>
+                                <li><strong>Estructura jerárquica:</strong> Elementos anidados</li>
+                                <li><strong>Metadatos:</strong> Información sobre información</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🏗️ Componentes Básicos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Elementos:</strong> &lt;elemento&gt;contenido&lt;/elemento&gt;</li>
+                                <li><strong>Atributos:</strong> name="value"</li>
+                                <li><strong>Entidades:</strong> &amp;lt; &amp;gt; &amp;amp;</li>
+                                <li><strong>Comentarios:</strong> &lt;!-- comentario --&gt;</li>
+                                <li><strong>DTD/Schema:</strong> Definición de estructura</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Lenguaje</th>
+                                <th>Año</th>
+                                <th>Basado en</th>
+                                <th>Sintaxis</th>
+                                <th>Uso Principal</th>
+                            </tr>
+                            <tr>
+                                <td><strong>SGML</strong></td>
+                                <td>1986</td>
+                                <td>GML (IBM)</td>
+                                <td>Muy flexible</td>
+                                <td>Documentación técnica</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HTML</strong></td>
+                                <td>1993</td>
+                                <td>SGML</td>
+                                <td>Permisiva</td>
+                                <td>Páginas web</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XML</strong></td>
+                                <td>1998</td>
+                                <td>SGML</td>
+                                <td>Estricta</td>
+                                <td>Intercambio de datos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XHTML</strong></td>
+                                <td>2000</td>
+                                <td>XML + HTML</td>
+                                <td>Muy estricta</td>
+                                <td>Web semántica</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="exam-alert">
+                        DIFERENCIA CLAVE: HTML es permisivo (tags no cerrados OK), XML es estricto (todos los tags deben cerrarse). XHTML = HTML con reglas XML.
+                    </div>
+                </div>
+            </div>
+
+            <div id="html" class="tab-content">
+                <div class="content-section">
+                    <h2>🌐 HTML (HyperText Markup Language)</h2>
+
+                    <h3>📚 Estructura Fundamental de HTML</h3>
+                    <div class="code-block">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Título de la página&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Encabezado principal&lt;/h1&gt;
+        &lt;nav&gt;...&lt;/nav&gt;
+    &lt;/header&gt;
+    &lt;main&gt;
+        &lt;section&gt;
+            &lt;article&gt;...&lt;/article&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;...&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                    </div>
+
+                    <div class="exam-alert">
+                        ESTRUCTURA OBLIGATORIA PARA EXAMEN: DOCTYPE → html → head/body. El meta charset DEBE ir antes del title para evitar problemas de codificación.
+                    </div>
+
+                    <h3>🏷️ Elementos HTML por Categorías</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📝 Elementos de Texto</h4>
+                            <div class="code-block">
+&lt;h1&gt; a &lt;h6&gt;    Encabezados
+&lt;p&gt;           Párrafos
+&lt;span&gt;        Texto inline
+&lt;div&gt;         Contenedor block
+&lt;strong&gt;      Texto importante
+&lt;em&gt;          Texto enfatizado
+&lt;mark&gt;        Texto resaltado
+&lt;small&gt;       Texto pequeño
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔗 Elementos de Enlace</h4>
+                            <div class="code-block">
+&lt;a href="url"&gt;Enlace&lt;/a&gt;
+&lt;a href="mailto:email"&gt;Email&lt;/a&gt;
+&lt;a href="tel:+34123456789"&gt;Teléfono&lt;/a&gt;
+&lt;a href="#seccion"&gt;Ancla interna&lt;/a&gt;
+&lt;a download&gt;Descargar archivo&lt;/a&gt;
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>📋 Elementos de Lista</h4>
+                            <div class="code-block">
+&lt;!-- Lista desordenada --&gt;
+&lt;ul&gt;
+    &lt;li&gt;Elemento 1&lt;/li&gt;
+    &lt;li&gt;Elemento 2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Lista ordenada --&gt;
+&lt;ol&gt;
+    &lt;li&gt;Primero&lt;/li&gt;
+    &lt;li&gt;Segundo&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Lista de definiciones --&gt;
+&lt;dl&gt;
+    &lt;dt&gt;Término&lt;/dt&gt;
+    &lt;dd&gt;Definición&lt;/dd&gt;
+&lt;/dl&gt;
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎨 Elementos Multimedia</h4>
+                            <div class="code-block">
+&lt;img src="image.jpg" alt="Descripción"&gt;
+&lt;picture&gt;
+    &lt;source media="(min-width: 800px)" srcset="large.jpg"&gt;
+    &lt;img src="small.jpg" alt="Imagen"&gt;
+&lt;/picture&gt;
+
+&lt;video controls&gt;
+    &lt;source src="video.mp4" type="video/mp4"&gt;
+    &lt;source src="video.webm" type="video/webm"&gt;
+&lt;/video&gt;
+
+&lt;audio controls&gt;
+    &lt;source src="audio.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        ATRIBUTO ALT obligatorio en imágenes para accesibilidad. En exámenes siempre preguntan sobre elementos semánticos de HTML5.
+                    </div>
+
+                    <h3>📊 Elementos de Tabla Completos</h3>
+                    <div class="code-block">
+&lt;table&gt;
+    &lt;caption&gt;Título de la tabla&lt;/caption&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th scope="col"&gt;Columna 1&lt;/th&gt;
+            &lt;th scope="col"&gt;Columna 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;th scope="row"&gt;Fila 1&lt;/th&gt;
+            &lt;td&gt;Dato&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Total&lt;/td&gt;
+            &lt;td&gt;100&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;
+                    </div>
+
+                    <h3>📝 Formularios Avanzados</h3>
+                    <div class="code-block">
+&lt;form action="/submit" method="POST" enctype="multipart/form-data"&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Información personal&lt;/legend&gt;
+        
+        &lt;label for="name"&gt;Nombre:&lt;/label&gt;
+        &lt;input type="text" id="name" name="name" required minlength="2"&gt;
+        
+        &lt;label for="email"&gt;Email:&lt;/label&gt;
+        &lt;input type="email" id="email" name="email" required&gt;
+        
+        &lt;label for="phone"&gt;Teléfono:&lt;/label&gt;
+        &lt;input type="tel" id="phone" name="phone" pattern="[0-9]{9}"&gt;
+        
+        &lt;label for="birthdate"&gt;Fecha nacimiento:&lt;/label&gt;
+        &lt;input type="date" id="birthdate" name="birthdate" max="2005-12-31"&gt;
+        
+        &lt;label for="age"&gt;Edad:&lt;/label&gt;
+        &lt;input type="number" id="age" name="age" min="18" max="100"&gt;
+        
+        &lt;label for="website"&gt;Web personal:&lt;/label&gt;
+        &lt;input type="url" id="website" name="website"&gt;
+        
+        &lt;label for="salary"&gt;Salario deseado:&lt;/label&gt;
+        &lt;input type="range" id="salary" name="salary" min="20000" max="80000"&gt;
+        
+        &lt;label for="file"&gt;CV:&lt;/label&gt;
+        &lt;input type="file" id="file" name="file" accept=".pdf,.doc,.docx"&gt;
+        
+        &lt;label for="country"&gt;País:&lt;/label&gt;
+        &lt;select id="country" name="country"&gt;
+            &lt;option value=""&gt;Selecciona país&lt;/option&gt;
+            &lt;option value="es"&gt;España&lt;/option&gt;
+            &lt;option value="fr"&gt;Francia&lt;/option&gt;
+        &lt;/select&gt;
+        
+        &lt;label for="comments"&gt;Comentarios:&lt;/label&gt;
+        &lt;textarea id="comments" name="comments" rows="4" cols="50"&gt;&lt;/textarea&gt;
+        
+        &lt;fieldset&gt;
+            &lt;legend&gt;Género&lt;/legend&gt;
+            &lt;input type="radio" id="male" name="gender" value="male"&gt;
+            &lt;label for="male"&gt;Masculino&lt;/label&gt;
+            &lt;input type="radio" id="female" name="gender" value="female"&gt;
+            &lt;label for="female"&gt;Femenino&lt;/label&gt;
+        &lt;/fieldset&gt;
+        
+        &lt;input type="checkbox" id="terms" name="terms" required&gt;
+        &lt;label for="terms"&gt;Acepto términos y condiciones&lt;/label&gt;
+    &lt;/fieldset&gt;
+    
+    &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+    &lt;button type="reset"&gt;Limpiar&lt;/button&gt;
+&lt;/form&gt;
+                    </div>
+
+                    <div class="exam-alert">
+                        ELEMENTOS DE FORMULARIO PARA EXAMEN: Todos los input deben tener label asociado (for/id), fieldset agrupa campos relacionados, validation se hace con atributos HTML5.
+                    </div>
+
+                    <h3>🆕 Elementos Semánticos HTML5</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🏗️ Estructura de Página</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>&lt;header&gt;:</strong> Encabezado de página/sección</li>
+                                <li><strong>&lt;nav&gt;:</strong> Enlaces de navegación</li>
+                                <li><strong>&lt;main&gt;:</strong> Contenido principal</li>
+                                <li><strong>&lt;section&gt;:</strong> Sección temática</li>
+                                <li><strong>&lt;article&gt;:</strong> Contenido independiente</li>
+                                <li><strong>&lt;aside&gt;:</strong> Contenido secundario</li>
+                                <li><strong>&lt;footer&gt;:</strong> Pie de página/sección</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📝 Elementos de Contenido</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>&lt;figure&gt;/&lt;figcaption&gt;:</strong> Imágenes con leyenda</li>
+                                <li><strong>&lt;details&gt;/&lt;summary&gt;:</strong> Contenido desplegable</li>
+                                <li><strong>&lt;time&gt;:</strong> Fechas y horas</li>
+                                <li><strong>&lt;address&gt;:</strong> Información de contacto</li>
+                                <li><strong>&lt;progress&gt;:</strong> Barras de progreso</li>
+                                <li><strong>&lt;meter&gt;:</strong> Medidores escalares</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        HTML5 introdujo 28 nuevos elementos semánticos. Los más importantes para examen: header, nav, main, section, article, aside, footer.
+                    </div>
+                </div>
+            </div>
+
+            <div id="xml" class="tab-content">
+                <div class="content-section">
+                    <h2>📄 XML (eXtensible Markup Language)</h2>
+
+                    <h3>🎯 Características Fundamentales de XML</h3>
+                    <div class="highlight-box">
+                        <h4>🔧 Reglas Sintácticas Estrictas</h4>
+                        <ol>
+                            <li><strong>Todos los elementos deben cerrarse:</strong> &lt;elemento&gt;&lt;/elemento&gt; o &lt;elemento/&gt;</li>
+                            <li><strong>Case-sensitive:</strong> &lt;Nombre&gt; ≠ &lt;nombre&gt;</li>
+                            <li><strong>Elementos anidados correctamente:</strong> Sin solapamiento</li>
+                            <li><strong>Un solo elemento raíz</strong></li>
+                            <li><strong>Valores de atributos entre comillas:</strong> attribute="value"</li>
+                        </ol>
+                    </div>
+
+                    <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="xml-comment">&lt;!-- Declaración XML obligatoria --&gt;</span>
+
+<span class="xml-tag">&lt;biblioteca</span> <span class="xml-attribute">fecha=<span class="xml-value">"2025-08-09"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;libro</span> <span class="xml-attribute">id=<span class="xml-value">"001"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;titulo&gt;</span>Fundamentos XML<span class="xml-tag">&lt;/titulo&gt;</span>
+        <span class="xml-tag">&lt;autor&gt;</span>
+            <span class="xml-tag">&lt;nombre&gt;</span>Juan<span class="xml-tag">&lt;/nombre&gt;</span>
+            <span class="xml-tag">&lt;apellido&gt;</span>Pérez<span class="xml-tag">&lt;/apellido&gt;</span>
+        <span class="xml-tag">&lt;/autor&gt;</span>
+        <span class="xml-tag">&lt;precio</span> <span class="xml-attribute">moneda=<span class="xml-value">"EUR"</span></span><span class="xml-tag">&gt;</span>29.99<span class="xml-tag">&lt;/precio&gt;</span>
+        <span class="xml-tag">&lt;disponible/&gt;</span> <span class="xml-comment">&lt;!-- Elemento vacío --&gt;</span>
+    <span class="xml-tag">&lt;/libro&gt;</span>
+<span class="xml-tag">&lt;/biblioteca&gt;</span>
+                    </div>
+
+                    <div class="exam-alert">
+                        REGLA DE ORO XML: Si no está bien formado (well-formed), no es XML válido. Parser debe rechazarlo inmediatamente.
+                    </div>
+
+                    <h3>📝 DTD (Document Type Definition)</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📋 DTD Interna</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0"?&gt;</span>
+<span class="xml-comment">&lt;!DOCTYPE persona [</span>
+<span class="xml-comment">    &lt;!ELEMENT persona (nombre, edad, email?)&gt;</span>
+<span class="xml-comment">    &lt;!ELEMENT nombre (#PCDATA)&gt;</span>
+<span class="xml-comment">    &lt;!ELEMENT edad (#PCDATA)&gt;</span>
+<span class="xml-comment">    &lt;!ELEMENT email (#PCDATA)&gt;</span>
+<span class="xml-comment">    &lt;!ATTLIST persona id ID #REQUIRED&gt;</span>
+<span class="xml-comment">]&gt;</span>
+
+<span class="xml-tag">&lt;persona</span> <span class="xml-attribute">id=<span class="xml-value">"p001"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;nombre&gt;</span>Ana García<span class="xml-tag">&lt;/nombre&gt;</span>
+    <span class="xml-tag">&lt;edad&gt;</span>30<span class="xml-tag">&lt;/edad&gt;</span>
+    <span class="xml-tag">&lt;email&gt;</span>ana@email.com<span class="xml-tag">&lt;/email&gt;</span>
+<span class="xml-tag">&lt;/persona&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔗 DTD Externa</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0"?&gt;</span>
+<span class="xml-comment">&lt;!DOCTYPE biblioteca SYSTEM "biblioteca.dtd"&gt;</span>
+
+<span class="xml-comment">&lt;!-- Archivo biblioteca.dtd --&gt;</span>
+<span class="xml-comment">&lt;!ELEMENT biblioteca (libro+)&gt;</span>
+<span class="xml-comment">&lt;!ELEMENT libro (titulo, autor, precio)&gt;</span>
+<span class="xml-comment">&lt;!ELEMENT titulo (#PCDATA)&gt;</span>
+<span class="xml-comment">&lt;!ELEMENT autor (#PCDATA)&gt;</span>
+<span class="xml-comment">&lt;!ELEMENT precio (#PCDATA)&gt;</span>
+<span class="xml-comment">&lt;!ATTLIST libro id ID #REQUIRED&gt;</span>
+<span class="xml-comment">&lt;!ATTLIST precio moneda CDATA "EUR"&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Símbolo DTD</th>
+                                <th>Significado</th>
+                                <th>Ejemplo</th>
+                                <th>Descripción</th>
+                            </tr>
+                            <tr>
+                                <td><strong>?</strong></td>
+                                <td>Opcional (0 o 1)</td>
+                                <td>email?</td>
+                                <td>El elemento email es opcional</td>
+                            </tr>
+                            <tr>
+                                <td><strong>*</strong></td>
+                                <td>Cero o más</td>
+                                <td>comentario*</td>
+                                <td>Puede tener 0, 1 o más comentarios</td>
+                            </tr>
+                            <tr>
+                                <td><strong>+</strong></td>
+                                <td>Uno o más</td>
+                                <td>libro+</td>
+                                <td>Debe tener al menos un libro</td>
+                            </tr>
+                            <tr>
+                                <td><strong>|</strong></td>
+                                <td>Alternativa (OR)</td>
+                                <td>tipo (libro|revista)</td>
+                                <td>Puede ser libro O revista</td>
+                            </tr>
+                            <tr>
+                                <td><strong>,</strong></td>
+                                <td>Secuencia (AND)</td>
+                                <td>(titulo,autor)</td>
+                                <td>Debe tener titulo Y autor en orden</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        MNEMOTECNIA DTD: ? = quizás, * = muchos, + = positivo (mínimo 1), | = OR lógico, , = Y en secuencia.
+                    </div>
+
+                    <h3>🔧 XML Schema (XSD)</h3>
+                    <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="xml-tag">&lt;xs:schema</span> <span class="xml-attribute">xmlns:xs=<span class="xml-value">"http://www.w3.org/2001/XMLSchema"</span>
+           targetNamespace=<span class="xml-value">"http://ejemplo.com/biblioteca"</span>
+           elementFormDefault=<span class="xml-value">"qualified"</span></span><span class="xml-tag">&gt;</span>
+
+    <span class="xml-comment">&lt;!-- Definición de tipos complejos --&gt;</span>
+    <span class="xml-tag">&lt;xs:complexType</span> <span class="xml-attribute">name=<span class="xml-value">"TipoLibro"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;xs:sequence&gt;</span>
+            <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"titulo"</span> type=<span class="xml-value">"xs:string"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"autor"</span> type=<span class="xml-value">"xs:string"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"isbn"</span> type=<span class="xml-value">"TipoISBN"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"precio"</span> type=<span class="xml-value">"TipoPrecio"</span></span><span class="xml-tag">/&gt;</span>
+        <span class="xml-tag">&lt;/xs:sequence&gt;</span>
+        <span class="xml-tag">&lt;xs:attribute</span> <span class="xml-attribute">name=<span class="xml-value">"id"</span> type=<span class="xml-value">"xs:ID"</span> use=<span class="xml-value">"required"</span></span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/xs:complexType&gt;</span>
+
+    <span class="xml-comment">&lt;!-- Definición de tipos simples con restricciones --&gt;</span>
+    <span class="xml-tag">&lt;xs:simpleType</span> <span class="xml-attribute">name=<span class="xml-value">"TipoISBN"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;xs:restriction</span> <span class="xml-attribute">base=<span class="xml-value">"xs:string"</span></span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;xs:pattern</span> <span class="xml-attribute">value=<span class="xml-value">"[0-9]{3}-[0-9]{10}"</span></span><span class="xml-tag">/&gt;</span>
+        <span class="xml-tag">&lt;/xs:restriction&gt;</span>
+    <span class="xml-tag">&lt;/xs:simpleType&gt;</span>
+
+    <span class="xml-tag">&lt;xs:simpleType</span> <span class="xml-attribute">name=<span class="xml-value">"TipoPrecio"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;xs:restriction</span> <span class="xml-attribute">base=<span class="xml-value">"xs:decimal"</span></span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;xs:minInclusive</span> <span class="xml-attribute">value=<span class="xml-value">"0"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;xs:maxInclusive</span> <span class="xml-attribute">value=<span class="xml-value">"999.99"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;xs:fractionDigits</span> <span class="xml-attribute">value=<span class="xml-value">"2"</span></span><span class="xml-tag">/&gt;</span>
+        <span class="xml-tag">&lt;/xs:restriction&gt;</span>
+    <span class="xml-tag">&lt;/xs:simpleType&gt;</span>
+
+    <span class="xml-comment">&lt;!-- Elemento raíz --&gt;</span>
+    <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"biblioteca"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;xs:complexType&gt;</span>
+            <span class="xml-tag">&lt;xs:sequence&gt;</span>
+                <span class="xml-tag">&lt;xs:element</span> <span class="xml-attribute">name=<span class="xml-value">"libro"</span> type=<span class="xml-value">"TipoLibro"</span> 
+                           minOccurs=<span class="xml-value">"1"</span> maxOccurs=<span class="xml-value">"unbounded"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;/xs:sequence&gt;</span>
+        <span class="xml-tag">&lt;/xs:complexType&gt;</span>
+    <span class="xml-tag">&lt;/xs:element&gt;</span>
+
+<span class="xml-tag">&lt;/xs:schema&gt;</span>
+                    </div>
+
+                    <div class="exam-alert">
+                        XSD vs DTD: XSD tiene tipado fuerte, namespaces, restricciones avanzadas y es XML. DTD es más simple pero limitado. XSD reemplazó DTD en aplicaciones modernas.
+                    </div>
+
+                    <h3>🔍 Espacios de Nombres (Namespaces)</h3>
+                    <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+
+<span class="xml-comment">&lt;!-- Documento con múltiples namespaces --&gt;</span>
+<span class="xml-tag">&lt;documento</span>
+    <span class="xml-attribute">xmlns:libro=<span class="xml-value">"http://ejemplo.com/biblioteca"</span>
+    xmlns:persona=<span class="xml-value">"http://ejemplo.com/personas"</span>
+    xmlns:xsi=<span class="xml-value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><span class="xml-tag">&gt;</span>
+    
+    <span class="xml-tag">&lt;libro:biblioteca&gt;</span>
+        <span class="xml-tag">&lt;libro:libro</span> <span class="xml-attribute">id=<span class="xml-value">"001"</span></span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;libro:titulo&gt;</span>XML Avanzado<span class="xml-tag">&lt;/libro:titulo&gt;</span>
+            <span class="xml-tag">&lt;libro:autor&gt;</span>
+                <span class="xml-tag">&lt;persona:nombre&gt;</span>María<span class="xml-tag">&lt;/persona:nombre&gt;</span>
+                <span class="xml-tag">&lt;persona:apellido&gt;</span>González<span class="xml-tag">&lt;/persona:apellido&gt;</span>
+            <span class="xml-tag">&lt;/libro:autor&gt;</span>
+        <span class="xml-tag">&lt;/libro:libro&gt;</span>
+    <span class="xml-tag">&lt;/libro:biblioteca&gt;</span>
+    
+<span class="xml-tag">&lt;/documento&gt;</span>
+                    </div>
+
+                    <div class="hot-tip">
+                        NAMESPACES evitan conflictos cuando combinas XML de diferentes fuentes. El prefijo es local, la URI del namespace es lo que importa.
+                    </div>
+                </div>
+            </div>
+
+            <div id="advanced" class="tab-content">
+                <div class="content-section">
+                    <h2>⚡ Lenguajes de Marca Avanzados</h2>
+
+                    <h3>🔄 XSLT (XML Stylesheet Language Transformations)</h3>
+                    <div class="highlight-box">
+                        <p><strong>XSLT</strong> permite transformar documentos XML en otros formatos (HTML, XML diferente, texto plano, PDF).</p>
+                    </div>
+
+                    <div class="language-showcase">
+                        <div class="card">
+                            <h4>📄 XML Fuente</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0"?&gt;</span>
+<span class="xml-tag">&lt;empleados&gt;</span>
+    <span class="xml-tag">&lt;empleado</span> <span class="xml-attribute">id=<span class="xml-value">"001"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;nombre&gt;</span>Juan Pérez<span class="xml-tag">&lt;/nombre&gt;</span>
+        <span class="xml-tag">&lt;cargo&gt;</span>Desarrollador<span class="xml-tag">&lt;/cargo&gt;</span>
+        <span class="xml-tag">&lt;salario&gt;</span>45000<span class="xml-tag">&lt;/salario&gt;</span>
+    <span class="xml-tag">&lt;/empleado&gt;</span>
+    <span class="xml-tag">&lt;empleado</span> <span class="xml-attribute">id=<span class="xml-value">"002"</span></span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;nombre&gt;</span>Ana García<span class="xml-tag">&lt;/nombre&gt;</span>
+        <span class="xml-tag">&lt;cargo&gt;</span>Analista<span class="xml-tag">&lt;/cargo&gt;</span>
+        <span class="xml-tag">&lt;salario&gt;</span>42000<span class="xml-tag">&lt;/salario&gt;</span>
+    <span class="xml-tag">&lt;/empleado&gt;</span>
+<span class="xml-tag">&lt;/empleados&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔄 XSLT Stylesheet</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0"?&gt;</span>
+<span class="xml-tag">&lt;xsl:stylesheet</span> <span class="xml-attribute">version=<span class="xml-value">"1.0"</span>
+    xmlns:xsl=<span class="xml-value">"http://www.w3.org/1999/XSL/Transform"</span></span><span class="xml-tag">&gt;</span>
+
+<span class="xml-tag">&lt;xsl:template</span> <span class="xml-attribute">match=<span class="xml-value">"/"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;html&gt;</span>
+    <span class="xml-tag">&lt;head&gt;</span>
+        <span class="xml-tag">&lt;title&gt;</span>Lista de Empleados<span class="xml-tag">&lt;/title&gt;</span>
+    <span class="xml-tag">&lt;/head&gt;</span>
+    <span class="xml-tag">&lt;body&gt;</span>
+        <span class="xml-tag">&lt;h1&gt;</span>Empleados<span class="xml-tag">&lt;/h1&gt;</span>
+        <span class="xml-tag">&lt;table&gt;</span>
+            <span class="xml-tag">&lt;tr&gt;</span>
+                <span class="xml-tag">&lt;th&gt;</span>ID<span class="xml-tag">&lt;/th&gt;</span>
+                <span class="xml-tag">&lt;th&gt;</span>Nombre<span class="xml-tag">&lt;/th&gt;</span>
+                <span class="xml-tag">&lt;th&gt;</span>Cargo<span class="xml-tag">&lt;/th&gt;</span>
+                <span class="xml-tag">&lt;th&gt;</span>Salario<span class="xml-tag">&lt;/th&gt;</span>
+            <span class="xml-tag">&lt;/tr&gt;</span>
+            <span class="xml-tag">&lt;xsl:for-each</span> <span class="xml-attribute">select=<span class="xml-value">"empleados/empleado"</span></span><span class="xml-tag">&gt;</span>
+                <span class="xml-tag">&lt;xsl:sort</span> <span class="xml-attribute">select=<span class="xml-value">"salario"</span> order=<span class="xml-value">"descending"</span></span><span class="xml-tag">/&gt;</span>
+                <span class="xml-tag">&lt;tr&gt;</span>
+                    <span class="xml-tag">&lt;td&gt;</span><span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attribute">select=<span class="xml-value">"@id"</span></span><span class="xml-tag">/&gt;</span><span class="xml-tag">&lt;/td&gt;</span>
+                    <span class="xml-tag">&lt;td&gt;</span><span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attribute">select=<span class="xml-value">"nombre"</span></span><span class="xml-tag">/&gt;</span><span class="xml-tag">&lt;/td&gt;</span>
+                    <span class="xml-tag">&lt;td&gt;</span><span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attribute">select=<span class="xml-value">"cargo"</span></span><span class="xml-tag">/&gt;</span><span class="xml-tag">&lt;/td&gt;</span>
+                    <span class="xml-tag">&lt;td&gt;</span><span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attribute">select=<span class="xml-value">"salario"</span></span><span class="xml-tag">/&gt;</span><span class="xml-tag">&lt;/td&gt;</span>
+                <span class="xml-tag">&lt;/tr&gt;</span>
+            <span class="xml-tag">&lt;/xsl:for-each&gt;</span>
+        <span class="xml-tag">&lt;/table&gt;</span>
+    <span class="xml-tag">&lt;/body&gt;</span>
+    <span class="xml-tag">&lt;/html&gt;</span>
+<span class="xml-tag">&lt;/xsl:template&gt;</span>
+
+<span class="xml-tag">&lt;/xsl:stylesheet&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        XSLT CLAVE DE EXAMEN: xsl:template define patrones, xsl:for-each itera, xsl:value-of extrae valores, xsl:sort ordena resultados.
+                    </div>
+
+                    <h3>📍 XPath (XML Path Language)</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Expresión XPath</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo de Resultado</th>
+                            </tr>
+                            <tr>
+                                <td><strong>/</strong></td>
+                                <td>Selecciona desde la raíz</td>
+                                <td>/biblioteca selecciona el elemento raíz</td>
+                            </tr>
+                            <tr>
+                                <td><strong>//</strong></td>
+                                <td>Selecciona en cualquier lugar</td>
+                                <td>//titulo encuentra todos los títulos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>.</strong></td>
+                                <td>Nodo actual</td>
+                                <td>./precio precio del elemento actual</td>
+                            </tr>
+                            <tr>
+                                <td><strong>..</strong></td>
+                                <td>Nodo padre</td>
+                                <td>../autor autor del libro padre</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@</strong></td>
+                                <td>Selecciona atributos</td>
+                                <td>@id selecciona el atributo id</td>
+                            </tr>
+                            <tr>
+                                <td><strong>[]</strong></td>
+                                <td>Predicados/filtros</td>
+                                <td>libro[precio&gt;30] libros caros</td>
+                            </tr>
+                            <tr>
+                                <td><strong>text()</strong></td>
+                                <td>Contenido textual</td>
+                                <td>titulo/text() solo el texto del título</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-block">
+<!-- Ejemplos XPath Avanzados -->
+/biblioteca/libro[1]                    <!-- Primer libro -->
+/biblioteca/libro[last()]               <!-- Último libro -->
+/biblioteca/libro[position()>1]        <!-- Todos excepto el primero -->
+//libro[@id='001']                     <!-- Libro con ID específico -->
+//libro[precio>25 and precio<50]       <!-- Libros entre 25 y 50 -->
+//autor[contains(text(),'García')]     <!-- Autores con 'García' -->
+//libro[titulo[starts-with(.,'XML')]]  <!-- Libros cuyo título empiece por 'XML' -->
+count(//libro)                         <!-- Contar todos los libros -->
+sum(//precio)                          <!-- Suma de todos los precios -->
+//libro[precio=max(//precio)]          <!-- Libro más caro -->
+                    </div>
+
+                    <div class="hot-tip">
+                        XPATH ESENCIAL PARA EXAMEN: / desde raíz, // cualquier descendiente, [] para filtros, @ para atributos. Memoriza funciones: count(), sum(), max(), min().
+                    </div>
+
+                    <h3>📋 Otros Lenguajes de Marca</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 SVG (Scalable Vector Graphics)</h4>
+                            <div class="xml-example">
+<span class="xml-tag">&lt;svg</span> <span class="xml-attribute">width=<span class="xml-value">"200"</span> height=<span class="xml-value">"200"</span>
+     xmlns=<span class="xml-value">"http://www.w3.org/2000/svg"</span></span><span class="xml-tag">&gt;</span>
+    
+    <span class="xml-tag">&lt;circle</span> <span class="xml-attribute">cx=<span class="xml-value">"50"</span> cy=<span class="xml-value">"50"</span> r=<span class="xml-value">"40"</span>
+            fill=<span class="xml-value">"red"</span> stroke=<span class="xml-value">"blue"</span> stroke-width=<span class="xml-value">"2"</span></span><span class="xml-tag">/&gt;</span>
+    
+    <span class="xml-tag">&lt;rect</span> <span class="xml-attribute">x=<span class="xml-value">"100"</span> y=<span class="xml-value">"10"</span> width=<span class="xml-value">"80"</span> height=<span class="xml-value">"80"</span>
+          fill=<span class="xml-value">"green"</span></span><span class="xml-tag">/&gt;</span>
+    
+    <span class="xml-tag">&lt;text</span> <span class="xml-attribute">x=<span class="xml-value">"20"</span> y=<span class="xml-value">"140"</span> font-family=<span class="xml-value">"Arial"</span> font-size=<span class="xml-value">"14"</span></span><span class="xml-tag">&gt;</span>
+        SVG Example
+    <span class="xml-tag">&lt;/text&gt;</span>
+    
+<span class="xml-tag">&lt;/svg&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🧮 MathML (Mathematical Markup Language)</h4>
+                            <div class="xml-example">
+<span class="xml-tag">&lt;math</span> <span class="xml-attribute">xmlns=<span class="xml-value">"http://www.w3.org/1998/Math/MathML"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;mrow&gt;</span>
+        <span class="xml-tag">&lt;mi&gt;</span>x<span class="xml-tag">&lt;/mi&gt;</span>
+        <span class="xml-tag">&lt;mo&gt;</span>=<span class="xml-tag">&lt;/mo&gt;</span>
+        <span class="xml-tag">&lt;mfrac&gt;</span>
+            <span class="xml-tag">&lt;mrow&gt;</span>
+                <span class="xml-tag">&lt;mo&gt;</span>-<span class="xml-tag">&lt;/mo&gt;</span>
+                <span class="xml-tag">&lt;mi&gt;</span>b<span class="xml-tag">&lt;/mi&gt;</span>
+                <span class="xml-tag">&lt;mo&gt;</span>±<span class="xml-tag">&lt;/mo&gt;</span>
+                <span class="xml-tag">&lt;msqrt&gt;</span>
+                    <span class="xml-tag">&lt;msup&gt;</span>
+                        <span class="xml-tag">&lt;mi&gt;</span>b<span class="xml-tag">&lt;/mi&gt;</span>
+                        <span class="xml-tag">&lt;mn&gt;</span>2<span class="xml-tag">&lt;/mn&gt;</span>
+                    <span class="xml-tag">&lt;/msup&gt;</span>
+                    <span class="xml-tag">&lt;mo&gt;</span>-<span class="xml-tag">&lt;/mo&gt;</span>
+                    <span class="xml-tag">&lt;mn&gt;</span>4<span class="xml-tag">&lt;/mn&gt;</span>
+                    <span class="xml-tag">&lt;mi&gt;</span>a<span class="xml-tag">&lt;/mi&gt;</span>
+                    <span class="xml-tag">&lt;mi&gt;</span>c<span class="xml-tag">&lt;/mi&gt;</span>
+                <span class="xml-tag">&lt;/msqrt&gt;</span>
+            <span class="xml-tag">&lt;/mrow&gt;</span>
+            <span class="xml-tag">&lt;mrow&gt;</span>
+                <span class="xml-tag">&lt;mn&gt;</span>2<span class="xml-tag">&lt;/mn&gt;</span>
+                <span class="xml-tag">&lt;mi&gt;</span>a<span class="xml-tag">&lt;/mi&gt;</span>
+            <span class="xml-tag">&lt;/mrow&gt;</span>
+        <span class="xml-tag">&lt;/mfrac&gt;</span>
+    <span class="xml-tag">&lt;/mrow&gt;</span>
+<span class="xml-tag">&lt;/math&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>📰 RSS (Really Simple Syndication)</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="xml-tag">&lt;rss</span> <span class="xml-attribute">version=<span class="xml-value">"2.0"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;channel&gt;</span>
+        <span class="xml-tag">&lt;title&gt;</span>Mi Blog Técnico<span class="xml-tag">&lt;/title&gt;</span>
+        <span class="xml-tag">&lt;link&gt;</span>https://miblog.com<span class="xml-tag">&lt;/link&gt;</span>
+        <span class="xml-tag">&lt;description&gt;</span>Blog sobre tecnología<span class="xml-tag">&lt;/description&gt;</span>
+        
+        <span class="xml-tag">&lt;item&gt;</span>
+            <span class="xml-tag">&lt;title&gt;</span>Introducción a XML<span class="xml-tag">&lt;/title&gt;</span>
+            <span class="xml-tag">&lt;link&gt;</span>https://miblog.com/xml-intro<span class="xml-tag">&lt;/link&gt;</span>
+            <span class="xml-tag">&lt;pubDate&gt;</span>Mon, 09 Aug 2025 10:00:00 GMT<span class="xml-tag">&lt;/pubDate&gt;</span>
+            <span class="xml-tag">&lt;description&gt;</span>
+                Aprende los fundamentos de XML...
+            <span class="xml-tag">&lt;/description&gt;</span>
+        <span class="xml-tag">&lt;/item&gt;</span>
+    <span class="xml-tag">&lt;/channel&gt;</span>
+<span class="xml-tag">&lt;/rss&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>📋 SOAP (Simple Object Access Protocol)</h4>
+                            <div class="xml-example">
+<span class="xml-comment">&lt;?xml version="1.0"?&gt;</span>
+<span class="xml-tag">&lt;soap:Envelope</span>
+    <span class="xml-attribute">xmlns:soap=<span class="xml-value">"http://www.w3.org/2003/05/soap-envelope"</span></span><span class="xml-tag">&gt;</span>
+    
+    <span class="xml-tag">&lt;soap:Header&gt;</span>
+        <span class="xml-tag">&lt;auth:Authentication</span>
+            <span class="xml-attribute">xmlns:auth=<span class="xml-value">"http://ejemplo.com/auth"</span></span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;auth:token&gt;</span>abc123<span class="xml-tag">&lt;/auth:token&gt;</span>
+        <span class="xml-tag">&lt;/auth:Authentication&gt;</span>
+    <span class="xml-tag">&lt;/soap:Header&gt;</span>
+    
+    <span class="xml-tag">&lt;soap:Body&gt;</span>
+        <span class="xml-tag">&lt;ws:GetUserInfo</span>
+            <span class="xml-attribute">xmlns:ws=<span class="xml-value">"http://ejemplo.com/webservice"</span></span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;ws:userId&gt;</span>123<span class="xml-tag">&lt;/ws:userId&gt;</span>
+        <span class="xml-tag">&lt;/ws:GetUserInfo&gt;</span>
+    <span class="xml-tag">&lt;/soap:Body&gt;</span>
+    
+<span class="xml-tag">&lt;/soap:Envelope&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        LENGUAJES DERIVADOS DE XML: SVG para gráficos vectoriales, MathML para matemáticas, RSS/Atom para feeds, SOAP para servicios web. Todos usan sintaxis XML.
+                    </div>
+                </div>
+            </div>
+
+            <div id="processing" class="tab-content">
+                <div class="content-section">
+                    <h2>🔄 Procesamiento y Validación</h2>
+
+                    <h3>⚙️ Parsers XML</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>🌊 SAX (Simple API for XML)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Event-driven:</strong> Procesa secuencialmente</li>
+                                <li><strong>Memory efficient:</strong> No carga todo el documento</li>
+                                <li><strong>Forward-only:</strong> No puede volver atrás</li>
+                                <li><strong>Ideal para:</strong> Documentos grandes, streaming</li>
+                            </ul>
+                            <div class="code-block">
+// Eventos SAX principales:
+startDocument()    // Inicio del documento
+startElement()     // <elemento>
+characters()       // Contenido textual
+endElement()       // </elemento>
+endDocument()      // Final del documento
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🌳 DOM (Document Object Model)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Tree-based:</strong> Carga todo en memoria</li>
+                                <li><strong>Random access:</strong> Navegación libre</li>
+                                <li><strong>Modificable:</strong> Puede alterar el árbol</li>
+                                <li><strong>Ideal para:</strong> Documentos pequeños, manipulación</li>
+                            </ul>
+                            <div class="code-block">
+// Métodos DOM principales:
+getElementsByTagName("titulo")
+getElementById("libro001")
+createElement("nuevo")
+appendChild(elemento)
+removeChild(elemento)
+setAttribute("id", "valor")
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔄 StAX (Streaming API for XML)</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Pull parsing:</strong> Controlado por aplicación</li>
+                                <li><strong>Cursor-based:</strong> Navegación controlada</li>
+                                <li><strong>Bidireccional:</strong> Lectura y escritura</li>
+                                <li><strong>Ideal para:</strong> Procesamiento selectivo</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎯 XPath Processors</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Query-based:</strong> Consultas específicas</li>
+                                <li><strong>Expresiones:</strong> Lenguaje de consulta</li>
+                                <li><strong>Efficient:</strong> Solo lo que se necesita</li>
+                                <li><strong>Ideal para:</strong> Extracción de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        COMPARACIÓN CLAVE: SAX (secuencial, memoria baja), DOM (aleatorio, memoria alta), StAX (pull-based, control total). Elige según tamaño de documento y necesidades.
+                    </div>
+
+                    <h3>✅ Validación de Documentos</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Tipo de Validación</th>
+                                <th>Qué Valida</th>
+                                <th>Cuándo Usar</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Well-formed</strong></td>
+                                <td>Sintaxis XML correcta</td>
+                                <td>Siempre (mínimo requerido)</td>
+                                <td>Tags cerrados, case-sensitive</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DTD Valid</strong></td>
+                                <td>Estructura según DTD</td>
+                                <td>Validación básica de estructura</td>
+                                <td>Elementos permitidos, orden</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Schema Valid</strong></td>
+                                <td>Tipos de datos y restricciones</td>
+                                <td>Validación completa de datos</td>
+                                <td>Tipos, rangos, patrones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Namespace Valid</strong></td>
+                                <td>Espacios de nombres correctos</td>
+                                <td>Documentos multi-vocabulario</td>
+                                <td>Prefijos, URIs de namespace</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="hot-tip">
+                        JERARQUÍA DE VALIDACIÓN: Well-formed es base, DTD añade estructura, XSD añade tipado, Namespaces añaden contexto. Un documento puede ser well-formed pero no válido.
+                    </div>
+
+                    <h3>🛠️ Herramientas y APIs</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>☕ Java APIs</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>JAXP:</strong> Java API for XML Processing</li>
+                                <li><strong>JAXB:</strong> XML Binding (Java ↔ XML)</li>
+                                <li><strong>JAX-WS:</strong> Web Services</li>
+                                <li><strong>XMLBeans:</strong> Schema-based binding</li>
+                            </ul>
+                            <div class="code-block">
+// JAXP Example
+DocumentBuilderFactory factory = 
+    DocumentBuilderFactory.newInstance();
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document doc = builder.parse("documento.xml");
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🐍 Python Libraries</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>xml.etree.ElementTree:</strong> Built-in parser</li>
+                                <li><strong>lxml:</strong> Comprehensive XML library</li>
+                                <li><strong>BeautifulSoup:</strong> HTML/XML parsing</li>
+                                <li><strong>xmltodict:</strong> XML to dictionary</li>
+                            </ul>
+                            <div class="code-block">
+# Python ElementTree
+import xml.etree.ElementTree as ET
+
+tree = ET.parse('biblioteca.xml')
+root = tree.getroot()
+
+for libro in root.findall('libro'):
+    titulo = libro.find('titulo').text
+    print(titulo)
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🌐 JavaScript/Web APIs</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>DOMParser:</strong> Parse XML strings</li>
+                                <li><strong>XMLHttpRequest:</strong> Load XML via HTTP</li>
+                                <li><strong>fetch API:</strong> Modern XML loading</li>
+                                <li><strong>XSLT Processor:</strong> Client-side transforms</li>
+                            </ul>
+                            <div class="code-block">
+// JavaScript DOMParser
+const parser = new DOMParser();
+const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+const libros = xmlDoc.getElementsByTagName("libro");
+for(let libro of libros) {
+    console.log(libro.getElementsByTagName("titulo")[0].textContent);
+}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔧 Command Line Tools</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>xmllint:</strong> Validación y pretty-printing</li>
+                                <li><strong>xsltproc:</strong> Procesamiento XSLT</li>
+                                <li><strong>xmlstarlet:</strong> Swiss-army knife XML</li>
+                                <li><strong>tidy:</strong> HTML/XML cleanup</li>
+                            </ul>
+                            <div class="code-block">
+# Comandos útiles
+xmllint --valid documento.xml          # Validar contra DTD
+xmllint --schema schema.xsd doc.xml    # Validar contra XSD
+xsltproc transform.xsl data.xml        # Aplicar transformación
+xmlstarlet sel -t -v "//titulo" doc.xml # XPath query
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        HERRAMIENTAS IMPRESCINDIBLES PARA EXAMEN: xmllint para validación, xsltproc para transformaciones, DOMParser para web, JAXP para Java.
+                    </div>
+
+                    <h3>🚀 Optimización y Rendimiento</h3>
+                    <div class="highlight-box">
+                        <h4>💡 Best Practices para Rendimiento</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Streaming parsers</strong> para documentos grandes (&gt;10MB)</li>
+                            <li><strong>XPath indexing</strong> para consultas repetitivas</li>
+                            <li><strong>Schema compilation</strong> para validación frecuente</li>
+                            <li><strong>Lazy loading</strong> de elementos grandes</li>
+                            <li><strong>Compression</strong> (gzip) para transmisión</li>
+                            <li><strong>Caching</strong> de documentos parseados</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Tamaño Documento</th>
+                                <th>Parser Recomendado</th>
+                                <th>Memoria Aproximada</th>
+                                <th>Velocidad</th>
+                            </tr>
+                            <tr>
+                                <td>&lt; 1MB</td>
+                                <td>DOM</td>
+                                <td>3-5x tamaño archivo</td>
+                                <td>Rápido para navegación</td>
+                            </tr>
+                            <tr>
+                                <td>1-10MB</td>
+                                <td>StAX o XPath selectivo</td>
+                                <td>Constante</td>
+                                <td>Medio, controlable</td>
+                            </tr>
+                            <tr>
+                                <td>10-100MB</td>
+                                <td>SAX</td>
+                                <td>Constante (baja)</td>
+                                <td>Muy rápido, secuencial</td>
+                            </tr>
+                            <tr>
+                                <td>&gt; 100MB</td>
+                                <td>Streaming + partitioning</td>
+                                <td>Constante (muy baja)</td>
+                                <td>Depende de I/O</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="applications" class="tab-content">
+                <div class="content-section">
+                    <h2>🎯 Aplicaciones y Casos de Uso</h2>
+
+                    <h3>🌐 Aplicaciones Web</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 Intercambio de Datos</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Web Services:</strong> SOAP, REST con XML</li>
+                                <li><strong>APIs:</strong> Paypal, Amazon, Google APIs</li>
+                                <li><strong>EDI:</strong> Electronic Data Interchange</li>
+                                <li><strong>B2B Integration:</strong> Entre empresas</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📋 Configuración</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Spring:</strong> applicationContext.xml</li>
+                                <li><strong>Maven:</strong> pom.xml builds</li>
+                                <li><strong>Hibernate:</strong> hibernate.cfg.xml</li>
+                                <li><strong>Tomcat:</strong> web.xml, server.xml</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>📰 Syndication</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>RSS:</strong> Really Simple Syndication</li>
+                                <li><strong>Atom:</strong> Alternative syndication format</li>
+                                <li><strong>Podcasts:</strong> Media RSS extensions</li>
+                                <li><strong>News feeds:</strong> Agregadores de contenido</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🎨 Rich Media</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>SVG:</strong> Gráficos vectoriales escalables</li>
+                                <li><strong>XAML:</strong> Microsoft UI markup</li>
+                                <li><strong>XUL:</strong> Mozilla UI Language</li>
+                                <li><strong>SMIL:</strong> Synchronized Multimedia</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🏢 Aplicaciones Empresariales</h3>
+                    <div class="highlight-box">
+                        <h4>🏭 Sectores que Usan XML Intensivamente</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Banca:</strong> ISO 20022, SWIFT, FpML</li>
+                            <li><strong>Salud:</strong> HL7, CDA, DICOM</li>
+                            <li><strong>Gobierno:</strong> XML Schema para formularios</li>
+                            <li><strong>Logística:</strong> EDI, UBL (Universal Business Language)</li>
+                            <li><strong>Telecomunicaciones:</strong> SIP, XCAP</li>
+                            <li><strong>Seguros:</strong> ACORD XML standards</li>
+                        </ul>
+                    </div>
+
+                    <div class="language-showcase">
+                        <div class="card">
+                            <h4>🏦 Ejemplo Bancario (SWIFT)</h4>
+                            <div class="xml-example">
+<span class="xml-tag">&lt;Document</span> <span class="xml-attribute">xmlns=<span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;CstmrCdtTrfInitn&gt;</span>
+        <span class="xml-tag">&lt;GrpHdr&gt;</span>
+            <span class="xml-tag">&lt;MsgId&gt;</span>MSG123456<span class="xml-tag">&lt;/MsgId&gt;</span>
+            <span class="xml-tag">&lt;CreDtTm&gt;</span>2025-08-09T10:30:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>
+            <span class="xml-tag">&lt;NbOfTxs&gt;</span>1<span class="xml-tag">&lt;/NbOfTxs&gt;</span>
+        <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+        <span class="xml-tag">&lt;PmtInf&gt;</span>
+            <span class="xml-tag">&lt;PmtInfId&gt;</span>PMT123<span class="xml-tag">&lt;/PmtInfId&gt;</span>
+            <span class="xml-tag">&lt;PmtMtd&gt;</span>TRF<span class="xml-tag">&lt;/PmtMtd&gt;</span>
+            <span class="xml-tag">&lt;ReqdExctnDt&gt;</span>2025-08-10<span class="xml-tag">&lt;/ReqdExctnDt&gt;</span>
+            <span class="xml-tag">&lt;CdtTrfTxInf&gt;</span>
+                <span class="xml-tag">&lt;Amt&gt;</span>
+                    <span class="xml-tag">&lt;InstdAmt</span> <span class="xml-attribute">Ccy=<span class="xml-value">"EUR"</span></span><span class="xml-tag">&gt;</span>1000.00<span class="xml-tag">&lt;/InstdAmt&gt;</span>
+                <span class="xml-tag">&lt;/Amt&gt;</span>
+                <span class="xml-tag">&lt;CdtrAcct&gt;</span>
+                    <span class="xml-tag">&lt;Id&gt;</span>
+                        <span class="xml-tag">&lt;IBAN&gt;</span>ES9121000418450200051332<span class="xml-tag">&lt;/IBAN&gt;</span>
+                    <span class="xml-tag">&lt;/Id&gt;</span>
+                <span class="xml-tag">&lt;/CdtrAcct&gt;</span>
+            <span class="xml-tag">&lt;/CdtTrfTxInf&gt;</span>
+        <span class="xml-tag">&lt;/PmtInf&gt;</span>
+    <span class="xml-tag">&lt;/CstmrCdtTrfInitn&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4>🏥 Ejemplo Sanitario (HL7)</h4>
+                            <div class="xml-example">
+<span class="xml-tag">&lt;ClinicalDocument</span> <span class="xml-attribute">xmlns=<span class="xml-value">"urn:hl7-org:v3"</span></span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;typeId</span> <span class="xml-attribute">root=<span class="xml-value">"2.16.840.1.113883.1.3"</span> extension=<span class="xml-value">"POCD_HD000040"</span></span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;id</span> <span class="xml-attribute">root=<span class="xml-value">"2.16.840.1.113883.19.4"</span> extension=<span class="xml-value">"c266"</span></span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;code</span> <span class="xml-attribute">code=<span class="xml-value">"11488-4"</span> codeSystem=<span class="xml-value">"2.16.840.1.113883.6.1"</span>
+          displayName=<span class="xml-value">"Consultation note"</span></span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;title&gt;</span>Informe Médico<span class="xml-tag">&lt;/title&gt;</span>
+    <span class="xml-tag">&lt;effectiveTime</span> <span class="xml-attribute">value=<span class="xml-value">"20250809103000+0100"</span></span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;confidentialityCode</span> <span class="xml-attribute">code=<span class="xml-value">"N"</span> codeSystem=<span class="xml-value">"2.16.840.1.113883.5.25"</span></span><span class="xml-tag">/&gt;</span>
+    
+    <span class="xml-tag">&lt;recordTarget&gt;</span>
+        <span class="xml-tag">&lt;patientRole&gt;</span>
+            <span class="xml-tag">&lt;id</span> <span class="xml-attribute">extension=<span class="xml-value">"12345"</span> root=<span class="xml-value">"2.16.840.1.113883.4.1"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;patient&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>
+                    <span class="xml-tag">&lt;given&gt;</span>Juan<span class="xml-tag">&lt;/given&gt;</span>
+                    <span class="xml-tag">&lt;family&gt;</span>Pérez<span class="xml-tag">&lt;/family&gt;</span>
+                <span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;administrativeGenderCode</span> <span class="xml-attribute">code=<span class="xml-value">"M"</span></span><span class="xml-tag">/&gt;</span>
+                <span class="xml-tag">&lt;birthTime</span> <span class="xml-attribute">value=<span class="xml-value">"19850315"</span></span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;/patient&gt;</span>
+        <span class="xml-tag">&lt;/patientRole&gt;</span>
+    <span class="xml-tag">&lt;/recordTarget&gt;</span>
+<span class="xml-tag">&lt;/ClinicalDocument&gt;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-alert">
+                        ESTÁNDARES SECTORIALES DE XML: ISO 20022 (banca), HL7 (salud), UBL (comercio), NewsML (medios), ACORD (seguros). Memoriza al menos 3 para examen.
+                    </div>
+
+                    <h3>🔮 Tendencias Futuras</h3>
+                    <div class="grid-container">
+                        <div class="card">
+                            <h4>📊 JSON vs XML</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>JSON domina APIs REST</strong> (más simple)</li>
+                                <li><strong>XML sigue en enterprise</strong> (más robusto)</li>
+                                <li><strong>GraphQL emergente</strong> (queries flexibles)</li>
+                                <li><strong>Protocol Buffers</strong> (Google, binario)</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>☁️ Cloud y Microservicios</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Config as Code:</strong> YAML predomina</li>
+                                <li><strong>Container orchestration:</strong> K8s YAML</li>
+                                <li><strong>Infrastructure as Code:</strong> Terraform HCL</li>
+                                <li><strong>CI/CD pipelines:</strong> YAML configs</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🤖 AI y Machine Learning</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>ONNX:</strong> Open Neural Network Exchange</li>
+                                <li><strong>Model serialization:</strong> XML descriptors</li>
+                                <li><strong>Training data:</strong> XML annotations</li>
+                                <li><strong>NLP:</strong> XML para structured text</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h4>🔗 Blockchain e IoT</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Smart contracts metadata</strong></li>
+                                <li><strong>IoT device descriptions</strong></li>
+                                <li><strong>Sensor data exchange</strong></li>
+                                <li><strong>Interoperability standards</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="hot-tip">
+                        FUTURO DE XML: Aunque JSON domina web APIs, XML mantiene fuerza en enterprise, gobierno, salud y finanzas por su robustez, validación y madurez de estándares.
+                    </div>
+
+                    <h3>🎓 Certificaciones y Competencias</h3>
+                    <div class="highlight-box">
+                        <h4>📜 Certificaciones Relevantes</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Oracle Certified Expert, Java EE Web Services Developer</strong></li>
+                            <li><strong>Microsoft XML Web Services and Server Components</strong></li>
+                            <li><strong>IBM XML and Related Technologies</strong></li>
+                            <li><strong>W3C XML Schema Competence</strong></li>
+                            <li><strong>OASIS Universal Business Language (UBL)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table>
+                            <tr>
+                                <th>Nivel de Competencia</th>
+                                <th>Conocimientos Requeridos</th>
+                                <th>Aplicaciones Típicas</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Básico</strong></td>
+                                <td>HTML, XML syntax, DTD básico</td>
+                                <td>Páginas web simples, RSS feeds</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Intermedio</strong></td>
+                                <td>XSD, XSLT, XPath, Namespaces</td>
+                                <td>Web services, configuración apps</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Avanzado</strong></td>
+                                <td>SAX/DOM, optimización, estándares sectoriales</td>
+                                <td>Sistemas empresariales, integración B2B</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Experto</strong></td>
+                                <td>Custom parsers, performance tuning, standards development</td>
+                                <td>Arquitectura de sistemas, consultoría</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="exam-alert">
+                        COMPETENCIAS CLAVE PARA EXAMEN: Sintaxis XML/HTML, diferencias entre DTD/XSD, XPath básico, casos de uso empresariales, y ventajas/desventajas vs JSON.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover clase active de todos los botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        // Efecto de escritura para el título
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('.header h1');
+            const text = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

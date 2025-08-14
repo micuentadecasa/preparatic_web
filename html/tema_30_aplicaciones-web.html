@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 30: Aplicaciones Web</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #1a1a1a;
+            --surface-color: #2c2c2c;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        .light-theme {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .tab.active {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-card {
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .content-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .content-card li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 0 15px 15px 0;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .exercise-container {
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-container:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+        }
+
+        .exercise h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .exercise-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .exercise-options label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-options label:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .exercise-options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--secondary-color);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-item {
+            background: var(--surface-color);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tech-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+                margin: 2px 0;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .code-snippet code {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--surface-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 30: Aplicaciones Web</h1>
+            <p>Desarrollo Frontend, Backend y Servicios Web</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Vista General</button>
+            <button class="tab" onclick="showTab('frontend')">Frontend</button>
+            <button class="tab" onclick="showTab('backend')">Backend</button>
+            <button class="tab" onclick="showTab('services')">Servicios Web</button>
+            <button class="tab" onclick="showTab('exercises')">Ejercicios</button>
+            <button class="tab" onclick="showTab('resources')">Recursos</button>
+        </nav>
+
+        <main class="tab-content active" id="overview">
+            <h2>Vista General: Aplicaciones Web</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Capas Arquitectura</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Frameworks JS</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Protocolos Web</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20+</span>
+                    <span class="stat-label">Lenguajes Server</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Arquitectura Web Multicapa</h3>
+                    <ul>
+                        <li>Capa de presentación (Frontend)</li>
+                        <li>Capa de lógica de negocio</li>
+                        <li>Capa de acceso a datos</li>
+                        <li>Capa de persistencia</li>
+                        <li>Servicios web y APIs</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Tecnologías Frontend</h3>
+                    <ul>
+                        <li>HTML5, CSS3, JavaScript ES6+</li>
+                        <li>Frameworks: React, Vue, Angular</li>
+                        <li>Preprocesadores CSS: Sass, Less</li>
+                        <li>Build tools: Webpack, Vite, Parcel</li>
+                        <li>PWA y Service Workers</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Tecnologías Backend</h3>
+                    <ul>
+                        <li>Lenguajes: JavaScript (Node.js), Python, Java, C#, PHP</li>
+                        <li>Frameworks: Express, Django, Spring, .NET</li>
+                        <li>Bases de datos: SQL y NoSQL</li>
+                        <li>Servidores: Apache, Nginx, IIS</li>
+                        <li>Contenedores: Docker, Kubernetes</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Servicios Web y APIs</h3>
+                    <ul>
+                        <li>REST APIs y RESTful services</li>
+                        <li>GraphQL y Apollo</li>
+                        <li>SOAP y servicios web tradicionales</li>
+                        <li>WebSockets para tiempo real</li>
+                        <li>Microservicios y arquitectura distribuida</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🌐 Evolución de las Aplicaciones Web</h4>
+                <p>Las aplicaciones web han evolucionado desde páginas estáticas hasta complejas aplicaciones de una sola página (SPA) y aplicaciones web progresivas (PWA). La arquitectura moderna incluye separación clara entre frontend y backend, APIs RESTful, servicios en la nube, y tecnologías de contenedorización para escalabilidad y mantenimiento.</p>
+            </div>
+
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <span class="tech-icon">🎨</span>
+                    <h4>Frontend</h4>
+                    <p>HTML, CSS, JavaScript</p>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">⚙️</span>
+                    <h4>Backend</h4>
+                    <p>Node.js, Python, Java</p>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🗄️</span>
+                    <h4>Base de Datos</h4>
+                    <p>MySQL, MongoDB</p>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔗</span>
+                    <h4>APIs</h4>
+                    <p>REST, GraphQL</p>
+                </div>
+            </div>
+        </main>
+
+        <div class="tab-content" id="frontend">
+            <h2>Desarrollo Frontend</h2>
+            
+            <div class="highlight-box">
+                <h4>🎯 Frontend: La Interfaz de Usuario</h4>
+                <p>El desarrollo frontend se centra en la experiencia del usuario, incluyendo diseño responsivo, interactividad, accesibilidad y rendimiento.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>HTML5 Semántico</h3>
+                    <ul>
+                        <li>Elementos semánticos: header, nav, main, article</li>
+                        <li>APIs nativas: Canvas, Web Storage, Geolocation</li>
+                        <li>Formularios avanzados con validación</li>
+                        <li>Multimedia: audio, video, elementos interactivos</li>
+                        <li>Web Components y Custom Elements</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>CSS3 Avanzado</h3>
+                    <ul>
+                        <li>Flexbox y CSS Grid para layouts</li>
+                        <li>Animaciones y transiciones CSS</li>
+                        <li>Variables CSS (Custom Properties)</li>
+                        <li>Media Queries para diseño responsivo</li>
+                        <li>Metodologías: BEM, SMACSS, Atomic CSS</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>JavaScript Moderno</h3>
+                    <ul>
+                        <li>ES6+: Arrow functions, destructuring, modules</li>
+                        <li>Programación asíncrona: Promises, async/await</li>
+                        <li>DOM manipulation y Event handling</li>
+                        <li>Fetch API y XMLHttpRequest</li>
+                        <li>TypeScript para tipado estático</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Frameworks y Librerías</h3>
+                    <ul>
+                        <li>React: Virtual DOM, JSX, Hooks</li>
+                        <li>Vue.js: Directivas, Vuex, Vue Router</li>
+                        <li>Angular: Components, Services, Dependency Injection</li>
+                        <li>Estado global: Redux, Vuex, NgRx</li>
+                        <li>UI Libraries: Bootstrap, Material-UI, Tailwind</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-snippet">
+                <code>
+// Ejemplo de componente React con Hooks
+import React, { useState, useEffect } from 'react';
+
+const UserProfile = ({ userId }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/users/${userId}`)
+      .then(response => response.json())
+      .then(userData => {
+        setUser(userData);
+        setLoading(false);
+      });
+  }, [userId]);
+
+  if (loading) return &lt;div&gt;Cargando...&lt;/div&gt;;
+  
+  return (
+    &lt;div className="user-profile"&gt;
+      &lt;h2&gt;{user.name}&lt;/h2&gt;
+      &lt;p&gt;{user.email}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+                </code>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Performance Frontend</h4>
+                <div class="formula">FCP (First Contentful Paint) < 1.8s</div>
+                <div class="formula">LCP (Largest Contentful Paint) < 2.5s</div>
+                <div class="formula">CLS (Cumulative Layout Shift) < 0.1</div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Framework</th>
+                        <th>Tipo</th>
+                        <th>Curva Aprendizaje</th>
+                        <th>Rendimiento</th>
+                        <th>Ecosistema</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>React</td>
+                        <td>Librería</td>
+                        <td>Moderada</td>
+                        <td>Alto</td>
+                        <td>Muy extenso</td>
+                    </tr>
+                    <tr>
+                        <td>Vue.js</td>
+                        <td>Framework progresivo</td>
+                        <td>Fácil</td>
+                        <td>Alto</td>
+                        <td>Creciente</td>
+                    </tr>
+                    <tr>
+                        <td>Angular</td>
+                        <td>Framework completo</td>
+                        <td>Alta</td>
+                        <td>Alto</td>
+                        <td>Completo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="backend">
+            <h2>Desarrollo Backend</h2>
+            
+            <div class="highlight-box">
+                <h4>🔧 Backend: El Motor de la Aplicación</h4>
+                <p>El backend maneja la lógica de negocio, seguridad, bases de datos, autenticación y servicios que alimentan la aplicación frontend.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Node.js y JavaScript</h3>
+                    <ul>
+                        <li>Express.js para servidores web</li>
+                        <li>NPM y gestión de dependencias</li>
+                        <li>Event loop y programación asíncrona</li>
+                        <li>Middleware y routing</li>
+                        <li>Frameworks: Fastify, Koa.js, NestJS</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Python Web Development</h3>
+                    <ul>
+                        <li>Django: Framework full-stack con ORM</li>
+                        <li>Flask: Microframework ligero</li>
+                        <li>FastAPI: APIs modernas con tipado</li>
+                        <li>SQLAlchemy para bases de datos</li>
+                        <li>Celery para tareas asíncronas</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Java Enterprise</h3>
+                    <ul>
+                        <li>Spring Boot y Spring Framework</li>
+                        <li>JPA y Hibernate para persistencia</li>
+                        <li>Servlets y JSP</li>
+                        <li>Maven y Gradle para build</li>
+                        <li>Microservicios con Spring Cloud</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>PHP y Desarrollo Web</h3>
+                    <ul>
+                        <li>Laravel: Framework MVC completo</li>
+                        <li>Symfony: Componentes reutilizables</li>
+                        <li>Composer para gestión de paquetes</li>
+                        <li>PSR standards y buenas prácticas</li>
+                        <li>WordPress y CMS personalizado</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-snippet">
+                <code>
+// Ejemplo de API REST con Express.js
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+// Middleware de autenticación
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.sendStatus(401);
+  
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+// Rutas CRUD
+app.get('/api/users', authenticateToken, async (req, res) => {
+  const users = await User.findAll();
+  res.json(users);
+});
+
+app.post('/api/users', authenticateToken, async (req, res) => {
+  const user = await User.create(req.body);
+  res.status(201).json(user);
+});
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+                </code>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Performance Backend</h4>
+                <div class="formula">Tiempo de Respuesta = Tiempo de Procesamiento + Tiempo de E/O</div>
+                <div class="formula">Throughput = Requests procesados / Tiempo total</div>
+                <div class="formula">Latencia de BD = Tiempo de Consulta + Tiempo de Conexión</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="services">
+            <h2>Servicios Web y APIs</h2>
+            
+            <div class="highlight-box">
+                <h4>🔗 Interoperabilidad y Comunicación</h4>
+                <p>Los servicios web permiten la comunicación entre aplicaciones distribuidas usando estándares como REST, SOAP y GraphQL.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>REST APIs</h3>
+                    <ul>
+                        <li>Principios REST: Stateless, Cacheable, Uniform Interface</li>
+                        <li>Métodos HTTP: GET, POST, PUT, DELETE, PATCH</li>
+                        <li>Códigos de estado HTTP y manejo de errores</li>
+                        <li>Versionado de APIs y documentación</li>
+                        <li>HATEOAS y Richardson Maturity Model</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>GraphQL</h3>
+                    <ul>
+                        <li>Schema y Type System</li>
+                        <li>Queries, Mutations y Subscriptions</li>
+                        <li>Resolvers y Data Sources</li>
+                        <li>Apollo Server y Apollo Client</li>
+                        <li>Federación de esquemas</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>SOAP y Servicios Web</h3>
+                    <ul>
+                        <li>WSDL (Web Services Description Language)</li>
+                        <li>UDDI (Universal Description, Discovery, Integration)</li>
+                        <li>WS-Security y WS-Addressing</li>
+                        <li>Envelope, Header y Body</li>
+                        <li>Binding protocols: HTTP, SMTP, TCP</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>WebSockets y Tiempo Real</h3>
+                    <ul>
+                        <li>Comunicación bidireccional full-duplex</li>
+                        <li>Socket.IO para Node.js</li>
+                        <li>Server-Sent Events (SSE)</li>
+                        <li>WebRTC para comunicación P2P</li>
+                        <li>SignalR para aplicaciones .NET</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Tipo</th>
+                        <th>Formato</th>
+                        <th>Overhead</th>
+                        <th>Uso Típico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>REST</td>
+                        <td>Stateless</td>
+                        <td>JSON/XML</td>
+                        <td>Bajo</td>
+                        <td>APIs web modernas</td>
+                    </tr>
+                    <tr>
+                        <td>GraphQL</td>
+                        <td>Query Language</td>
+                        <td>JSON</td>
+                        <td>Medio</td>
+                        <td>APIs flexibles</td>
+                    </tr>
+                    <tr>
+                        <td>SOAP</td>
+                        <td>Protocol</td>
+                        <td>XML</td>
+                        <td>Alto</td>
+                        <td>Servicios empresariales</td>
+                    </tr>
+                    <tr>
+                        <td>WebSocket</td>
+                        <td>Full-duplex</td>
+                        <td>Binary/Text</td>
+                        <td>Muy bajo</td>
+                        <td>Tiempo real</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="code-snippet">
+                <code>
+// Ejemplo de schema GraphQL
+const typeDefs = `
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    posts: [Post!]!
+  }
+
+  type Post {
+    id: ID!
+    title: String!
+    content: String!
+    author: User!
+    createdAt: String!
+  }
+
+  type Query {
+    users: [User!]!
+    user(id: ID!): User
+    posts(limit: Int, offset: Int): [Post!]!
+  }
+
+  type Mutation {
+    createUser(name: String!, email: String!): User!
+    updateUser(id: ID!, name: String, email: String): User!
+    deleteUser(id: ID!): Boolean!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    users: () => User.findAll(),
+    user: (_, { id }) => User.findById(id),
+    posts: (_, { limit, offset }) => Post.findAll({ limit, offset })
+  },
+  Mutation: {
+    createUser: (_, { name, email }) => User.create({ name, email }),
+    updateUser: (_, { id, ...updates }) => User.update(id, updates),
+    deleteUser: (_, { id }) => User.delete(id)
+  }
+};
+                </code>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de APIs</h4>
+                <div class="formula">Rate Limit = Requests permitidos / Ventana de tiempo</div>
+                <div class="formula">API Latency = Tiempo respuesta - Tiempo red</div>
+                <div class="formula">Error Rate = (Requests fallidos / Total requests) × 100</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exercises">
+            <h2>Ejercicios de Aplicaciones Web</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p style="text-align: center; margin-bottom: 2rem;">Progreso: <span id="progress-text">0/10</span></p>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 1: Cálculo de Throughput del Servidor</h4>
+                    <p>Un servidor web procesa 2400 requests en 4 minutos. ¿Cuál es el throughput en requests por segundo?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Throughput = Total Requests / Tiempo (segundos)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise1" value="a"> a) 10 req/s</label>
+                        <label><input type="radio" name="exercise1" value="b"> b) 10.5 req/s</label>
+                        <label><input type="radio" name="exercise1" value="c"> c) 10 req/s</label>
+                        <label><input type="radio" name="exercise1" value="d"> d) 12 req/s</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(1, 'c', 'Throughput = 2400 requests / (4 × 60 segundos) = 2400 / 240 = 10 requests por segundo.')">Verificar Respuesta</button>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 2: Tiempo de Carga de Recursos</h4>
+                    <p>Una página web tiene 8 archivos CSS (50KB cada uno), 12 imágenes (200KB cada una) y 6 archivos JS (100KB cada uno). ¿Cuál es el tamaño total en MB?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Tamaño Total = Σ(Cantidad × Tamaño individual)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise2" value="a"> a) 3.4 MB</label>
+                        <label><input type="radio" name="exercise2" value="b"> b) 3.6 MB</label>
+                        <label><input type="radio" name="exercise2" value="c"> c) 3.5 MB</label>
+                        <label><input type="radio" name="exercise2" value="d"> d) 3.8 MB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(2, 'c', 'CSS: 8×50KB=400KB, Imágenes: 12×200KB=2400KB, JS: 6×100KB=600KB. Total: 3400KB = 3.4MB ≈ 3.5MB.')">Verificar Respuesta</button>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 3: Cálculo de Rate Limiting</h4>
+                    <p>Una API permite 1000 requests por hora por usuario. Un usuario ha hecho 750 requests en 45 minutos. ¿Cuántos requests puede hacer en los próximos 15 minutos?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Requests Disponibles = Límite - Requests Usados</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise3" value="a"> a) 200 requests</label>
+                        <label><input type="radio" name="exercise3" value="b"> b) 250 requests</label>
+                        <label><input type="radio" name="exercise3" value="c"> c) 150 requests</label>
+                        <label><input type="radio" name="exercise3" value="d"> d) 300 requests</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(3, 'b', 'Requests disponibles = 1000 - 750 = 250 requests. El rate limit se aplica por hora completa.')">Verificar Respuesta</button>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 4: Optimización de Bundle JavaScript</h4>
+                    <p>Un bundle JS inicial pesa 2.5MB. Tras code splitting se divide en: chunk principal (800KB), chunk vendor (1.2MB) y 3 chunks lazy (200KB cada uno). ¿Cuál es la reducción del bundle inicial?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Bundle Inicial = Chunk Principal + Chunk Vendor</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise4" value="a"> a) 500KB</label>
+                        <label><input type="radio" name="exercise4" value="b"> b) 600KB</label>
+                        <label><input type="radio" name="exercise4" value="c"> c) 700KB</label>
+                        <label><input type="radio" name="exercise4" value="d"> d) 400KB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(4, 'a', 'Bundle inicial tras splitting = 800KB + 1200KB = 2000KB. Reducción = 2500KB - 2000KB = 500KB.')">Verificar Respuesta</button>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 5: Cálculo de CDN Savings</h4>
+                    <p>Un servidor maneja 10,000 requests/día de archivos estáticos (ancho de banda: 500MB/día). Con CDN se reduce el tráfico en 80%. Si el coste por GB es $0.10, ¿cuál es el ahorro mensual?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Ahorro = Ancho Banda × % Reducción × Días × Coste/GB</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise4" value="a"> a) $12.00</label>
+                        <label><input type="radio" name="exercise5" value="b"> b) $12.40</label>
+                        <label><input type="radio" name="exercise5" value="c"> c) $12.80</label>
+                        <label><input type="radio" name="exercise5" value="d"> d) $11.60</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(5, 'a', 'Ahorro diario = 0.5GB × 0.8 × $0.10 = $0.04. Ahorro mensual = $0.04 × 30 = $12.00.')">Verificar Respuesta</button>
+                    <div id="feedback5" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 6: Performance Budget</h4>
+                    <p>Una página tiene un presupuesto de 2 segundos para FCP. Los archivos tardan: HTML (200ms), CSS (300ms), JS crítico (800ms), fuentes (400ms). ¿Se cumple el presupuesto?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">FCP = max(HTML + CSS, HTML + JS crítico, HTML + Fuentes)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise6" value="a"> a) No, 1.0s de exceso</label>
+                        <label><input type="radio" name="exercise6" value="b"> b) Sí, con 1.0s de margen</label>
+                        <label><input type="radio" name="exercise6" value="c"> c) No, 0.2s de exceso</label>
+                        <label><input type="radio" name="exercise6" value="d"> d) Sí, con 0.8s de margen</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(6, 'b', 'FCP = max(500ms, 1000ms, 600ms) = 1000ms = 1.0s. Presupuesto: 2.0s. Margen = 1.0s.')">Verificar Respuesta</button>
+                    <div id="feedback6" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 7: Conexiones HTTP/2</h4>
+                    <p>Una página necesita cargar 20 recursos. Con HTTP/1.1 (máx 6 conexiones paralelas) vs HTTP/2 (multiplexing). Si cada recurso tarda 100ms, ¿cuál es la mejora de tiempo con HTTP/2?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">HTTP/1.1 = ⌈Recursos/Conexiones⌉ × Tiempo por recurso</div>
+                        <div class="formula">HTTP/2 = Tiempo por recurso (paralelo completo)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise7" value="a"> a) 200ms mejora</label>
+                        <label><input type="radio" name="exercise7" value="b"> b) 250ms mejora</label>
+                        <label><input type="radio" name="exercise7" value="c"> c) 233ms mejora</label>
+                        <label><input type="radio" name="exercise7" value="d"> d) 300ms mejora</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(7, 'c', 'HTTP/1.1: ⌈20/6⌉ = 4 rounds × 100ms = 400ms. HTTP/2: 100ms. Mejora = 333ms - 100ms = 233ms.')">Verificar Respuesta</button>
+                    <div id="feedback7" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 8: Base de Datos - Pool de Conexiones</h4>
+                    <p>Un pool tiene 10 conexiones BD. Cada query tarda 50ms. Si llegan 25 requests simultáneos, ¿cuál es el tiempo total para procesar todas?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Tiempo Total = ⌈Requests/Pool Size⌉ × Tiempo por Query</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise8" value="a"> a) 150ms</label>
+                        <label><input type="radio" name="exercise8" value="b"> b) 125ms</label>
+                        <label><input type="radio" name="exercise8" value="c"> c) 100ms</label>
+                        <label><input type="radio" name="exercise8" value="d"> d) 200ms</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(8, 'a', 'Rounds necesarios = ⌈25/10⌉ = 3. Tiempo total = 3 × 50ms = 150ms.')">Verificar Respuesta</button>
+                    <div id="feedback8" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 9: API Caching - Hit Rate</h4>
+                    <p>Una API recibe 1000 requests. El cache tiene 750 hits y 250 misses. Cada hit tarda 10ms y cada miss 80ms. ¿Cuál es el tiempo promedio de respuesta?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Tiempo Promedio = (Hits × T_hit + Misses × T_miss) / Total</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise9" value="a"> a) 25.5ms</label>
+                        <label><input type="radio" name="exercise9" value="b"> b) 27.5ms</label>
+                        <label><input type="radio" name="exercise9" value="c"> c) 30.0ms</label>
+                        <label><input type="radio" name="exercise9" value="d"> d) 32.5ms</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(9, 'b', 'Tiempo promedio = (750×10ms + 250×80ms) / 1000 = (7500 + 20000) / 1000 = 27.5ms.')">Verificar Respuesta</button>
+                    <div id="feedback9" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 10: WebSocket vs HTTP Overhead</h4>
+                    <p>Una aplicación envía 100 mensajes de 50 bytes cada uno. HTTP añade 500 bytes de headers por request. WebSocket añade solo 2 bytes por mensaje tras la conexión inicial. ¿Cuál es la reducción de overhead?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Overhead HTTP = Mensajes × Headers por mensaje</div>
+                        <div class="formula">Overhead WS = Mensajes × Headers por mensaje WS</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise10" value="a"> a) 49.6KB</label>
+                        <label><input type="radio" name="exercise10" value="b"> b) 49.8KB</label>
+                        <label><input type="radio" name="exercise10" value="c"> c) 48.8KB</label>
+                        <label><input type="radio" name="exercise10" value="d"> d) 50.2KB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(10, 'b', 'HTTP overhead: 100×500B = 50KB. WS overhead: 100×2B = 0.2KB. Reducción = 50KB - 0.2KB = 49.8KB.')">Verificar Respuesta</button>
+                    <div id="feedback10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="resources">
+            <h2>Recursos y Referencias</h2>
+            
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>📚 Documentación Oficial</h3>
+                    <ul>
+                        <li>MDN Web Docs (Mozilla)</li>
+                        <li>React Documentation</li>
+                        <li>Node.js API Documentation</li>
+                        <li>W3C Specifications</li>
+                        <li>Can I Use (Compatibility)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🛠️ Herramientas de Desarrollo</h3>
+                    <ul>
+                        <li>Chrome DevTools</li>
+                        <li>Visual Studio Code</li>
+                        <li>Postman/Insomnia (APIs)</li>
+                        <li>Webpack/Vite (Bundlers)</li>
+                        <li>Docker (Contenedores)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>📊 Monitoreo y Analytics</h3>
+                    <ul>
+                        <li>Google Lighthouse</li>
+                        <li>New Relic/DataDog</li>
+                        <li>Google Analytics</li>
+                        <li>Sentry (Error tracking)</li>
+                        <li>LogRocket (Session replay)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎓 Preparación de Examen</h3>
+                    <ul>
+                        <li>Conocer arquitecturas multicapa</li>
+                        <li>Dominar protocolos web (HTTP, WebSocket)</li>
+                        <li>Entender frameworks principales</li>
+                        <li>Practicar cálculos de performance</li>
+                        <li>Estudiar patrones de diseño web</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Puntos Clave para el Examen</h4>
+                <ul>
+                    <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript ES6+, frameworks (React, Vue, Angular)</li>
+                    <li><strong>Backend:</strong> Node.js, Python (Django/Flask), Java (Spring), PHP (Laravel)</li>
+                    <li><strong>APIs:</strong> REST principios, GraphQL queries, SOAP estructura, WebSocket ventajas</li>
+                    <li><strong>Performance:</strong> Métricas Core Web Vitals, optimización de bundles, caching</li>
+                    <li><strong>Seguridad:</strong> HTTPS, CORS, CSP, autenticación JWT, validación de entrada</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4>Fórmulas de Performance Web</h4>
+                <div class="formula">FCP = Tiempo primer contenido visible</div>
+                <div class="formula">LCP = Tiempo elemento principal cargado</div>
+                <div class="formula">Throughput = Requests / Tiempo</div>
+                <div class="formula">Cache Hit Rate = Hits / Total Requests</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.add('light-theme');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.innerHTML = '<p>Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+
+            if (selectedAnswer.value === correctAnswer) {
+                feedback.innerHTML = `<p><strong>¡Correcto!</strong> ${explanation}</p>`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `<p><strong>Incorrecto.</strong> ${explanation}</p>`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        });
+
+        // Add click handlers for tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.textContent.toLowerCase()
+                        .replace('vista general', 'overview')
+                        .replace('frontend', 'frontend')
+                        .replace('backend', 'backend')
+                        .replace('servicios web', 'services')
+                        .replace('ejercicios', 'exercises')
+                        .replace('recursos', 'resources');
+                    showTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

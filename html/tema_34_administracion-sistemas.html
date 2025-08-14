@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 34: Administración de Sistemas</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #1a1a1a;
+            --surface-color: #2c2c2c;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        .light-theme {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --surface-color: #f8f9fa;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .tab.active {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .content-card {
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .content-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .content-card li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 0 15px 15px 0;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-box h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .exercise-container {
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-container:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+        }
+
+        .exercise h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .exercise-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .exercise-options label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-options label:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .exercise-options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--secondary-color);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, var(--surface-color), var(--background-color));
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+                margin: 2px 0;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .exercise-options {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .command-box {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .command-box code {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .process-steps {
+            counter-reset: step-counter;
+        }
+
+        .process-step {
+            counter-increment: step-counter;
+            position: relative;
+            padding: 1rem 1rem 1rem 3rem;
+            margin: 1rem 0;
+            background: var(--surface-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .process-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .monitoring-item {
+            background: var(--surface-color);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .monitoring-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .monitoring-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 34: Administración de Sistemas</h1>
+            <p>Sistemas Operativos y Bases de Datos</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Vista General</button>
+            <button class="tab" onclick="showTab('os-admin')">Admin SO</button>
+            <button class="tab" onclick="showTab('db-admin')">Admin BD</button>
+            <button class="tab" onclick="showTab('monitoring')">Monitoreo</button>
+            <button class="tab" onclick="showTab('exercises')">Ejercicios</button>
+            <button class="tab" onclick="showTab('resources')">Recursos</button>
+        </nav>
+
+        <main class="tab-content active" id="overview">
+            <h2>Vista General: Administración de Sistemas</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">SO Principales</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">SGBD Populares</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Disponibilidad</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">SLA Objetivo</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Administración de Sistemas Operativos</h3>
+                    <ul>
+                        <li>Gestión de usuarios y permisos</li>
+                        <li>Configuración y mantenimiento del sistema</li>
+                        <li>Instalación y actualización de software</li>
+                        <li>Monitoreo de recursos y rendimiento</li>
+                        <li>Backup y recuperación de datos</li>
+                        <li>Configuración de servicios y demonios</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Administración de Bases de Datos</h3>
+                    <ul>
+                        <li>Instalación y configuración de SGBD</li>
+                        <li>Gestión de usuarios y privilegios</li>
+                        <li>Optimización de consultas y rendimiento</li>
+                        <li>Backup, restore y recuperación</li>
+                        <li>Monitoreo y tuning de bases de datos</li>
+                        <li>Replicación y alta disponibilidad</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Responsabilidades del Administrador</h3>
+                    <ul>
+                        <li>Planificación de capacidad y escalabilidad</li>
+                        <li>Implementación de políticas de seguridad</li>
+                        <li>Documentación de procedimientos</li>
+                        <li>Gestión de incidentes y resolución de problemas</li>
+                        <li>Automatización de tareas repetitivas</li>
+                        <li>Cumplimiento de normativas y auditorías</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Herramientas y Tecnologías</h3>
+                    <ul>
+                        <li>Scripts de automatización (Bash, PowerShell, Python)</li>
+                        <li>Herramientas de configuración (Ansible, Puppet, Chef)</li>
+                        <li>Sistemas de monitoreo (Nagios, Zabbix, Prometheus)</li>
+                        <li>Virtualización y contenedores (Docker, Kubernetes)</li>
+                        <li>Herramientas de backup (Bacula, Veeam, rsync)</li>
+                        <li>Sistemas de logs (ELK Stack, Splunk)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🔧 Funciones Críticas del Administrador de Sistemas</h4>
+                <p>El administrador de sistemas es responsable de mantener la infraestructura IT funcionando de manera óptima, segura y eficiente. Esto incluye tanto los sistemas operativos como las bases de datos, garantizando alta disponibilidad, rendimiento adecuado, y cumplimiento de las políticas de seguridad y backup.</p>
+            </div>
+
+            <div class="monitoring-grid">
+                <div class="monitoring-item">
+                    <div class="monitoring-value">CPU</div>
+                    <div class="monitoring-label">Utilización < 80%</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">RAM</div>
+                    <div class="monitoring-label">Uso < 85%</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">Disco</div>
+                    <div class="monitoring-label">Espacio < 90%</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">Red</div>
+                    <div class="monitoring-label">Latencia < 100ms</div>
+                </div>
+            </div>
+        </main>
+
+        <div class="tab-content" id="os-admin">
+            <h2>Administración de Sistemas Operativos</h2>
+            
+            <div class="highlight-box">
+                <h4>🖥️ Gestión Integral del Sistema Operativo</h4>
+                <p>La administración de sistemas operativos abarca desde la instalación inicial hasta el mantenimiento continuo, incluyendo configuración, seguridad, rendimiento y disponibilidad.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Gestión de Usuarios y Permisos</h3>
+                    <ul>
+                        <li>Creación y eliminación de cuentas</li>
+                        <li>Configuración de grupos y roles</li>
+                        <li>Políticas de contraseñas</li>
+                        <li>Control de acceso (ACL)</li>
+                        <li>Auditoría de accesos</li>
+                        <li>Autenticación centralizada (LDAP, AD)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Configuración del Sistema</h3>
+                    <ul>
+                        <li>Parámetros del kernel</li>
+                        <li>Variables de entorno</li>
+                        <li>Servicios y demonios</li>
+                        <li>Configuración de red</li>
+                        <li>Firewall y seguridad</li>
+                        <li>Programación de tareas (cron, Task Scheduler)</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Gestión de Software</h3>
+                    <ul>
+                        <li>Instalación de paquetes</li>
+                        <li>Actualizaciones y parches</li>
+                        <li>Gestión de dependencias</li>
+                        <li>Repositorios de software</li>
+                        <li>Licenciamiento</li>
+                        <li>Rollback y versionado</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Monitoreo y Rendimiento</h3>
+                    <ul>
+                        <li>Métricas de sistema (CPU, RAM, I/O)</li>
+                        <li>Análisis de logs</li>
+                        <li>Alertas y notificaciones</li>
+                        <li>Análisis de tendencias</li>
+                        <li>Optimización de rendimiento</li>
+                        <li>Planificación de capacidad</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <h4>Instalación Inicial</h4>
+                    <p>Particionado, instalación del SO, configuración básica de red, usuarios iniciales y servicios esenciales.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Configuración de Seguridad</h4>
+                    <p>Hardening del sistema, configuración de firewall, políticas de acceso y auditoría.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Implementación de Monitoreo</h4>
+                    <p>Instalación de agentes, configuración de métricas, establecimiento de umbrales y alertas.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Automatización</h4>
+                    <p>Scripts de mantenimiento, backup automático, actualización de parches y tareas rutinarias.</p>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <code>
+# Comandos básicos de administración Linux
+sudo useradd -m -s /bin/bash usuario
+sudo usermod -aG sudo usuario
+sudo systemctl enable servicio
+sudo systemctl start servicio
+sudo crontab -e
+df -h | head -10
+top -bn1 | grep "Cpu(s)"
+free -h
+tail -f /var/log/syslog
+                </code>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Rendimiento del Sistema</h4>
+                <div class="formula">CPU Usage = (Total Time - Idle Time) / Total Time × 100</div>
+                <div class="formula">Memory Usage = Used Memory / Total Memory × 100</div>
+                <div class="formula">Disk I/O = (Read + Write operations) / Time interval</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="db-admin">
+            <h2>Administración de Bases de Datos</h2>
+            
+            <div class="highlight-box">
+                <h4>🗄️ Gestión Completa de SGBD</h4>
+                <p>La administración de bases de datos incluye instalación, configuración, optimización, seguridad, backup y mantenimiento de sistemas de gestión de bases de datos.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Instalación y Configuración</h3>
+                    <ul>
+                        <li>Instalación del SGBD</li>
+                        <li>Configuración de parámetros</li>
+                        <li>Creación de instancias</li>
+                        <li>Configuración de memoria</li>
+                        <li>Configuración de storage</li>
+                        <li>Configuración de red y puertos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Gestión de Usuarios y Seguridad</h3>
+                    <ul>
+                        <li>Creación de usuarios de BD</li>
+                        <li>Asignación de privilegios</li>
+                        <li>Roles y perfiles</li>
+                        <li>Autenticación y autorización</li>
+                        <li>Cifrado de datos</li>
+                        <li>Auditoría de accesos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Backup y Recuperación</h3>
+                    <ul>
+                        <li>Estrategias de backup (Full, Incremental, Diferencial)</li>
+                        <li>Programación de backups</li>
+                        <li>Pruebas de restore</li>
+                        <li>Point-in-time recovery</li>
+                        <li>Backup de logs de transacciones</li>
+                        <li>Disaster recovery plans</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Optimización y Performance</h3>
+                    <ul>
+                        <li>Análisis de queries</li>
+                        <li>Tuning de índices</li>
+                        <li>Optimización de memoria</li>
+                        <li>Estadísticas y planes de ejecución</li>
+                        <li>Particionado de tablas</li>
+                        <li>Monitoreo de rendimiento</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="command-box">
+                <code>
+-- Comandos básicos de administración MySQL
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON database.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
+
+-- Backup y restore
+mysqldump -u root -p database > backup.sql
+mysql -u root -p database < backup.sql
+
+-- Monitoreo de rendimiento
+SHOW PROCESSLIST;
+SHOW ENGINE INNODB STATUS;
+SELECT * FROM INFORMATION_SCHEMA.INNODB_METRICS;
+                </code>
+            </div>
+
+            <div class="formula-box">
+                <h4>Métricas de Performance de BD</h4>
+                <div class="formula">Query Response Time = Parse + Execute + Fetch time</div>
+                <div class="formula">Throughput = Transactions / Time interval</div>
+                <div class="formula">Buffer Hit Ratio = (1 - Physical Reads / Logical Reads) × 100</div>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <h4>Planificación de Backup</h4>
+                    <p>Definir RPO (Recovery Point Objective) y RTO (Recovery Time Objective), frecuencia y tipo de backup.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Configuración de Replicación</h4>
+                    <p>Setup master-slave, configuración de logs binarios, sincronización inicial de datos.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Monitoreo Continuo</h4>
+                    <p>Configuración de alertas, métricas de rendimiento, análisis de slow queries.</p>
+                </div>
+                <div class="process-step">
+                    <h4>Mantenimiento Regular</h4>
+                    <p>Actualización de estadísticas, rebuilding de índices, purga de logs antiguos.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="monitoring">
+            <h2>Monitoreo y Gestión de Rendimiento</h2>
+            
+            <div class="highlight-box">
+                <h4>📊 Monitoreo Proactivo</h4>
+                <p>El monitoreo continuo permite detectar problemas antes de que afecten a los usuarios, optimizar el rendimiento y planificar el crecimiento de la infraestructura.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Métricas del Sistema</h3>
+                    <ul>
+                        <li>CPU: utilización, load average, procesos</li>
+                        <li>Memoria: RAM utilizada, swap, buffers</li>
+                        <li>Disco: espacio libre, I/O, latencia</li>
+                        <li>Red: throughput, paquetes, errores</li>
+                        <li>Temperatura y voltajes</li>
+                        <li>Servicios y procesos activos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Métricas de Base de Datos</h3>
+                    <ul>
+                        <li>Conexiones activas y máximas</li>
+                        <li>Transacciones por segundo</li>
+                        <li>Tiempo de respuesta de queries</li>
+                        <li>Cache hit ratio</li>
+                        <li>Locks y deadlocks</li>
+                        <li>Tamaño de logs y backups</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Herramientas de Monitoreo</h3>
+                    <ul>
+                        <li>Nagios: monitoreo de infraestructura</li>
+                        <li>Zabbix: monitoreo integral</li>
+                        <li>Prometheus + Grafana: métricas y visualización</li>
+                        <li>ELK Stack: análisis de logs</li>
+                        <li>New Relic: APM y monitoreo</li>
+                        <li>PRTG: monitoreo de red</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Alertas y Notifications</h3>
+                    <ul>
+                        <li>Umbrales críticos y warning</li>
+                        <li>Escalado de alertas</li>
+                        <li>Notificaciones por email, SMS, Slack</li>
+                        <li>Supresión de alertas duplicadas</li>
+                        <li>Documentación de incidentes</li>
+                        <li>Métricas de disponibilidad (SLA)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="monitoring-grid">
+                <div class="monitoring-item">
+                    <div class="monitoring-value">99.9%</div>
+                    <div class="monitoring-label">Uptime Target</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">&lt; 100ms</div>
+                    <div class="monitoring-label">Response Time</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">5min</div>
+                    <div class="monitoring-label">MTTR Target</div>
+                </div>
+                <div class="monitoring-item">
+                    <div class="monitoring-value">720h</div>
+                    <div class="monitoring-label">MTBF Target</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <h4>KPIs de Disponibilidad</h4>
+                <div class="formula">Uptime % = (Total Time - Downtime) / Total Time × 100</div>
+                <div class="formula">MTTR = Total Downtime / Number of Incidents</div>
+                <div class="formula">MTBF = Total Uptime / Number of Failures</div>
+            </div>
+
+            <div class="command-box">
+                <code>
+# Scripts de monitoreo básico
+#!/bin/bash
+# Monitoreo de recursos del sistema
+echo "=== System Resources Monitor ==="
+echo "CPU Usage: $(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)"
+echo "Memory Usage: $(free | grep Mem | awk '{printf "%.1f%%", $3/$2 * 100.0}')"
+echo "Disk Usage: $(df -h / | awk 'NR==2{printf "%s", $5}')"
+echo "Load Average: $(uptime | awk -F'load average:' '{print $2}')"
+echo "Active Connections: $(netstat -an | grep ESTABLISHED | wc -l)"
+                </code>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exercises">
+            <h2>Ejercicios de Administración de Sistemas</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p style="text-align: center; margin-bottom: 2rem;">Progreso: <span id="progress-text">0/10</span></p>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 1: Cálculo de Utilización de CPU</h4>
+                    <p>Un servidor registra los siguientes tiempos en 100 segundos: user=20s, system=15s, idle=60s, wait=5s. ¿Cuál es el porcentaje de utilización de CPU?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">CPU Usage = (Total - Idle) / Total × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise1" value="a"> a) 35%</label>
+                        <label><input type="radio" name="exercise1" value="b"> b) 40%</label>
+                        <label><input type="radio" name="exercise1" value="c"> c) 45%</label>
+                        <label><input type="radio" name="exercise1" value="d"> d) 60%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(1, 'b', 'CPU Usage = (100 - 60) / 100 × 100 = 40%. Solo el tiempo idle no se cuenta como utilización.')">Verificar Respuesta</button>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 2: Planificación de Backup</h4>
+                    <p>Una base de datos de 500GB crece 50GB/semana. El backup full tarda 4 horas y el incremental 30 minutos. ¿Cuántas horas de backup por semana con estrategia semanal full + diarios incrementales?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Tiempo Total = Full backup + (6 × Incremental backups)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise2" value="a"> a) 7 horas</label>
+                        <label><input type="radio" name="exercise2" value="b"> b) 6.5 horas</label>
+                        <label><input type="radio" name="exercise2" value="c"> c) 7.5 horas</label>
+                        <label><input type="radio" name="exercise2" value="d"> d) 8 horas</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(2, 'a', 'Tiempo total = 4 horas (full) + 6 × 0.5 horas (incrementales) = 4 + 3 = 7 horas por semana.')">Verificar Respuesta</button>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 3: Buffer Hit Ratio</h4>
+                    <p>Una base de datos procesa 10,000 lecturas lógicas y 500 lecturas físicas de disco. ¿Cuál es el buffer hit ratio?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Buffer Hit Ratio = (1 - Physical Reads / Logical Reads) × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise3" value="a"> a) 95.0%</label>
+                        <label><input type="radio" name="exercise3" value="b"> b) 94.5%</label>
+                        <label><input type="radio" name="exercise3" value="c"> c) 95.5%</label>
+                        <label><input type="radio" name="exercise3" value="d"> d) 96.0%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(3, 'a', 'Buffer Hit Ratio = (1 - 500/10000) × 100 = (1 - 0.05) × 100 = 95.0%')">Verificar Respuesta</button>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 4: Cálculo de MTTR</h4>
+                    <p>En un mes de 720 horas, un sistema tuvo 6 incidentes con downtimes de: 15min, 30min, 45min, 20min, 10min, 40min. ¿Cuál es el MTTR en minutos?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">MTTR = Total Downtime / Number of Incidents</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise4" value="a"> a) 25 min</label>
+                        <label><input type="radio" name="exercise4" value="b"> b) 26.7 min</label>
+                        <label><input type="radio" name="exercise4" value="c"> c) 27.5 min</label>
+                        <label><input type="radio" name="exercise4" value="d"> d) 30 min</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(4, 'b', 'MTTR = (15+30+45+20+10+40) / 6 = 160 / 6 = 26.7 minutos promedio de recuperación.')">Verificar Respuesta</button>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 5: Capacidad de Almacenamiento</h4>
+                    <p>Un sistema tiene 3 discos RAID 5: 2TB, 2TB, 2TB. ¿Cuál es la capacidad útil disponible después de la redundancia?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">RAID 5 Capacity = (n-1) × Smallest Disk Size</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise5" value="a"> a) 4TB</label>
+                        <label><input type="radio" name="exercise5" value="b"> b) 4.5TB</label>
+                        <label><input type="radio" name="exercise5" value="c"> c) 5TB</label>
+                        <label><input type="radio" name="exercise5" value="d"> d) 6TB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(5, 'a', 'RAID 5 con 3 discos = (3-1) × 2TB = 2 × 2TB = 4TB. Un disco se usa para paridad.')">Verificar Respuesta</button>
+                    <div id="feedback5" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 6: Monitoreo de Memoria</h4>
+                    <p>Un servidor tiene 32GB RAM total. Actualmente usa: Sistema=8GB, Aplicaciones=18GB, Cache=4GB, Libre=2GB. ¿Cuál es el porcentaje de memoria activamente utilizada?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Active Memory = (Sistema + Aplicaciones) / Total × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise6" value="a"> a) 81.25%</label>
+                        <label><input type="radio" name="exercise6" value="b"> b) 87.5%</label>
+                        <label><input type="radio" name="exercise6" value="c"> c) 75%</label>
+                        <label><input type="radio" name="exercise6" value="d"> d) 93.75%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(6, 'a', 'Memory activa = (8+18)/32 × 100 = 26/32 × 100 = 81.25%. Cache no cuenta como uso activo.')">Verificar Respuesta</button>
+                    <div id="feedback6" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 7: SLA y Downtime Permitido</h4>
+                    <p>Un SLA garantiza 99.9% de uptime anual. ¿Cuántas horas de downtime están permitidas en un año de 8760 horas?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Downtime Permitido = Total Hours × (1 - SLA%)</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise7" value="a"> a) 8.76 horas</label>
+                        <label><input type="radio" name="exercise7" value="b"> b) 7.2 horas</label>
+                        <label><input type="radio" name="exercise7" value="c"> c) 4.38 horas</label>
+                        <label><input type="radio" name="exercise7" value="d"> d) 10.5 horas</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(7, 'a', 'Downtime = 8760 × (1 - 0.999) = 8760 × 0.001 = 8.76 horas anuales permitidas.')">Verificar Respuesta</button>
+                    <div id="feedback7" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 8: Throughput de Base de Datos</h4>
+                    <p>Una BD procesa 1200 transacciones en 5 minutos durante pico de carga. ¿Cuál es el throughput en TPS (transacciones por segundo)?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">TPS = Total Transactions / Time in seconds</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise8" value="a"> a) 3 TPS</label>
+                        <label><input type="radio" name="exercise8" value="b"> b) 4 TPS</label>
+                        <label><input type="radio" name="exercise8" value="c"> c) 5 TPS</label>
+                        <label><input type="radio" name="exercise8" value="d"> d) 6 TPS</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(8, 'b', 'TPS = 1200 transacciones / (5 × 60 segundos) = 1200 / 300 = 4 TPS.')">Verificar Respuesta</button>
+                    <div id="feedback8" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 9: Espacio de Logs de Base de Datos</h4>
+                    <p>Los logs de transacciones crecen 2GB/día. Se mantienen 7 días antes del truncate. Si el espacio total de logs es 20GB, ¿hay suficiente espacio?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">Espacio Necesario = Crecimiento diario × Días de retención</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise9" value="a"> a) Sí, sobran 6GB</label>
+                        <label><input type="radio" name="exercise9" value="b"> b) No, faltan 2GB</label>
+                        <label><input type="radio" name="exercise9" value="c"> c) Justo, sin margen</label>
+                        <label><input type="radio" name="exercise9" value="d"> d) Sí, sobran 4GB</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(9, 'a', 'Espacio necesario = 2GB × 7 días = 14GB. Disponible: 20GB. Margen = 20-14 = 6GB.')">Verificar Respuesta</button>
+                    <div id="feedback9" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 10: Eficiencia de Compresión de Backup</h4>
+                    <p>Un backup sin comprimir ocupa 800GB. Con compresión se reduce a 320GB. ¿Cuál es el porcentaje de reducción de espacio?</p>
+                    
+                    <div class="formula-box">
+                        <div class="formula">% Reducción = (Tamaño Original - Tamaño Comprimido) / Tamaño Original × 100</div>
+                    </div>
+                    
+                    <div class="exercise-options">
+                        <label><input type="radio" name="exercise10" value="a"> a) 60%</label>
+                        <label><input type="radio" name="exercise10" value="b"> b) 55%</label>
+                        <label><input type="radio" name="exercise10" value="c"> c) 65%</label>
+                        <label><input type="radio" name="exercise10" value="d"> d) 40%</label>
+                    </div>
+                    <button class="btn-check" onclick="checkAnswer(10, 'a', 'Reducción = (800-320)/800 × 100 = 480/800 × 100 = 60% de reducción de espacio.')">Verificar Respuesta</button>
+                    <div id="feedback10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="resources">
+            <h2>Recursos y Referencias</h2>
+            
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>📚 Documentación Oficial</h3>
+                    <ul>
+                        <li>Red Hat System Administrator's Guide</li>
+                        <li>Microsoft Windows Server Documentation</li>
+                        <li>MySQL/PostgreSQL Administration Guide</li>
+                        <li>Oracle Database Administrator's Guide</li>
+                        <li>Linux System Administrator's Manual</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🛠️ Herramientas Esenciales</h3>
+                    <ul>
+                        <li>Monitoreo: Nagios, Zabbix, Prometheus</li>
+                        <li>Automatización: Ansible, Puppet, Chef</li>
+                        <li>Backup: Veeam, Bacula, rsync</li>
+                        <li>Logs: ELK Stack, Splunk, Fluentd</li>
+                        <li>Virtualización: VMware, Hyper-V, KVM</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>🎓 Certificaciones</h3>
+                    <ul>
+                        <li>Red Hat Certified System Administrator (RHCSA)</li>
+                        <li>Microsoft Certified: Windows Server</li>
+                        <li>Oracle Certified Associate (OCA) DBA</li>
+                        <li>MySQL Database Administrator</li>
+                        <li>CompTIA Server+</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>📊 Best Practices</h3>
+                    <ul>
+                        <li>Documentar todos los procedimientos</li>
+                        <li>Automatizar tareas repetitivas</li>
+                        <li>Implementar monitoreo proactivo</li>
+                        <li>Mantener backups y probar restores</li>
+                        <li>Seguir principios de seguridad</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Puntos Clave para el Examen</h4>
+                <ul>
+                    <li><strong>SO:</strong> Gestión de usuarios, servicios, rendimiento, logs y seguridad</li>
+                    <li><strong>BD:</strong> Instalación, configuración, backup, optimización y monitoreo</li>
+                    <li><strong>Monitoreo:</strong> Métricas clave (CPU, memoria, disco, red), alertas y SLAs</li>
+                    <li><strong>Backup:</strong> Estrategias (full, incremental, diferencial), RPO/RTO</li>
+                    <li><strong>Performance:</strong> Tuning, análisis de cuellos de botella, planificación de capacidad</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4>Fórmulas Clave de Administración</h4>
+                <div class="formula">CPU Usage = (Total - Idle) / Total × 100</div>
+                <div class="formula">MTTR = Total Downtime / Number of Incidents</div>
+                <div class="formula">SLA Uptime = (Total Time - Downtime) / Total Time × 100</div>
+                <div class="formula">Buffer Hit Ratio = (1 - Physical/Logical Reads) × 100</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.classList.add('light-theme');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.classList.remove('light-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.innerHTML = '<p>Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+
+            if (selectedAnswer.value === correctAnswer) {
+                feedback.innerHTML = `<p><strong>¡Correcto!</strong> ${explanation}</p>`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `<p><strong>Incorrecto.</strong> ${explanation}</p>`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        });
+
+        // Add click handlers for tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.textContent.toLowerCase()
+                        .replace('vista general', 'overview')
+                        .replace('admin so', 'os-admin')
+                        .replace('admin bd', 'db-admin')
+                        .replace('monitoreo', 'monitoring')
+                        .replace('ejercicios', 'exercises')
+                        .replace('recursos', 'resources');
+                    showTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

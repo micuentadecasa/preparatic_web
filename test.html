@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 28: Arquitecturas de Desarrollo - Java EE, .NET, Python y Ecosistemas Modernos</title>
+    <style>
+        /* Theme Variables */
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #bdc3c7;
+            --border: #555555;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+            position: relative;
+        }
+
+        .tab:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Add smooth scrolling and animations */
+        body {
+            overflow-x: hidden; /* Prevent horizontal scrollbar when content overflows */
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>⚙️ Arquitecturas de Desarrollo - Java EE, .NET, Python y Ecosistemas Modernos</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="subtitle">Explorando las arquitecturas de desarrollo más populares y sus ecosistemas asociados.</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📋 Visión General</button>
+            <button class="tab" onclick="showTab('javaee')">☕ Java EE</button>
+            <button class="tab" onclick="showTab('dotnet')">💻 .NET</button>
+            <button class="tab" onclick="showTab('python')">🐍 Python y Ecosistemas</button>
+            <button class="tab" onclick="showTab('comparison')">📊 Comparación</button>
+        </div>
+
+        <div id="overview" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>Arquitecturas de Desarrollo:</strong> Un conjunto de patrones y tecnologías que definen la estructura de un sistema de software.
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div>Principales Arquitecturas</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20+</span>
+                    <div>Tecnologías Asociadas</div>
+                </div>
+            </stats-grid>
+
+            <div class="card">
+                <h3>🎯 Objetivos Principales</h3>
+                <ul>
+                    <li>Escalabilidad</li>
+                    <li>Mantenibilidad</li>
+                    <li>Seguridad</li>
+                    <li>Integración Continua</li>
+                </ul>
+            </div>
+
+            <div class="process-card">
+                <h3>☕ Java EE</h3>
+                <p>Un conjunto de estándares para el desarrollo de aplicaciones empresariales en Java.</p>
+
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>Servlets y JSP</h4>
+                        <ul>
+                            <li>Lógica de negocio</li>
+                            <li>Presentación de datos</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>EJB (Enterprise JavaBeans)</h4>
+                        <ul>
+                            <li>Lógica de negocio compleja</li>
+                            <li>Persistencia de datos</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+        </div>
+
+        <div id="javaee" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>Java EE:</strong> Un conjunto de estándares para el desarrollo de aplicaciones empresariales en Java.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>☕ Componentes Clave</h3>
+                    <ul>
+                        <li>Servlets</li>
+                        <li>JSPs</li>
+                        <li>EJB</li>
+                        <li>JDBC</li>
+                        <li>JMS (Java Message Service)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>☕ Arquitectura de Java EE</h3>
+                <ul>
+                    <li><strong>Modelo-Vista-Controlador (MVC):</strong> Patrón de diseño para separar la lógica de negocio, la presentación y el manejo de eventos.</li>
+                    <li><strong>Componentes:</strong> Servlets, JSPs, EJBs, JMS, etc.</li>
+                    <li><strong>Ecosistema:</strong>  WebSphere, GlassFish, WildFly</li>
+                </ul>
+
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>Servlets</h4>
+                        <ul>
+                            <li>Manejo de peticiones HTTP</li>
+                            <li>Generación de HTML dinámico</li>
+                        </ul>
+                    </div>
+                    <div class="workflow-step">
+                        <h4>JSPs</h4>
+                        <ul>
+                            <li>HTML embebido en Java</li>
+                            <li>Mayor flexibilidad que Servlets</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+        </div>
+
+        <div id="dotnet" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>.NET:</strong> Plataforma de desarrollo de software de Microsoft.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>💻 Arquitecturas Clave</h3>
+                    <ul>
+                        <li><strong>Modelo-Vista-Controlador (MVC):</strong> Similar a Java EE</li>
+                        <li><strong>Microservices:</strong>  Arquitectura basada en servicios independientes.</li>
+                        <li><strong>Web API:</strong> Servicios web basados en HTTP.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>💻 Arquitecturas Clave .NET</h3>
+                <ul>
+                    <li><strong>ASP.NET MVC:</strong>  Framework para construir aplicaciones web basadas en el patrón MVC</li>
+                    <li><strong>ASP.NET Web Forms:</strong>  Framework basado en controles de formulario visuales</li>
+                    <li><strong>.NET Core/5+:</strong>  Plataforma multiplataforma, basada en contenedores</li>
+                </ul>
+
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>ASP.NET MVC</h4>
+                        <ul>
+                            <li>Separación de responsabilidades</li>
+                            <li>Controladores, vistas y modelos</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+        </div>
+
+        <div id="python" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>Python y Ecosistemas:</strong> Un entorno de desarrollo versátil con múltiples frameworks.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🐍 Frameworks Populares</h3>
+                    <ul>
+                        <li><strong>Django:</strong>  Framework de alto nivel, "batteries included".</li>
+                        <li><strong>Flask:</strong> Microframework, ideal para APIs y aplicaciones pequeñas.</li>
+                        <li><strong>FastAPI:</strong>  Framework moderno, rápido y fácil de usar para APIs.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="process-card">
+                <h3>🐍 Arquitecturas Python</h3>
+                <ul>
+                    <li><strong>Microservices:</strong>  Servicios independientes, fáciles de desplegar.</li>
+                    <li><strong>API-First:</strong>  Desarrollo centrado en APIs RESTful.</li>
+                    <li><strong>Event-Driven:</strong>  Arquitectura basada en eventos y colas de mensajes.</li>
+                </ul>
+
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <h4>Flask</h4>
+                        <ul>
+                            <li>Fácil de aprender</li>
+                            <li>Flexible</li>
+                            <li>Ideal para APIs</li>
+                        </ul>
+                    </div>
+                </workflow-diagram>
+            </div>
+
+        </div>
+
+        <div id="comparison" class="tab-content hidden">
+            <div class="alert alert-info">
+                <strong>Arquitecturas de Desarrollo:</strong> Un conjunto de patrones y tecnologías que definen la estructura de un sistema de software.
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Comparación</h3>
+                    <ul>
+                        <li><strong>Java EE:</strong> Madurez, escalabilidad, seguridad (ideal para aplicaciones empresariales).</li>
+                        <li><strong>.NET:</strong> Integración Microsoft, facilidad de uso (ideal para aplicaciones Windows).</li>
+                        <li><strong>Python:</strong> Flexibilidad, comunidad activa (ideal para prototipos rápidos y APIs).</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+
+            if (savedTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card, .process-card, .methodology-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

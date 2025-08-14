@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 32 - Accesibilidad y UX</title>
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #404040;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #6c63ff;
+            --accent-hover: #5a52d5;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .nav-tab {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .principle-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+        }
+
+        .principle-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .guidelines-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .guidelines-table th,
+        .guidelines-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .guidelines-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .guidelines-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .exercise-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .exercise-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exercise-option:hover {
+            background: var(--accent-color)20;
+            border-color: var(--accent-color);
+        }
+
+        .exercise-option input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+
+        .exercise-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .exercise-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: var(--success-color)20;
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-incorrect {
+            background: var(--error-color)20;
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .list-styled li::before {
+            content: "▶";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .accessibility-levels {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .level-a { border-left: 4px solid var(--success-color); }
+        .level-aa { border-left: 4px solid var(--warning-color); }
+        .level-aaa { border-left: 4px solid var(--error-color); }
+
+        .ux-process {
+            background: linear-gradient(135deg, var(--success-color)10, var(--accent-color)10);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--accent-color)30;
+        }
+
+        .disability-card {
+            background: linear-gradient(135deg, var(--warning-color)15, var(--success-color)15);
+            border-left: 4px solid var(--warning-color);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .disability-card h4 {
+            color: var(--warning-color);
+            margin-bottom: 10px;
+        }
+
+        .code-example {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                border-radius: 8px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .principle-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Tema 32: Accesibilidad y UX</h1>
+            <p>Accesibilidad, diseño universal, usabilidad y experiencia de usuario en tecnologías digitales</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(event, 'overview')">Visión General</button>
+            <button class="nav-tab" onclick="showTab(event, 'accessibility')">Accesibilidad</button>
+            <button class="nav-tab" onclick="showTab(event, 'usability')">Usabilidad</button>
+            <button class="nav-tab" onclick="showTab(event, 'ux-design')">Diseño UX</button>
+            <button class="nav-tab" onclick="showTab(event, 'guidelines')">Normativas</button>
+            <button class="nav-tab" onclick="showTab(event, 'exercises')">Ejercicios</button>
+            <button class="nav-tab" onclick="showTab(event, 'resources')">Recursos</button>
+        </nav>
+
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Introducción a Accesibilidad y UX</h2>
+                <p>La accesibilidad y experiencia de usuario (UX) son fundamentales para crear tecnologías inclusivas que sirvan a todas las personas, independientemente de sus capacidades o limitaciones. El diseño universal busca crear productos usables por el mayor número de personas posible.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">15%</span>
+                        <span class="stat-label">De la población mundial tiene algún tipo de discapacidad</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">13</span>
+                        <span class="stat-label">Pautas WCAG 2.1 para accesibilidad web</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Principios fundamentales de usabilidad</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7±2</span>
+                        <span class="stat-label">Regla de Miller para memoria a corto plazo</span>
+                    </div>
+                </div>
+
+                <h3>Conceptos Fundamentales</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>Accesibilidad</h4>
+                        <p>La práctica de hacer que los productos, servicios y entornos sean utilizables por personas con la más amplia gama de habilidades.</p>
+                        <ul class="list-styled">
+                            <li>Eliminación de barreras</li>
+                            <li>Tecnologías asistivas</li>
+                            <li>Estándares WCAG</li>
+                            <li>Diseño inclusivo</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Usabilidad</h4>
+                        <p>La facilidad con la que los usuarios pueden aprender a usar, navegar e interactuar con un sistema.</p>
+                        <ul class="list-styled">
+                            <li>Facilidad de aprendizaje</li>
+                            <li>Eficiencia de uso</li>
+                            <li>Memorabilidad</li>
+                            <li>Tolerancia a errores</li>
+                            <li>Satisfacción subjetiva</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Experiencia de Usuario (UX)</h4>
+                        <p>La percepción y respuesta de una persona resultante del uso o uso anticipado de un producto, sistema o servicio.</p>
+                        <ul class="list-styled">
+                            <li>Investigación de usuarios</li>
+                            <li>Diseño centrado en el usuario</li>
+                            <li>Prototipado y testing</li>
+                            <li>Iteración continua</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Diseño Universal</h4>
+                        <p>El diseño de productos y entornos para ser utilizables por todas las personas, sin necesidad de adaptación.</p>
+                        <ul class="list-styled">
+                            <li>Uso equitativo</li>
+                            <li>Flexibilidad en el uso</li>
+                            <li>Uso simple e intuitivo</li>
+                            <li>Información perceptible</li>
+                            <li>Tolerancia al error</li>
+                            <li>Bajo esfuerzo físico</li>
+                            <li>Tamaño apropiado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Impacto de la Accesibilidad y UX</h3>
+                <div class="ux-process">
+                    <h4>Beneficios Organizacionales</h4>
+                    <p><strong>Mercado Ampliado:</strong> Acceso a usuarios con discapacidades (15% de la población)</p>
+                    <p><strong>Mejora General:</strong> Las mejoras de accesibilidad benefician a todos los usuarios</p>
+                    <p><strong>Cumplimiento Legal:</strong> Conformidad con regulaciones de accesibilidad</p>
+                    <p><strong>ROI Positivo:</strong> Reducción de costos de soporte y mayor satisfacción</p>
+                    <p><strong>Reputación:</strong> Imagen corporativa responsable e inclusiva</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Principios Clave del Diseño Inclusivo</h4>
+                    <p><strong>Reconocer Diversidad:</strong> Los usuarios tienen diferentes necesidades, preferencias y contextos.</p>
+                    <p><strong>Exclusión como Fuente de Aprendizaje:</strong> Identificar barreras para crear mejores soluciones.</p>
+                    <p><strong>Resolver para Uno, Extender a Muchos:</strong> Soluciones específicas benefician grupos amplios.</p>
+                    <p><strong>Aprovechar Variabilidad Humana:</strong> La diversidad impulsa la innovación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="accessibility" class="tab-content">
+            <div class="card">
+                <h2>Accesibilidad Digital</h2>
+                <p>La accesibilidad digital se enfoca en hacer que la tecnología sea utilizable por personas con diversas discapacidades, siguiendo estándares internacionales y mejores prácticas.</p>
+
+                <h3>Tipos de Discapacidades y Consideraciones</h3>
+                <div class="principle-grid">
+                    <div class="disability-card">
+                        <h4>Discapacidades Visuales</h4>
+                        <p><strong>Población:</strong> Ceguera, baja visión, daltonismo</p>
+                        <p><strong>Tecnologías Asistivas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Lectores de pantalla (NVDA, JAWS, VoiceOver)</li>
+                            <li>Magnificadores de pantalla</li>
+                            <li>Displays braille</li>
+                            <li>Software de reconocimiento de voz</li>
+                        </ul>
+                        <p><strong>Consideraciones de Diseño:</strong></p>
+                        <ul class="list-styled">
+                            <li>Texto alternativo para imágenes</li>
+                            <li>Contraste de color adecuado (4.5:1 para AA)</li>
+                            <li>Navegación por teclado</li>
+                            <li>Estructura semántica HTML</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Discapacidades Auditivas</h4>
+                        <p><strong>Población:</strong> Sordera, hipoacusia, trastornos del procesamiento auditivo</p>
+                        <p><strong>Tecnologías Asistivas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Subtítulos y transcripciones</li>
+                            <li>Intérpretes de lengua de señas</li>
+                            <li>Alertas visuales</li>
+                            <li>Amplificadores auditivos</li>
+                        </ul>
+                        <p><strong>Consideraciones de Diseño:</strong></p>
+                        <ul class="list-styled">
+                            <li>Subtítulos para contenido audiovisual</li>
+                            <li>Transcripciones de audio</li>
+                            <li>Señales visuales para alertas sonoras</li>
+                            <li>Lenguaje claro y simple</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Discapacidades Motoras</h4>
+                        <p><strong>Población:</strong> Limitaciones de movilidad, fuerza o destreza</p>
+                        <p><strong>Tecnologías Asistivas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Teclados especializados</li>
+                            <li>Software de control por voz</li>
+                            <li>Dispositivos de seguimiento ocular</li>
+                            <li>Switches y botones adaptativos</li>
+                        </ul>
+                        <p><strong>Consideraciones de Diseño:</strong></p>
+                        <ul class="list-styled">
+                            <li>Navegación completa por teclado</li>
+                            <li>Objetivos táctiles grandes (44x44 píxeles mínimo)</li>
+                            <li>Tiempo suficiente para completar tareas</li>
+                            <li>Evitar gestos complejos</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Discapacidades Cognitivas</h4>
+                        <p><strong>Población:</strong> Dislexia, TDAH, autismo, demencia</p>
+                        <p><strong>Tecnologías Asistivas:</strong></p>
+                        <ul class="list-styled">
+                            <li>Software de lectura</li>
+                            <li>Organizadores visuales</li>
+                            <li>Recordatorios y alertas</li>
+                            <li>Simplificadores de texto</li>
+                        </ul>
+                        <p><strong>Consideraciones de Diseño:</strong></p>
+                        <ul class="list-styled">
+                            <li>Diseño simple y consistente</li>
+                            <li>Navegación clara y predecible</li>
+                            <li>Evitar distracciones innecesarias</li>
+                            <li>Proporcionar ayuda contextual</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Principios WCAG 2.1</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>1. Perceptible</h4>
+                        <p>La información debe ser presentada de formas que los usuarios puedan percibir.</p>
+                        <ul class="list-styled">
+                            <li><strong>1.1 Alternativas de texto:</strong> Para contenido no textual</li>
+                            <li><strong>1.2 Medios temporizados:</strong> Subtítulos y audiodescripciones</li>
+                            <li><strong>1.3 Adaptable:</strong> Contenido que se puede presentar de diferentes formas</li>
+                            <li><strong>1.4 Distinguible:</strong> Facilitar la percepción del contenido</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>2. Operable</h4>
+                        <p>Los componentes de la interfaz deben ser operables por todos los usuarios.</p>
+                        <ul class="list-styled">
+                            <li><strong>2.1 Accesible por teclado:</strong> Funcionalidad disponible desde teclado</li>
+                            <li><strong>2.2 Tiempo suficiente:</strong> Tiempo para leer y usar contenido</li>
+                            <li><strong>2.3 Convulsiones:</strong> No causar convulsiones</li>
+                            <li><strong>2.4 Navegable:</strong> Ayudar a navegar y encontrar contenido</li>
+                            <li><strong>2.5 Modalidades de entrada:</strong> Funciones operables de varias formas</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>3. Comprensible</h4>
+                        <p>La información y operación de la interfaz deben ser comprensibles.</p>
+                        <ul class="list-styled">
+                            <li><strong>3.1 Legible:</strong> Texto legible y comprensible</li>
+                            <li><strong>3.2 Predecible:</strong> Páginas que aparecen y funcionan de manera predecible</li>
+                            <li><strong>3.3 Entrada de datos:</strong> Ayudar a evitar y corregir errores</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>4. Robusto</h4>
+                        <p>El contenido debe ser lo suficientemente robusto para ser interpretado de forma confiable.</p>
+                        <ul class="list-styled">
+                            <li><strong>4.1 Compatible:</strong> Maximizar compatibilidad con tecnologías asistivas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Niveles de Conformidad WCAG</h3>
+                <div class="accessibility-levels level-a">
+                    <h4>Nivel A - Mínimo</h4>
+                    <p>Nivel básico de accesibilidad. Elimina las principales barreras para algunos usuarios.</p>
+                    <ul class="list-styled">
+                        <li>25 criterios de éxito</li>
+                        <li>Requerimientos fundamentales</li>
+                        <li>Base mínima de accesibilidad</li>
+                    </ul>
+                </div>
+
+                <div class="accessibility-levels level-aa">
+                    <h4>Nivel AA - Estándar</h4>
+                    <p>Nivel recomendado para la mayoría de sitios web. Elimina barreras significativas.</p>
+                    <ul class="list-styled">
+                        <li>13 criterios adicionales (38 total)</li>
+                        <li>Estándar legal en muchos países</li>
+                        <li>Contraste mínimo 4.5:1</li>
+                    </ul>
+                </div>
+
+                <div class="accessibility-levels level-aaa">
+                    <h4>Nivel AAA - Mejorado</h4>
+                    <p>Máximo nivel de accesibilidad. No se recomienda como política general para sitios completos.</p>
+                    <ul class="list-styled">
+                        <li>23 criterios adicionales (61 total)</li>
+                        <li>Para contenido especializado</li>
+                        <li>Contraste mínimo 7:1</li>
+                    </ul>
+                </div>
+
+                <h3>Ejemplos Prácticos de Implementación</h3>
+                <div class="code-example">
+&lt;!-- Ejemplo de texto alternativo --&gt;
+&lt;img src="grafico-ventas.png" alt="Gráfico que muestra aumento del 25% en ventas del Q3 2023"&gt;
+
+&lt;!-- Ejemplo de estructura semántica --&gt;
+&lt;nav aria-label="Navegación principal"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#inicio"&gt;Inicio&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#productos"&gt;Productos&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;!-- Ejemplo de formulario accesible --&gt;
+&lt;label for="email"&gt;Correo electrónico *&lt;/label&gt;
+&lt;input type="email" id="email" name="email" required 
+       aria-describedby="email-error"&gt;
+&lt;div id="email-error" role="alert"&gt;
+  Ingrese un correo electrónico válido
+&lt;/div&gt;
+
+&lt;!-- Ejemplo de skip link --&gt;
+&lt;a href="#main-content" class="skip-link"&gt;Saltar al contenido principal&lt;/a&gt;
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Herramientas de Evaluación de Accesibilidad</h4>
+                    <p><strong>Automatizadas:</strong> axe-core, WAVE, Lighthouse, Pa11y</p>
+                    <p><strong>Manuales:</strong> Lectores de pantalla, navegación por teclado, evaluación de contraste</p>
+                    <p><strong>Usuarios:</strong> Testing con usuarios reales con discapacidades</p>
+                    <p><strong>Nota:</strong> Las herramientas automatizadas solo detectan ~30% de problemas</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="usability" class="tab-content">
+            <div class="card">
+                <h2>Usabilidad de Sistemas</h2>
+                <p>La usabilidad se refiere a la facilidad con la que los usuarios pueden aprender a usar, navegar e interactuar eficientemente con un sistema para lograr sus objetivos.</p>
+
+                <h3>Principios de Usabilidad de Jakob Nielsen</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>1. Facilidad de Aprendizaje</h4>
+                        <p>¿Qué tan fácil es para los usuarios realizar tareas básicas la primera vez que encuentran el diseño?</p>
+                        <ul class="list-styled">
+                            <li>Interfaz intuitiva</li>
+                            <li>Metáforas familiares</li>
+                            <li>Onboarding efectivo</li>
+                            <li>Patrones reconocibles</li>
+                        </ul>
+                        <p><strong>Métrica:</strong> Tiempo hasta primera tarea exitosa</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>2. Eficiencia</h4>
+                        <p>Una vez que aprenden el diseño, ¿qué tan rápido pueden realizar tareas los usuarios?</p>
+                        <ul class="list-styled">
+                            <li>Atajos de teclado</li>
+                            <li>Funciones avanzadas</li>
+                            <li>Automatización</li>
+                            <li>Personalización</li>
+                        </ul>
+                        <p><strong>Métrica:</strong> Tiempo de tarea para usuarios expertos</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>3. Memorabilidad</h4>
+                        <p>¿Qué tan fácil es reestablecer competencia cuando regresan después de no usar el sistema?</p>
+                        <ul class="list-styled">
+                            <li>Consistencia visual</li>
+                            <li>Patrones estándar</li>
+                            <li>Ayuda contextual</li>
+                            <li>Recordatorios visuales</li>
+                        </ul>
+                        <p><strong>Métrica:</strong> Tasa de éxito tras período de no uso</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>4. Errores</h4>
+                        <p>¿Cuántos errores cometen los usuarios, qué tan severos son estos errores, y qué tan fácil se recuperan?</p>
+                        <ul class="list-styled">
+                            <li>Prevención de errores</li>
+                            <li>Mensajes claros</li>
+                            <li>Deshacer/rehacer</li>
+                            <li>Confirmaciones</li>
+                        </ul>
+                        <p><strong>Métrica:</strong> Tasa de errores y tiempo de recuperación</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>5. Satisfacción</h4>
+                        <p>¿Qué tan agradable es usar el diseño?</p>
+                        <ul class="list-styled">
+                            <li>Estética agradable</li>
+                            <li>Feedback positivo</li>
+                            <li>Fluidez de interacción</li>
+                            <li>Reducción de fricción</li>
+                        </ul>
+                        <p><strong>Métrica:</strong> Encuestas de satisfacción (SUS, CSAT)</p>
+                    </div>
+                </div>
+
+                <h3>Heurísticas de Usabilidad de Nielsen</h3>
+                <table class="guidelines-table">
+                    <thead>
+                        <tr>
+                            <th>Heurística</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo de Violación</th>
+                            <th>Solución</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Visibilidad del estado del sistema</td>
+                            <td>El sistema debe mantener informados a los usuarios sobre lo que está ocurriendo</td>
+                            <td>Loading sin indicador de progreso</td>
+                            <td>Barras de progreso, spinners, mensajes de estado</td>
+                        </tr>
+                        <tr>
+                            <td>Concordancia entre sistema y mundo real</td>
+                            <td>Usar lenguaje familiar al usuario</td>
+                            <td>Jerga técnica en interfaz de usuario</td>
+                            <td>Terminología del dominio del usuario</td>
+                        </tr>
+                        <tr>
+                            <td>Control y libertad del usuario</td>
+                            <td>Proporcionar salidas de emergencia claramente marcadas</td>
+                            <td>No poder cancelar una acción</td>
+                            <td>Botones de cancelar, deshacer, salir</td>
+                        </tr>
+                        <tr>
+                            <td>Consistencia y estándares</td>
+                            <td>Seguir convenciones de plataforma</td>
+                            <td>Iconos con significados diferentes</td>
+                            <td>Sistema de diseño coherente</td>
+                        </tr>
+                        <tr>
+                            <td>Prevención de errores</td>
+                            <td>Diseño cuidadoso que previene problemas</td>
+                            <td>Botones destructivos sin confirmación</td>
+                            <td>Validación en tiempo real, confirmaciones</td>
+                        </tr>
+                        <tr>
+                            <td>Reconocimiento antes que memoria</td>
+                            <td>Minimizar carga de memoria del usuario</td>
+                            <td>Comandos que deben ser recordados</td>
+                            <td>Menús, opciones visibles, autocompletar</td>
+                        </tr>
+                        <tr>
+                            <td>Flexibilidad y eficiencia de uso</td>
+                            <td>Acelerar interacción para usuarios expertos</td>
+                            <td>Solo una forma de hacer las tareas</td>
+                            <td>Atajos de teclado, gestos avanzados</td>
+                        </tr>
+                        <tr>
+                            <td>Diseño estético y minimalista</td>
+                            <td>Los diálogos no deben contener información irrelevante</td>
+                            <td>Interfaz recargada de información</td>
+                            <td>Jerarquía visual clara, contenido relevante</td>
+                        </tr>
+                        <tr>
+                            <td>Ayudar a reconocer, diagnosticar y recuperarse de errores</td>
+                            <td>Mensajes de error en lenguaje claro</td>
+                            <td>"Error 404" sin más información</td>
+                            <td>Mensajes explicativos con soluciones</td>
+                        </tr>
+                        <tr>
+                            <td>Ayuda y documentación</td>
+                            <td>Puede ser necesaria información adicional</td>
+                            <td>Manual técnico complejo</td>
+                            <td>Ayuda contextual, FAQs, tutoriales</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Métodos de Evaluación de Usabilidad</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>Testing con Usuarios</h4>
+                        <p>Observación directa de usuarios reales usando el sistema.</p>
+                        <ul class="list-styled">
+                            <li><strong>Moderado:</strong> Facilitador guía la sesión</li>
+                            <li><strong>No moderado:</strong> Usuario trabaja independientemente</li>
+                            <li><strong>Remoto:</strong> Usuario en su ambiente natural</li>
+                            <li><strong>Presencial:</strong> En laboratorio de usabilidad</li>
+                        </ul>
+                        <p><strong>Participantes:</strong> 5-8 usuarios representativos</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Evaluación Heurística</h4>
+                        <p>Inspección sistemática por expertos usando principios reconocidos.</p>
+                        <ul class="list-styled">
+                            <li>3-5 evaluadores expertos</li>
+                            <li>Revisión independiente</li>
+                            <li>Consolidación de hallazgos</li>
+                            <li>Priorización por severidad</li>
+                        </ul>
+                        <p><strong>Ventaja:</strong> Rápido y económico</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Cognitive Walkthrough</h4>
+                        <p>Simulación paso a paso del proceso mental del usuario.</p>
+                        <ul class="list-styled">
+                            <li>Definir tareas críticas</li>
+                            <li>Identificar usuarios objetivo</li>
+                            <li>Simular cada acción</li>
+                            <li>Evaluar facilidad de cada paso</li>
+                        </ul>
+                        <p><strong>Enfoque:</strong> Facilidad de aprendizaje</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Análisis de Analytics</h4>
+                        <p>Análisis de datos de comportamiento de usuarios reales.</p>
+                        <ul class="list-styled">
+                            <li>Mapas de calor</li>
+                            <li>Grabaciones de sesiones</li>
+                            <li>Embudos de conversión</li>
+                            <li>Métricas de abandono</li>
+                        </ul>
+                        <p><strong>Ventaja:</strong> Datos de usuarios reales a gran escala</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Métricas Cuantitativas de Usabilidad</h4>
+                    <p><strong>Tiempo de Tarea:</strong> Tiempo promedio para completar tareas específicas</p>
+                    <p><strong>Tasa de Éxito:</strong> Porcentaje de tareas completadas exitosamente</p>
+                    <p><strong>Tasa de Error:</strong> Número de errores por tarea completada</p>
+                    <p><strong>System Usability Scale (SUS):</strong> Escala estándar de 0-100</p>
+                    <p><strong>Net Promoter Score (NPS):</strong> Probabilidad de recomendación</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="ux-design" class="tab-content">
+            <div class="card">
+                <h2>Diseño de Experiencia de Usuario (UX)</h2>
+                <p>El diseño UX es un proceso iterativo centrado en el usuario que busca crear productos que proporcionen experiencias significativas y relevantes a los usuarios.</p>
+
+                <h3>Proceso de Diseño Centrado en el Usuario</h3>
+                <div class="ux-process">
+                    <h4>Metodología Double Diamond</h4>
+                    <p><strong>Descubrir (Divergir):</strong> Investigación amplia del problema y usuarios</p>
+                    <p><strong>Definir (Converger):</strong> Síntesis de insights y definición del problema</p>
+                    <p><strong>Desarrollar (Divergir):</strong> Ideación y exploración de soluciones</p>
+                    <p><strong>Entregar (Converger):</strong> Prototipado, testing y refinamiento</p>
+                </div>
+
+                <h3>Fases del Proceso UX</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>1. Investigación</h4>
+                        <p>Comprensión profunda de usuarios, necesidades y contexto.</p>
+                        <ul class="list-styled">
+                            <li><strong>Investigación de usuarios:</strong> Entrevistas, encuestas, observación</li>
+                            <li><strong>Análisis competitivo:</strong> Benchmarking y análisis de mercado</li>
+                            <li><strong>Stakeholder interviews:</strong> Requisitos de negocio</li>
+                            <li><strong>Audit de contenido:</strong> Inventario de contenido existente</li>
+                        </ul>
+                        <p><strong>Entregables:</strong> Personas, user journey maps, insights</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>2. Estrategia</h4>
+                        <p>Definición de objetivos, estrategia y plan de producto.</p>
+                        <ul class="list-styled">
+                            <li><strong>Definición del problema:</strong> Problem statements</li>
+                            <li><strong>Objetivos del usuario:</strong> Jobs-to-be-Done</li>
+                            <li><strong>Requisitos funcionales:</strong> Features y funcionalidades</li>
+                            <li><strong>Estrategia de contenido:</strong> Arquitectura de información</li>
+                        </ul>
+                        <p><strong>Entregables:</strong> Product requirements, sitemap, user flows</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>3. Diseño</h4>
+                        <p>Creación de soluciones visuales y de interacción.</p>
+                        <ul class="list-styled">
+                            <li><strong>Sketching:</strong> Exploración rápida de ideas</li>
+                            <li><strong>Wireframing:</strong> Estructura y layout</li>
+                            <li><strong>Prototipado:</strong> Interacciones y flujos</li>
+                            <li><strong>Visual design:</strong> Interfaz visual final</li>
+                        </ul>
+                        <p><strong>Entregables:</strong> Wireframes, prototipos, design system</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>4. Validación</h4>
+                        <p>Testing y validación con usuarios reales.</p>
+                        <ul class="list-styled">
+                            <li><strong>Usability testing:</strong> Testing de prototipos</li>
+                            <li><strong>A/B testing:</strong> Comparación de variantes</li>
+                            <li><strong>Analytics:</strong> Análisis de comportamiento</li>
+                            <li><strong>Feedback loops:</strong> Iteración continua</li>
+                        </ul>
+                        <p><strong>Entregables:</strong> Test reports, recommendations, iterations</p>
+                    </div>
+                </div>
+
+                <h3>Herramientas y Técnicas UX</h3>
+                <table class="guidelines-table">
+                    <thead>
+                        <tr>
+                            <th>Fase</th>
+                            <th>Herramienta/Técnica</th>
+                            <th>Propósito</th>
+                            <th>Cuándo Usar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Investigación</td>
+                            <td>User Personas</td>
+                            <td>Representación de usuarios objetivo</td>
+                            <td>Al inicio del proyecto, después de investigación</td>
+                        </tr>
+                        <tr>
+                            <td>Investigación</td>
+                            <td>Customer Journey Map</td>
+                            <td>Visualizar experiencia completa del usuario</td>
+                            <td>Para entender touchpoints y pain points</td>
+                        </tr>
+                        <tr>
+                            <td>Estrategia</td>
+                            <td>Service Blueprint</td>
+                            <td>Mapear procesos internos y externos</td>
+                            <td>Para servicios complejos con múltiples actores</td>
+                        </tr>
+                        <tr>
+                            <td>Estrategia</td>
+                            <td>Information Architecture</td>
+                            <td>Organizar contenido lógicamente</td>
+                            <td>Antes de diseñar interfaces</td>
+                        </tr>
+                        <tr>
+                            <td>Diseño</td>
+                            <td>Design Sprint</td>
+                            <td>Prototipo rápido en 5 días</td>
+                            <td>Para validar ideas rápidamente</td>
+                        </tr>
+                        <tr>
+                            <td>Diseño</td>
+                            <td>Card Sorting</td>
+                            <td>Entender modelo mental de usuarios</td>
+                            <td>Para organizar navegación y contenido</td>
+                        </tr>
+                        <tr>
+                            <td>Validación</td>
+                            <td>Usability Testing</td>
+                            <td>Evaluar facilidad de uso</td>
+                            <td>Durante diseño y después de implementación</td>
+                        </tr>
+                        <tr>
+                            <td>Validación</td>
+                            <td>Tree Testing</td>
+                            <td>Evaluar navegación y findability</td>
+                            <td>Para validar arquitectura de información</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Principios de Diseño de Interacción</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>Affordances</h4>
+                        <p>Propiedades de un objeto que sugieren cómo puede ser usado.</p>
+                        <ul class="list-styled">
+                            <li>Botones que parecen clickeables</li>
+                            <li>Campos de texto que invitan a escribir</li>
+                            <li>Elementos arrastrables con visual handles</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Feedback</h4>
+                        <p>Información sobre el resultado de una acción.</p>
+                        <ul class="list-styled">
+                            <li>Estados visuales (hover, active, disabled)</li>
+                            <li>Confirmaciones de acciones</li>
+                            <li>Indicadores de progreso</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Mapping</h4>
+                        <p>Relación entre controles y sus efectos.</p>
+                        <ul class="list-styled">
+                            <li>Controles cercanos a elementos que afectan</li>
+                            <li>Metáforas espaciales claras</li>
+                            <li>Agrupación lógica de elementos</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Constraints</h4>
+                        <p>Limitaciones que guían el comportamiento correcto.</p>
+                        <ul class="list-styled">
+                            <li>Campos que solo aceptan números</li>
+                            <li>Fechas que no pueden ser futuras</li>
+                            <li>Botones deshabilitados hasta completar requisitos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Leyes de UX Fundamentales</h4>
+                    <p><strong>Ley de Fitts:</strong> Tiempo para alcanzar un objetivo = f(distancia, tamaño)</p>
+                    <p><strong>Ley de Hick:</strong> Tiempo de decisión aumenta con número de opciones</p>
+                    <p><strong>Regla de Miller:</strong> Memoria a corto plazo: 7±2 elementos</p>
+                    <p><strong>Principio de Pareto:</strong> 80% del uso viene del 20% de funcionalidades</p>
+                    <p><strong>Ley de Jakob:</strong> Usuarios esperan que tu sitio funcione como otros</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="guidelines" class="tab-content">
+            <div class="card">
+                <h2>Normativas y Guidelines</h2>
+                <p>Las normativas y guidelines proporcionan marcos de referencia reconocidos para implementar accesibilidad y usabilidad de manera sistemática y conforme a estándares internacionales.</p>
+
+                <h3>Normativas de Accesibilidad</h3>
+                <div class="principle-grid">
+                    <div class="disability-card">
+                        <h4>WCAG 2.1 (Web Content Accessibility Guidelines)</h4>
+                        <p><strong>Organización:</strong> W3C Web Accessibility Initiative (WAI)</p>
+                        <p><strong>Alcance:</strong> Accesibilidad de contenido web</p>
+                        <ul class="list-styled">
+                            <li>4 principios fundamentales (POUR)</li>
+                            <li>13 pautas</li>
+                            <li>78 criterios de éxito</li>
+                            <li>3 niveles de conformidad (A, AA, AAA)</li>
+                        </ul>
+                        <p><strong>Aplicación:</strong> Estándar de facto mundial para accesibilidad web</p>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Section 508 (Estados Unidos)</h4>
+                        <p><strong>Organización:</strong> Gobierno Federal de Estados Unidos</p>
+                        <p><strong>Alcance:</strong> Tecnología federal accesible</p>
+                        <ul class="list-styled">
+                            <li>Basado en WCAG 2.0 Level AA</li>
+                            <li>Aplicable a agencias federales</li>
+                            <li>Extensivo a contratistas</li>
+                            <li>Incluye software y hardware</li>
+                        </ul>
+                        <p><strong>Aplicación:</strong> Obligatorio para gobierno federal US</p>
+                    </div>
+                    <div class="disability-card">
+                        <h4>EN 301 549 (Europa)</h4>
+                        <p><strong>Organización:</strong> ETSI (European Telecommunications Standards Institute)</p>
+                        <p><strong>Alcance:</strong> Productos y servicios TIC</p>
+                        <ul class="list-styled">
+                            <li>Incorpora WCAG 2.1 Level AA</li>
+                            <li>Aplicable a sector público</li>
+                            <li>Incluye software nativo</li>
+                            <li>Cubre documentos y multimedia</li>
+                        </ul>
+                        <p><strong>Aplicación:</strong> Directiva Europea de Accesibilidad</p>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Legislación Española</h4>
+                        <p><strong>Normativas:</strong> Real Decreto 1112/2018</p>
+                        <p><strong>Alcance:</strong> Sitios web y apps móviles del sector público</p>
+                        <ul class="list-styled">
+                            <li>Basado en WCAG 2.1 Level AA</li>
+                            <li>Declaraciones de accesibilidad obligatorias</li>
+                            <li>Mecanismo de feedback</li>
+                            <li>Monitoreo y reporting</li>
+                        </ul>
+                        <p><strong>Aplicación:</strong> Organismos públicos españoles</p>
+                    </div>
+                </div>
+
+                <h3>Estándares ISO Relacionados</h3>
+                <table class="guidelines-table">
+                    <thead>
+                        <tr>
+                            <th>Estándar</th>
+                            <th>Título</th>
+                            <th>Enfoque</th>
+                            <th>Aplicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ISO 9241-11</td>
+                            <td>Usabilidad: Definiciones y conceptos</td>
+                            <td>Framework conceptual de usabilidad</td>
+                            <td>Definición estándar de usabilidad</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 9241-110</td>
+                            <td>Principios de diseño de diálogos</td>
+                            <td>Principios para interfaces de usuario</td>
+                            <td>Diseño de interacciones usuario-sistema</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 9241-210</td>
+                            <td>Diseño centrado en el humano</td>
+                            <td>Proceso de diseño centrado en usuario</td>
+                            <td>Metodología de desarrollo UX</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 14289-1</td>
+                            <td>Accesibilidad de documentos PDF</td>
+                            <td>Documentos PDF accesibles</td>
+                            <td>Creación de PDFs accesibles</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 40500</td>
+                            <td>WCAG 2.0 como estándar ISO</td>
+                            <td>Accesibilidad de contenido web</td>
+                            <td>Adopción formal de WCAG</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Guidelines de Plataformas</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>Human Interface Guidelines (Apple)</h4>
+                        <ul class="list-styled">
+                            <li>Clarity: Texto legible, iconos precisos</li>
+                            <li>Deference: El contenido es lo principal</li>
+                            <li>Depth: Jerarquía visual y realismo</li>
+                            <li>Accessibility: VoiceOver, Dynamic Type</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Material Design (Google)</h4>
+                        <ul class="list-styled">
+                            <li>Material metaphor: Superficie física</li>
+                            <li>Bold, graphic, intentional: Tipografía clara</li>
+                            <li>Motion provides meaning: Animaciones funcionales</li>
+                            <li>Accessibility: Contraste, tamaños, navegación</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Fluent Design (Microsoft)</h4>
+                        <ul class="list-styled">
+                            <li>Light: Iluminación y sombras</li>
+                            <li>Depth: Layering y jerarquía</li>
+                            <li>Motion: Transiciones fluidas</li>
+                            <li>Material: Texturas y superficies</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Carbon Design System (IBM)</h4>
+                        <ul class="list-styled">
+                            <li>Purposeful: Cada elemento tiene función</li>
+                            <li>Connected: Consistencia entre productos</li>
+                            <li>Inclusive: Accesible para todos</li>
+                            <li>Honest: Transparencia en interacciones</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Proceso de Auditoría de Accesibilidad</h3>
+                <div class="ux-process">
+                    <h4>Metodología de Evaluación WCAG-EM</h4>
+                    <p><strong>Paso 1:</strong> Definir alcance de la evaluación</p>
+                    <p><strong>Paso 2:</strong> Explorar el sitio web objetivo</p>
+                    <p><strong>Paso 3:</strong> Seleccionar muestra representativa</p>
+                    <p><strong>Paso 4:</strong> Auditar la muestra seleccionada</p>
+                    <p><strong>Paso 5:</strong> Reportar hallazgos de evaluación</p>
+                </div>
+
+                <div class="code-example">
+<!-- Ejemplo de declaración de accesibilidad -->
+&lt;meta name="accessibility-statement" 
+      content="Este sitio cumple con WCAG 2.1 AA"&gt;
+
+&lt;!-- Ejemplo de skip navigation --&gt;
+&lt;a href="#main" class="skip-nav"&gt;Saltar al contenido principal&lt;/a&gt;
+
+&lt;!-- Ejemplo de landmark roles --&gt;
+&lt;header role="banner"&gt;
+&lt;nav role="navigation" aria-label="Principal"&gt;
+&lt;main role="main" id="main"&gt;
+&lt;aside role="complementary"&gt;
+&lt;footer role="contentinfo"&gt;
+
+&lt;!-- Ejemplo de live regions --&gt;
+&lt;div aria-live="polite" aria-atomic="true" id="status"&gt;
+  Formulario enviado exitosamente
+&lt;/div&gt;
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Compliance y Riesgos Legales</h4>
+                    <p><strong>Demandas por Accesibilidad:</strong> Aumento de litigios bajo ADA y legislación similar</p>
+                    <p><strong>Target vs NFB (2006):</strong> Caso landmark de accesibilidad web en US</p>
+                    <p><strong>Domino's vs Robles (2019):</strong> Suprema Corte confirma aplicabilidad ADA a sitios web</p>
+                    <p><strong>Recomendación:</strong> Implementar WCAG 2.1 AA como mínimo para mitigar riesgos</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="exercises" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos de Accesibilidad y UX</h2>
+                <p>Resuelve estos ejercicios para aplicar conceptos de accesibilidad, usabilidad y experiencia de usuario.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p>Progreso: <span id="progress-text">0/10</span> ejercicios completados</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 1:</strong> Para WCAG 2.1 nivel AA, ¿cuál es la relación de contraste mínima requerida para texto normal sobre fondo?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="4.5">
+                        <label>4.5:1</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="3">
+                        <label>3:1</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="7">
+                        <label>7:1</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise1" value="2.1">
+                        <label>2.1:1</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(1, 4.5, 'WCAG 2.1 AA requiere contraste mínimo de 4.5:1 para texto normal (3:1 para texto grande, 7:1 para AAA)')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 2:</strong> Según la regla de Miller, ¿cuál es el número óptimo de elementos que la memoria a corto plazo puede manejar?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="7">
+                        <label>7±2 elementos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="5">
+                        <label>5±2 elementos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="9">
+                        <label>9±2 elementos</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise2" value="3">
+                        <label>3±2 elementos</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(2, 7, 'La regla de Miller establece que la memoria a corto plazo puede manejar 7±2 elementos (entre 5 y 9)')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 3:</strong> Un botón táctil debe tener un tamaño mínimo recomendado por WCAG de:
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="44">
+                        <label>44×44 píxeles</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="32">
+                        <label>32×32 píxeles</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="48">
+                        <label>48×48 píxeles</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise3" value="24">
+                        <label>24×24 píxeles</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(3, 44, 'WCAG 2.1 AA recomienda 44×44 píxeles mínimo para objetivos táctiles para facilitar el uso')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 4:</strong> En un test de usabilidad con 100 usuarios, 85 completaron exitosamente una tarea. ¿Cuál es la tasa de éxito?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="85">
+                        <label>85%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="15">
+                        <label>15%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="1.18">
+                        <label>1.18%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise4" value="100">
+                        <label>100%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(4, 85, 'Tasa de éxito = (85 usuarios exitosos / 100 usuarios totales) × 100 = 85%')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 5:</strong> Si un usuario tarda 20 segundos en completar una tarea en la primera vez y 5 segundos después de aprender, ¿cuál es la mejora en eficiencia?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="75">
+                        <label>75% de mejora</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="300">
+                        <label>300% de mejora</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="25">
+                        <label>25% de mejora</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise5" value="15">
+                        <label>15% de mejora</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(5, 75, 'Mejora = ((20-5)/20) × 100 = 75% de reducción en tiempo = 75% de mejora en eficiencia')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 6:</strong> ¿Qué porcentaje de la población mundial tiene algún tipo de discapacidad según la OMS?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="15">
+                        <label>15%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="10">
+                        <label>10%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="20">
+                        <label>20%</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise6" value="5">
+                        <label>5%</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(6, 15, 'Según la OMS, aproximadamente 15% de la población mundial (1.3 mil millones de personas) vive con alguna discapacidad')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 7:</strong> Para una evaluación heurística efectiva, Nielsen recomienda usar:
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="3-5">
+                        <label>3-5 evaluadores</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="1">
+                        <label>1 evaluador</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="10">
+                        <label>10 evaluadores</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise7" value="2">
+                        <label>2 evaluadores</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(7, '3-5', 'Nielsen recomienda 3-5 evaluadores expertos para encontrar la mayoría de problemas de usabilidad de manera costo-efectiva')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 8:</strong> Un sitio web tiene 1000 páginas. Para una auditoría WCAG representativa, ¿cuántas páginas aproximadamente deberían evaluarse?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="10-15">
+                        <label>10-15 páginas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="100">
+                        <label>100 páginas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="50">
+                        <label>50 páginas</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise8" value="5">
+                        <label>5 páginas</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(8, '10-15', 'Para sitios grandes, una muestra representativa de 10-15 páginas típicamente cubre los tipos principales de contenido y funcionalidad')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback8"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 9:</strong> ¿Cuántos principios fundamentales tiene WCAG 2.1?
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="4">
+                        <label>4 principios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="13">
+                        <label>13 principios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="78">
+                        <label>78 principios</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise9" value="3">
+                        <label>3 principios</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(9, 4, 'WCAG 2.1 tiene 4 principios fundamentales: Perceptible, Operable, Comprensible y Robusto (POUR)')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise-question">
+                    <strong>Ejercicio 10:</strong> Un SUS (System Usability Scale) score de 68 se considera:
+                </div>
+                <div class="exercise-options">
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="promedio">
+                        <label>Promedio/Aceptable</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="excelente">
+                        <label>Excelente</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="malo">
+                        <label>Malo</label>
+                    </div>
+                    <div class="exercise-option">
+                        <input type="radio" name="exercise10" value="bueno">
+                        <label>Bueno</label>
+                    </div>
+                </div>
+                <button class="exercise-button" onclick="checkAnswer(10, 'promedio', 'Un SUS score de 68 está en el promedio. >80 es bueno, >90 es excelente, <50 es malo')">Verificar Respuesta</button>
+                <div class="exercise-feedback" id="feedback10"></div>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>Recursos y Herramientas</h2>
+                <p>Conjunto completo de recursos, herramientas y referencias para implementar accesibilidad y mejorar la experiencia de usuario.</p>
+
+                <h3>Herramientas de Evaluación de Accesibilidad</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4>Herramientas Automatizadas</h4>
+                        <ul class="list-styled">
+                            <li><strong>axe DevTools:</strong> Extension de navegador para testing</li>
+                            <li><strong>WAVE:</strong> Web Accessibility Evaluation Tool</li>
+                            <li><strong>Pa11y:</strong> Command line accessibility tester</li>
+                            <li><strong>Lighthouse:</strong> Auditoría integrada en Chrome</li>
+                            <li><strong>Accessibility Insights:</strong> Suite de Microsoft</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Lectores de Pantalla</h4>
+                        <ul class="list-styled">
+                            <li><strong>NVDA:</strong> Gratuito para Windows</li>
+                            <li><strong>JAWS:</strong> Commercial screen reader</li>
+                            <li><strong>VoiceOver:</strong> Integrado en macOS/iOS</li>
+                            <li><strong>TalkBack:</strong> Android screen reader</li>
+                            <li><strong>Orca:</strong> Screen reader para Linux</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Herramientas de Contraste</h4>
+                        <ul class="list-styled">
+                            <li><strong>Colour Contrast Analyser:</strong> TPGi tool</li>
+                            <li><strong>WebAIM Contrast Checker:</strong> Online tool</li>
+                            <li><strong>Stark:</strong> Plugin para Figma/Sketch</li>
+                            <li><strong>Colorblinding:</strong> Simulador de daltonismo</li>
+                        </ul>
+                    </div>
+                    <div class="principle-card">
+                        <h4>Validadores de Código</h4>
+                        <ul class="list-styled">
+                            <li><strong>HTML Validator:</strong> W3C Markup Validation</li>
+                            <li><strong>CSS Validator:</strong> W3C CSS Validation</li>
+                            <li><strong>A11y Linters:</strong> ESLint accessibility rules</li>
+                            <li><strong>axe-core:</strong> Accessibility testing engine</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Herramientas UX y Usabilidad</h3>
+                <table class="guidelines-table">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Herramienta</th>
+                            <th>Propósito</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Prototipado</td>
+                            <td>Figma, Sketch, Adobe XD</td>
+                            <td>Diseño y prototipado de interfaces</td>
+                            <td>SaaS/Desktop</td>
+                        </tr>
+                        <tr>
+                            <td>User Testing</td>
+                            <td>UserTesting, Maze, UsabilityHub</td>
+                            <td>Testing remoto con usuarios</td>
+                            <td>SaaS</td>
+                        </tr>
+                        <tr>
+                            <td>Analytics</td>
+                            <td>Hotjar, FullStory, LogRocket</td>
+                            <td>Grabación de sesiones y heatmaps</td>
+                            <td>SaaS</td>
+                        </tr>
+                        <tr>
+                            <td>Encuestas</td>
+                            <td>Typeform, SurveyMonkey, UserVoice</td>
+                            <td>Recolección de feedback de usuarios</td>
+                            <td>SaaS</td>
+                        </tr>
+                        <tr>
+                            <td>Card Sorting</td>
+                            <td>OptimalSort, Miro, Treejack</td>
+                            <td>Arquitectura de información</td>
+                            <td>SaaS</td>
+                        </tr>
+                        <tr>
+                            <td>A/B Testing</td>
+                            <td>Optimizely, VWO, Google Optimize</td>
+                            <td>Testing de variantes</td>
+                            <td>SaaS</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Recursos de Aprendizaje</h3>
+                <div class="principle-grid">
+                    <div class="disability-card">
+                        <h4>Accesibilidad</h4>
+                        <ul class="list-styled">
+                            <li><strong>WebAIM:</strong> Web accessibility resources</li>
+                            <li><strong>A11y Project:</strong> Community-driven accessibility</li>
+                            <li><strong>Deque University:</strong> Accessibility training</li>
+                            <li><strong>MDN Accessibility:</strong> Developer documentation</li>
+                            <li><strong>Inclusive Design Toolkit:</strong> Microsoft resources</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Usabilidad y UX</h4>
+                        <ul class="list-styled">
+                            <li><strong>Nielsen Norman Group:</strong> UX research and articles</li>
+                            <li><strong>Smashing Magazine:</strong> Web design resources</li>
+                            <li><strong>UX Booth:</strong> UX community and articles</li>
+                            <li><strong>Laws of UX:</strong> Jon Yablonski's collection</li>
+                            <li><strong>Design Systems:</strong> Repositories and examples</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Certificaciones</h4>
+                        <ul class="list-styled">
+                            <li><strong>IAAP:</strong> International Association of Accessibility Professionals</li>
+                            <li><strong>CPACC:</strong> Certified Professional in Accessibility Core Competencies</li>
+                            <li><strong>WAS:</strong> Web Accessibility Specialist</li>
+                            <li><strong>UXC:</strong> User Experience Certification</li>
+                        </ul>
+                    </div>
+                    <div class="disability-card">
+                        <h4>Comunidades</h4>
+                        <ul class="list-styled">
+                            <li><strong>A11y Slack:</strong> Accessibility community</li>
+                            <li><strong>UX Mastery Community:</strong> UX practitioners</li>
+                            <li><strong>Interaction Design Association:</strong> IxDA global network</li>
+                            <li><strong>Women in UX:</strong> Support network for women</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Checklist de Implementación</h3>
+                <div class="ux-process">
+                    <h4>Checklist de Accesibilidad Básica</h4>
+                    <p>☐ Texto alternativo para todas las imágenes informativas</p>
+                    <p>☐ Contraste de color cumple WCAG 2.1 AA (4.5:1)</p>
+                    <p>☐ Navegación completa por teclado</p>
+                    <p>☐ Etiquetas descriptivas en formularios</p>
+                    <p>☐ Encabezados semánticos (h1, h2, h3...)</p>
+                    <p>☐ Enlaces descriptivos (evitar "clic aquí")</p>
+                    <p>☐ Videos con subtítulos</p>
+                    <p>☐ Páginas tienen títulos únicos y descriptivos</p>
+                    <p>☐ HTML semánticamente correcto</p>
+                    <p>☐ Testing con lector de pantalla</p>
+                </div>
+
+                <h3>ROI de Accesibilidad y UX</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">$38</span>
+                        <span class="stat-label">ROI por cada $1 invertido en UX</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">13T$</span>
+                        <span class="stat-label">Poder adquisitivo global de personas con discapacidades</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">70%</span>
+                        <span class="stat-label">Reducción en costo de desarrollo con testing temprano</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">200%</span>
+                        <span class="stat-label">Aumento en conversiones con mejor usabilidad</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Recomendaciones para Implementación Organizacional</h4>
+                    <p><strong>Championing:</strong> Identificar champions de accesibilidad en cada equipo</p>
+                    <p><strong>Training:</strong> Capacitación regular en accesibilidad y UX para todo el equipo</p>
+                    <p><strong>Tooling:</strong> Integrar herramientas de accesibilidad en CI/CD pipelines</p>
+                    <p><strong>Policy:</strong> Establecer políticas claras de accesibilidad y UX</p>
+                    <p><strong>Testing:</strong> Incluir usuarios con discapacidades en proceso de testing</p>
+                    <p><strong>Metrics:</strong> Definir y trackear KPIs de accesibilidad y usabilidad</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let completedExercises = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Modo Claro';
+                currentTheme = 'light';
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('nav-tab');
+            
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.style.display = 'block';
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = '❌ Por favor selecciona una respuesta.';
+                return;
+            }
+            
+            const userAnswer = selectedAnswer.value;
+            const isCorrect = userAnswer == correctAnswer;
+            
+            feedback.style.display = 'block';
+            
+            if (isCorrect) {
+                feedback.className = 'exercise-feedback feedback-correct';
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                
+                if (!selectedAnswer.closest('.exercise-container').dataset.completed) {
+                    completedExercises++;
+                    selectedAnswer.closest('.exercise-container').dataset.completed = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'exercise-feedback feedback-incorrect';
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedExercises / 10) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completedExercises}/10`;
+        }
+
+        // Inicializar tema
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌞 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

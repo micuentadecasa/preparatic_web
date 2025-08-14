@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 5 - Sistemas de gestión de bases de datos relacionales</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--exercise-text);
+        }
+
+        .exercise-container h3 {
+            color: var(--exercise-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 5: Sistemas de gestión de bases de datos relacionales</h1>
+            <p>Características y elementos constitutivos. Antecedentes históricos. El lenguaje SQL. Estándares de conectividad: ODBC y JDBC.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Conceptos Clave</div>
+                <div class="tab" onclick="showTab('content2')">📘 SQL y Lenguajes</div>
+                <div class="tab" onclick="showTab('content3')">📘 Normalización y Diseño</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos y Tips</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">1970</span>
+                        <div>Año de publicación del modelo relacional por Codd</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">ACID</span>
+                        <div>Propiedades de las transacciones</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <div>Formas normales principales</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción a los Sistemas de Gestión de Bases de Datos Relacionales</h3>
+                    <p>Un Sistema de Gestión de Bases de Datos Relacionales (RDBMS) es un tipo de sistema de gestión de bases de datos (DBMS) que almacena y proporciona acceso a puntos de datos relacionados entre sí. Los datos se organizan en tablas con filas y columnas, siguiendo las reglas del modelo relacional propuesto por Edgar F. Codd en 1970.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Fundamentales para el Examen</h3>
+                    <ul class="list-checkmark">
+                        <li>Modelo relacional: Tablas, filas, columnas y claves</li>
+                        <li>Lenguaje SQL: DDL, DML, DCL y TCL</li>
+                        <li>Normalización: Formas normales 1NF, 2NF, 3NF, BCNF</li>
+                        <li>Transacciones: Propiedades ACID (Atomicity, Consistency, Isolation, Durability)</li>
+                        <li>Conectividad: ODBC, JDBC y conectores de bases de datos</li>
+                    </ul>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Tips para el Examen</h4>
+                        <p>En los exámenes, presta especial atención a las formas normales y a las diferencias entre los tipos de comandos SQL. Las preguntas sobre transacciones y sus propiedades ACID son muy comunes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>📘 Fundamentos del Modelo Relacional</h3>
+                    <p>El modelo relacional organiza los datos en estructuras llamadas relaciones (tablas), donde cada relación está formada por tuplas (filas) y atributos (columnas). Este modelo se basa en la teoría de conjuntos y la lógica de predicados de primer orden.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Antecedentes Históricos</h4>
+                            <p>En 1970, Edgar F. Codd, investigador de IBM, publicó "A Relational Model of Data for Large Shared Data Banks", estableciendo las bases del modelo relacional. Este trabajo revolucionó la forma en que se almacenaban y accedían los datos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Desarrollo Comercial</h4>
+                            <p>A partir de 1974, se desarrollaron los primeros SGBD relacionales como System R de IBM y Oracle. En la década de 1980, SQL se convirtió en el estándar de facto para los lenguajes de consulta relacional.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Estándares Modernos</h4>
+                            <p>Hoy en día, los RDBMS dominan el mercado de bases de datos, con productos como Oracle, SQL Server, MySQL, PostgreSQL y DB2 implementando variaciones del modelo relacional con extensiones para objetos, XML y otros tipos de datos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Elementos Constitutivos de una Base de Datos Relacional</h3>
+                    <p>Una base de datos relacional consta de varios elementos fundamentales que deben entenderse para el diseño y administración efectiva:</p>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes para el Examen</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Relación (Tabla)</strong>: Estructura bidimensional con filas y columnas</li>
+                            <li><strong>Atributo (Columna)</strong>: Define una característica de la entidad</li>
+                            <li><strong>Dominio</strong>: Conjunto de valores permitidos para un atributo</li>
+                            <li><strong>Tupla (Fila)</strong>: Instancia específica de una entidad</li>
+                            <li><strong>Clave</strong>: Atributo o conjunto de atributos que identifica de forma única una tupla</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Pregunta de Examen Típica</h4>
+                        <p>¿Cuál es la diferencia entre una clave primaria y una clave candidata?</p>
+                        <p><strong>Respuesta:</strong> Una clave candidata es cualquier atributo o conjunto de atributos que puede identificar de forma única una tupla. Una clave primaria es la clave candidata seleccionada por el diseñador para identificar de forma única las tuplas. Una tabla puede tener varias claves candidatas pero solo una clave primaria.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>📘 Lenguaje SQL y Estándares de Conectividad</h3>
+                    <p>SQL (Structured Query Language) es el lenguaje estándar para gestionar y manipular bases de datos relacionales. Además, existen estándares de conectividad como ODBC y JDBC que permiten a las aplicaciones comunicarse con diferentes SGBD.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Tipos de Comandos SQL</h3>
+                    <p>SQL se divide en varias categorías de comandos, cada una con un propósito específico:</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Descripción</th>
+                                <th>Comandos Principales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DDL (Data Definition Language)</strong></td>
+                                <td>Definen la estructura de la BD</td>
+                                <td>CREATE, ALTER, DROP, TRUNCATE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DML (Data Manipulation Language)</strong></td>
+                                <td>Manipulan los datos</td>
+                                <td>SELECT, INSERT, UPDATE, DELETE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DCL (Data Control Language)</strong></td>
+                                <td>Controlan permisos y acceso</td>
+                                <td>GRANT, REVOKE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>TCL (Transaction Control Language)</strong></td>
+                                <td>Gestionan transacciones</td>
+                                <td>COMMIT, ROLLBACK, SAVEPOINT</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Error Común en Exámenes</h4>
+                        <p>Confundir TRUNCATE con DELETE FROM (sin WHERE).</p>
+                        <p><strong>Explicación:</strong> TRUNCATE elimina todas las filas de una tabla de forma rápida, sin generar registros de log individuales por fila. DELETE FROM (sin WHERE) también elimina todas las filas, pero lo hace fila por fila, generando registros de log. TRUNCATE reinicia los contadores de identidad, DELETE no lo hace.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>📘 Normalización y Diseño de Bases de Datos</h3>
+                    <p>La normalización es el proceso de organizar los datos en una base de datos para minimizar la redundancia y mejorar la integridad. Es fundamental para el diseño eficiente de bases de datos relacionales.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Formas Normales</h3>
+                    <div class="warning-box">
+                        <h4>⚠️ Consideraciones Importantes</h4>
+                        <p>La normalización debe equilibrarse con el rendimiento. En algunos casos, la desnormalización puede ser necesaria para optimizar consultas complejas, especialmente en sistemas de data warehouse.</p>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4>✅ Formas Normales Principales</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>1FN (Primera Forma Normal)</strong>: Eliminar grupos repetitivos y asegurar atomicidad de valores</li>
+                            <li><strong>2FN (Segunda Forma Normal)</strong>: Cumplir 1FN y que todos los atributos no clave dependan completamente de la clave primaria</li>
+                            <li><strong>3FN (Tercera Forma Normal)</strong>: Cumplir 2FN y que no existan dependencias transitivas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Escenario Práctico</h4>
+                        <p>Una tabla de empleados contiene id_empleado, nombre, departamento, jefe_departamento. ¿En qué forma normal está esta tabla?</p>
+                        <p><strong>Solución:</strong> Esta tabla probablemente no cumple la 2FN si id_empleado es la clave primaria, ya que departamento y jefe_departamento dependen parcialmente de la clave (dependerían del departamento, no del empleado específico). Esto representa una dependencia parcial que viola la 2FN.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>"A Relational Model of Data for Large Shared Data Banks" (1970):</strong> Artículo original de Edgar F. Codd</li>
+                        <li><strong>ISO/IEC 9075:</strong> Estándar SQL (varias partes)</li>
+                        <li><strong>Libro "Database Systems: The Complete Book" de Garcia-Molina, Ullman y Widom:</strong> Referencia completa</li>
+                        <li><strong>ANSI X3.135-1992:</strong> Estándar SQL-92</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Base_de_datos_relacional" target="_blank">Wikipedia - Base de datos relacional</a></li>
+                        <li><a href="https://es.wikipedia.org/wiki/SQL" target="_blank">Wikipedia - SQL</a></li>
+                        <li><a href="https://www.iso.org/standard/63555.html" target="_blank">ISO/IEC 9075 - SQL Standard</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes de Examen</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre INNER JOIN y OUTER JOIN?</h4>
+                            <p>INNER JOIN devuelve solo las filas que tienen coincidencias en ambas tablas. OUTER JOIN (LEFT, RIGHT o FULL) devuelve todas las filas de una tabla y las coincidencias de la otra tabla, rellenando con NULL donde no hay coincidencias.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Qué es una clave foránea y cómo se utiliza?</h4>
+                            <p>Una clave foránea es un campo (o colección de campos) en una tabla que hace referencia a la clave primaria de otra tabla. Se utiliza para establecer y reforzar vínculos entre los datos de dos tablas, manteniendo la integridad referencial.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🎯 Estrategias de Estudio para el Examen</h3>
+                    <div class="exam-tip">
+                        <h4>💡 Plan de Estudio Recomendado</h4>
+                        <p>1. Comprende el modelo relacional y sus fundamentos (2 horas)<br>
+                           2. Practica comandos SQL DDL y DML con ejemplos (3 horas)<br>
+                           3. Domina las formas normales con ejercicios prácticos (3 horas)<br>
+                           4. Estudia las propiedades ACID y transacciones (2 horas)<br>
+                           5. Revisa estándares de conectividad ODBC/JDBC (1 hora)<br>
+                           6. Realiza exámenes de práctica sobre todo el tema (2 horas)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica para el Examen</h3>
+                    <p>Practica tus conocimientos sobre bases de datos relacionales con estos ejercicios. Presta atención a las explicaciones detalladas para entender los conceptos clave.</p>
+                    <div class="exam-tip">
+                        <h4>💡 Cómo Abordar los Ejercicios</h4>
+                        <p>Lee cuidadosamente cada pregunta. Para ejercicios de normalización, identifica primero las dependencias funcionales. Para comandos SQL, piensa en el resultado esperado antes de seleccionar una respuesta.</p>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Pregunta de Conceptos Básicos</h3>
+                    <div class="exercise-question">
+                        ¿Cuál de las siguientes NO es una propiedad ACID de las transacciones?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Atomicidad (Atomicity)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Consistencia (Consistency)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Aislamiento (Isolation)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">Distribución (Distribution)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'd', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio de Normalización</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es la principal característica de la Segunda Forma Normal (2NF)?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', 'No deben existir dependencias parciales', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Comandos SQL</h3>
+                    <div class="exercise-question">
+                        ¿Qué comando SQL se utiliza para eliminar una tabla junto con todos sus datos y estructura?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', 'DROP TABLE', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Claves en Bases de Datos</h3>
+                    <div class="exercise-question">
+                        ¿Cuál de las siguientes afirmaciones sobre claves es CORRECTA?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Una tabla puede tener múltiples claves primarias</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Una clave primaria puede contener valores NULL</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Una clave foránea siempre debe hacer referencia a una clave primaria</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt4" name="exercise4" value="d">
+                            <label for="ex4opt4">Una clave candidata es la clave primaria seleccionada</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'c', 'ex4feedback')">Verificar Respuesta</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Formas Normales</h3>
+                    <div class="exercise-question">
+                        ¿Qué forma normal se satisface cuando no existen dependencias transitivas?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise5_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise5_answer', 'Tercera Forma Normal', 'ex5feedback')">Verificar Respuesta</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode by default
+        document.body.classList.add('dark-mode');
+        
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'Incorrecto. Inténtalo de nuevo. ❌<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌<br><br><strong>Explicación:</strong> ` + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function getExplanation(exerciseName, correctAnswer) {
+            // Custom explanations for each exercise
+            const explanations = {
+                'exercise1': {
+                    'a': 'La Atomicidad es una propiedad ACID que garantiza que todas las operaciones de una transacción se completen o ninguna se realice.',
+                    'b': 'La Consistencia es una propiedad ACID que asegura que una transacción lleva la base de datos de un estado válido a otro estado válido.',
+                    'c': 'El Aislamiento es una propiedad ACID que garantiza que las transacciones concurrentes no interfieran entre sí.',
+                    'd': 'Correcto! Distribución no es una propiedad ACID. Las propiedades ACID son: Atomicidad, Consistencia, Aislamiento y Durabilidad.'
+                },
+                'exercise4': {
+                    'a': 'Incorrecto. Una tabla solo puede tener una clave primaria, aunque puede estar compuesta por múltiples columnas.',
+                    'b': 'Incorrecto. Una clave primaria no puede contener valores NULL por definición.',
+                    'c': 'Correcto! Una clave foránea debe hacer referencia a una clave primaria o una clave única en otra tabla para mantener la integridad referencial.',
+                    'd': 'Incorrecto. Una clave candidata es cualquier clave que podría ser primaria; la clave primaria es la clave candidata seleccionada.'
+                }
+            };
+            
+            if (explanations[exerciseName] && explanations[exerciseName][correctAnswer]) {
+                return explanations[exerciseName][correctAnswer];
+            }
+            return 'Explicación detallada de por qué esta es la respuesta correcta.';
+        }
+
+        function getTextExplanation(inputId, correctAnswer) {
+            // Custom explanations for text exercises
+            const explanations = {
+                'exercise2_answer': 'La Segunda Forma Normal (2NF) requiere que, además de cumplir con la Primera Forma Normal (1NF), no existan dependencias parciales. Esto significa que todos los atributos no clave deben depender completamente de la clave primaria, no solo de una parte de ella.',
+                'exercise3_answer': 'El comando DROP TABLE elimina completamente la tabla, incluyendo su estructura, índices, restricciones y todos los datos. Es diferente de DELETE (que solo elimina datos) y TRUNCATE (que elimina datos pero mantiene la estructura).',
+                'exercise5_answer': 'La Tercera Forma Normal (3NF) se satisface cuando una tabla cumple con la 2NF y además no existen dependencias transitivas. Una dependencia transitiva ocurre cuando un atributo no clave depende de otro atributo no clave.'
+            };
+            
+            if (explanations[inputId]) {
+                return explanations[inputId];
+            }
+            return `Explicación detallada de por qué "${correctAnswer}" es la respuesta correcta.`;
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

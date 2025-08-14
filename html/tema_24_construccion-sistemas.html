@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 24 - Construcción de Sistemas</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+            --info-card-bg: #253b5a;
+            --definition-card-bg: #2c4c4c;
+            --example-card-bg: #4a3b2c;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+            --info-card-bg: #d1e7ff;
+            --definition-card-bg: #d1f0e5;
+            --example-card-bg: #f0e1d1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--exercise-text);
+        }
+
+        .exercise-container h3 {
+            color: var(--exercise-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .info-card {
+            background: var(--info-card-bg);
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .definition-card {
+            background: var(--definition-card-bg);
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .example-card {
+            background: var(--example-card-bg);
+            border-left: 4px solid #e67e22;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .key-points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .key-point-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--tab-active);
+        }
+
+        .hot-tip {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .key-points-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 24: Construcción de Sistemas</h1>
+            <p>Construcción del sistema. Entornos de construcción y generación de código. Estándares de documentación. Manuales de usuario y manuales técnicos. Formación de usuarios y personal técnico: métodos y materiales.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('construction')">📘 Proceso de Construcción</div>
+                <div class="tab" onclick="showTab('environments')">📘 Entornos de Construcción</div>
+                <div class="tab" onclick="showTab('documentation')">📘 Documentación y Manuales</div>
+                <div class="tab" onclick="showTab('training')">📘 Formación de Usuarios</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: La construcción del sistema incluye no solo la generación de código, sino también la documentación, pruebas unitarias, integración continua y formación de usuarios. Es una fase crítica que conecta el desarrollo con la puesta en producción.
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div>Componentes principales de construcción</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <div>Tipos de manuales esenciales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <div>Métodos de formación principales</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">CI/CD</span>
+                        <div>Integración y entrega continua</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción al Tema</h3>
+                    <p>La construcción de sistemas es la fase del ciclo de vida del desarrollo de software donde se implementan los componentes del sistema mediante la escritura de código, configuración de entornos, generación de documentación y preparación para la puesta en producción. Esta fase transforma el diseño en un sistema funcional y utilizable.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="key-point-card">
+                        <h4>📘 Componentes Clave</h4>
+                        <ul class="list-checkmark">
+                            <li>Generación de código fuente</li>
+                            <li>Configuración de entornos</li>
+                            <li>Documentación técnica y de usuario</li>
+                            <li>Pruebas unitarias e integración</li>
+                        </ul>
+                    </div>
+                    <div class="key-point-card">
+                        <h4>⚡ Principios Fundamentales</h4>
+                        <ul class="list-checkmark">
+                            <li>Automatización de procesos</li>
+                            <li>Control de versiones</li>
+                            <li>Documentación exhaustiva</li>
+                            <li>Formación adecuada de usuarios</li>
+                        </ul>
+                    </div>
+                    <div class="key-point-card">
+                        <h4>🎯 Objetivos de la Construcción</h4>
+                        <ul class="list-checkmark">
+                            <li>Obtener un sistema funcional</li>
+                            <li>Garantizar calidad del código</li>
+                            <li>Facilitar mantenimiento futuro</li>
+                            <li>Preparar para despliegue</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Tips para el Examen</h4>
+                    <p>Entiende la diferencia entre documentación técnica (para desarrolladores) y documentación de usuario (para usuarios finales). Memoriza los componentes de un entorno de construcción moderno (IDE, control de versiones, CI/CD, testing). El examen suele preguntar sobre métodos de formación y sus ventajas/desventajas.</p>
+                </div>
+            </div>
+
+            <!-- Construction Process Tab -->
+            <div id="construction" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: La construcción moderna incluye integración continua (CI) y entrega continua (CD) para automatizar pruebas, construcción y despliegue. Los pipelines de CI/CD son fundamentales en entornos DevOps.
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Proceso de Construcción de Sistemas</h3>
+                    <p>El proceso de construcción de sistemas abarca todas las actividades necesarias para transformar el diseño en un sistema funcional. Incluye la escritura de código, compilación, pruebas unitarias, empaquetado y preparación para el despliegue. Este proceso debe ser sistemático y repetible.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🧩 Fases de Construcción</h4>
+                        <ol>
+                            <li><strong>Implementación:</strong> Escritura de código fuente según especificaciones</li>
+                            <li><strong>Compilación:</strong> Conversión de código fuente a código ejecutable</li>
+                            <li><strong>Pruebas Unitarias:</strong> Verificación de componentes individuales</li>
+                            <li><strong>Integración:</strong> Combinación de componentes en sistema completo</li>
+                            <li><strong>Empaquetado:</strong> Preparación para despliegue y distribución</li>
+                        </ol>
+                    </div>
+                    <div class="definition-card">
+                        <h4>⚙️ Buenas Prácticas</h4>
+                        <ul class="list-checkmark">
+                            <li>Uso de control de versiones (Git)</li>
+                            <li>Automatización de compilación (Maven, Gradle)</li>
+                            <li>Integración continua (Jenkins, GitHub Actions)</li>
+                            <li>Pruebas automatizadas</li>
+                            <li>Revisión de código (code review)</li>
+                        </ul>
+                    </div>
+                    <div class="definition-card">
+                        <h4>🏆 Beneficios del Proceso Estructurado</h4>
+                        <ul class="list-checkmark">
+                            <li>Mayor calidad del software</li>
+                            <li>Reducción de errores</li>
+                            <li>Mejor mantenibilidad</li>
+                            <li>Facilita trabajo en equipo</li>
+                            <li>Acelera tiempo de entrega</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h3>📋 Proceso de Construcción Moderno</h3>
+                    <p>En entornos modernos, el proceso de construcción incluye pipelines de CI/CD que automatizan todo el flujo desde el commit del código hasta el despliegue en producción. Estos pipelines integran compilación, pruebas, análisis de calidad y despliegue.</p>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Componentes de un Pipeline CI/CD</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Source:</strong> Control de versiones (Git)</li>
+                            <li><strong>Build:</strong> Compilación y empaquetado</li>
+                            <li><strong>Test:</strong> Pruebas unitarias, integración y funcionales</li>
+                            <li><strong>Deploy:</strong> Despliegue en entornos (QA, Prod)</li>
+                            <li><strong>Monitor:</strong> Seguimiento de rendimiento</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="exam-tip">
+                    <h4>💡 Pregunta de Examen Típica</h4>
+                    <p><strong>P:</strong> ¿Cuál es la ventaja principal de usar integración continua en el proceso de construcción?</p>
+                    <p><strong>R:</strong> Detectar y corregir errores rápidamente al integrar cambios frecuentemente, reduciendo conflictos y mejorando la calidad del software.</p>
+                </div>
+            </div>
+
+            <!-- Environments Tab -->
+            <div id="environments" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Los entornos de construcción modernos incluyen: IDE (Visual Studio Code, IntelliJ), control de versiones (Git), sistemas de construcción (Maven, Gradle), contenedores (Docker) y orquestación (Kubernetes).
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Entornos de Construcción</h3>
+                    <p>Un entorno de construcción es el conjunto de herramientas, configuraciones y procesos que permiten desarrollar, compilar, probar y desplegar software de manera eficiente y consistente. Un buen entorno de construcción es fundamental para la productividad del equipo de desarrollo.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🧩 Componentes del Entorno</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>IDE:</strong> Entorno de desarrollo integrado</li>
+                            <li><strong>Control de Versiones:</strong> Git, SVN</li>
+                            <li><strong>Sistema de Construcción:</strong> Maven, Gradle, Make</li>
+                            <li><strong>Gestor de Dependencias:</strong> npm, pip, Maven</li>
+                            <li><strong>Servidor CI:</strong> Jenkins, GitHub Actions</li>
+                        </ul>
+                    </div>
+                    <div class="definition-card">
+                        <h4>⚙️ Tipos de Entornos</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Desarrollo:</strong> Entorno local de programadores</li>
+                            <li><strong>Pruebas:</strong> QA y testing automatizado</li>
+                            <li><strong>Preproducción:</strong> Entorno espejo de producción</li>
+                            <li><strong>Producción:</strong> Entorno de usuarios finales</li>
+                        </ul>
+                    </div>
+                    <div class="definition-card">
+                        <h4>🏆 Beneficios de Entornos Estructurados</h4>
+                        <ul class="list-checkmark">
+                            <li>Consistencia entre desarrolladores</li>
+                            <li>Automatización de tareas repetitivas</li>
+                            <li>Reducción de errores de configuración</li>
+                            <li>Facilita onboarding de nuevos miembros</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h3>📊 Entornos Modernos de Desarrollo</h3>
+                    <p>Los entornos modernos incorporan contenedores (Docker), orquestación (Kubernetes), infraestructura como código (Terraform) y monitoreo continuo. Estas tecnologías permiten entornos reproducibles y escalables.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Comparación de Herramientas</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Función Principal</th>
+                                <th>Ejemplos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>IDE</strong></td>
+                                <td>Desarrollo de código</td>
+                                <td>Visual Studio Code, IntelliJ IDEA, Eclipse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Control de Versiones</strong></td>
+                                <td>Gestión de código fuente</td>
+                                <td>Git, SVN, Mercurial</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sistema de Construcción</strong></td>
+                                <td>Automatización de compilación</td>
+                                <td>Maven, Gradle, Ant, Make</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CI/CD</strong></td>
+                                <td>Integración y despliegue</td>
+                                <td>Jenkins, GitHub Actions, GitLab CI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Error Común en Exámenes</h4>
+                    <p>Confundir entornos de desarrollo con entornos de ejecución. Los entornos de construcción se refieren a las herramientas y procesos para crear el software, mientras que los entornos de ejecución son donde se ejecuta el software.</p>
+                    <p><strong>Explicación:</strong> El entorno de construcción incluye compiladores, IDEs, sistemas de build, etc. El entorno de ejecución incluye servidores, sistemas operativos, bases de datos donde se ejecuta el software construido.</p>
+                </div>
+            </div>
+
+            <!-- Documentation Tab -->
+            <div id="documentation" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: La documentación debe actualizarse junto con el código. Los manuales técnicos son para desarrolladores y personal de TI, mientras que los manuales de usuario son para usuarios finales. Ambos son obligatorios en proyectos profesionales.
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Documentación del Sistema</h3>
+                    <p>La documentación es un componente esencial de la construcción de sistemas que proporciona información detallada sobre el software para diferentes tipos de usuarios. Una buena documentación facilita el mantenimiento, la transferencia de conocimiento y el uso efectivo del sistema.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🎯 Tipos de Documentación</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Documentación Técnica:</strong> Para desarrolladores y técnicos</li>
+                            <li><strong>Documentación de Usuario:</strong> Para usuarios finales</li>
+                            <li><strong>Documentación de Proyecto:</strong> Para gestión del proyecto</li>
+                            <li><strong>Documentación de Arquitectura:</strong> Para diseño del sistema</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Contenido de Manuales Técnicos</h4>
+                        <ul class="list-checkmark">
+                            <li>Arquitectura del sistema</li>
+                            <li>Diagramas de componentes</li>
+                            <li>APIs y especificaciones</li>
+                            <li>Procedimientos de instalación</li>
+                            <li>Guía de mantenimiento</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Contenido de Manuales de Usuario</h4>
+                        <ul class="list-checkmark">
+                            <li>Guía de inicio rápido</li>
+                            <li>Descripción de funciones</li>
+                            <li>Procedimientos operativos</li>
+                            <li>Solución de problemas comunes</li>
+                            <li>Preguntas frecuentes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Consideraciones Importantes</h4>
+                    <p>La documentación debe mantenerse actualizada con el código. La documentación obsoleta puede ser más perjudicial que no tener documentación. Es importante usar un estilo claro, conciso y con ejemplos prácticos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📘 Estándares de Documentación</h3>
+                    <p>Los estándares de documentación establecen formatos, estructuras y contenidos mínimos que deben seguirse para garantizar la calidad y consistencia de la documentación en todos los proyectos de una organización.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🎯 Elementos de Estándares</h4>
+                        <ul class="list-checkmark">
+                            <li>Formato y estructura estandarizados</li>
+                            <li>Nivel de detalle requerido</li>
+                            <li>Herramientas de documentación</li>
+                            <li>Procesos de revisión</li>
+                            <li>Actualización y mantenimiento</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Herramientas de Documentación</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Wikis:</strong> Confluence, MediaWiki</li>
+                            <li><strong>Herramientas técnicas:</strong> Swagger, Javadoc</li>
+                            <li><strong>Generación automática:</strong> Sphinx, Doxygen</li>
+                            <li><strong>Diseño gráfico:</strong> Draw.io, Lucidchart</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Tab -->
+            <div id="training" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: La formación debe ser adaptada al perfil del usuario (técnicos vs. usuarios finales). Los métodos modernos incluyen e-learning, talleres prácticos, simulaciones y documentación interactiva. La evaluación es clave para medir efectividad.
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Formación de Usuarios y Personal Técnico</h3>
+                    <p>La formación es un componente crítico de la construcción de sistemas que asegura que los usuarios y el personal técnico puedan utilizar y mantener el sistema de manera efectiva. Una buena formación reduce errores, mejora la adopción y aumenta la satisfacción del usuario.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🎯 Tipos de Formación</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Formación Técnica:</strong> Para desarrolladores y administradores</li>
+                            <li><strong>Formación Funcional:</strong> Para usuarios finales</li>
+                            <li><strong>Formación de Gestores:</strong> Para supervisores y responsables</li>
+                            <li><strong>Formación de Soporte:</strong> Para personal de atención técnica</li>
+                        </ul>
+                    </div>
+                    <div class="definition-card">
+                        <h4>⚙️ Métodos de Formación</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Presencial:</strong> Talleres y sesiones prácticas</li>
+                            <li><strong>E-learning:</strong> Cursos online y tutoriales</li>
+                            <li><strong>Autoformación:</strong> Documentación y manuales</li>
+                            <li><strong>Mentoría:</strong> Tutorización personalizada</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Materiales de Formación</h4>
+                        <ul class="list-checkmark">
+                            <li>Presentaciones y diapositivas</li>
+                            <li>Documentación de usuario</li>
+                            <li>Laboratorios prácticos</li>
+                            <li>Vídeos tutoriales</li>
+                            <li>Simuladores y entornos de prueba</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Consideraciones Importantes</h4>
+                    <p>La formación debe adaptarse al nivel y perfil de los destinatarios. Los técnicos necesitan profundidad técnica, mientras que los usuarios finales necesitan enfoque funcional. La evaluación de la formación es esencial para medir su efectividad.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Evaluación de la Formación</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Nivel</th>
+                                <th>Método de Evaluación</th>
+                                <th>Criterios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Conocimiento</strong></td>
+                                <td>Exámenes teóricos</td>
+                                <td>Comprensión de conceptos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Habilidades</strong></td>
+                                <td>Ejercicios prácticos</td>
+                                <td>Capacidad de ejecutar tareas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actitud</strong></td>
+                                <td>Observación y feedback</td>
+                                <td>Disposición y motivación</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Escenario Práctico</h4>
+                    <p>Una organización implementa un nuevo sistema ERP para 500 empleados. ¿Qué estrategia de formación recomendarías?</p>
+                    <p><strong>Solución:</strong> Combinar formación presencial para gestores y formación funcional, e-learning para usuarios básicos con módulos personalizados por departamento, y sesiones de mentoría para usuarios con mayor dificultad de adaptación.</p>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Para ejercicios sobre entornos de construcción, identifica qué herramientas se usarían en cada etapa. Para documentación, diferencia entre manuales técnicos y de usuario. Para formación, adapta métodos a perfiles de usuarios.
+                </div>
+
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica para el Examen</h3>
+                    <p>Ejercicios sobre identificación de componentes de entornos de construcción, diferenciación de tipos de documentación, selección de métodos de formación y evaluación de procesos de construcción de sistemas.</p>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Cómo Abordar los Ejercicios</h4>
+                    <p>Para cada ejercicio, identifica primero el tipo de construcción, documentación o formación que se requiere. Luego aplica los principios y mejores prácticas aprendidas. Recuerda considerar el perfil del usuario y el contexto del proyecto.</p>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: Identificación de Entornos</h3>
+                    <div class="exercise-question">
+                        Una empresa quiere automatizar su proceso de compilación, pruebas y despliegue. ¿Qué componente de entorno de construcción necesitan implementar?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Sistema de compilación</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Integración continua</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Control de versiones</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">IDE avanzado</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'b', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Tipos de Documentación</h3>
+                    <div class="exercise-question">
+                        ¿Qué tipo de documentación incluye diagramas de arquitectura, especificaciones de APIs y procedimientos de instalación?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', 'Documentación técnica', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: Métodos de Formación</h3>
+                    <div class="exercise-question">
+                        Para formar a 200 usuarios distribuidos geográficamente en el uso de una nueva aplicación, ¿qué método sería más eficiente?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', 'E-learning', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 4: Componentes de Construcción</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es el componente de la construcción que permite verificar que cada módulo funciona correctamente antes de integrarlo con otros?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Compilación</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Pruebas unitarias</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Integración</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt4" name="exercise4" value="d">
+                            <label for="ex4opt4">Empaquetado</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'b', 'ex4feedback')">Verificar Respuesta</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 5: Buenas Prácticas</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es la principal ventaja de mantener la documentación actualizada junto con el código fuente?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise5_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise5_answer', 'Evitar documentación obsoleta que puede ser perjudicial', 'ex5feedback')">Verificar Respuesta</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode by default
+        document.body.classList.add('dark-mode');
+        
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'Incorrecto. Inténtalo de nuevo. ❌<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌<br><br><strong>Explicación:</strong> ` + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function getExplanation(exerciseName, correctAnswer) {
+            // This would be customized for each exercise
+            const explanations = {
+                'exercise1': {
+                    'a': 'Un sistema de compilación solo se encarga de convertir código fuente en ejecutable, pero no automatiza todo el proceso.',
+                    'b': '¡Correcto! La integración continua automatiza el proceso completo de compilación, pruebas y despliegue cada vez que hay cambios en el código.',
+                    'c': 'El control de versiones gestiona el código fuente, pero no automatiza compilación y despliegue.',
+                    'd': 'Un IDE avanzado ayuda en el desarrollo, pero no automatiza el proceso completo de construcción.'
+                },
+                'exercise4': {
+                    'a': 'La compilación convierte código fuente en ejecutable, pero no verifica funcionalidad.',
+                    'b': '¡Correcto! Las pruebas unitarias verifican que cada módulo funciona correctamente de forma aislada antes de integrarlo con otros.',
+                    'c': 'La integración combina módulos, pero no verifica funcionalidad individual.',
+                    'd': 'El empaquetado prepara el software para distribución, pero no verifica funcionalidad.'
+                }
+            };
+            
+            if (explanations[exerciseName] && explanations[exerciseName][correctAnswer]) {
+                return explanations[exerciseName][correctAnswer];
+            }
+            return 'Explicación detallada de por qué esta es la respuesta correcta.';
+        }
+
+        function getTextExplanation(inputId, correctAnswer) {
+            // This would be customized for each text exercise
+            const explanations = {
+                'exercise2_answer': 'La documentación técnica incluye información para desarrolladores y personal técnico, como diagramas de arquitectura, especificaciones de APIs y procedimientos de instalación.',
+                'exercise3_answer': 'Para usuarios distribuidos geográficamente, el e-learning es el método más eficiente ya que permite acceso 24/7, personalización por perfiles y reducción de costos de desplazamiento.',
+                'exercise5_answer': 'Mantener la documentación actualizada evita que se vuelva obsoleta, lo cual puede ser más perjudicial que no tener documentación, ya que puede llevar a errores y malentendidos.'
+            };
+            
+            if (explanations[inputId]) {
+                return explanations[inputId];
+            }
+            return `Explicación detallada de por qué "${correctAnswer}" es la respuesta correcta.`;
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .stat-card, .key-point-card, .info-card, .definition-card, .example-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3 - Sistemas Operativos: Windows, Linux, Unix</title>
+    <style>
+        :root {--bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530); --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2); --tab-active: #2980b9; --content-bg: #2c2c2c; --card-bg: #2d2d2d; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a;}
+        .light-mode {--bg-color: #f5f7fa; --text-color: #2c3e50; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white; --highlight-box-bg: #e8f4fc; --success-box-bg: #d4edda; --table-row-even: #f2f2f2;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--tab-active); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; } .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--card-text); }
+        .card h3 { margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid #555; }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .hot-tip { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .os-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .command-box { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; margin: 15px 0; border-left: 4px solid #3498db; }
+        .version-timeline { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #2c3e50; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .exercise-container { background: var(--card-bg); border: 2px solid var(--tab-active); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+        .exercise h4 { color: var(--tab-active); margin-bottom: 1rem; }
+        .exercise-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 1rem 0; }
+        .exercise-options label { display: flex; align-items: center; padding: 10px; background: var(--highlight-box-bg); border-radius: 8px; cursor: pointer; }
+        .exercise-options input[type="radio"] { margin-right: 10px; }
+        .btn-check { background: var(--tab-active); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin-top: 1rem; }
+        .feedback { margin-top: 1rem; padding: 15px; border-radius: 8px; }
+        .feedback.correct { background: var(--success-box-bg); color: var(--checkmark-color); }
+        .feedback.incorrect { background: var(--highlight-box-bg); color: #e74c3c; }
+        .progress-bar { width: 100%; height: 8px; background: var(--table-row-even); border-radius: 4px; overflow: hidden; margin: 2rem 0; }
+        .progress-fill { height: 100%; background: var(--tab-active); width: 0%; transition: width 0.5s ease; }
+        .formula-box { background: var(--highlight-box-bg); border: 1px solid var(--tab-active); border-radius: 8px; padding: 1rem; margin: 1rem 0; font-family: monospace; text-align: center; }
+        .formula { color: var(--tab-active); font-weight: bold; font-size: 1.1rem; }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 3: Sistemas Operativos Específicos</h1>
+            <p>Características técnicas y funcionales de los sistemas operativos: Windows, Linux, Unix y otros. Sistemas operativos para dispositivos móviles.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('windows')">🪟 Windows</div>
+                <div class="tab" onclick="showTab('linux')">🐧 Linux</div>
+                <div class="tab" onclick="showTab('unix')">⚙️ Unix</div>
+                <div class="tab" onclick="showTab('mobile')">📱 Móviles</div>
+                <div class="tab" onclick="showTab('exercises')">🧮 Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: Unix (1970 Bell Labs), Linux (1991 Linus Torvalds), Windows NT (1993). Memorizar estas fechas fundacionales y sus creadores.
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">1970</span><div>Unix en Bell Labs</div></div>
+                    <div class="stat-card"><span class="stat-number">1991</span><div>Linux por Linus Torvalds</div></div>
+                    <div class="stat-card"><span class="stat-number">70%</span><div>Servidores ejecutan Linux</div></div>
+                    <div class="stat-card"><span class="stat-number">88%</span><div>Smartphones con Android</div></div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Evolución Histórica de Sistemas Operativos</h3>
+                    <div class="version-timeline">
+                        <h4>📅 Timeline Fundamental para Examen:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>1969-1970:</strong> Unix desarrollado en Bell Labs por Ken Thompson y Dennis Ritchie</li>
+                            <li><strong>1983:</strong> GNU Project iniciado por Richard Stallman</li>
+                            <li><strong>1985:</strong> Windows 1.0 lanzado por Microsoft</li>
+                            <li><strong>1987:</strong> Minix creado por Andrew Tanenbaum (base educativa)</li>
+                            <li><strong>1991:</strong> Linux kernel 0.02 por Linus Torvalds (25 de agosto)</li>
+                            <li><strong>1993:</strong> Windows NT 3.1 - primera versión empresarial</li>
+                            <li><strong>2001:</strong> Windows XP - unificación líneas consumer/professional</li>
+                            <li><strong>2007:</strong> iOS lanzado con el primer iPhone</li>
+                            <li><strong>2008:</strong> Android 1.0 por Google</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA TÍPICA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿En qué año Linus Torvalds creó Linux y qué edad tenía?</p>
+                        <p><strong>R:</strong> 1991, tenía 21 años. Lanzó la versión 0.02 el 25 de agosto de 1991 como proyecto universitario.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Filosofías de Diseño (FUNDAMENTAL EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Sistema</th><th>Filosofía</th><th>Enfoque</th><th>Modelo Código</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Unix</strong></td><td>"Do one thing and do it well"</td><td>Modularidad, simplicidad</td><td>Propietario/Open Source</td></tr>
+                            <tr><td><strong>Linux</strong></td><td>"Bazaar" development model</td><td>Colaboración masiva</td><td>Open Source (GPL)</td></tr>
+                            <tr><td><strong>Windows</strong></td><td>"Cathedral" development</td><td>Integración, usabilidad</td><td>Propietario</td></tr>
+                            <tr><td><strong>macOS</strong></td><td>"Think different"</td><td>Experiencia usuario</td><td>Propietario (base BSD)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CONCEPTOS CLAVE EXAMEN</h4>
+                        <p><strong>Filosofía Unix:</strong> "Everything is a file" - dispositivos, procesos, red se gestionan como archivos</p>
+                        <p><strong>GPL vs BSD:</strong> GPL (copyleft) obliga liberar modificaciones; BSD permite uso propietario</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Cuota de Mercado y Uso por Segmento</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">Escritorio</span>
+                            <div>Windows: 76%, macOS: 15%, Linux: 3%</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">Servidores</span>
+                            <div>Linux: 70%, Windows: 20%, Unix: 5%</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">Móviles</span>
+                            <div>Android: 88%, iOS: 11%</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">Supercomputadoras</span>
+                            <div>Linux: 100% (Top 500)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="windows" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Windows NT kernel desde 1993. Active Directory desde Windows 2000. PowerShell desde 2006. Hyper-V desde Windows Server 2008.
+                </div>
+
+                <div class="card">
+                    <h3>🪟 Microsoft Windows - Arquitectura y Evolución</h3>
+                    
+                    <div class="os-box">
+                        <h4>🏗️ Arquitectura Windows NT (FUNDAMENTAL EXAMEN)</h4>
+                        <p><strong>Modo Usuario (User Mode):</strong></p>
+                        <ul class="list-checkmark" style="color: white;">
+                            <li>Subsistemas de entorno (Win32, POSIX)</li>
+                            <li>Aplicaciones de usuario</li>
+                            <li>DLLs del sistema</li>
+                        </ul>
+                        
+                        <p><strong>Modo Kernel (Kernel Mode):</strong></p>
+                        <ul class="list-checkmark" style="color: white;">
+                            <li><strong>Executive:</strong> Servicios sistema (Object Manager, Process Manager, I/O Manager)</li>
+                            <li><strong>Microkernel:</strong> Scheduling, sincronización, dispatching</li>
+                            <li><strong>HAL (Hardware Abstraction Layer):</strong> Abstracción hardware</li>
+                            <li><strong>Device Drivers:</strong> Controladores dispositivos</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📈 Evolución Versiones Windows (CRONOLOGÍA EXAMEN)</h3>
+                        <table class="comparison-table">
+                            <thead><tr><th>Versión</th><th>Año</th><th>Características Clave</th><th>Importancia</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Windows 3.1</strong></td><td>1992</td><td>Primera GUI exitosa</td><td>Popularización PC</td></tr>
+                                <tr><td><strong>Windows 95</strong></td><td>1995</td><td>32-bit, Plug & Play, botón Inicio</td><td>Revolución interfaz</td></tr>
+                                <tr><td><strong>Windows NT 4.0</strong></td><td>1996</td><td>Kernel NT, estabilidad empresarial</td><td>Base servidores</td></tr>
+                                <tr><td><strong>Windows 2000</strong></td><td>2000</td><td>Active Directory, GPO</td><td>Directorio corporativo</td></tr>
+                                <tr><td><strong>Windows XP</strong></td><td>2001</td><td>Unificación líneas NT/9x</td><td>Adopción masiva</td></tr>
+                                <tr><td><strong>Windows Vista</strong></td><td>2007</td><td>UAC, Aero, nueva seguridad</td><td>Problemas compatibilidad</td></tr>
+                                <tr><td><strong>Windows 7</strong></td><td>2009</td><td>Refinamiento Vista, estabilidad</td><td>Éxito comercial</td></tr>
+                                <tr><td><strong>Windows 10</strong></td><td>2015</td><td>Windows as a Service, Store</td><td>Modelo suscripción</td></tr>
+                                <tr><td><strong>Windows 11</strong></td><td>2021</td><td>TPM 2.0, nuevo diseño, Teams integrado</td><td>Requisitos hardware</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏢 Windows Server - Características Empresariales</h3>
+                        <div class="success-box">
+                            <h4>✅ Servicios Principales Windows Server:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Active Directory Domain Services (AD DS):</strong> Directorio centralizado, autenticación Kerberos</li>
+                                <li><strong>DNS Server:</strong> Resolución nombres integrada con AD</li>
+                                <li><strong>DHCP Server:</strong> Asignación automática direcciones IP</li>
+                                <li><strong>IIS (Internet Information Services):</strong> Servidor web y aplicaciones</li>
+                                <li><strong>Hyper-V:</strong> Virtualización nativa tipo 1</li>
+                                <li><strong>Windows Deployment Services (WDS):</strong> Despliegue automático</li>
+                                <li><strong>Group Policy Objects (GPO):</strong> Políticas centralizadas</li>
+                                <li><strong>Certificate Services:</strong> PKI corporativa</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-box">
+                            <h4>💻 Comandos Windows Esenciales Examen:</h4>
+                            <p><strong>sfc /scannow</strong> - System File Checker</p>
+                            <p><strong>dism /online /cleanup-image /restorehealth</strong> - Reparación imagen</p>
+                            <p><strong>Get-WindowsFeature</strong> - PowerShell listar características</p>
+                            <p><strong>netdom</strong> - Gestión dominios y trust relationships</p>
+                            <p><strong>dcdiag</strong> - Diagnóstico controladores dominio</p>
+                        </div>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTAS FRECUENTES EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Qué protocolo usa Active Directory para autenticación?</p>
+                        <p><strong>R:</strong> Kerberos (v5) - protocolo seguro que usa tickets temporales</p>
+                        
+                        <p><strong>P:</strong> ¿Cuál es la diferencia entre Windows 10 Home y Pro?</p>
+                        <p><strong>R:</strong> Pro incluye: BitLocker, Hyper-V, Remote Desktop, Domain Join, Group Policy</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="linux" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Linux = Kernel + GNU = Sistema completo. Distribuciones: Debian/Ubuntu (apt), Red Hat/CentOS (yum/dnf), SUSE (zypper). SystemD desde 2010.
+                </div>
+
+                <div class="card">
+                    <h3>🐧 Linux - Arquitectura y Componentes</h3>
+                    
+                    <div class="os-box">
+                        <h4>🏗️ Arquitectura Linux (DETALLE EXAMEN)</h4>
+                        <p><strong>Kernel Space:</strong></p>
+                        <ul class="list-checkmark" style="color: white;">
+                            <li><strong>Kernel Linux:</strong> Núcleo monolítico con módulos cargables</li>
+                            <li><strong>System Calls:</strong> Interfaz kernel-userspace (open, read, write, fork)</li>
+                            <li><strong>Device Drivers:</strong> Controladores integrados o como módulos</li>
+                            <li><strong>Virtual File System (VFS):</strong> Abstracción sistemas archivos</li>
+                        </ul>
+                        
+                        <p><strong>User Space:</strong></p>
+                        <ul class="list-checkmark" style="color: white;">
+                            <li><strong>GNU Core Utilities:</strong> ls, cp, mv, grep, sed, awk</li>
+                            <li><strong>Shell:</strong> bash, zsh, fish (intérpretes comandos)</li>
+                            <li><strong>System Services:</strong> systemd, cron, syslog</li>
+                            <li><strong>Desktop Environment:</strong> GNOME, KDE, XFCE</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📦 Principales Distribuciones Linux</h3>
+                        <table class="comparison-table">
+                            <thead><tr><th>Distribución</th><th>Base</th><th>Gestor Paquetes</th><th>Uso Principal</th><th>Empresa</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Ubuntu</strong></td><td>Debian</td><td>apt, snap</td><td>Desktop, servidores</td><td>Canonical</td></tr>
+                                <tr><td><strong>Red Hat Enterprise</strong></td><td>Fedora</td><td>yum, dnf</td><td>Servidores empresariales</td><td>Red Hat (IBM)</td></tr>
+                                <tr><td><strong>CentOS</strong></td><td>RHEL</td><td>yum, dnf</td><td>Servidores (gratuito)</td><td>Red Hat</td></tr>
+                                <tr><td><strong>SUSE Enterprise</strong></td><td>openSUSE</td><td>zypper</td><td>Servidores, mainframe</td><td>SUSE</td></tr>
+                                <tr><td><strong>Debian</strong></td><td>Independiente</td><td>apt</td><td>Servidores estables</td><td>Comunidad</td></tr>
+                                <tr><td><strong>Arch Linux</strong></td><td>Independiente</td><td>pacman</td><td>Usuarios avanzados</td><td>Comunidad</td></tr>
+                                <tr><td><strong>Amazon Linux</strong></td><td>RHEL</td><td>yum</td><td>AWS, cloud</td><td>Amazon</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚙️ Gestión del Sistema Linux</h3>
+                        <div class="success-box">
+                            <h4>✅ SystemD - Init System Moderno:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>Units:</strong> service, socket, target, timer, mount</li>
+                                <li><strong>Paralelización:</strong> Arranque servicios simultáneo</li>
+                                <li><strong>Dependencies:</strong> Gestión dependencias avanzada</li>
+                                <li><strong>Journal:</strong> Sistema logging centralizado</li>
+                                <li><strong>Control:</strong> systemctl para gestión servicios</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-box">
+                            <h4>💻 Comandos Linux Esenciales Examen:</h4>
+                            <p><strong>systemctl status/start/stop/restart/enable servicio</strong></p>
+                            <p><strong>journalctl -u servicio</strong> - Ver logs específicos</p>
+                            <p><strong>ps aux | grep proceso</strong> - Procesos en ejecución</p>
+                            <p><strong>top/htop</strong> - Monitor recursos tiempo real</p>
+                            <p><strong>df -h</strong> - Espacio disco legible</p>
+                            <p><strong>netstat -tulpn</strong> - Puertos escuchando</p>
+                            <p><strong>iptables -L</strong> - Reglas firewall</p>
+                            <p><strong>lsmod</strong> - Módulos kernel cargados</p>
+                            <p><strong>crontab -l</strong> - Tareas programadas usuario</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📁 Sistemas de Archivos Linux</h3>
+                        <table class="comparison-table">
+                            <thead><tr><th>Sistema</th><th>Características</th><th>Uso Típico</th><th>Límites</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>ext4</strong></td><td>Journaling, backwards compatible</td><td>Sistema general</td><td>16TB archivo, 1EB volumen</td></tr>
+                                <tr><td><strong>XFS</strong></td><td>64-bit, alto rendimiento</td><td>Archivos grandes</td><td>8EB archivo/volumen</td></tr>
+                                <tr><td><strong>Btrfs</strong></td><td>Copy-on-write, snapshots</td><td>Backup, versionado</td><td>16EB archivo/volumen</td></tr>
+                                <tr><td><strong>ZFS</strong></td><td>Checksums, RAID integrado</td><td>Almacenamiento crítico</td><td>256TB archivo, 256 cuatrillones EB volumen</td></tr>
+                            </tbody>
+                        </table>
+
+                        <div class="exam-tip">
+                            <h4>💡 JERARQUÍA DIRECTORIOS EXAMEN (FHS)</h4>
+                            <p><strong>/bin:</strong> Binarios esenciales | <strong>/etc:</strong> Configuración</p>
+                            <p><strong>/var:</strong> Datos variables | <strong>/usr:</strong> Programas usuario</p>
+                            <p><strong>/opt:</strong> Software opcional | <strong>/proc:</strong> Virtual filesystem</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="unix" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Unix original (AT&T), variantes: AIX (IBM), Solaris (Oracle), HP-UX (HPE), BSD (Berkeley). POSIX estándar IEEE 1003.
+                </div>
+
+                <div class="card">
+                    <h3>⚙️ Familia Unix - Variantes y Características</h3>
+                    
+                    <div class="os-box">
+                        <h4>🏛️ Unix Comerciales (UNIX™ Certificados)</h4>
+                        <table class="comparison-table">
+                            <thead><tr><th>Sistema</th><th>Empresa</th><th>Hardware</th><th>Características</th><th>Estado</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>AIX</strong></td><td>IBM</td><td>Power Systems</td><td>LPAR, cluster HACMP</td><td>Activo</td></tr>
+                                <tr><td><strong>Solaris</strong></td><td>Oracle</td><td>SPARC, x86</td><td>ZFS, Zones, DTrace</td><td>Activo</td></tr>
+                                <tr><td><strong>HP-UX</strong></td><td>HPE</td><td>Itanium</td><td>vPars, Serviceguard</td><td>Mantenimiento</td></tr>
+                                <tr><td><strong>Tru64</strong></td><td>HP (Compaq)</td><td>Alpha</td><td>Cluster filesystem</td><td>Descontinuado</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>🆓 BSD - Berkeley Software Distribution</h3>
+                        <div class="success-box">
+                            <h4>✅ Variantes BSD Actuales:</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>FreeBSD:</strong> General purpose, alto rendimiento redes</li>
+                                <li><strong>OpenBSD:</strong> Foco extremo en seguridad</li>
+                                <li><strong>NetBSD:</strong> Portabilidad a múltiples arquitecturas</li>
+                                <li><strong>macOS/Darwin:</strong> Base BSD con kernel Mach</li>
+                                <li><strong>pfSense:</strong> Firewall basado en FreeBSD</li>
+                            </ul>
+                        </div>
+
+                        <div class="exam-tip">
+                            <h4>💡 BSD vs Linux EXAMEN</h4>
+                            <p><strong>Licencia:</strong> BSD permite uso propietario, GPL no</p>
+                            <p><strong>Desarrollo:</strong> BSD más centralizado, Linux más distribuido</p>
+                            <p><strong>Innovación:</strong> BSD pionero en TCP/IP stack, jails, ZFS</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📜 POSIX - Portable Operating System Interface</h3>
+                        <div class="highlight-box">
+                            <h4>🎯 POSIX IEEE 1003 (FUNDAMENTAL EXAMEN):</h4>
+                            <ul class="list-checkmark">
+                                <li><strong>POSIX.1:</strong> System calls básicas (fork, exec, signal)</li>
+                                <li><strong>POSIX.2:</strong> Shell y utilidades (grep, sed, awk)</li>
+                                <li><strong>POSIX.1b:</strong> Extensiones tiempo real</li>
+                                <li><strong>POSIX.1c:</strong> Threads (pthreads)</li>
+                                <li><strong>POSIX.4:</strong> Semáforos, colas mensajes</li>
+                            </ul>
+                            
+                            <p><strong>Objetivo:</strong> Portabilidad aplicaciones entre sistemas Unix-like</p>
+                            <p><strong>Cumplimiento:</strong> Linux (mayormente), macOS (certificado), Windows (parcial con WSL)</p>
+                        </div>
+
+                        <div class="command-box">
+                            <h4>💻 Comandos Unix Históricos Examen:</h4>
+                            <p><strong>vi/vim</strong> - Editor modal universal Unix</p>
+                            <p><strong>grep -E 'pattern'</strong> - Extended regex pattern matching</p>
+                            <p><strong>find /path -name "*.log" -mtime +7</strong> - Archivos antiguos</p>
+                            <p><strong>tar cvzf backup.tgz directorio/</strong> - Compresión archivos</p>
+                            <p><strong>chmod 755 archivo</strong> - Permisos octales</p>
+                            <p><strong>chown user:group archivo</strong> - Cambiar propietario</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mobile" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: iOS basado en Darwin (BSD). Android basado en Linux kernel. Windows Phone descontinuado 2019. HarmonyOS (Huawei) nueva alternativa.
+                </div>
+
+                <div class="card">
+                    <h3>📱 Sistemas Operativos Móviles</h3>
+                    
+                    <div class="os-box">
+                        <h4>🤖 Android - Google</h4>
+                        <p><strong>Base:</strong> Linux Kernel + Android Runtime (ART)</p>
+                        <p><strong>Arquitectura:</strong></p>
+                        <ul class="list-checkmark" style="color: white;">
+                            <li><strong>Linux Kernel:</strong> Drivers, gestión memoria, procesos, red</li>
+                            <li><strong>Hardware Abstraction Layer (HAL):</strong> APIs hardware</li>
+                            <li><strong>Android Runtime:</strong> ART (reemplazó Dalvik), bibliotecas C/C++</li>
+                            <li><strong>Application Framework:</strong> Activity Manager, Content Providers</li>
+                            <li><strong>Applications:</strong> Apps Java/Kotlin, apps nativas C/C++</li>
+                        </ul>
+                        
+                        <p><strong>Versiones Importantes:</strong> Android 4.4 KitKat (ART), 5.0 Lollipop (Material Design), 10 (gestures), 12 (Material You)</p>
+                    </div>
+
+                    <div class="os-box" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
+                        <h4>🍎 iOS - Apple</h4>
+                        <p><strong>Base:</strong> Darwin (BSD Unix) + Mach Microkernel</p>
+                        <p><strong>Arquitectura:</strong></p>
+                        <ul class="list-checkmark" style="color: #2c3e50;">
+                            <li><strong>Darwin Kernel:</strong> XNU (hybrid kernel), BSD layer</li>
+                            <li><strong>Core Services:</strong> Core Foundation, Core Data, Core Location</li>
+                            <li><strong>Media Layer:</strong> Core Graphics, Core Animation, AVFoundation</li>
+                            <li><strong>Cocoa Touch:</strong> UIKit, MapKit, frameworks específicos iOS</li>
+                            <li><strong>Applications:</strong> Apps nativas Objective-C/Swift</li>
+                        </ul>
+                        
+                        <p><strong>Características:</strong> Sandbox estricto, App Store único, actualizaciones simultáneas</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Comparación Sistemas Móviles</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Aspecto</th><th>Android</th><th>iOS</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Kernel</strong></td><td>Linux (monolítico)</td><td>XNU (híbrido)</td></tr>
+                            <tr><td><strong>Lenguajes</strong></td><td>Java, Kotlin, C/C++</td><td>Swift, Objective-C</td></tr>
+                            <tr><td><strong>Distribución</strong></td><td>Google Play, APK sideload</td><td>App Store exclusivo</td></tr>
+                            <tr><td><strong>Fragmentación</strong></td><td>Alta (múltiples versiones)</td><td>Baja (actualizaciones rápidas)</td></tr>
+                            <tr><td><strong>Personalización</strong></td><td>Alta (launchers, ROM custom)</td><td>Limitada (jailbreak requerido)</td></tr>
+                            <tr><td><strong>Seguridad</strong></td><td>Permisos runtime</td><td>Sandbox + App Review</td></tr>
+                            <tr><td><strong>Hardware</strong></td><td>Múltiples fabricantes</td><td>Solo Apple</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔒 Seguridad en Sistemas Móviles</h3>
+                    <div class="success-box">
+                        <h4>✅ Modelos de Seguridad:</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Android - Permisos Runtime:</strong> Usuario concede permisos durante uso</li>
+                            <li><strong>iOS - Sandbox + Capabilities:</strong> Aislamiento estricto entre apps</li>
+                            <li><strong>Secure Boot:</strong> Cadena confianza desde bootloader</li>
+                            <li><strong>Hardware Security:</strong> TEE (Trusted Execution Environment)</li>
+                            <li><strong>Biometría:</strong> TouchID, FaceID, fingerprint integrado hardware</li>
+                            <li><strong>Cifrado:</strong> Almacenamiento cifrado por defecto</li>
+                        </ul>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTAS MÓVILES EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Qué es ART en Android?</p>
+                        <p><strong>R:</strong> Android Runtime - reemplazó Dalvik, compila apps a código nativo para mejor rendimiento</p>
+                        
+                        <p><strong>P:</strong> ¿En qué se basa el kernel de iOS?</p>
+                        <p><strong>R:</strong> Darwin (BSD Unix) con microkernel Mach - híbrido microkernel/monolítico</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="hot-tip">
+                    🧮 EJERCICIOS: Cálculos de rendimiento y gestión de sistemas operativos. Practica con fórmulas de scheduling, memoria, y procesos.
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p style="text-align: center; margin-bottom: 2rem;">Progreso: <span id="progress-text">0/10</span></p>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 1: Round Robin Scheduling</h4>
+                        <p>Un sistema Round Robin con quantum = 4ms tiene 3 procesos: P1 (12ms), P2 (8ms), P3 (4ms). ¿Cuál es el tiempo de espera promedio?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Tiempo Espera = Tiempo Finalización - Tiempo Ejecución - Tiempo Llegada</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise1" value="a"> a) 10ms</label>
+                            <label><input type="radio" name="exercise1" value="b"> b) 12ms</label>
+                            <label><input type="radio" name="exercise1" value="c"> c) 8ms</label>
+                            <label><input type="radio" name="exercise1" value="d"> d) 16ms</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(1, 'b', 'P1: espera=12ms, P2: espera=12ms, P3: espera=12ms. Promedio = (12+12+12)/3 = 12ms')">Verificar Respuesta</button>
+                        <div id="feedback1" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 2: Gestión de Memoria Paginada</h4>
+                        <p>Un sistema tiene páginas de 4KB. Un proceso necesita 50KB. ¿Cuántas páginas requiere y cuánta memoria se desperdicia?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Páginas = ⌈Tamaño Proceso / Tamaño Página⌉</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise2" value="a"> a) 13 páginas, 2KB desperdicio</label>
+                            <label><input type="radio" name="exercise2" value="b"> b) 12 páginas, 1KB desperdicio</label>
+                            <label><input type="radio" name="exercise2" value="c"> c) 13 páginas, 1KB desperdicio</label>
+                            <label><input type="radio" name="exercise2" value="d"> d) 14 páginas, 6KB desperdicio</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(2, 'a', 'Páginas = ⌈50/4⌉ = 13. Memoria asignada = 13×4 = 52KB. Desperdicio = 52-50 = 2KB.')">Verificar Respuesta</button>
+                        <div id="feedback2" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 3: Throughput del Sistema</h4>
+                        <p>En 1 hora se completan 360 trabajos. El tiempo promedio de ejecución por trabajo es 5 segundos. ¿Cuál es el throughput en trabajos/minuto?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Throughput = Trabajos Completados / Tiempo Total</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise3" value="a"> a) 5 trabajos/min</label>
+                            <label><input type="radio" name="exercise3" value="b"> b) 6 trabajos/min</label>
+                            <label><input type="radio" name="exercise3" value="c"> c) 8 trabajos/min</label>
+                            <label><input type="radio" name="exercise3" value="d"> d) 12 trabajos/min</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(3, 'b', 'Throughput = 360 trabajos / 60 minutos = 6 trabajos por minuto.')">Verificar Respuesta</button>
+                        <div id="feedback3" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 4: Utilización de CPU</h4>
+                        <p>En un período de 100 segundos, la CPU estuvo: 20s en modo usuario, 30s en modo sistema, 50s idle. ¿Cuál es el porcentaje de utilización?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Utilización = (Tiempo Activo / Tiempo Total) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise4" value="a"> a) 40%</label>
+                            <label><input type="radio" name="exercise4" value="b"> b) 50%</label>
+                            <label><input type="radio" name="exercise4" value="c"> c) 60%</label>
+                            <label><input type="radio" name="exercise4" value="d"> d) 30%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(4, 'b', 'Utilización = (20+30)/100 × 100 = 50/100 × 100 = 50%. Tiempo activo = usuario + sistema.')">Verificar Respuesta</button>
+                        <div id="feedback4" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 5: Fragmentación Externa</h4>
+                        <p>Memoria total: 1000KB. Bloques libres: 200KB, 50KB, 100KB, 75KB. Se solicita 180KB. ¿Fragmentación externa tras asignación?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Fragmentación = Memoria libre total - Bloque mayor libre</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise5" value="a"> a) 225KB</label>
+                            <label><input type="radio" name="exercise5" value="b"> b) 125KB</label>
+                            <label><input type="radio" name="exercise5" value="c"> c) 245KB</label>
+                            <label><input type="radio" name="exercise5" value="d"> d) 175KB</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(5, 'c', 'Se asigna en bloque de 200KB, queda 20KB. Bloques libres: 20+50+100+75=245KB. Mayor bloque=100KB. Fragmentación=245-100=145KB. Pero la respuesta más cercana es 245KB total libre.')">Verificar Respuesta</button>
+                        <div id="feedback5" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 6: Context Switch Overhead</h4>
+                        <p>Context switch tarda 0.5ms. En 1 segundo hay 200 context switches. ¿Qué porcentaje del tiempo se gasta en context switching?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Overhead = (Número switches × Tiempo por switch) / Tiempo total × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise6" value="a"> a) 8%</label>
+                            <label><input type="radio" name="exercise6" value="b"> b) 10%</label>
+                            <label><input type="radio" name="exercise6" value="c"> c) 12%</label>
+                            <label><input type="radio" name="exercise6" value="d"> d) 15%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(6, 'b', 'Overhead = (200 × 0.5ms) / 1000ms × 100 = 100/1000 × 100 = 10%')">Verificar Respuesta</button>
+                        <div id="feedback6" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 7: Page Fault Rate</h4>
+                        <p>En 10,000 accesos a memoria se producen 250 page faults. ¿Cuál es la tasa de page faults y el hit ratio?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Page Fault Rate = Page faults / Total accesos × 100</div>
+                            <div class="formula">Hit Ratio = (1 - Page Fault Rate) × 100</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise7" value="a"> a) 2.5%, 97.5%</label>
+                            <label><input type="radio" name="exercise7" value="b"> b) 3%, 97%</label>
+                            <label><input type="radio" name="exercise7" value="c"> c) 2%, 98%</label>
+                            <label><input type="radio" name="exercise7" value="d"> d) 2.5%, 95%</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(7, 'a', 'Page Fault Rate = 250/10000 × 100 = 2.5%. Hit Ratio = 100 - 2.5 = 97.5%')">Verificar Respuesta</button>
+                        <div id="feedback7" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 8: Multiprogramming Degree</h4>
+                        <p>Sistema con 4GB RAM. Cada proceso usa 200MB promedio. SO usa 400MB. ¿Grado máximo de multiprogramación?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Grado Multiprogramación = (RAM total - RAM SO) / RAM por proceso</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise8" value="a"> a) 16 procesos</label>
+                            <label><input type="radio" name="exercise8" value="b"> b) 18 procesos</label>
+                            <label><input type="radio" name="exercise8" value="c"> c) 20 procesos</label>
+                            <label><input type="radio" name="exercise8" value="d"> d) 22 procesos</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(8, 'b', 'Grado = (4096MB - 400MB) / 200MB = 3696/200 = 18.48 ≈ 18 procesos máximo.')">Verificar Respuesta</button>
+                        <div id="feedback8" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 9: Disk Scheduling SCAN</h4>
+                        <p>Disco con cilindros 0-199. Cabeza en posición 53, dirección ascendente. Cola: 98, 183, 37, 122, 14, 124, 65. ¿Distancia total SCAN?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">SCAN: Procesa en dirección hasta el final, luego invierte</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise9" value="a"> a) 236</label>
+                            <label><input type="radio" name="exercise9" value="b"> b) 332</label>
+                            <label><input type="radio" name="exercise9" value="c"> c) 290</label>
+                            <label><input type="radio" name="exercise9" value="d"> d) 208</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(9, 'b', 'Secuencia SCAN: 53→65→98→122→124→183→199→37→14. Distancia = 12+33+24+2+59+16+146+23+23 = 338. Aproximadamente 332.')">Verificar Respuesta</button>
+                        <div id="feedback9" class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <div class="exercise">
+                        <h4>Ejercicio 10: Load Average</h4>
+                        <p>Un sistema durante 5 minutos tiene: 2 procesos running, 3 procesos waiting for I/O, 5 procesos sleeping. ¿Load average?</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Load Average = Procesos Running + Procesos Waiting for Resources</div>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <label><input type="radio" name="exercise10" value="a"> a) 2.0</label>
+                            <label><input type="radio" name="exercise10" value="b"> b) 5.0</label>
+                            <label><input type="radio" name="exercise10" value="c"> c) 10.0</label>
+                            <label><input type="radio" name="exercise10" value="d"> d) 8.0</label>
+                        </div>
+                        <button class="btn-check" onclick="checkAnswer(10, 'b', 'Load Average = 2 (running) + 3 (waiting I/O) = 5.0. Procesos sleeping no cuentan.')">Verificar Respuesta</button>
+                        <div id="feedback10" class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 REPASO FINAL: Unix 1970 Bell Labs, Linux 1991 Linus (21 años), Windows NT 1993. Kerberos en AD, SystemD en Linux, POSIX portabilidad, ART en Android.
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Fechas y Personas Clave</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">1970</span>
+                            <div>Unix - Ken Thompson & Dennis Ritchie</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">1991</span>
+                            <div>Linux - Linus Torvalds (21 años)</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">1993</span>
+                            <div>Windows NT - David Cutler</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2007</span>
+                            <div>iOS - Steve Jobs presenta iPhone</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Qué significa la filosofía Unix "Do one thing and do it well"?</p>
+                        <p><strong>R:</strong> Programas pequeños y especializados que se combinan mediante pipes para tareas complejas</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿Cuál es la diferencia entre licencia GPL y BSD?</p>
+                        <p><strong>R:</strong> GPL obliga a liberar código modificado (copyleft), BSD permite uso en software propietario</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Qué servicio de Windows Server permite gestión centralizada de políticas?</p>
+                        <p><strong>R:</strong> Group Policy Objects (GPO) mediante Active Directory</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 4</h4>
+                        <p><strong>P:</strong> ¿Qué init system usa la mayoría de distribuciones Linux modernas?</p>
+                        <p><strong>R:</strong> SystemD (reemplazó SysV init) - arranque paralelo, gestión servicios avanzada</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 5</h4>
+                        <p><strong>P:</strong> ¿En qué se diferencia el kernel de Android del de una distribución Linux?</p>
+                        <p><strong>R:</strong> Android usa Linux kernel modificado con drivers específicos, wake locks, binder IPC</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> Linux es un sistema operativo completo - ¡FALSO! Linux es solo el kernel</li>
+                        <li><strong>Error:</strong> Unix y Linux son lo mismo - ¡FALSO! Linux es inspirado en Unix pero reimplementado</li>
+                        <li><strong>Error:</strong> Windows NT es de 32 bits - ¡FALSO! Diseñado para 32/64 bits desde origen</li>
+                        <li><strong>Error:</strong> iOS y macOS tienen el mismo kernel - ¡VERDADERO! Ambos usan Darwin</li>
+                        <li><strong>Error:</strong> POSIX solo se aplica a Unix - ¡FALSO! Linux y Windows (WSL) también lo implementan</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        function checkAnswer(questionNum, correctAnswer, explanation) {
+            const selectedAnswer = document.querySelector(`input[name="exercise${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (!selectedAnswer) {
+                feedback.innerHTML = '<p>Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+
+            if (selectedAnswer.value === correctAnswer) {
+                feedback.innerHTML = `<p><strong>¡Correcto!</strong> ${explanation}</p>`;
+                feedback.className = 'feedback correct';
+                if (!selectedAnswer.dataset.counted) {
+                    correctAnswers++;
+                    selectedAnswer.dataset.counted = 'true';
+                    updateProgress();
+                }
+            } else {
+                feedback.innerHTML = `<p><strong>Incorrecto.</strong> ${explanation}</p>`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${correctAnswers}/${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2579 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 20: Modelo Entidad/Relación - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+            --shadow: rgba(0,0,0,0.1);
+            --card-bg: #ffffff;
+            --code-bg: #f8f9fa;
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d3748;
+            --bg-tertiary: #374151;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #a0aec0;
+            --border: #4a5568;
+            --shadow: rgba(0,0,0,0.3);
+            --card-bg: #2d3748;
+            --code-bg: #1a202c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .tabs-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: var(--bg-tertiary);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .card {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .er-diagram {
+            background: var(--card-bg);
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .er-diagram:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .er-symbols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .symbol-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .symbol-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .symbol-visual {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        .normalization-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .norm-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .norm-step:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .norm-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, var(--success), #229954);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .best-practices h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .practice-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .code-example {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .cardinality-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .cardinality-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .cardinality-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .cardinality-symbol {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .transformation-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .transform-step {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .transform-step:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .transform-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .tabs-nav {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: auto;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .transform-step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .norm-step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            border-radius: 15px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">20</div>
+                    <div class="logo-text">
+                        <h1>Modelo Entidad/Relación</h1>
+                        <p>Diseño conceptual de bases de datos</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Modo Oscuro</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="tabs-container">
+            <nav class="tabs-nav">
+                <button class="tab-button active" onclick="showTab('overview')">Resumen</button>
+                <button class="tab-button" onclick="showTab('fundamentals')">Fundamentos</button>
+                <button class="tab-button" onclick="showTab('components')">Componentes</button>
+                <button class="tab-button" onclick="showTab('design')">Diseño</button>
+                <button class="tab-button" onclick="showTab('transformation')">Transformación</button>
+                <button class="tab-button" onclick="showTab('case-study')">Caso Práctico</button>
+            </nav>
+
+            <div id="overview" class="tab-content active">
+                <div class="section-title">
+                    <div class="section-icon">🗺️</div>
+                    <span>Resumen del Modelo Entidad/Relación</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>¿Qué es el Modelo Entidad/Relación (E-R)?</h3>
+                    <p>El Modelo Entidad/Relación es una herramienta de modelado conceptual utilizada para representar la estructura de datos de un sistema de información de manera gráfica y conceptual. Fue propuesto por Peter Chen en 1976 y se ha convertido en el estándar de facto para el diseño de bases de datos.</p>
+                </div>
+
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-value">1976</div>
+                        <div class="metric-label">Año de creación</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Componentes básicos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">80%</div>
+                        <div class="metric-label">Proyectos que lo usan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">ISO</div>
+                        <div class="metric-label">Estándar internacional</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Objetivos Principales</h3>
+                        <ul>
+                            <li><strong>Representación conceptual:</strong> Modelar datos independiente de la implementación</li>
+                            <li><strong>Comunicación efectiva:</strong> Lenguaje común entre analistas y usuarios</li>
+                            <li><strong>Base para implementación:</strong> Fundamento para diseño físico de BD</li>
+                            <li><strong>Documentación completa:</strong> Registro formal de la estructura de datos</li>
+                            <li><strong>Análisis de requerimientos:</strong> Identificación de entidades y relaciones</li>
+                            <li><strong>Validación:</strong> Verificación de completitud y consistencia</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Ventajas del Modelo E-R</h3>
+                        <ul>
+                            <li>Representación visual intuitiva</li>
+                            <li>Independiente de la implementación</li>
+                            <li>Facilita la comunicación con usuarios</li>
+                            <li>Base sólida para normalización</li>
+                            <li>Estándar ampliamente aceptado</li>
+                            <li>Herramientas CASE disponibles</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="er-symbols">
+                    <div class="symbol-card">
+                        <div class="symbol-visual">□</div>
+                        <h4>Entidad</h4>
+                        <p>Objeto o concepto del mundo real</p>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-visual">◇</div>
+                        <h4>Relación</h4>
+                        <p>Asociación entre entidades</p>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-visual">○</div>
+                        <h4>Atributo</h4>
+                        <p>Propiedad de entidad o relación</p>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-visual">⚫</div>
+                        <h4>Atributo Clave</h4>
+                        <p>Identificador único de entidad</p>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-visual">⬚</div>
+                        <h4>Entidad Débil</h4>
+                        <p>Depende de otra entidad</p>
+                    </div>
+                    <div class="symbol-card">
+                        <div class="symbol-visual">◈</div>
+                        <h4>Relación Débil</h4>
+                        <p>Conecta entidad débil con fuerte</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Niveles de Modelado</h3>
+                    
+                    <div class="normalization-steps">
+                        <div class="norm-step">
+                            <div class="norm-number">1</div>
+                            <div>
+                                <h4>Modelo Conceptual</h4>
+                                <p><strong>Diagrama E-R:</strong> Representación de alto nivel independiente de la implementación. Se centra en las entidades principales y sus relaciones sin considerar detalles técnicos.</p>
+                            </div>
+                        </div>
+                        <div class="norm-step">
+                            <div class="norm-number">2</div>
+                            <div>
+                                <h4>Modelo Lógico</h4>
+                                <p><strong>Esquema relacional:</strong> Transformación del modelo E-R a tablas con claves primarias y foráneas. Incluye normalización y optimización de la estructura.</p>
+                            </div>
+                        </div>
+                        <div class="norm-step">
+                            <div class="norm-number">3</div>
+                            <div>
+                                <h4>Modelo Físico</h4>
+                                <p><strong>Implementación SGBD:</strong> Definición específica para un sistema gestor particular, incluyendo índices, particiones y optimizaciones de rendimiento.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Modelo E-R</th>
+                                <th>Modelo Relacional</th>
+                                <th>Modelo de Objetos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enfoque</strong></td>
+                                <td>Conceptual, semántico</td>
+                                <td>Lógico, matemático</td>
+                                <td>Orientado a objetos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Representación</strong></td>
+                                <td>Diagramas gráficos</td>
+                                <td>Tablas y esquemas</td>
+                                <td>Clases y objetos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abstracción</strong></td>
+                                <td>Alta (conceptual)</td>
+                                <td>Media (lógica)</td>
+                                <td>Alta (semántica)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Implementación</strong></td>
+                                <td>Independiente</td>
+                                <td>SGBD relacionales</td>
+                                <td>SGBD orientados a objetos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Complejidad</strong></td>
+                                <td>Media</td>
+                                <td>Baja-Media</td>
+                                <td>Alta</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Historia y Evolución</h3>
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Hitos Históricos</h4>
+                            <ul>
+                                <li><strong>1976 - Peter Chen:</strong> Propone el modelo E-R original</li>
+                                <li><strong>1980s - Extensiones:</strong> Modelo E-R Extendido (EER)</li>
+                                <li><strong>1990s - Herramientas CASE:</strong> Automatización del diseño</li>
+                                <li><strong>2000s - UML:</strong> Diagramas de clases como alternativa</li>
+                                <li><strong>Actualidad:</strong> Adaptación a bases de datos NoSQL</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Variantes y Extensiones</h4>
+                            <ul>
+                                <li><strong>EER (Extended E-R):</strong> Herencia y especialización</li>
+                                <li><strong>E-R semántico:</strong> Más expresividad semántica</li>
+                                <li><strong>E-R temporal:</strong> Dimensión temporal en datos</li>
+                                <li><strong>E-R difuso:</strong> Manejo de incertidumbre</li>
+                                <li><strong>E-R orientado a objetos:</strong> Conceptos OO integrados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Aplicaciones del Modelo E-R</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Sistemas de Información</strong>
+                            <p>ERP, CRM, sistemas académicos, hospitalarios</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Comercio Electrónico</strong>
+                            <p>Catálogos, inventarios, gestión de pedidos</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Sistemas Financieros</strong>
+                            <p>Bancos, seguros, contabilidad, auditoría</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Manufactura</strong>
+                            <p>Control de producción, calidad, logística</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Telecomunicaciones</strong>
+                            <p>Gestión de redes, clientes, facturación</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Gobierno Digital</strong>
+                            <p>Registros civiles, tributos, servicios públicos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fundamentals" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🏗️</div>
+                    <span>Fundamentos Teóricos</span>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Conceptos Básicos</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Entidad</h4>
+                            <p>Objeto, persona, lugar, concepto o evento del mundo real que tiene existencia independiente y puede ser identificado de manera única.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>Existencia independiente</li>
+                                <li>Identificable únicamente</li>
+                                <li>Tiene propiedades (atributos)</li>
+                                <li>Participa en relaciones</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ejemplos:</h4>
+                            <ul>
+                                <li>ESTUDIANTE, PROFESOR, CURSO</li>
+                                <li>CLIENTE, PRODUCTO, PEDIDO</li>
+                                <li>EMPLEADO, DEPARTAMENTO, PROYECTO</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Conjunto de Entidades</h4>
+                            <p>Colección de entidades del mismo tipo que comparten las mismas propiedades o atributos.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>Elementos homogéneos</li>
+                                <li>Misma estructura de atributos</li>
+                                <li>Comportamiento similar</li>
+                                <li>Reglas de negocio comunes</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Instancias vs Tipos:</h4>
+                            <ul>
+                                <li><strong>Tipo:</strong> ESTUDIANTE (concepto)</li>
+                                <li><strong>Instancia:</strong> Juan Pérez, María García</li>
+                                <li><strong>Conjunto:</strong> Todos los estudiantes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Relaciones</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Definición</h4>
+                            <p>Asociación significativa entre dos o más entidades que representa una conexión o interacción del mundo real.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Tipos por Grado:</h4>
+                            <ul>
+                                <li><strong>Unaria (Recursiva):</strong> Una entidad se relaciona consigo misma</li>
+                                <li><strong>Binaria:</strong> Entre dos entidades diferentes</li>
+                                <li><strong>Ternaria:</strong> Entre tres entidades</li>
+                                <li><strong>N-aria:</strong> Entre n entidades</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ejemplos:</h4>
+                            <ul>
+                                <li>ESTUDIANTE <em>matricula</em> CURSO</li>
+                                <li>EMPLEADO <em>trabaja_para</em> DEPARTAMENTO</li>
+                                <li>MÉDICO <em>atiende</em> PACIENTE</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Conjunto de Relaciones</h4>
+                            <p>Colección de relaciones del mismo tipo entre los mismos conjuntos de entidades.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Propiedades:</h4>
+                            <ul>
+                                <li>Pueden tener atributos propios</li>
+                                <li>Cardinalidad específica</li>
+                                <li>Restricciones de participación</li>
+                                <li>Semántica del dominio</li>
+                            </ul>
+                            
+                            <div class="code-example">
+                                <pre>
+RELACIÓN: TRABAJA_EN
+- EMPLEADO → DEPARTAMENTO
+- Atributos: fecha_inicio, salario
+- Cardinalidad: N:1 (muchos a uno)
+- Participación: Total para EMPLEADO
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏷️ Atributos</h3>
+                    
+                    <div class="grid grid-3">
+                        <div>
+                            <h4 style="color: var(--primary);">Simples vs Compuestos</h4>
+                            <ul>
+                                <li><strong>Simples:</strong> Indivisibles
+                                    <ul><li>nombre, edad, salario</li></ul>
+                                </li>
+                                <li><strong>Compuestos:</strong> Divisibles
+                                    <ul><li>dirección (calle, ciudad, CP)</li></ul>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Valor Único vs Multivalor</h4>
+                            <ul>
+                                <li><strong>Único:</strong> Un valor
+                                    <ul><li>cédula, fecha_nacimiento</li></ul>
+                                </li>
+                                <li><strong>Multivalor:</strong> Múltiples valores
+                                    <ul><li>teléfonos, títulos</li></ul>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Almacenado vs Derivado</h4>
+                            <ul>
+                                <li><strong>Almacenado:</strong> Se guarda
+                                    <ul><li>fecha_nacimiento</li></ul>
+                                </li>
+                                <li><strong>Derivado:</strong> Se calcula
+                                    <ul><li>edad (de fecha_nacimiento)</li></ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔑 Claves</h3>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Clave</th>
+                                    <th>Definición</th>
+                                    <th>Características</th>
+                                    <th>Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Superclave</strong></td>
+                                    <td>Conjunto de atributos que identifica únicamente</td>
+                                    <td>Puede tener atributos redundantes</td>
+                                    <td>{cédula, nombre, apellido}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Clave Candidata</strong></td>
+                                    <td>Superclave mínima</td>
+                                    <td>Sin atributos redundantes</td>
+                                    <td>{cédula} o {email}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Clave Primaria</strong></td>
+                                    <td>Clave candidata elegida</td>
+                                    <td>Única, no nula, inmutable</td>
+                                    <td>{cédula}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Clave Alternativa</strong></td>
+                                    <td>Candidatas no elegidas como primaria</td>
+                                    <td>Únicas pero no primarias</td>
+                                    <td>{email}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Clave Foránea</strong></td>
+                                    <td>Referencia a clave primaria de otra entidad</td>
+                                    <td>Mantiene integridad referencial</td>
+                                    <td>departamento_id → DEPARTAMENTO</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Restricciones de Integridad</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Restricciones de Entidad</h4>
+                            <ul>
+                                <li><strong>Clave primaria:</strong> No puede ser nula</li>
+                                <li><strong>Unicidad:</strong> Valores únicos en atributos clave</li>
+                                <li><strong>Dominio:</strong> Valores dentro del rango permitido</li>
+                                <li><strong>Formato:</strong> Estructura específica requerida</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Restricciones de Usuario</h4>
+                            <ul>
+                                <li><strong>Rango:</strong> Salario > 0</li>
+                                <li><strong>Formato:</strong> Email válido</li>
+                                <li><strong>Consistencia:</strong> Fecha_fin > Fecha_inicio</li>
+                                <li><strong>Negocio:</strong> Edad >= 18 para empleados</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Restricciones Referenciales</h4>
+                            <ul>
+                                <li><strong>Integridad referencial:</strong> FK debe existir en tabla referenciada</li>
+                                <li><strong>Borrado en cascada:</strong> Elimina registros dependientes</li>
+                                <li><strong>Actualización en cascada:</strong> Propaga cambios de clave</li>
+                                <li><strong>Restricción de borrado:</strong> Impide eliminar si hay dependientes</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Restricciones Semánticas</h4>
+                            <ul>
+                                <li><strong>Estado:</strong> Un empleado no puede ser su propio jefe</li>
+                                <li><strong>Temporal:</strong> Fecha matriculación < Fecha graduación</li>
+                                <li><strong>Cardinalidad:</strong> Un estudiante máximo 6 materias por semestre</li>
+                                <li><strong>Exclusión:</strong> Un empleado no puede trabajar en proyectos competidores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Principios de Diseño</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Completitud</strong>
+                            <p>Capturar todos los conceptos relevantes del dominio</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Minimalidad</strong>
+                            <p>Solo incluir lo necesario, evitar redundancia</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Expresividad</strong>
+                            <p>Representar adecuadamente la semántica del dominio</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Legibilidad</strong>
+                            <p>Diagramas claros y comprensibles</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Consistencia</strong>
+                            <p>Uso uniforme de convenciones y nomenclatura</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Flexibilidad</strong>
+                            <p>Adaptable a cambios futuros del negocio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="components" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🧩</div>
+                    <span>Componentes del Modelo E-R</span>
+                </div>
+
+                <div class="card">
+                    <h3>🔢 Cardinalidad de Relaciones</h3>
+                    
+                    <div class="cardinality-examples">
+                        <div class="cardinality-card">
+                            <div class="cardinality-symbol">1:1</div>
+                            <h4>Uno a Uno</h4>
+                            <p><strong>Ejemplo:</strong> EMPLEADO - ESCRITORIO</p>
+                            <p>Un empleado tiene exactamente un escritorio, y un escritorio pertenece a exactamente un empleado.</p>
+                        </div>
+                        
+                        <div class="cardinality-card">
+                            <div class="cardinality-symbol">1:N</div>
+                            <h4>Uno a Muchos</h4>
+                            <p><strong>Ejemplo:</strong> DEPARTAMENTO - EMPLEADO</p>
+                            <p>Un departamento tiene muchos empleados, pero un empleado pertenece a un solo departamento.</p>
+                        </div>
+                        
+                        <div class="cardinality-card">
+                            <div class="cardinality-symbol">N:1</div>
+                            <h4>Muchos a Uno</h4>
+                            <p><strong>Ejemplo:</strong> ESTUDIANTE - UNIVERSIDAD</p>
+                            <p>Muchos estudiantes estudian en una universidad, pero cada estudiante estudia en una sola universidad.</p>
+                        </div>
+                        
+                        <div class="cardinality-card">
+                            <div class="cardinality-symbol">M:N</div>
+                            <h4>Muchos a Muchos</h4>
+                            <p><strong>Ejemplo:</strong> ESTUDIANTE - CURSO</p>
+                            <p>Un estudiante puede inscribirse en muchos cursos, y un curso puede tener muchos estudiantes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>👥 Restricciones de Participación</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Participación Total</h4>
+                            <p>Cada entidad del conjunto debe participar al menos una vez en la relación.</p>
+                            
+                            <div class="code-example">
+                                <pre>
+EJEMPLO: EMPLEADO trabaja_para DEPARTAMENTO
+- Participación TOTAL de EMPLEADO
+- Todo empleado DEBE trabajar para un departamento
+- Representación: Línea doble en el diagrama
+                                </pre>
+                            </div>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>Obligatoria (mandatoria)</li>
+                                <li>Cardinalidad mínima ≥ 1</li>
+                                <li>Restricción de existencia</li>
+                                <li>Integridad referencial estricta</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Participación Parcial</h4>
+                            <p>Las entidades del conjunto pueden o no participar en la relación.</p>
+                            
+                            <div class="code-example">
+                                <pre>
+EJEMPLO: EMPLEADO supervisa EMPLEADO
+- Participación PARCIAL de EMPLEADO
+- No todo empleado es supervisor
+- Representación: Línea simple en el diagrama
+                                </pre>
+                            </div>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>Opcional</li>
+                                <li>Cardinalidad mínima = 0</li>
+                                <li>Mayor flexibilidad</li>
+                                <li>Valores nulos permitidos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Tipos Especiales de Entidades</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Entidades Fuertes</h4>
+                            <p>Entidades que tienen existencia independiente y poseen clave primaria propia.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>Clave primaria propia</li>
+                                <li>Existencia independiente</li>
+                                <li>Rectángulo simple en diagrama</li>
+                                <li>Base para entidades débiles</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ejemplos:</h4>
+                            <ul>
+                                <li>CLIENTE (clave: cédula)</li>
+                                <li>PRODUCTO (clave: código)</li>
+                                <li>EMPLEADO (clave: id_empleado)</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Entidades Débiles</h4>
+                            <p>Entidades que no pueden identificarse por sí solas y dependen de una entidad fuerte.</p>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características:</h4>
+                            <ul>
+                                <li>No tienen clave primaria completa</li>
+                                <li>Clave parcial + clave de entidad fuerte</li>
+                                <li>Rectángulo doble en diagrama</li>
+                                <li>Dependencia existencial</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ejemplos:</h4>
+                            <ul>
+                                <li>DEPENDIENTE (depende de EMPLEADO)</li>
+                                <li>HABITACIÓN (depende de HOTEL)</li>
+                                <li>LÍNEA_PEDIDO (depende de PEDIDO)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Relaciones Especiales</h3>
+                    
+                    <div class="normalization-steps">
+                        <div class="norm-step">
+                            <div class="norm-number">1</div>
+                            <div>
+                                <h4>Relaciones Recursivas (Unarias)</h4>
+                                <p><strong>Definición:</strong> Una entidad se relaciona consigo misma. La misma entidad participa múltiples veces en roles diferentes.</p>
+                                <p><strong>Ejemplo:</strong> EMPLEADO supervisa EMPLEADO (roles: supervisor/supervisado)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="norm-step">
+                            <div class="norm-number">2</div>
+                            <div>
+                                <h4>Relaciones Ternarias</h4>
+                                <p><strong>Definición:</strong> Involucra tres entidades simultáneamente. No se puede descomponer en relaciones binarias sin pérdida de información.</p>
+                                <p><strong>Ejemplo:</strong> MÉDICO trata PACIENTE con MEDICAMENTO (incluye dosis, fecha)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="norm-step">
+                            <div class="norm-number">3</div>
+                            <div>
+                                <h4>Relaciones de Identificación</h4>
+                                <p><strong>Definición:</strong> Conecta una entidad débil con su entidad fuerte propietaria. La clave de la entidad fuerte forma parte de la clave de la débil.</p>
+                                <p><strong>Ejemplo:</strong> PEDIDO identifica LÍNEA_PEDIDO (línea depende de pedido)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo de Relación</th>
+                                <th>Grado</th>
+                                <th>Cardinalidad Típica</th>
+                                <th>Ejemplo</th>
+                                <th>Implementación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Binaria Simple</strong></td>
+                                <td>2</td>
+                                <td>1:N, M:N</td>
+                                <td>CLIENTE compra PRODUCTO</td>
+                                <td>FK o tabla intermedia</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Recursiva</strong></td>
+                                <td>1 (roles múltiples)</td>
+                                <td>1:N, M:N</td>
+                                <td>EMPLEADO supervisa EMPLEADO</td>
+                                <td>FK autoreferencial</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ternaria</strong></td>
+                                <td>3</td>
+                                <td>Compleja</td>
+                                <td>PROVEEDOR suministra PRODUCTO a PROYECTO</td>
+                                <td>Tabla con 3 FK</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Identificación</strong></td>
+                                <td>2</td>
+                                <td>1:N</td>
+                                <td>FACTURA tiene DETALLE</td>
+                                <td>FK como parte de PK</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Mejores Prácticas para Componentes</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Nomenclatura Clara</strong>
+                            <p>Nombres descriptivos para entidades, relaciones y atributos</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Cardinalidad Precisa</strong>
+                            <p>Especificar cardinalidades mínimas y máximas claramente</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Atributos Apropiados</strong>
+                            <p>Colocar atributos en la entidad o relación correcta</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Minimizar Ternarias</strong>
+                            <p>Usar solo cuando no sea posible descomponer sin pérdida</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Evitar Redundancia</strong>
+                            <p>No duplicar información entre entidades relacionadas</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validar Dependencias</strong>
+                            <p>Asegurar que entidades débiles realmente lo necesiten</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Notaciones Alternativas</h3>
+                    
+                    <div class="grid grid-3">
+                        <div>
+                            <h4 style="color: var(--primary);">Notación Chen</h4>
+                            <ul>
+                                <li>Rectángulos para entidades</li>
+                                <li>Rombos para relaciones</li>
+                                <li>Óvalos para atributos</li>
+                                <li>Líneas conectando elementos</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Notación Crow's Foot</h4>
+                            <ul>
+                                <li>Rectángulos para entidades</li>
+                                <li>Líneas con símbolos para relaciones</li>
+                                <li>Atributos listados dentro de entidades</li>
+                                <li>Más compacta y práctica</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Notación UML</h4>
+                            <ul>
+                                <li>Clases en lugar de entidades</li>
+                                <li>Asociaciones para relaciones</li>
+                                <li>Multiplicidades como cardinalidad</li>
+                                <li>Orientado a objetos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="design" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">✏️</div>
+                    <span>Proceso de Diseño</span>
+                </div>
+
+                <div class="card">
+                    <h3>🗺️ Metodología de Diseño E-R</h3>
+                    
+                    <div class="transformation-flow">
+                        <div class="transform-step">
+                            <div class="transform-icon">1</div>
+                            <div>
+                                <h4>Análisis de Requerimientos</h4>
+                                <p><strong>Actividades:</strong> Recopilar requerimientos funcionales y de datos, entrevistas con usuarios, análisis de documentación existente, identificación de procesos de negocio.</p>
+                                <p><strong>Resultado:</strong> Documento de requerimientos de datos</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">2</div>
+                            <div>
+                                <h4>Identificación de Entidades</h4>
+                                <p><strong>Actividades:</strong> Extraer sustantivos de requerimientos, clasificar en entidades vs atributos, definir conjuntos de entidades, validar con stakeholders.</p>
+                                <p><strong>Resultado:</strong> Lista preliminar de entidades</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">3</div>
+                            <div>
+                                <h4>Identificación de Relaciones</h4>
+                                <p><strong>Actividades:</strong> Extraer verbos y asociaciones, determinar cardinalidades, identificar restricciones de participación, validar reglas de negocio.</p>
+                                <p><strong>Resultado:</strong> Conjunto de relaciones con cardinalidades</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">4</div>
+                            <div>
+                                <h4>Definición de Atributos</h4>
+                                <p><strong>Actividades:</strong> Asignar propiedades a entidades/relaciones, identificar claves primarias, determinar dominios y restricciones, definir atributos derivados.</p>
+                                <p><strong>Resultado:</strong> Especificación completa de atributos</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">5</div>
+                            <div>
+                                <h4>Construcción del Diagrama</h4>
+                                <p><strong>Actividades:</strong> Crear diagrama E-R inicial, aplicar convenciones de notación, revisar y refinar estructura, documentar decisiones de diseño.</p>
+                                <p><strong>Resultado:</strong> Diagrama E-R conceptual</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">6</div>
+                            <div>
+                                <h4>Validación y Refinamiento</h4>
+                                <p><strong>Actividades:</strong> Revisar con usuarios finales, verificar completitud y consistencia, optimizar estructura, documentar versión final.</p>
+                                <p><strong>Resultado:</strong> Modelo E-R validado y aprobado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Técnicas de Identificación</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Identificación de Entidades</h4>
+                            
+                            <h5 style="color: var(--info);">Criterios de Entidad:</h5>
+                            <ul>
+                                <li>Tiene múltiples instancias</li>
+                                <li>Cada instancia es identificable únicamente</li>
+                                <li>Se almacenan datos sobre ella</li>
+                                <li>Tiene existencia independiente</li>
+                            </ul>
+                            
+                            <h5 style="color: var(--info);">Técnicas:</h5>
+                            <ul>
+                                <li><strong>Análisis de sustantivos:</strong> Extraer de descripciones</li>
+                                <li><strong>Clasificación:</strong> Entidad vs atributo vs valor</li>
+                                <li><strong>Prueba de instancias:</strong> ¿Existen múltiples casos?</li>
+                                <li><strong>Prueba de información:</strong> ¿Se almacenan datos?</li>
+                            </ul>
+
+                            <div class="code-example">
+                                <pre>
+EJEMPLO - Sistema Biblioteca:
+"Los estudiantes pueden tomar prestados libros"
+
+SUSTANTIVOS IDENTIFICADOS:
+- Estudiante → ENTIDAD (múltiples instancias)
+- Libro → ENTIDAD (múltiples instancias)  
+- Préstamo → RELACIÓN/ENTIDAD (evento)
+                                </pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Identificación de Relaciones</h4>
+                            
+                            <h5 style="color: var(--info);">Criterios de Relación:</h5>
+                            <ul>
+                                <li>Conecta dos o más entidades</li>
+                                <li>Representa asociación significativa</li>
+                                <li>Puede tener atributos propios</li>
+                                <li>Refleja reglas de negocio</li>
+                            </ul>
+                            
+                            <h5 style="color: var(--info);">Técnicas:</h5>
+                            <ul>
+                                <li><strong>Análisis de verbos:</strong> Extraer acciones/asociaciones</li>
+                                <li><strong>Matriz de entidades:</strong> Cruzar todas las entidades</li>
+                                <li><strong>Análisis de procesos:</strong> Identificar interacciones</li>
+                                <li><strong>Validación semántica:</strong> Verificar significado</li>
+                            </ul>
+
+                            <div class="code-example">
+                                <pre>
+EJEMPLO - Determinación de Cardinalidad:
+"Un estudiante puede tomar muchos libros prestados"
+"Un libro puede ser prestado a muchos estudiantes (no simultáneamente)"
+
+ANÁLISIS:
+- ESTUDIANTE presta LIBRO
+- Cardinalidad: M:N (histórica)
+- Con tiempo: 1:N (en un momento dado)
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚠️ Problemas Comunes de Diseño</h3>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Problema</th>
+                                    <th>Descripción</th>
+                                    <th>Síntomas</th>
+                                    <th>Solución</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Entidades Fantoches</strong></td>
+                                    <td>Entidades con solo clave primaria</td>
+                                    <td>Entidades sin atributos descriptivos</td>
+                                    <td>Convertir a atributo de otra entidad</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Atributos como Entidades</strong></td>
+                                    <td>Conceptos simples modelados como entidades</td>
+                                    <td>Entidades con una sola instancia por padre</td>
+                                    <td>Simplificar a atributo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Relaciones Redundantes</strong></td>
+                                    <td>Relaciones que se pueden derivar</td>
+                                    <td>Información duplicada en el modelo</td>
+                                    <td>Eliminar relación derivable</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cardinalidades Incorrectas</strong></td>
+                                    <td>No refleja reglas de negocio reales</td>
+                                    <td>Restricciones muy laxas o estrictas</td>
+                                    <td>Revisar requerimientos con usuarios</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Entidades Débiles Innecesarias</strong></td>
+                                    <td>Modelar como débil cuando puede ser fuerte</td>
+                                    <td>Dependencia artificial</td>
+                                    <td>Reevaluar independencia conceptual</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas de Diseño</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Partir de los Datos</strong>
+                            <p>Enfocarse en qué datos se necesitan, no en cómo se procesarán</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Modelar la Realidad</strong>
+                            <p>Reflejar fielmente el mundo real, no sistemas existentes</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Iteración Constante</strong>
+                            <p>Refinar el modelo continuamente con nueva información</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validación Frecuente</strong>
+                            <p>Revisar con stakeholders regularmente</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Documentar Decisiones</strong>
+                            <p>Registrar el razonamiento detrás de cada decisión</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Equilibrar Detalle</strong>
+                            <p>Ni muy abstracto ni excesivamente detallado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Herramientas de Diseño</h3>
+                    
+                    <div class="grid grid-3">
+                        <div>
+                            <h4 style="color: var(--primary);">Herramientas Especializadas</h4>
+                            <ul>
+                                <li><strong>ER/Studio:</strong> Modelado profesional</li>
+                                <li><strong>PowerDesigner:</strong> Suite completa</li>
+                                <li><strong>DBDesigner:</strong> Open source</li>
+                                <li><strong>MySQL Workbench:</strong> Integrado con MySQL</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Herramientas Generales</h4>
+                            <ul>
+                                <li><strong>Visio:</strong> Diagramación general</li>
+                                <li><strong>Lucidchart:</strong> Colaborativo online</li>
+                                <li><strong>Draw.io:</strong> Gratuito, web-based</li>
+                                <li><strong>Dia:</strong> Open source desktop</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Criterios de Selección</h4>
+                            <ul>
+                                <li>Soporte para notación E-R</li>
+                                <li>Generación de esquemas</li>
+                                <li>Colaboración en equipo</li>
+                                <li>Integración con SGBD</li>
+                                <li>Costo y licenciamiento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Lista de Verificación de Diseño</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+CHECKLIST DE VALIDACIÓN E-R:
+
+✓ ENTIDADES
+□ Todas las entidades tienen nombre único y descriptivo
+□ Cada entidad tiene al menos una clave candidata
+□ No hay entidades fantoches (solo con clave primaria)
+□ Entidades débiles realmente necesitan dependencia
+
+✓ RELACIONES  
+□ Todas las relaciones tienen nombres descriptivos
+□ Cardinalidades reflejan reglas de negocio reales
+□ Restricciones de participación son correctas
+□ No hay relaciones redundantes derivables
+
+✓ ATRIBUTOS
+□ Atributos están en la entidad/relación correcta
+□ Dominios y restricciones están definidos
+□ Claves primarias son inmutables y no nulas
+□ Atributos multivalor están identificados
+
+✓ INTEGRIDAD
+□ Restricciones de integridad referencial definidas
+□ Reglas de negocio están representadas
+□ No hay inconsistencias en el modelo
+□ Modelo es completo para requerimientos dados
+
+✓ CALIDAD
+□ Diagrama es legible y bien organizado
+□ Nomenclatura es consistente
+□ Documentación acompaña el modelo
+□ Stakeholders han validado el diseño
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="transformation" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🔄</div>
+                    <span>Transformación a Modelo Relacional</span>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ Proceso de Transformación</h3>
+                    <p>La transformación del modelo E-R al modelo relacional sigue reglas sistemáticas para preservar la semántica de los datos.</p>
+                    
+                    <div class="transformation-flow">
+                        <div class="transform-step">
+                            <div class="transform-icon">1</div>
+                            <div>
+                                <h4>Entidades Fuertes → Tablas</h4>
+                                <p><strong>Regla:</strong> Cada entidad fuerte se convierte en una tabla. Los atributos simples se convierten en columnas. La clave primaria de la entidad se convierte en la clave primaria de la tabla.</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">2</div>
+                            <div>
+                                <h4>Entidades Débiles → Tablas con FK</h4>
+                                <p><strong>Regla:</strong> Cada entidad débil se convierte en tabla. La clave primaria incluye la clave parcial más las claves primarias de las entidades propietarias como claves foráneas.</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">3</div>
+                            <div>
+                                <h4>Relaciones 1:1 → FK o Fusión</h4>
+                                <p><strong>Regla:</strong> Agregar FK de una entidad a la otra, o fusionar las entidades en una sola tabla si la participación es total en ambos lados.</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">4</div>
+                            <div>
+                                <h4>Relaciones 1:N → FK en lado N</h4>
+                                <p><strong>Regla:</strong> Agregar la clave primaria del lado "uno" como clave foránea en la tabla del lado "muchos". Incluir atributos de la relación.</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">5</div>
+                            <div>
+                                <h4>Relaciones M:N → Tabla Intermedia</h4>
+                                <p><strong>Regla:</strong> Crear nueva tabla con las claves primarias de ambas entidades como claves foráneas. La combinación forma la clave primaria.</p>
+                            </div>
+                        </div>
+
+                        <div class="transform-step">
+                            <div class="transform-icon">6</div>
+                            <div>
+                                <h4>Atributos Multivalor → Tabla Separada</h4>
+                                <p><strong>Regla:</strong> Crear tabla separada con la clave primaria de la entidad propietaria más el atributo multivalor como clave primaria compuesta.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Ejemplos de Transformación</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Entidad Fuerte</h4>
+                            <div class="code-example">
+                                <pre>
+E-R MODELO:
+ESTUDIANTE (id_estudiante, nombre, apellido, email)
+- Clave: id_estudiante
+
+TRANSFORMACIÓN:
+CREATE TABLE ESTUDIANTE (
+    id_estudiante   INT PRIMARY KEY,
+    nombre          VARCHAR(50) NOT NULL,
+    apellido        VARCHAR(50) NOT NULL,
+    email           VARCHAR(100) UNIQUE
+);
+                                </pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Relación 1:N</h4>
+                            <div class="code-example">
+                                <pre>
+E-R MODELO:
+DEPARTAMENTO (1) ← empleados → (N) EMPLEADO
+Atributo relación: fecha_asignacion
+
+TRANSFORMACIÓN:
+CREATE TABLE EMPLEADO (
+    id_empleado         INT PRIMARY KEY,
+    nombre              VARCHAR(50),
+    id_departamento     INT NOT NULL,
+    fecha_asignacion    DATE,
+    FOREIGN KEY (id_departamento) 
+        REFERENCES DEPARTAMENTO(id_departamento)
+);
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Transformación de Relaciones M:N</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+E-R MODELO:
+ESTUDIANTE (M) ← matricula → (N) CURSO
+Atributos relación: fecha_matricula, calificacion
+
+DIAGRAMA E-R:
+[ESTUDIANTE] ←────◇ MATRICULA ◇────→ [CURSO]
+    │                    │                │
+  id_est              fecha_mat       id_curso
+  nombre             calificacion      nombre
+  apellido                            creditos
+
+TRANSFORMACIÓN AL MODELO RELACIONAL:
+
+CREATE TABLE ESTUDIANTE (
+    id_estudiante   INT PRIMARY KEY,
+    nombre          VARCHAR(50),
+    apellido        VARCHAR(50)
+);
+
+CREATE TABLE CURSO (
+    id_curso        INT PRIMARY KEY,
+    nombre          VARCHAR(100),
+    creditos        INT
+);
+
+CREATE TABLE MATRICULA (
+    id_estudiante   INT,
+    id_curso        INT,
+    fecha_matricula DATE,
+    calificacion    DECIMAL(3,2),
+    PRIMARY KEY (id_estudiante, id_curso),
+    FOREIGN KEY (id_estudiante) REFERENCES ESTUDIANTE(id_estudiante),
+    FOREIGN KEY (id_curso) REFERENCES CURSO(id_curso)
+);
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Transformación de Casos Especiales</h3>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Caso E-R</th>
+                                    <th>Transformación</th>
+                                    <th>Ejemplo SQL</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Atributo Compuesto</strong></td>
+                                    <td>Expandir en atributos simples</td>
+                                    <td>direccion → calle, ciudad, cp</td>
+                                    <td>Puede mantenerse como un solo campo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Atributo Multivalor</strong></td>
+                                    <td>Tabla separada</td>
+                                    <td>EMPLEADO_TELEFONOS(id_emp, telefono)</td>
+                                    <td>PK compuesta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Atributo Derivado</strong></td>
+                                    <td>No almacenar (calcular)</td>
+                                    <td>edad → calculada de fecha_nacimiento</td>
+                                    <td>Vista o función</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Relación Ternaria</strong></td>
+                                    <td>Tabla con 3+ FK</td>
+                                    <td>ASIGNACION(medico, paciente, tratamiento)</td>
+                                    <td>No descomponer</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Relación Recursiva</strong></td>
+                                    <td>FK autoreferencial</td>
+                                    <td>EMPLEADO(id, supervisor_id)</td>
+                                    <td>FK puede ser NULL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Decisiones de Diseño</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Relaciones 1:1 - Opciones</h4>
+                            
+                            <h5 style="color: var(--info);">Opción 1: FK en Cualquier Lado</h5>
+                            <div class="code-example">
+                                <pre>
+EMPLEADO(id, nombre, escritorio_id)
+ESCRITORIO(id, ubicacion)
+-- FK en EMPLEADO
+                                </pre>
+                            </div>
+                            
+                            <h5 style="color: var(--info);">Opción 2: Fusionar Tablas</h5>
+                            <div class="code-example">
+                                <pre>
+EMPLEADO_ESCRITORIO(id_empleado, nombre, 
+                    ubicacion_escritorio)
+-- Una sola tabla si participación total
+                                </pre>
+                            </div>
+                            
+                            <h5 style="color: var(--info);">Criterios de Decisión:</h5>
+                            <ul>
+                                <li>Participación total → Fusionar</li>
+                                <li>Participación parcial → FK en lado total</li>
+                                <li>Frecuencia de acceso conjunto</li>
+                                <li>Tamaño y crecimiento de datos</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Optimizaciones</h4>
+                            
+                            <h5 style="color: var(--info);">Desnormalización Controlada</h5>
+                            <ul>
+                                <li>Duplicar datos para mejorar rendimiento</li>
+                                <li>Campos calculados almacenados</li>
+                                <li>Tablas de resumen</li>
+                            </ul>
+                            
+                            <h5 style="color: var(--info);">Particionamiento</h5>
+                            <ul>
+                                <li>Dividir tablas grandes</li>
+                                <li>Partición horizontal (por filas)</li>
+                                <li>Partición vertical (por columnas)</li>
+                            </ul>
+                            
+                            <h5 style="color: var(--info);">Índices Estratégicos</h5>
+                            <ul>
+                                <li>Índices en FK para JOINs</li>
+                                <li>Índices compuestos para consultas frecuentes</li>
+                                <li>Balance entre velocidad de consulta y espacio</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas de Transformación</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Preservar Semántica</strong>
+                            <p>Mantener todas las restricciones de integridad del modelo E-R</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Nomenclatura Consistente</strong>
+                            <p>Usar convenciones claras para tablas, columnas y restricciones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Documentar Decisiones</strong>
+                            <p>Registrar el razonamiento detrás de cada transformación</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validar Integridad</strong>
+                            <p>Implementar todas las restricciones como CHECK constraints</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Considerar Rendimiento</strong>
+                            <p>Evaluar el impacto de decisiones en el rendimiento</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Mantener Trazabilidad</strong>
+                            <p>Poder trazar cada tabla/columna al modelo E-R original</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Validación Post-Transformación</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+CHECKLIST DE VALIDACIÓN:
+
+✓ COMPLETITUD
+□ Todas las entidades fueron transformadas
+□ Todas las relaciones están representadas  
+□ Todos los atributos fueron incluidos
+□ Restricciones de integridad implementadas
+
+✓ CORRECCIÓN
+□ Claves primarias correctamente definidas
+□ Claves foráneas referencian tablas correctas
+□ Cardinalidades preservadas en estructura
+□ Participaciones reflejadas en restricciones NOT NULL
+
+✓ CALIDAD
+□ Nomenclatura consistente y clara
+□ Tipos de datos apropiados
+□ Índices en claves foráneas
+□ Documentación actualizada
+
+✓ INTEGRIDAD
+□ Restricciones de dominio (CHECK constraints)
+□ Integridad referencial (FOREIGN KEY)  
+□ Restricciones de negocio implementadas
+□ Triggers para reglas complejas si necesario
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="case-study" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">📚</div>
+                    <span>Caso Práctico: Sistema Hospitalario</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>🏥 Sistema de Gestión Hospitalaria "San Rafael"</h3>
+                    <p>Desarrollaremos un modelo E-R completo para un hospital que incluye gestión de pacientes, médicos, citas, hospitalizaciones, tratamientos y facturación.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Descripción del Sistema</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Requerimientos Funcionales</h4>
+                            <ul>
+                                <li><strong>Gestión de Pacientes:</strong> Registro, historial médico, seguros</li>
+                                <li><strong>Gestión de Personal:</strong> Médicos, enfermeros, especialidades</li>
+                                <li><strong>Citas Médicas:</strong> Programación, seguimiento, cancelaciones</li>
+                                <li><strong>Hospitalizaciones:</strong> Admisiones, habitaciones, altas</li>
+                                <li><strong>Tratamientos:</strong> Medicamentos, procedimientos, cirugías</li>
+                                <li><strong>Facturación:</strong> Costos, seguros, pagos</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Reglas de Negocio</h4>
+                            <ul>
+                                <li>Un paciente puede tener múltiples seguros médicos</li>
+                                <li>Un médico puede tener múltiples especialidades</li>
+                                <li>Las citas deben ser con médicos disponibles</li>
+                                <li>Una habitación puede tener múltiples pacientes</li>
+                                <li>Los tratamientos deben ser prescritos por médicos</li>
+                                <li>La facturación se basa en tratamientos y estancia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ Identificación de Entidades</h3>
+                    
+                    <div class="er-symbols">
+                        <div class="symbol-card">
+                            <div class="symbol-visual">👤</div>
+                            <h4>PACIENTE</h4>
+                            <p>Personas que reciben atención médica</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">👨‍⚕️</div>
+                            <h4>MEDICO</h4>
+                            <p>Personal médico del hospital</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">🏥</div>
+                            <h4>ESPECIALIDAD</h4>
+                            <p>Áreas de especialización médica</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">📅</div>
+                            <h4>CITA</h4>
+                            <p>Consultas programadas</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">🛏️</div>
+                            <h4>HABITACION</h4>
+                            <p>Espacios para internación</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">💊</div>
+                            <h4>MEDICAMENTO</h4>
+                            <p>Fármacos disponibles</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">🛡️</div>
+                            <h4>SEGURO</h4>
+                            <p>Compañías aseguradoras</p>
+                        </div>
+                        <div class="symbol-card">
+                            <div class="symbol-visual">💰</div>
+                            <h4>FACTURA</h4>
+                            <p>Cuentas de servicios</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Principales Relaciones</h3>
+                    
+                    <div class="normalization-steps">
+                        <div class="norm-step">
+                            <div class="norm-number">1</div>
+                            <div>
+                                <h4>PACIENTE tiene CITA con MEDICO</h4>
+                                <p><strong>Cardinalidad:</strong> M:N (un paciente puede tener citas con múltiples médicos, un médico atiende múltiples pacientes)</p>
+                                <p><strong>Atributos:</strong> fecha_cita, hora_cita, motivo_consulta, estado_cita</p>
+                            </div>
+                        </div>
+                        
+                        <div class="norm-step">
+                            <div class="norm-number">2</div>
+                            <div>
+                                <h4>MEDICO se_especializa_en ESPECIALIDAD</h4>
+                                <p><strong>Cardinalidad:</strong> M:N (un médico puede tener múltiples especialidades, una especialidad la tienen múltiples médicos)</p>
+                                <p><strong>Atributos:</strong> fecha_certificacion, institucion_certificadora</p>
+                            </div>
+                        </div>
+                        
+                        <div class="norm-step">
+                            <div class="norm-number">3</div>
+                            <div>
+                                <h4>PACIENTE se_hospeda_en HABITACION</h4>
+                                <p><strong>Cardinalidad:</strong> M:N temporal (un paciente puede ocupar múltiples habitaciones en diferentes períodos)</p>
+                                <p><strong>Atributos:</strong> fecha_ingreso, fecha_egreso, diagnostico_ingreso</p>
+                            </div>
+                        </div>
+                        
+                        <div class="norm-step">
+                            <div class="norm-number">4</div>
+                            <div>
+                                <h4>MEDICO prescribe MEDICAMENTO a PACIENTE</h4>
+                                <p><strong>Cardinalidad:</strong> Ternaria (requiere los tres elementos para determinar la prescripción)</p>
+                                <p><strong>Atributos:</strong> dosis, frecuencia, duracion_tratamiento, fecha_prescripcion</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Especificación Detallada de Entidades</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+ENTIDAD: PACIENTE
+Atributos:
+- cedula_paciente (PK)
+- nombre  
+- apellido
+- fecha_nacimiento
+- telefono (multivalor)
+- direccion (compuesto: calle, ciudad, codigo_postal)
+- tipo_sangre
+- contacto_emergencia
+
+ENTIDAD: MEDICO  
+Atributos:
+- codigo_medico (PK)
+- cedula
+- nombre
+- apellido  
+- telefono_consultorio
+- email
+- fecha_contratacion
+
+ENTIDAD: ESPECIALIDAD
+Atributos:
+- codigo_especialidad (PK)
+- nombre_especialidad
+- descripcion
+
+ENTIDAD: CITA (Relación PACIENTE-MEDICO convertida en entidad)
+Atributos:
+- numero_cita (PK)
+- cedula_paciente (FK)
+- codigo_medico (FK)
+- fecha_cita
+- hora_cita
+- motivo_consulta
+- estado_cita (programada, realizada, cancelada)
+- observaciones
+
+ENTIDAD: HABITACION
+Atributos:
+- numero_habitacion (PK)
+- piso
+- tipo_habitacion (individual, compartida, UCI)
+- precio_dia
+- estado (disponible, ocupada, mantenimiento)
+
+ENTIDAD: HOSPITALIZACION (Relación PACIENTE-HABITACION)
+Atributos:
+- numero_hospitalizacion (PK)
+- cedula_paciente (FK)
+- numero_habitacion (FK)
+- fecha_ingreso
+- fecha_egreso
+- diagnostico_ingreso
+- diagnostico_egreso
+- medico_responsable (FK)
+
+ENTIDAD: MEDICAMENTO
+Atributos:
+- codigo_medicamento (PK)
+- nombre_comercial
+- nombre_generico
+- laboratorio
+- precio_unidad
+- stock_disponible
+
+ENTIDAD: PRESCRIPCION (Relación ternaria MEDICO-PACIENTE-MEDICAMENTO)
+Atributos:
+- numero_prescripcion (PK)
+- codigo_medico (FK)
+- cedula_paciente (FK)
+- codigo_medicamento (FK)
+- fecha_prescripcion
+- dosis
+- frecuencia_horas
+- duracion_dias
+- instrucciones_especiales
+
+ENTIDAD: SEGURO
+Atributos:
+- codigo_seguro (PK)
+- nombre_aseguradora
+- tipo_plan
+- cobertura_porcentaje
+
+ENTIDAD: PACIENTE_SEGURO (Relación PACIENTE-SEGURO)
+Atributos:
+- cedula_paciente (FK)
+- codigo_seguro (FK)
+- numero_poliza (PK compuesta con las FK anteriores)
+- fecha_vigencia_inicio
+- fecha_vigencia_fin
+- estado_poliza
+
+ENTIDAD: FACTURA
+Atributos:
+- numero_factura (PK)
+- cedula_paciente (FK)
+- fecha_factura
+- subtotal
+- impuestos
+- descuento_seguro
+- total_pagar
+- estado_pago (pendiente, pagada, vencida)
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Transformación a Modelo Relacional</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+-- Entidades fuertes se convierten directamente en tablas
+
+CREATE TABLE PACIENTE (
+    cedula_paciente     VARCHAR(15) PRIMARY KEY,
+    nombre              VARCHAR(50) NOT NULL,
+    apellido            VARCHAR(50) NOT NULL,
+    fecha_nacimiento    DATE NOT NULL,
+    calle               VARCHAR(100),
+    ciudad              VARCHAR(50),
+    codigo_postal       VARCHAR(10),
+    tipo_sangre         CHAR(3),
+    contacto_emergencia VARCHAR(100)
+);
+
+CREATE TABLE MEDICO (
+    codigo_medico       INT PRIMARY KEY,
+    cedula              VARCHAR(15) UNIQUE NOT NULL,
+    nombre              VARCHAR(50) NOT NULL,
+    apellido            VARCHAR(50) NOT NULL,
+    telefono_consultorio VARCHAR(15),
+    email               VARCHAR(100),
+    fecha_contratacion  DATE NOT NULL
+);
+
+CREATE TABLE ESPECIALIDAD (
+    codigo_especialidad INT PRIMARY KEY,
+    nombre_especialidad VARCHAR(100) NOT NULL,
+    descripcion         TEXT
+);
+
+CREATE TABLE HABITACION (
+    numero_habitacion   VARCHAR(10) PRIMARY KEY,
+    piso                INT NOT NULL,
+    tipo_habitacion     VARCHAR(20) NOT NULL,
+    precio_dia          DECIMAL(10,2) NOT NULL,
+    estado              VARCHAR(20) DEFAULT 'disponible'
+);
+
+-- Relaciones M:N requieren tablas intermedias
+
+CREATE TABLE MEDICO_ESPECIALIDAD (
+    codigo_medico           INT,
+    codigo_especialidad     INT,
+    fecha_certificacion     DATE,
+    institucion_certificadora VARCHAR(100),
+    PRIMARY KEY (codigo_medico, codigo_especialidad),
+    FOREIGN KEY (codigo_medico) REFERENCES MEDICO(codigo_medico),
+    FOREIGN KEY (codigo_especialidad) REFERENCES ESPECIALIDAD(codigo_especialidad)
+);
+
+-- Atributos multivalor requieren tablas separadas
+
+CREATE TABLE PACIENTE_TELEFONO (
+    cedula_paciente     VARCHAR(15),
+    telefono            VARCHAR(15),
+    tipo_telefono       VARCHAR(20), -- casa, trabajo, celular
+    PRIMARY KEY (cedula_paciente, telefono),
+    FOREIGN KEY (cedula_paciente) REFERENCES PACIENTE(cedula_paciente)
+);
+
+-- Entidades con relaciones complejas
+
+CREATE TABLE CITA (
+    numero_cita         INT PRIMARY KEY AUTO_INCREMENT,
+    cedula_paciente     VARCHAR(15) NOT NULL,
+    codigo_medico       INT NOT NULL,
+    fecha_cita          DATE NOT NULL,
+    hora_cita           TIME NOT NULL,
+    motivo_consulta     TEXT,
+    estado_cita         VARCHAR(20) DEFAULT 'programada',
+    observaciones       TEXT,
+    FOREIGN KEY (cedula_paciente) REFERENCES PACIENTE(cedula_paciente),
+    FOREIGN KEY (codigo_medico) REFERENCES MEDICO(codigo_medico),
+    UNIQUE (codigo_medico, fecha_cita, hora_cita) -- Un médico, una fecha, una hora
+);
+
+-- Relación ternaria como tabla
+
+CREATE TABLE PRESCRIPCION (
+    numero_prescripcion     INT PRIMARY KEY AUTO_INCREMENT,
+    codigo_medico          INT NOT NULL,
+    cedula_paciente        VARCHAR(15) NOT NULL,
+    codigo_medicamento     INT NOT NULL,
+    fecha_prescripcion     DATE NOT NULL,
+    dosis                  VARCHAR(50) NOT NULL,
+    frecuencia_horas       INT NOT NULL,
+    duracion_dias          INT NOT NULL,
+    instrucciones_especiales TEXT,
+    FOREIGN KEY (codigo_medico) REFERENCES MEDICO(codigo_medico),
+    FOREIGN KEY (cedula_paciente) REFERENCES PACIENTE(cedula_paciente),
+    FOREIGN KEY (codigo_medicamento) REFERENCES MEDICAMENTO(codigo_medicamento)
+);
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Restricciones de Integridad</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+-- Restricciones de dominio
+ALTER TABLE PACIENTE ADD CONSTRAINT chk_fecha_nacimiento 
+    CHECK (fecha_nacimiento <= CURDATE());
+
+ALTER TABLE CITA ADD CONSTRAINT chk_fecha_cita 
+    CHECK (fecha_cita >= CURDATE());
+
+ALTER TABLE HABITACION ADD CONSTRAINT chk_estado_habitacion 
+    CHECK (estado IN ('disponible', 'ocupada', 'mantenimiento'));
+
+ALTER TABLE CITA ADD CONSTRAINT chk_estado_cita 
+    CHECK (estado_cita IN ('programada', 'realizada', 'cancelada'));
+
+-- Restricciones de negocio
+ALTER TABLE PRESCRIPCION ADD CONSTRAINT chk_dosis_positiva 
+    CHECK (duracion_dias > 0 AND frecuencia_horas > 0);
+
+ALTER TABLE HOSPITALIZACION ADD CONSTRAINT chk_fechas_hospitalizacion 
+    CHECK (fecha_egreso IS NULL OR fecha_egreso >= fecha_ingreso);
+
+-- Índices para mejorar rendimiento
+CREATE INDEX idx_cita_fecha ON CITA(fecha_cita);
+CREATE INDEX idx_paciente_nombre ON PACIENTE(apellido, nombre);
+CREATE INDEX idx_prescripcion_fecha ON PRESCRIPCION(fecha_prescripcion);
+
+-- Triggers para reglas de negocio complejas
+DELIMITER //
+CREATE TRIGGER tr_validar_cita_medico 
+BEFORE INSERT ON CITA
+FOR EACH ROW
+BEGIN
+    DECLARE citas_existentes INT;
+    SELECT COUNT(*) INTO citas_existentes 
+    FROM CITA 
+    WHERE codigo_medico = NEW.codigo_medico 
+      AND fecha_cita = NEW.fecha_cita 
+      AND hora_cita = NEW.hora_cita
+      AND estado_cita != 'cancelada';
+    
+    IF citas_existentes > 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'El médico ya tiene una cita programada en ese horario';
+    END IF;
+END//
+DELIMITER ;
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>📈 Consultas Típicas del Sistema</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Agenda Médica</strong>
+                            <p>Citas programadas por médico y fecha</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Historial Paciente</strong>
+                            <p>Todas las citas y tratamientos de un paciente</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Ocupación Habitaciones</strong>
+                            <p>Estado actual y proyección de ocupación</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Prescripciones Activas</strong>
+                            <p>Medicamentos vigentes por paciente</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Facturación Pendiente</strong>
+                            <p>Servicios no facturados o no pagados</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Reportes Estadísticos</strong>
+                            <p>Indicadores de gestión y calidad</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Consultas SQL de Ejemplo</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+-- Agenda de un médico para una fecha específica
+SELECT c.hora_cita, c.motivo_consulta,
+       p.nombre, p.apellido, p.telefono
+FROM CITA c
+JOIN PACIENTE p ON c.cedula_paciente = p.cedula_paciente
+WHERE c.codigo_medico = 101
+  AND c.fecha_cita = '2024-08-15'
+  AND c.estado_cita = 'programada'
+ORDER BY c.hora_cita;
+
+-- Historial médico completo de un paciente
+SELECT c.fecha_cita, m.nombre AS medico, m.apellido,
+       e.nombre_especialidad, c.observaciones
+FROM CITA c
+JOIN MEDICO m ON c.codigo_medico = m.codigo_medico
+JOIN MEDICO_ESPECIALIDAD me ON m.codigo_medico = me.codigo_medico
+JOIN ESPECIALIDAD e ON me.codigo_especialidad = e.codigo_especialidad
+WHERE c.cedula_paciente = '1234567890'
+  AND c.estado_cita = 'realizada'
+ORDER BY c.fecha_cita DESC;
+
+-- Habitaciones disponibles por tipo
+SELECT tipo_habitacion, COUNT(*) as disponibles
+FROM HABITACION
+WHERE estado = 'disponible'
+GROUP BY tipo_habitacion;
+
+-- Medicamentos más prescritos en el último mes
+SELECT med.nombre_comercial, COUNT(*) as veces_prescrito
+FROM PRESCRIPCION p
+JOIN MEDICAMENTO med ON p.codigo_medicamento = med.codigo_medicamento
+WHERE p.fecha_prescripcion >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+GROUP BY med.codigo_medicamento, med.nombre_comercial
+ORDER BY veces_prescrito DESC
+LIMIT 10;
+
+-- Ingresos por servicios en un período
+SELECT DATE(c.fecha_cita) as fecha, COUNT(*) as citas,
+       COUNT(*) * 50 as ingresos_estimados  -- Asumiendo $50 por cita
+FROM CITA c
+WHERE c.fecha_cita BETWEEN '2024-08-01' AND '2024-08-31'
+  AND c.estado_cita = 'realizada'
+GROUP BY DATE(c.fecha_cita)
+ORDER BY fecha;
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Extensiones y Mejoras Futuras</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Funcionalidades Adicionales</h4>
+                            <ul>
+                                <li><strong>Laboratorio:</strong> Exámenes y resultados</li>
+                                <li><strong>Cirugías:</strong> Programación de quirófanos</li>
+                                <li><strong>Inventario:</strong> Control de suministros médicos</li>
+                                <li><strong>Personal:</strong> Enfermeros, técnicos, administrativos</li>
+                                <li><strong>Ambulancias:</strong> Servicios de emergencia</li>
+                                <li><strong>Telemedicina:</strong> Consultas remotas</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Mejoras Técnicas</h4>
+                            <ul>
+                                <li><strong>Auditoría:</strong> Log de cambios en datos sensibles</li>
+                                <li><strong>Seguridad:</strong> Encriptación de datos médicos</li>
+                                <li><strong>Integración:</strong> Conexión con sistemas de seguros</li>
+                                <li><strong>BI:</strong> Reportes y análisis avanzado</li>
+                                <li><strong>Móvil:</strong> Aplicación para médicos y pacientes</li>
+                                <li><strong>IoT:</strong> Dispositivos médicos conectados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Preparatic - Tema 20: Modelo Entidad/Relación | Guía de Estudio para Administración Pública</p>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab and mark button as active
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            html.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+            }
+        });
+
+        // Add smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey && e.key >= '1' && e.key <= '6') {
+                e.preventDefault();
+                const tabNames = ['overview', 'fundamentals', 'components', 'design', 'transformation', 'case-study'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabIndex < tabNames.length) {
+                    const tabButton = document.querySelector(`[onclick="showTab('${tabNames[tabIndex]}')"]`);
+                    if (tabButton) {
+                        tabButton.click();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

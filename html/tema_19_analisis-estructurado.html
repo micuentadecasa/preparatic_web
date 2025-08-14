@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 19: Análisis Estructurado - Preparatic</title>
+    <style>
+        :root[data-theme="light"] {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #ecf0f1;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+            --shadow: rgba(0,0,0,0.1);
+            --card-bg: #ffffff;
+            --code-bg: #f8f9fa;
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d3748;
+            --bg-tertiary: #374151;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #a0aec0;
+            --border: #4a5568;
+            --shadow: rgba(0,0,0,0.3);
+            --card-bg: #2d3748;
+            --code-bg: #1a202c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .tabs-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: var(--bg-tertiary);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .card {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .technique-card {
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .technique-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .technique-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .diagram-container:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .diagram-placeholder {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tool-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, var(--success), #229954);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .best-practices h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .practice-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .code-example {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .phase-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .phase-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .phase-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .phase-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .tabs-nav {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: auto;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .phase-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            border-radius: 15px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">19</div>
+                    <div class="logo-text">
+                        <h1>Análisis Estructurado</h1>
+                        <p>Metodología sistemática para análisis de sistemas</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Modo Oscuro</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="tabs-container">
+            <nav class="tabs-nav">
+                <button class="tab-button active" onclick="showTab('overview')">Resumen</button>
+                <button class="tab-button" onclick="showTab('foundations')">Fundamentos</button>
+                <button class="tab-button" onclick="showTab('techniques')">Técnicas</button>
+                <button class="tab-button" onclick="showTab('diagrams')">Diagramas</button>
+                <button class="tab-button" onclick="showTab('tools')">Herramientas</button>
+                <button class="tab-button" onclick="showTab('case-study')">Caso Práctico</button>
+            </nav>
+
+            <div id="overview" class="tab-content active">
+                <div class="section-title">
+                    <div class="section-icon">🔍</div>
+                    <span>Resumen del Análisis Estructurado</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>¿Qué es el Análisis Estructurado?</h3>
+                    <p>El Análisis Estructurado es una metodología sistemática para analizar y diseñar sistemas de información que utiliza herramientas gráficas y técnicas estructuradas para descomponer sistemas complejos en componentes más simples y manejables. Se centra en los procesos y el flujo de datos.</p>
+                </div>
+
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-value">1970s</div>
+                        <div class="metric-label">Década de origen</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">DFD</div>
+                        <div class="metric-label">Herramienta principal</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Top-Down</div>
+                        <div class="metric-label">Enfoque de descomposición</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">50%</div>
+                        <div class="metric-label">Reducción complejidad</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Características Principales</h3>
+                        <ul>
+                            <li><strong>Enfoque sistemático:</strong> Metodología paso a paso</li>
+                            <li><strong>Descomposición jerárquica:</strong> Top-down approach</li>
+                            <li><strong>Herramientas gráficas:</strong> DFD, diccionario de datos</li>
+                            <li><strong>Centrado en datos:</strong> Flujos y almacenamiento</li>
+                            <li><strong>Documentación completa:</strong> Especificaciones detalladas</li>
+                            <li><strong>Verificación cruzada:</strong> Consistencia entre modelos</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Ventajas</h3>
+                        <ul>
+                            <li>Comprensión sistemática del sistema</li>
+                            <li>Documentación clara y estandarizada</li>
+                            <li>Facilita la comunicación con usuarios</li>
+                            <li>Reduce la complejidad aparente</li>
+                            <li>Permite verificación de completitud</li>
+                            <li>Base sólida para el diseño</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Principios Fundamentales</h3>
+                    
+                    <div class="grid grid-3">
+                        <div>
+                            <h4 style="color: var(--primary);">Descomposición Funcional</h4>
+                            <p>División del sistema en procesos más pequeños y manejables, organizados jerárquicamente desde lo general hacia lo específico.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Modelado Gráfico</h4>
+                            <p>Uso de diagramas estandarizados que representen visualmente los procesos, datos y sus interrelaciones.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Diccionario de Datos</h4>
+                            <p>Repositorio centralizado que define todos los elementos de datos utilizados en el sistema.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-timeline">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 Fases del Análisis Estructurado</h3>
+                    
+                    <div class="phase-item">
+                        <div class="phase-icon">1</div>
+                        <div>
+                            <h4>Estudio del Sistema Actual</h4>
+                            <p>Análisis exhaustivo del sistema existente, identificación de problemas, documentación de procesos actuales y comprensión del dominio del problema.</p>
+                        </div>
+                    </div>
+
+                    <div class="phase-item">
+                        <div class="phase-icon">2</div>
+                        <div>
+                            <h4>Modelado Lógico del Sistema Actual</h4>
+                            <p>Creación de DFD del sistema actual, construcción del diccionario de datos, y documentación de especificaciones de procesos.</p>
+                        </div>
+                    </div>
+
+                    <div class="phase-item">
+                        <div class="phase-icon">3</div>
+                        <div>
+                            <h4>Modelado Lógico del Sistema Propuesto</h4>
+                            <p>Diseño del nuevo sistema lógico, incorporación de mejoras, definición de nuevos procesos y refinamiento del modelo de datos.</p>
+                        </div>
+                    </div>
+
+                    <div class="phase-item">
+                        <div class="phase-icon">4</div>
+                        <div>
+                            <h4>Desarrollo de Alternativas Físicas</h4>
+                            <p>Definición de opciones de implementación, evaluación de tecnologías, análisis costo-beneficio y selección de la mejor alternativa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚨 Limitaciones del Análisis Estructurado</h3>
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--accent);">Desafíos Metodológicos</h4>
+                            <ul>
+                                <li>Enfoque principalmente en procesos</li>
+                                <li>Dificultad con sistemas orientados a objetos</li>
+                                <li>Separación artificial entre datos y procesos</li>
+                                <li>Menos efectivo para sistemas interactivos</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--accent);">Limitaciones Prácticas</h4>
+                            <ul>
+                                <li>Tiempo intensivo de documentación</li>
+                                <li>Curva de aprendizaje pronunciada</li>
+                                <li>Mantenimiento complejo de diagramas</li>
+                                <li>Resistencia de usuarios a formalismo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Análisis Estructurado</th>
+                                <th>Análisis Orientado a Objetos</th>
+                                <th>Análisis Ágil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enfoque</strong></td>
+                                <td>Procesos y flujo de datos</td>
+                                <td>Objetos y clases</td>
+                                <td>Valor de negocio incremental</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentación</strong></td>
+                                <td>Extensa y formal</td>
+                                <td>Modelos UML detallados</td>
+                                <td>Mínima y evolutiva</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Flexibilidad</strong></td>
+                                <td>Baja (estructura rígida)</td>
+                                <td>Media (reutilización)</td>
+                                <td>Alta (adaptativo)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiempo Setup</strong></td>
+                                <td>Alto</td>
+                                <td>Alto</td>
+                                <td>Bajo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mejor Para</strong></td>
+                                <td>Sistemas complejos batch</td>
+                                <td>Sistemas OO complejos</td>
+                                <td>Proyectos dinámicos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="foundations" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🏗️</div>
+                    <span>Fundamentos Teóricos</span>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Historia y Evolución</h3>
+                    <p>El Análisis Estructurado fue desarrollado en la década de 1970 como respuesta a la crisis del software y la necesidad de metodologías más rigurosas.</p>
+                    
+                    <div class="phase-timeline">
+                        <div class="phase-item">
+                            <div class="phase-icon">1970</div>
+                            <div>
+                                <h4>Orígenes</h4>
+                                <p><strong>Constantine y Yourdon:</strong> Introducen conceptos de modularidad y diseño estructurado. Énfasis en la descomposición funcional y la minimización del acoplamiento.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">1978</div>
+                            <div>
+                                <h4>Diagramas de Flujo de Datos</h4>
+                                <p><strong>DeMarco:</strong> Publica "Structured Analysis and System Specification", estableciendo los DFD como herramienta central del análisis estructurado.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">1985</div>
+                            <div>
+                                <h4>Análisis Estructurado Moderno</h4>
+                                <p><strong>Yourdon:</strong> Refina la metodología incorporando análisis esencial y desarrollo de prototipos, adaptándose a sistemas más interactivos.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">1990</div>
+                            <div>
+                                <h4>Declive y Evolución</h4>
+                                <p>Aparición de metodologías orientadas a objetos, pero principios fundamentales se mantienen en enfoques híbridos y herramientas modernas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🔬 Principios Teóricos</h3>
+                        
+                        <h4 style="color: var(--primary);">Descomposición Jerárquica</h4>
+                        <p>Principio fundamental que establece que los sistemas complejos pueden entenderse mejor dividiéndolos en subsistemas más simples.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Abstracción</h4>
+                        <p>Proceso de ocultar detalles de implementación mientras se preservan las características esenciales relevantes para el nivel de análisis.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Modularidad</h4>
+                        <p>División del sistema en módulos cohesivos con interfaces bien definidas y acoplamiento mínimo.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Refinamiento Gradual</h4>
+                        <p>Desarrollo iterativo desde conceptos generales hacia especificaciones detalladas.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🎯 Conceptos Clave</h3>
+                        
+                        <h4 style="color: var(--primary);">Entidades Externas</h4>
+                        <p>Personas, organizaciones o sistemas que interactúan con el sistema pero están fuera de su control.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Procesos</h4>
+                        <p>Actividades o funciones que transforman entradas en salidas, representando la lógica de negocio.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Almacenes de Datos</h4>
+                        <p>Repositorios donde se guardan datos para uso futuro, ya sean físicos o lógicos.</p>
+                        
+                        <h4 style="color: var(--primary); margin-top: 1.5rem;">Flujos de Datos</h4>
+                        <p>Movimiento de información entre procesos, almacenes y entidades externas.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Principios de Calidad</h3>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Principio</th>
+                                    <th>Descripción</th>
+                                    <th>Beneficio</th>
+                                    <th>Métrica</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Cohesión</strong></td>
+                                    <td>Elementos relacionados agrupados</td>
+                                    <td>Fácil mantenimiento</td>
+                                    <td>Funcional > Secuencial > Comunicacional</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Acoplamiento</strong></td>
+                                    <td>Minimizar interdependencias</td>
+                                    <td>Independencia modular</td>
+                                    <td>Datos < Estampilla < Control < Común</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Completitud</strong></td>
+                                    <td>Todas las funciones incluidas</td>
+                                    <td>Sistema completo</td>
+                                    <td>% Requerimientos cubiertos</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Consistencia</strong></td>
+                                    <td>Uniformidad en todo el sistema</td>
+                                    <td>Comprensión fácil</td>
+                                    <td>Estándares de nomenclatura</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas Fundamentales</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Comenzar Simple</strong>
+                            <p>Iniciar con un diagrama de contexto antes de descomponer</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Mantener Balance</strong>
+                            <p>Ni muy pocos ni demasiados procesos por nivel</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Nombrar Claramente</strong>
+                            <p>Usar nombres descriptivos y consistentes</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validar Continuamente</strong>
+                            <p>Verificar con stakeholders en cada nivel</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Documentar Decisiones</strong>
+                            <p>Registrar el razonamiento detrás de cada decisión</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Iterar Según Necesidad</strong>
+                            <p>Refinar y ajustar basado en nueva información</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Relación con Otras Metodologías</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Influencias Recibidas</h4>
+                            <ul>
+                                <li><strong>Programación Estructurada:</strong> Conceptos de modularidad</li>
+                                <li><strong>Teoría de Sistemas:</strong> Enfoque holístico</li>
+                                <li><strong>Ingeniería de Software:</strong> Rigor metodológico</li>
+                                <li><strong>Análisis de Sistemas:</strong> Técnicas de descomposición</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Influencias Ejercidas</h4>
+                            <ul>
+                                <li><strong>UML:</strong> Diagramas de casos de uso</li>
+                                <li><strong>Modelado de Procesos:</strong> BPMN, workflow</li>
+                                <li><strong>Arquitectura de Software:</strong> Descomposición modular</li>
+                                <li><strong>Métodos Ágiles:</strong> Enfoque en valor de negocio</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎓 Competencias Requeridas</h3>
+                    
+                    <div class="grid grid-3">
+                        <div>
+                            <h4 style="color: var(--primary);">Técnicas</h4>
+                            <ul>
+                                <li>Modelado con DFD</li>
+                                <li>Análisis de procesos</li>
+                                <li>Diseño de bases de datos</li>
+                                <li>Especificación formal</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Analíticas</h4>
+                            <ul>
+                                <li>Pensamiento sistemático</li>
+                                <li>Descomposición de problemas</li>
+                                <li>Identificación de patrones</li>
+                                <li>Análisis de dependencias</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Comunicación</h4>
+                            <ul>
+                                <li>Entrevistas estructuradas</li>
+                                <li>Facilitación de reuniones</li>
+                                <li>Documentación técnica</li>
+                                <li>Presentación de modelos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="techniques" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🛠️</div>
+                    <span>Técnicas y Métodos</span>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Técnicas de Recopilación de Información</h3>
+                    
+                    <div class="technique-grid">
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">🗣️</div>
+                                <div>
+                                    <h4>Entrevistas Estructuradas</h4>
+                                    <p>Conversaciones planificadas y dirigidas</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Propósito:</strong> Obtener información detallada sobre procesos<br>
+                                <strong>Técnica:</strong> Preguntas abiertas y cerradas secuenciadas<br>
+                                <strong>Resultado:</strong> Comprensión profunda del dominio
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">👁️</div>
+                                <div>
+                                    <h4>Observación Directa</h4>
+                                    <p>Análisis in-situ de procesos</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Propósito:</strong> Identificar procesos reales vs documentados<br>
+                                <strong>Técnica:</strong> Observación participativa y no participativa<br>
+                                <strong>Resultado:</strong> Flujos de trabajo auténticos
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">📄</div>
+                                <div>
+                                    <h4>Análisis Documental</h4>
+                                    <p>Revisión de material existente</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Propósito:</strong> Comprender políticas y procedimientos<br>
+                                <strong>Técnica:</strong> Análisis de contenido estructurado<br>
+                                <strong>Resultado:</strong> Fundamentos normativos y operacionales
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">📊</div>
+                                <div>
+                                    <h4>Cuestionarios</h4>
+                                    <p>Recopilación masiva de datos</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Propósito:</strong> Obtener información de múltiples fuentes<br>
+                                <strong>Técnica:</strong> Diseño de preguntas estructuradas<br>
+                                <strong>Resultado:</strong> Datos cuantitativos y tendencias
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Técnicas de Análisis</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Análisis Top-Down</h4>
+                            <p>Enfoque de descomposición desde lo general hacia lo específico:</p>
+                            <ol>
+                                <li><strong>Diagrama de Contexto:</strong> Vista general del sistema</li>
+                                <li><strong>Diagrama Nivel 0:</strong> Procesos principales</li>
+                                <li><strong>Diagramas Detallados:</strong> Procesos específicos</li>
+                                <li><strong>Especificaciones:</strong> Lógica de procesos</li>
+                            </ol>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ventajas:</h4>
+                            <ul>
+                                <li>Visión completa del sistema</li>
+                                <li>Identificación de componentes principales</li>
+                                <li>Facilita la planificación</li>
+                                <li>Mejor comunicación con stakeholders</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary);">Análisis Bottom-Up</h4>
+                            <p>Construcción desde elementos específicos hacia lo general:</p>
+                            <ol>
+                                <li><strong>Procesos Elementales:</strong> Actividades básicas</li>
+                                <li><strong>Agrupación:</strong> Combinación lógica</li>
+                                <li><strong>Integración:</strong> Formación de subsistemas</li>
+                                <li><strong>Sistema Completo:</strong> Vista integrada</li>
+                            </ol>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ventajas:</h4>
+                            <ul>
+                                <li>Detalle preciso desde el inicio</li>
+                                <li>Menos riesgo de omisiones</li>
+                                <li>Mejor para sistemas existentes</li>
+                                <li>Validación más fácil</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Técnicas de Validación</h3>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Verificación de Consistencia</strong>
+                                <p>Comprobar que los datos fluyen correctamente entre niveles y no hay contradicciones entre diagramas</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Verificación de Completitud</strong>
+                                <p>Asegurar que todos los procesos están definidos y todos los flujos de datos tienen origen y destino</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Validación con Usuarios</strong>
+                                <p>Revisar modelos con stakeholders para confirmar que reflejan correctamente la realidad del negocio</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Análisis de Escenarios</strong>
+                                <p>Probar el modelo con diferentes situaciones y casos extremos para verificar su robustez</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Técnica</th>
+                                <th>Objetivo</th>
+                                <th>Cuando Usar</th>
+                                <th>Artefactos</th>
+                                <th>Tiempo Típico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Entrevista Individual</strong></td>
+                                <td>Información detallada</td>
+                                <td>Expertos clave, procesos complejos</td>
+                                <td>Notas, grabaciones</td>
+                                <td>1-2 horas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sesiones JAD</strong></td>
+                                <td>Consenso grupal</td>
+                                <td>Múltiples stakeholders, decisiones</td>
+                                <td>DFD preliminares</td>
+                                <td>1-3 días</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Observación</strong></td>
+                                <td>Procesos reales</td>
+                                <td>Discrepancias documentación</td>
+                                <td>Diagramas de flujo</td>
+                                <td>Días-semanas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Análisis Documental</strong></td>
+                                <td>Comprensión inicial</td>
+                                <td>Inicio de proyecto</td>
+                                <td>Resúmenes, mapas</td>
+                                <td>1-2 semanas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prototipado</strong></td>
+                                <td>Validación conceptos</td>
+                                <td>Incertidumbre requerimientos</td>
+                                <td>Prototipos, feedback</td>
+                                <td>2-4 semanas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Mejores Prácticas por Técnica</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Entrevistas Efectivas</strong>
+                            <p>Preparar preguntas, escuchar activamente, confirmar comprensión</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Observación Productiva</strong>
+                            <p>Ser discreto, documentar inmediatamente, buscar patrones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Documentación Útil</strong>
+                            <p>Identificar fuentes relevantes, verificar actualidad, extraer esencia</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validación Continua</strong>
+                            <p>Verificar comprensión, buscar inconsistencias, iterar modelos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Técnicas de Refinamiento</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Balancing (Balanceado)</h4>
+                            <p>Técnica para asegurar consistencia entre niveles de DFD:</p>
+                            <ul>
+                                <li>Los flujos de entrada y salida de un proceso padre deben aparecer en su descomposición</li>
+                                <li>No introducir nuevos flujos externos en niveles inferiores</li>
+                                <li>Mantener coherencia en nombres de flujos</li>
+                                <li>Verificar que no falten ni sobren conexiones</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Leveling (Nivelado)</h4>
+                            <p>Proceso de crear jerarquías apropiadas de DFD:</p>
+                            <ul>
+                                <li>Determinar el nivel de detalle apropiado</li>
+                                <li>Agrupar procesos relacionados lógicamente</li>
+                                <li>Evitar diagramas con demasiados o muy pocos procesos</li>
+                                <li>Mantener un nivel de abstracción consistente por nivel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Métricas de Calidad del Análisis</h3>
+                    
+                    <div class="metrics-dashboard">
+                        <div class="metric-card">
+                            <div class="metric-value">7±2</div>
+                            <div class="metric-label">Procesos por DFD</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">95%</div>
+                            <div class="metric-label">Cobertura requerimientos</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">3-5</div>
+                            <div class="metric-label">Niveles DFD típicos</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Flujos balanceados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="diagrams" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">📊</div>
+                    <span>Diagramas y Modelado</span>
+                </div>
+
+                <div class="card">
+                    <h3>🗺️ Diagrama de Flujo de Datos (DFD)</h3>
+                    <p>Herramienta principal del análisis estructurado que muestra el flujo de información a través del sistema.</p>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Símbolos Básicos</h4>
+                            <div class="code-example">
+                                <pre>
+🟦 PROCESO
+   - Transforma datos
+   - Numerado jerárquicamente
+   - Nombre: verbo + objeto
+   
+⬜ ENTIDAD EXTERNA  
+   - Fuente o destino de datos
+   - Fuera del control del sistema
+   - Nombre: sustantivo
+   
+📂 ALMACÉN DE DATOS
+   - Repositorio de información
+   - Datos en reposo
+   - Nombre: sustantivo plural
+   
+➡️ FLUJO DE DATOS
+   - Movimiento de información
+   - Etiquetado con nombre de datos
+   - Dirección indicada por flecha
+                                </pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Reglas de Construcción</h4>
+                            <ul>
+                                <li><strong>Procesos:</strong> Debe tener al menos una entrada y una salida</li>
+                                <li><strong>Almacenes:</strong> No pueden conectarse directamente entre sí</li>
+                                <li><strong>Entidades:</strong> No se conectan directamente con almacenes</li>
+                                <li><strong>Flujos:</strong> Deben tener origen y destino claros</li>
+                                <li><strong>Nombres:</strong> Descriptivos y únicos en su contexto</li>
+                                <li><strong>Dirección:</strong> Indicada claramente por flechas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ Jerarquía de DFD</h3>
+                    
+                    <div class="phase-timeline">
+                        <div class="phase-item">
+                            <div class="phase-icon">0</div>
+                            <div>
+                                <h4>Diagrama de Contexto</h4>
+                                <p><strong>Nivel más alto:</strong> Muestra el sistema como un solo proceso interactuando con entidades externas. Establece el alcance y los límites del sistema.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">1</div>
+                            <div>
+                                <h4>Diagrama Nivel 0</h4>
+                                <p><strong>Vista general:</strong> Descompone el sistema en sus procesos principales (típicamente 3-7 procesos). Muestra interacciones principales.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">2</div>
+                            <div>
+                                <h4>Diagramas de Nivel Inferior</h4>
+                                <p><strong>Detalle específico:</strong> Cada proceso complejo se descompone en subprocesos. Continúa hasta llegar a procesos primitivos.</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">✓</div>
+                            <div>
+                                <h4>Proceso Primitivo</h4>
+                                <p><strong>Nivel final:</strong> Proceso que no se descompone más. Se describe con especificación de proceso detallada.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nivel DFD</th>
+                                <th>Propósito</th>
+                                <th>Audiencia</th>
+                                <th>Detalle</th>
+                                <th>Procesos Típicos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Contexto</strong></td>
+                                <td>Alcance del sistema</td>
+                                <td>Alta gerencia, sponsors</td>
+                                <td>Muy alto nivel</td>
+                                <td>1 proceso</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nivel 0</strong></td>
+                                <td>Funciones principales</td>
+                                <td>Gerentes, analistas</td>
+                                <td>Alto nivel</td>
+                                <td>3-7 procesos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nivel 1</strong></td>
+                                <td>Subfunciones</td>
+                                <td>Usuarios, analistas</td>
+                                <td>Medio</td>
+                                <td>3-7 por proceso padre</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nivel 2+</strong></td>
+                                <td>Procesos específicos</td>
+                                <td>Desarrolladores</td>
+                                <td>Detallado</td>
+                                <td>Hasta procesos primitivos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Diccionario de Datos</h3>
+                    <p>Repositorio centralizado que define todos los elementos de datos utilizados en los DFD.</p>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Notación del Diccionario</h4>
+                            <div class="code-example">
+                                <pre>
+SÍMBOLOS:
+= : se define como
++ : y (concatenación)
+[ | ] : o (selección)
+{ } : repetición (0 o más)
+( ) : repetición (1 o más)
+@ : identificador clave
+* * : comentarios
+
+EJEMPLOS:
+Pedido = Número_Pedido + Fecha_Pedido + 
+         Cliente + (Línea_Pedido) + Total
+
+Cliente = @Código_Cliente + Nombre_Cliente + 
+          Dirección + Teléfono
+
+Línea_Pedido = Código_Producto + 
+               Descripción + Cantidad + 
+               Precio_Unitario
+
+Dirección = Calle + Ciudad + 
+           [Provincia | Estado] + 
+           Código_Postal + País
+                                </pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Elementos del Diccionario</h4>
+                            <ul>
+                                <li><strong>Flujos de Datos:</strong> Nombre, composición, volumen</li>
+                                <li><strong>Elementos de Datos:</strong> Tipo, longitud, valores válidos</li>
+                                <li><strong>Almacenes:</strong> Contenido, organización, acceso</li>
+                                <li><strong>Procesos:</strong> Descripción, entradas, salidas, lógica</li>
+                                <li><strong>Entidades Externas:</strong> Descripción, interacciones</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Beneficios:</h4>
+                            <ul>
+                                <li>Elimina ambigüedades</li>
+                                <li>Facilita comunicación</li>
+                                <li>Base para diseño de BD</li>
+                                <li>Referencia para desarrollo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Especificaciones de Procesos</h3>
+                    <p>Descripciones detalladas de la lógica de los procesos primitivos.</p>
+                    
+                    <div class="technique-grid">
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">📝</div>
+                                <div>
+                                    <h4>Lenguaje Natural Estructurado</h4>
+                                    <p>Descripción en español con estructura</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Uso:</strong> Procesos simples, comunicación con usuarios<br>
+                                <strong>Ventajas:</strong> Fácil comprensión, no requiere formación<br>
+                                <strong>Desventajas:</strong> Puede ser ambiguo
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">🌳</div>
+                                <div>
+                                    <h4>Árboles de Decisión</h4>
+                                    <p>Representación gráfica de lógica compleja</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Uso:</strong> Múltiples condiciones y alternativas<br>
+                                <strong>Ventajas:</strong> Visual, completo, verificable<br>
+                                <strong>Desventajas:</strong> Puede ser extenso
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">📊</div>
+                                <div>
+                                    <h4>Tablas de Decisión</h4>
+                                    <p>Matriz de condiciones y acciones</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Uso:</strong> Lógica compleja con múltiples variables<br>
+                                <strong>Ventajas:</strong> Compacto, verificable<br>
+                                <strong>Desventajas:</strong> Difícil para lógica secuencial
+                            </div>
+                        </div>
+
+                        <div class="technique-card">
+                            <div class="technique-header">
+                                <div class="technique-icon">💻</div>
+                                <div>
+                                    <h4>Pseudocódigo</h4>
+                                    <p>Descripción similar a programación</p>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Uso:</strong> Procesos algorítmicos complejos<br>
+                                <strong>Ventajas:</strong> Preciso, fácil traducción a código<br>
+                                <strong>Desventajas:</strong> Requiere conocimiento técnico
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas para DFD</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Nombrado Consistente</strong>
+                            <p>Procesos: verbo+objeto, Almacenes: sustantivo plural</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Balanceado Correcto</strong>
+                            <p>Entradas y salidas coinciden entre niveles</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Complejidad Apropiada</strong>
+                            <p>7±2 procesos por diagrama, niveles necesarios</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Validación Continua</strong>
+                            <p>Verificar con usuarios, mantener actualizado</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Documentación Completa</strong>
+                            <p>Diccionario de datos actualizado</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Estándares Gráficos</strong>
+                            <p>Símbolos consistentes, diseño limpio</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Ejemplo de Especificación de Proceso</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+PROCESO 3.2: Validar Pedido
+
+ENTRADAS:
+- Pedido_Cliente (desde Entidad Cliente)
+- Inventario_Disponible (desde Almacén D2: Inventario)
+- Límite_Crédito (desde Almacén D1: Clientes)
+
+SALIDAS:
+- Pedido_Validado (hacia Proceso 3.3: Procesar Pedido)
+- Pedido_Rechazado (hacia Entidad Cliente)
+- Notificación_Inventario (hacia Proceso 2.1: Gestionar Inventario)
+
+LÓGICA:
+1. LEER Pedido_Cliente
+2. LEER Límite_Crédito para Cliente
+3. CALCULAR Total_Pedido = SUMA(Cantidad × Precio) para todos los items
+4. SI Total_Pedido > Límite_Crédito ENTONCES
+     ENVIAR Pedido_Rechazado con motivo "Excede límite de crédito"
+     TERMINAR
+5. PARA CADA item en Pedido_Cliente:
+     LEER Inventario_Disponible para Producto
+     SI Cantidad_Solicitada > Inventario_Disponible ENTONCES
+       ENVIAR Notificación_Inventario
+       ENVIAR Pedido_Rechazado con motivo "Inventario insuficiente"
+       TERMINAR
+6. ENVIAR Pedido_Validado
+
+REGLAS DE NEGOCIO:
+- Solo clientes con cuenta activa pueden hacer pedidos
+- Pedidos mínimos de $100
+- Descuentos automáticos para pedidos > $500
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tools" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">🔧</div>
+                    <span>Herramientas y Software</span>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">📐</div>
+                        <h3>Visio (Microsoft)</h3>
+                        <p><strong>Tipo:</strong> Diagramación general</p>
+                        <p><strong>Fortalezas:</strong> Amplia adopción, integración Office</p>
+                        <p><strong>DFD:</strong> Plantillas específicas disponibles</p>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🎨</div>
+                        <h3>Lucidchart</h3>
+                        <p><strong>Tipo:</strong> Diagramación web</p>
+                        <p><strong>Fortalezas:</strong> Colaboración en tiempo real</p>
+                        <p><strong>DFD:</strong> Símbolos estándar, validación</p>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <h3>Draw.io (Diagrams.net)</h3>
+                        <p><strong>Tipo:</strong> Gratuito, web/desktop</p>
+                        <p><strong>Fortalezas:</strong> Sin costo, muchas integraciones</p>
+                        <p><strong>DFD:</strong> Bibliotecas de símbolos completas</p>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🏢</div>
+                        <h3>Enterprise Architect</h3>
+                        <p><strong>Tipo:</strong> Modelado empresarial</p>
+                        <p><strong>Fortalezas:</strong> Repositorio centralizado, UML</p>
+                        <p><strong>DFD:</strong> Análisis estructurado completo</p>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🔷</div>
+                        <h3>Rational Rose</h3>
+                        <p><strong>Tipo:</strong> Análisis y diseño</p>
+                        <p><strong>Fortalezas:</strong> Trazabilidad, generación código</p>
+                        <p><strong>DFD:</strong> Soporte análisis estructurado</p>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🌐</div>
+                        <h3>Miro/Mural</h3>
+                        <p><strong>Tipo:</strong> Pizarra colaborativa</p>
+                        <p><strong>Fortalezas:</strong> Ideación, colaboración visual</p>
+                        <p><strong>DFD:</strong> Plantillas, trabajo en equipo</p>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Tipo</th>
+                                <th>Costo</th>
+                                <th>Colaboración</th>
+                                <th>DFD Features</th>
+                                <th>Integración</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Microsoft Visio</strong></td>
+                                <td>Desktop</td>
+                                <td>Medio</td>
+                                <td>Limitada</td>
+                                <td>Excelente</td>
+                                <td>Office 365</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lucidchart</strong></td>
+                                <td>Web</td>
+                                <td>Medio</td>
+                                <td>Excelente</td>
+                                <td>Muy buena</td>
+                                <td>Multiple platforms</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Draw.io</strong></td>
+                                <td>Web/Desktop</td>
+                                <td>Gratis</td>
+                                <td>Buena</td>
+                                <td>Buena</td>
+                                <td>Google Drive, GitHub</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enterprise Architect</strong></td>
+                                <td>Desktop</td>
+                                <td>Alto</td>
+                                <td>Buena</td>
+                                <td>Excelente</td>
+                                <td>Herramientas desarrollo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rational Rose</strong></td>
+                                <td>Desktop</td>
+                                <td>Alto</td>
+                                <td>Limitada</td>
+                                <td>Excelente</td>
+                                <td>IBM Suite</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Miro</strong></td>
+                                <td>Web</td>
+                                <td>Bajo-Medio</td>
+                                <td>Excelente</td>
+                                <td>Básica</td>
+                                <td>Productivity tools</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Herramientas Especializadas</h3>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">CASE (Computer-Aided Software Engineering)</h4>
+                            <ul>
+                                <li><strong>Visible Analyst:</strong> Herramienta clásica para análisis estructurado</li>
+                                <li><strong>System Architect:</strong> Metodologías múltiples incluyendo SA</li>
+                                <li><strong>PowerDesigner:</strong> Modelado de datos y procesos</li>
+                                <li><strong>MEGA Suite:</strong> Arquitectura empresarial</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Características CASE:</h4>
+                            <ul>
+                                <li>Repositorio centralizado de metadatos</li>
+                                <li>Verificación de consistencia automática</li>
+                                <li>Generación de reportes</li>
+                                <li>Trazabilidad completa</li>
+                                <li>Generación de código esquemático</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Herramientas Open Source</h4>
+                            <ul>
+                                <li><strong>Dia:</strong> Diagramación general (Linux/Windows)</li>
+                                <li><strong>yEd:</strong> Editor de grafos potente</li>
+                                <li><strong>PlantUML:</strong> Diagramas como código</li>
+                                <li><strong>ArgoUML:</strong> UML con soporte DFD</li>
+                            </ul>
+                            
+                            <h4 style="color: var(--primary); margin-top: 1.5rem;">Ventajas Open Source:</h4>
+                            <ul>
+                                <li>Sin costo de licencias</li>
+                                <li>Código abierto y extensible</li>
+                                <li>Comunidad activa de soporte</li>
+                                <li>Formatos estándar de intercambio</li>
+                                <li>Personalización completa</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>🎯 Selección de Herramientas</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Evaluar Necesidades</strong>
+                            <p>Tamaño del equipo, complejidad del proyecto, presupuesto</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Considerar Integración</strong>
+                            <p>Compatibilidad con herramientas existentes</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Probar Antes de Comprar</strong>
+                            <p>Versiones trial, evaluación con casos reales</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Capacitación del Equipo</strong>
+                            <p>Tiempo de aprendizaje, recursos de formación</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Escalabilidad</strong>
+                            <p>Capacidad de crecer con el proyecto y organización</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Soporte y Comunidad</strong>
+                            <p>Disponibilidad de ayuda y recursos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Criterios de Evaluación</h3>
+                    
+                    <div class="metrics-dashboard">
+                        <div class="metric-card">
+                            <div class="metric-value">9/10</div>
+                            <div class="metric-label">Facilidad de uso</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">8/10</div>
+                            <div class="metric-label">Funciones DFD</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">7/10</div>
+                            <div class="metric-label">Colaboración</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">6/10</div>
+                            <div class="metric-label">Costo-beneficio</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Configuración y Mejores Prácticas</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+CONFIGURACIÓN RECOMENDADA PARA DFD:
+
+SÍMBOLOS:
+□ Procesos: Rectángulos redondeados, numeración jerárquica
+□ Entidades: Rectángulos simples, mayúsculas
+□ Almacenes: Rectángulos abiertos, numeración D1, D2...
+□ Flujos: Flechas simples, etiquetadas
+
+ESTÁNDARES GRÁFICOS:
+□ Fuente: Arial o similar, tamaño 10-12pt
+□ Colores: Moderados, contraste alto
+□ Espaciado: Uniforme, no sobrecargado
+□ Alineación: Elementos bien distribuidos
+
+ORGANIZACIÓN:
+□ Un archivo por nivel de DFD
+□ Nomenclatura consistente de archivos
+□ Versionado claro (v1.0, v1.1, etc.)
+□ Backup regular de archivos
+
+COLABORACIÓN:
+□ Acceso controlado por roles
+□ Comentarios y revisiones documentadas
+□ Histórico de cambios mantenido
+□ Sincronización regular entre miembros
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="case-study" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">📚</div>
+                    <span>Caso Práctico</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>🏪 Sistema de Gestión de Biblioteca Municipal</h3>
+                    <p>Desarrollaremos el análisis estructurado completo para un sistema de gestión de biblioteca que incluye préstamos, devoluciones, gestión de catálogo y administración de usuarios.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Descripción del Sistema</h3>
+                    <p>La Biblioteca Municipal "Cervantes" requiere un sistema automatizado para gestionar sus operaciones diarias:</p>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="color: var(--primary);">Operaciones Actuales (Manual)</h4>
+                            <ul>
+                                <li>Registro manual de socios en libretas</li>
+                                <li>Catálogo en fichas físicas</li>
+                                <li>Préstamos registrados en tarjetas</li>
+                                <li>Control de devoluciones manual</li>
+                                <li>Multas calculadas manualmente</li>
+                                <li>Estadísticas inexistentes</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--primary);">Requerimientos del Nuevo Sistema</h4>
+                            <ul>
+                                <li>Gestión automatizada de socios</li>
+                                <li>Catálogo digital consultable</li>
+                                <li>Préstamos y devoluciones ágiles</li>
+                                <li>Cálculo automático de multas</li>
+                                <li>Reservas de libros</li>
+                                <li>Reportes y estadísticas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗺️ Diagrama de Contexto</h3>
+                    
+                    <div class="diagram-container">
+                        <div class="diagram-placeholder">
+                            📚 SISTEMA DE BIBLIOTECA
+                        </div>
+                        <div class="code-example">
+                            <pre>
+ENTIDADES EXTERNAS:
+□ SOCIO - Usuarios registrados de la biblioteca
+□ BIBLIOTECARIO - Personal que opera el sistema  
+□ PROVEEDOR - Suministra información de nuevos libros
+□ DIRECTOR - Recibe reportes gerenciales
+
+FLUJOS PRINCIPALES:
+• Socio → Sistema: Solicitud_Préstamo, Consulta_Catálogo
+• Sistema → Socio: Confirmación_Préstamo, Aviso_Vencimiento
+• Bibliotecario → Sistema: Datos_Libro, Datos_Socio
+• Sistema → Bibliotecario: Reporte_Diario
+• Sistema → Director: Estadísticas_Mensuales
+• Proveedor → Sistema: Catálogo_Novedades
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Diagrama Nivel 0</h3>
+                    
+                    <div class="phase-timeline">
+                        <div class="phase-item">
+                            <div class="phase-icon">1</div>
+                            <div>
+                                <h4>Gestionar Socios</h4>
+                                <p><strong>Función:</strong> Registro, actualización y consulta de información de socios</p>
+                                <p><strong>Entradas:</strong> Datos_Socio, Consulta_Socio</p>
+                                <p><strong>Salidas:</strong> Confirmación_Registro, Info_Socio</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">2</div>
+                            <div>
+                                <h4>Gestionar Catálogo</h4>
+                                <p><strong>Función:</strong> Mantenimiento del inventario de libros y materiales</p>
+                                <p><strong>Entradas:</strong> Datos_Libro, Consulta_Catálogo, Catálogo_Novedades</p>
+                                <p><strong>Salidas:</strong> Info_Libro, Disponibilidad</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">3</div>
+                            <div>
+                                <h4>Procesar Préstamos</h4>
+                                <p><strong>Función:</strong> Gestión de préstamos, renovaciones y reservas</p>
+                                <p><strong>Entradas:</strong> Solicitud_Préstamo, Solicitud_Renovación</p>
+                                <p><strong>Salidas:</strong> Confirmación_Préstamo, Recibo_Préstamo</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">4</div>
+                            <div>
+                                <h4>Procesar Devoluciones</h4>
+                                <p><strong>Función:</strong> Registro de devoluciones y cálculo de multas</p>
+                                <p><strong>Entradas:</strong> Devolución_Libro</p>
+                                <p><strong>Salidas:</strong> Confirmación_Devolución, Multa</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-item">
+                            <div class="phase-icon">5</div>
+                            <div>
+                                <h4>Generar Reportes</h4>
+                                <p><strong>Función:</strong> Creación de estadísticas y reportes gerenciales</p>
+                                <p><strong>Entradas:</strong> Solicitud_Reporte</p>
+                                <p><strong>Salidas:</strong> Reporte_Diario, Estadísticas_Mensuales</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Almacenes de Datos Principales</h3>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Almacén</th>
+                                    <th>Contenido</th>
+                                    <th>Procesos que Leen</th>
+                                    <th>Procesos que Escriben</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>D1: SOCIOS</strong></td>
+                                    <td>Información personal y estado de socios</td>
+                                    <td>1, 3, 4, 5</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D2: CATÁLOGO</strong></td>
+                                    <td>Inventario de libros y materiales</td>
+                                    <td>2, 3, 5</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D3: PRÉSTAMOS</strong></td>
+                                    <td>Registro de préstamos activos</td>
+                                    <td>3, 4, 5</td>
+                                    <td>3, 4</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D4: HISTORIAL</strong></td>
+                                    <td>Histórico de transacciones</td>
+                                    <td>5</td>
+                                    <td>3, 4</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D5: MULTAS</strong></td>
+                                    <td>Multas pendientes y pagadas</td>
+                                    <td>3, 5</td>
+                                    <td>4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Proceso Detallado: 3.1 Validar Préstamo</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+PROCESO: 3.1 Validar Préstamo
+
+ENTRADAS:
+- Solicitud_Préstamo (Cédula_Socio + Código_Libro)
+- Info_Socio (desde D1: SOCIOS)
+- Info_Libro (desde D2: CATÁLOGO)  
+- Préstamos_Activos (desde D3: PRÉSTAMOS)
+- Multas_Pendientes (desde D5: MULTAS)
+
+SALIDAS:
+- Préstamo_Aprobado (hacia 3.2: Registrar Préstamo)
+- Préstamo_Rechazado (hacia SOCIO)
+
+LÓGICA DE PROCESO:
+
+1. RECIBIR Solicitud_Préstamo
+2. LEER Info_Socio usando Cédula_Socio
+3. SI Socio no existe ENTONCES
+     ENVIAR Préstamo_Rechazado ("Socio no registrado")
+     TERMINAR
+4. SI Estado_Socio = "Suspendido" ENTONCES
+     ENVIAR Préstamo_Rechazado ("Socio suspendido")
+     TERMINAR
+5. LEER Multas_Pendientes para Cédula_Socio
+6. SI Multas_Pendientes > 0 ENTONCES
+     ENVIAR Préstamo_Rechazado ("Multas pendientes de pago")
+     TERMINAR
+7. CONTAR Préstamos_Activos para Cédula_Socio
+8. SI Préstamos_Activos >= Límite_Préstamos ENTONCES
+     ENVIAR Préstamo_Rechazado ("Límite de préstamos excedido")
+     TERMINAR
+9. LEER Info_Libro usando Código_Libro
+10. SI Estado_Libro ≠ "Disponible" ENTONCES
+      ENVIAR Préstamo_Rechazado ("Libro no disponible")
+      TERMINAR
+11. ENVIAR Préstamo_Aprobado
+
+REGLAS DE NEGOCIO:
+- Límite máximo: 3 libros por socio
+- Período préstamo: 15 días
+- Solo socios activos pueden solicitar préstamos
+- Libros de referencia no se prestan
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Diccionario de Datos - Extracto</h3>
+                    
+                    <div class="code-example">
+                        <pre>
+DICCIONARIO DE DATOS:
+
+Solicitud_Préstamo = Cédula_Socio + Código_Libro + Fecha_Solicitud
+Socio = @Cédula_Socio + Nombre + Apellidos + Dirección + 
+        Teléfono + Email + Fecha_Registro + Estado_Socio
+Libro = @Código_Libro + ISBN + Título + Autor + Editorial + 
+        Año_Publicación + Categoría + Estado_Libro + Ubicación
+Préstamo = @Número_Préstamo + Cédula_Socio + Código_Libro + 
+           Fecha_Préstamo + Fecha_Vencimiento + Estado_Préstamo
+Multa = @Número_Multa + Cédula_Socio + Número_Préstamo + 
+        Días_Retraso + Monto_Multa + Fecha_Multa + Estado_Multa
+
+ELEMENTOS DE DATOS:
+Cédula_Socio = 8{dígito} * Cédula de identidad *
+Estado_Socio = [Activo | Suspendido | Inactivo]
+Estado_Libro = [Disponible | Prestado | Reservado | Mantenimiento]
+Estado_Préstamo = [Activo | Vencido | Devuelto | Renovado]
+Fecha_Solicitud = dd/mm/aaaa * Formato fecha estándar *
+Límite_Préstamos = 3 * Máximo 3 libros por socio *
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="best-practices">
+                    <h3>📈 Resultados Esperados</h3>
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <strong>Eficiencia Operativa</strong>
+                            <p>Reducción 70% tiempo de préstamos y devoluciones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Control Automático</strong>
+                            <p>Eliminación de errores manuales y pérdida de información</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Mejor Servicio</strong>
+                            <p>Consultas online, reservas, notificaciones automáticas</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Información Gerencial</strong>
+                            <p>Reportes automáticos para toma de decisiones</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Escalabilidad</strong>
+                            <p>Base sólida para futuras funcionalidades digitales</p>
+                        </div>
+                        <div class="practice-item">
+                            <strong>Cumplimiento</strong>
+                            <p>Trazabilidad completa para auditorías</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Siguientes Pasos</h3>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Validación con Stakeholders</strong>
+                                <p>Revisión de DFD y especificaciones con bibliotecarios y director</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Refinamiento de Procesos</strong>
+                                <p>Completar especificaciones de todos los procesos primitivos</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Diseño de Base de Datos</strong>
+                                <p>Transformar diccionario de datos en esquema relacional</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Diseño de Interfaces</strong>
+                                <p>Mockups de pantallas basados en flujos de datos</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">5</div>
+                            <div>
+                                <strong>Plan de Implementación</strong>
+                                <p>Cronograma y recursos para desarrollo del sistema</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Preparatic - Tema 19: Análisis Estructurado | Guía de Estudio para Administración Pública</p>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab and mark button as active
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            html.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Claro';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Oscuro';
+            }
+        });
+
+        // Add smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey && e.key >= '1' && e.key <= '6') {
+                e.preventDefault();
+                const tabNames = ['overview', 'foundations', 'techniques', 'diagrams', 'tools', 'case-study'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabIndex < tabNames.length) {
+                    const tabButton = document.querySelector(`[onclick="showTab('${tabNames[tabIndex]}')"]`);
+                    if (tabButton) {
+                        tabButton.click();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 23 - Diseño de Programas</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+            --info-card-bg: #253b5a;
+            --definition-card-bg: #2c4c4c;
+            --example-card-bg: #4a3b2c;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --tab-border: #2980b9;
+            --content-area-border: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #e0e0e0;
+            --stat-number: #3498db;
+            --checkmark-color: rgb(88, 106, 95);
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+            --info-card-bg: #d1e7ff;
+            --definition-card-bg: #d1f0e5;
+            --example-card-bg: #f0e1d1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--stat-card-border);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--exercise-text);
+        }
+
+        .exercise-container h3 {
+            color: var(--exercise-text);
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 8px;
+        }
+
+        .exercise-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .exercise-input {
+            padding: 8px;
+            border: 1px solid var(--stat-card-border);
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .exercise-btn:hover {
+            opacity: 0.9;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .info-card {
+            background: var(--info-card-bg);
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .definition-card {
+            background: var(--definition-card-bg);
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .example-card {
+            background: var(--example-card-bg);
+            border-left: 4px solid #e67e22;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .key-points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .key-point-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--tab-active);
+        }
+
+        .hot-tip {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .key-points-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 23: Diseño de Programas</h1>
+            <p>Diseño de programas. Diseño estructurado. Análisis de transformación y de transacción. Cohesión y acoplamiento.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('structured')">📘 Diseño Estructurado</div>
+                <div class="tab" onclick="showTab('analysis')">📘 Análisis de Transformación y Transacción</div>
+                <div class="tab" onclick="showTab('cohesion')">📘 Cohesión y Acoplamiento</div>
+                <div class="tab" onclick="showTab('resources')">📚 Recursos y Tips</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: Memoriza los tipos de cohesión en orden de calidad (funcional > secuencial > comunicacional > procedural > temporal > lógico > coincidental) y los tipos de acoplamiento (de mejor a peor: datos > datos con estructuras > marca > control > externo > común > contenido).
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <div>Niveles de diseño estructurado</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <div>Tipos de análisis estructurado</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <div>Tipos de cohesión</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <div>Tipos de acoplamiento</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Introducción al Tema</h3>
+                    <p>El diseño de programas es una fase crítica en el desarrollo de software que se centra en cómo se estructurará y organizará el código para implementar los requisitos especificados. Este tema abarca conceptos fundamentales como el diseño estructurado, los enfoques de análisis de transformación y transacción, y los principios de cohesión y acoplamiento que guían una arquitectura de software robusta y mantenible.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="key-point-card">
+                        <h4>📘 Conceptos Clave</h4>
+                        <ul class="list-checkmark">
+                            <li>Diseño estructurado basado en estructuras de control</li>
+                            <li>Análisis de transformación para sistemas de procesamiento</li>
+                            <li>Análisis de transacción para sistemas interactivos</li>
+                        </ul>
+                    </div>
+                    <div class="key-point-card">
+                        <h4>⚡ Principios Fundamentales</h4>
+                        <ul class="list-checkmark">
+                            <li>Alta cohesión dentro de los módulos</li>
+                            <li>Bajo acoplamiento entre módulos</li>
+                            <li>Monentrada-monosalia en módulos</li>
+                        </ul>
+                    </div>
+                    <div class="key-point-card">
+                        <h4>🎯 Objetivos del Diseño</h4>
+                        <ul class="list-checkmark">
+                            <li>Facilitar mantenimiento y evolución</li>
+                            <li>Reducir complejidad del sistema</li>
+                            <li>Mejorar calidad y confiabilidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Tips para el Examen</h4>
+                    <p>Memoriza los tipos de cohesión en orden de calidad (funcional > secuencial > comunicacional > procedural > temporal > lógico > coincidental). Entiende cuándo aplicar el análisis de transformación vs. transacción. El examen suele incluir preguntas sobre identificar tipos de cohesión en fragmentos de código.</p>
+                </div>
+            </div>
+
+            <!-- Structured Design Tab -->
+            <div id="structured" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: El diseño estructurado se basa en el teorema de la estructura que establece que cualquier programa puede construirse usando solo tres estructuras de control básicas: secuencia, selección e iteración.
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Fundamentos del Diseño Estructurado</h3>
+                    <p>El diseño estructurado es una técnica de diseño que se basa en el teorema de la estructura que establece que cualquier programa puede construirse usando solo tres estructuras de control básicas: secuencia, selección e iteración. Esta metodología promueve la creación de programas modulares, legibles y mantenibles.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🧩 Principios del Diseño Estructurado</h4>
+                        <p>El diseño estructurado se fundamenta en la descomposición jerárquica del problema, donde se divide en subproblemas más pequeños y manejables. Cada subproblema se resuelve mediante módulos que se comunican a través de interfaces bien definidas.</p>
+                    </div>
+                    <div class="definition-card">
+                        <h4>⚙️ Estructuras de Control Básicas</h4>
+                        <p>Secuencia (ejecución lineal), Selección (bifurcación condicional) e Iteración (bucles) son las únicas estructuras necesarias para expresar cualquier algoritmo. Esta simplicidad facilita la comprensión, prueba y mantenimiento del código.</p>
+                    </div>
+                    <div class="definition-card">
+                        <h4>🏆 Beneficios del Enfoque Estructurado</h4>
+                        <p>Incluye mayor legibilidad del código, facilidad para la depuración, mejor mantenibilidad, y reducción de errores lógicos complejos. Además, facilita el trabajo en equipo al establecer estándares claros de codificación.</p>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h3>📋 Técnicas del Diseño Estructurado</h3>
+                    <p>Las técnicas del diseño estructurado incluyen el uso de diagramas de estructura (structure charts) para representar la organización modular del sistema, y la definición de interfaces claras entre módulos para controlar el flujo de datos y control.</p>
+                    
+                    <div class="highlight-box">
+                        <h4>💡 Puntos Importantes para el Examen</h4>
+                        <ul class="list-checkmark">
+                            <li>Los módulos deben tener una única entrada y una única salida (monentrada-monosalia)</li>
+                            <li>Evitar el uso de GOTO y estructuras de control no estructuradas</li>
+                            <li>Aplicar el principio de "divide y vencerás" para la descomposición funcional</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="exam-tip">
+                    <h4>💡 Pregunta de Examen Típica</h4>
+                    <p><strong>P:</strong> ¿Cuál es la característica principal de un módulo en diseño estructurado?</p>
+                    <p><strong>R:</strong> Debe tener una única entrada y una única salida, lo que facilita su comprensión y prueba.</p>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div id="analysis" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Análisis de transformación para sistemas que transforman entradas en salidas (procesamiento por lotes). Análisis de transacción para sistemas que seleccionan entre múltiples caminos de procesamiento (sistemas interactivos).
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Análisis de Transformación</h3>
+                    <p>El análisis de transformación es una técnica utilizada cuando el sistema puede modelarse como una transformación de entradas en salidas. Es aplicable cuando existe un flujo de datos que pasa por una serie de transformaciones hasta producir resultados.</p>
+                </div>
+
+                <div class="example-card">
+                    <h3>📊 Análisis de Transacción</h3>
+                    <p>El análisis de transacción se aplica cuando el sistema recibe una entrada que determina qué camino de procesamiento seguir. Es común en sistemas que manejan múltiples tipos de transacciones, donde cada transacción requiere un tratamiento específico diferente.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Comparación de Técnicas</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Análisis de Transformación</th>
+                                <th>Análisis de Transacción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Modelo de Flujo</strong></td>
+                                <td>Entrada → Procesamiento → Salida</td>
+                                <td>Entrada → Selección de Camino → Procesamiento</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Estructura</strong></td>
+                                <td>Lineal y secuencial</td>
+                                <td>Jerárquica con ramificaciones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aplicación Típica</strong></td>
+                                <td>Procesamiento por lotes, cálculos</td>
+                                <td>Sistemas interactivos, menús</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Error Común en Exámenes</h4>
+                    <p>Confundir cuándo aplicar cada tipo de análisis. El análisis de transformación es para sistemas que transforman datos, mientras que el de transacción es para sistemas que seleccionan entre caminos alternativos.</p>
+                    <p><strong>Explicación:</strong> El análisis de transformación se usa cuando hay un flujo lineal de datos a través de transformaciones sucesivas. El análisis de transacción se usa cuando se necesita tomar decisiones basadas en la entrada para seleccionar un camino de procesamiento.</p>
+                </div>
+            </div>
+
+            <!-- Cohesion Tab -->
+            <div id="cohesion" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Cohesión funcional (mejor) - todos los elementos contribuyen a una única función. Acoplamiento de datos (mejor) - módulos pasan datos simples como parámetros.
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Cohesión: Medida de Fuerza de los Módulos</h3>
+                    <p>La cohesión es una medida de la fuerza de relación entre los elementos de un módulo. Una alta cohesión indica que los elementos del módulo están estrechamente relacionados entre sí y contribuyen a un propósito único y bien definido. Es un atributo deseable en el diseño de software.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🎯 Tipos de Cohesión (de mejor a peor)</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Funcional:</strong> Todos los elementos contribuyen a una única función</li>
+                            <li><strong>Secuencial:</strong> Salida de uno es entrada del siguiente</li>
+                            <li><strong>Comunicacional:</strong> Elementos operan sobre los mismos datos</li>
+                            <li><strong>Procedural:</strong> Elementos relacionados por procedimiento de ejecución</li>
+                            <li><strong>Temporal:</strong> Elementos se ejecutan en el mismo periodo de tiempo</li>
+                            <li><strong>Lógica:</strong> Elementos realizan funciones lógicamente similares</li>
+                            <li><strong>Coincidental:</strong> Elementos no tienen relación aparente</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Ejemplos Prácticos</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Funcional:</strong> Módulo que calcula impuestos</li>
+                            <li><strong>Secuencial:</strong> Módulo que lee, valida y procesa datos</li>
+                            <li><strong>Comunicacional:</strong> Módulo que actualiza varios campos de un registro</li>
+                            <li><strong>Coincidental:</strong> Módulo con funciones de impresión y cálculo sin relación</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Consideraciones Importantes</h4>
+                    <p>La cohesión funcional es el objetivo ideal, mientras que la cohesión coincidental es la menos deseable. El diseño debe buscar maximizar la cohesión dentro de cada módulo para mejorar la mantenibilidad y comprensión del sistema.</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>📘 Acoplamiento: Medida de Interdependencia</h3>
+                    <p>El acoplamiento es una medida de la interdependencia entre módulos. Un bajo acoplamiento es deseable ya que facilita el mantenimiento, prueba e independencia de módulos. Se refiere a cómo se comunican los módulos entre sí y cuánto conocen de otros módulos.</p>
+                </div>
+
+                <div class="key-points-grid">
+                    <div class="definition-card">
+                        <h4>🎯 Tipos de Acoplamiento (de peor a mejor)</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Contenido:</strong> Un módulo modifica el código interno de otro</li>
+                            <li><strong>Común:</strong> Módulos comparten variables globales</li>
+                            <li><strong>Externo:</strong> Módulos comparten base de datos global</li>
+                            <li><strong>Control:</strong> Un módulo controla el flujo de otro</li>
+                            <li><strong>Marca:</strong> Módulos comparten partes de una estructura</li>
+                            <li><strong>Datos:</strong> Módulos pasan datos simples como parámetros</li>
+                            <li><strong>Datos con Estructuras:</strong> Módulos pasan estructuras como parámetros</li>
+                        </ul>
+                    </div>
+                    <div class="example-card">
+                        <h4>📋 Ejemplos Prácticos</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Datos:</strong> Pasar un entero como parámetro</li>
+                            <li><strong>Marca:</strong> Pasar un objeto y acceder a sus campos</li>
+                            <li><strong>Control:</strong> Pasar un flag que determina el flujo</li>
+                            <li><strong>Común:</strong> Usar variables globales para compartir datos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Consideraciones Importantes</h4>
+                    <p>El objetivo del diseño es minimizar el acoplamiento entre módulos. Un bajo acoplamiento significa que los cambios en un módulo tienen menor probabilidad de afectar a otros módulos, mejorando la mantenibilidad del sistema.</p>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Relaciona estos conceptos con principios SOLID de programación orientada a objetos: cohesión con Single Responsibility Principle y acoplamiento con Dependency Inversion Principle.
+                </div>
+
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Libros de Diseño de Software:</strong> "Structured Design" de Edward Yourdon y Larry Constantine</li>
+                        <li><strong>Métricas de Cohesión:</strong> Estudios sobre mantenibilidad y correlación con cohesión</li>
+                        <li><strong>Estándares de Codificación:</strong> Guías de estilo que promueven alta cohesión y bajo acoplamiento</li>
+                        <li><strong>Herramientas CASE:</strong> Software para modelado de estructuras y análisis de métricas</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://es.wikipedia.org/wiki/Cohesi%C3%B3n_(inform%C3%A1tica)" target="_blank">Cohesión en Wikipedia</a></li>
+                        <li><a href="https://es.wikipedia.org/wiki/Acoplamiento_(inform%C3%A1tica)" target="_blank">Acoplamiento en Wikipedia</a></li>
+                        <li><a href="https://www.ibm.com/docs/en/rational-soft-arch/9.6.1?topic=analysis-transaction-analysis" target="_blank">Análisis de Transacción IBM</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes de Examen</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>¿Cuál es la diferencia entre cohesión y acoplamiento?</h4>
+                            <p>La cohesión mide qué tan relacionados son los elementos DENTRO de un módulo, mientras que el acoplamiento mide qué tan dependientes son los módulos ENTRE SÍ. Alta cohesión y bajo acoplamiento son objetivos del buen diseño.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>¿Por qué es importante la cohesión funcional?</h4>
+                            <p>Porque cada módulo realiza una única función bien definida, lo que facilita la comprensión, prueba, mantenimiento y reutilización del código. Es el tipo más fuerte y deseable de cohesión.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exam-tip">
+                    <h4>💡 Plan de Estudio Recomendado</h4>
+                    <p>1) Memoriza los tipos de cohesión y acoplamiento en orden 2) Practica identificarlos en ejemplos de código 3) Entiende cuándo aplicar análisis de transformación vs. transacción 4) Relaciona estos conceptos con principios SOLID de programación orientada a objetos 5) Revisa ejercicios de exámenes anteriores sobre estos temas.</p>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Para identificar cohesión, pregunta: ¿Todos los elementos de este módulo contribuyen al mismo propósito? Para identificar acoplamiento, pregunta: ¿Cuánto necesita saber este módulo sobre otros módulos?
+                </div>
+
+                <div class="card">
+                    <h3>✏️ Ejercicios de Práctica para el Examen</h3>
+                    <p>Ejercicios sobre identificación de tipos de cohesión y acoplamiento, aplicación de técnicas de análisis estructurado, y evaluación de diseño modular.</p>
+                </div>
+
+                <div class="exam-tip">
+                    <h4>💡 Cómo Abordar los Ejercicios</h4>
+                    <p>Analiza cada módulo o fragmento de código preguntándote: ¿Qué hace este módulo? ¿Todos sus elementos contribuyen a ese propósito? ¿Cómo se comunica con otros módulos? Esto te ayudará a identificar cohesión y acoplamiento.</p>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: Identificación de Cohesión</h3>
+                    <div class="exercise-question">
+                        Un módulo que contiene funciones para abrir un archivo, leer datos, validarlos, calcular estadísticas y cerrar el archivo. ¿Qué tipo de cohesión tiene?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">Cohesión funcional</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Cohesión secuencial</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">Cohesión comunicacional</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt4" name="exercise1" value="d">
+                            <label for="ex1opt4">Cohesión procedural</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'b', 'ex1feedback')">Verificar Respuesta</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Análisis de Acoplamiento</h3>
+                    <div class="exercise-question">
+                        Dos módulos que comparten información a través de variables globales tienen:
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise2_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise2_answer', 'Acoplamiento común', 'ex2feedback')">Verificar Respuesta</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: Elección de Técnica de Análisis</h3>
+                    <div class="exercise-question">
+                        Un sistema que recibe una transacción bancaria y debe determinar si es un depósito, retiro o consulta de saldo. ¿Qué técnica de análisis se debe usar?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise3_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise3_answer', 'Análisis de transacción', 'ex3feedback')">Verificar Respuesta</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 4: Identificación de Acoplamiento</h3>
+                    <div class="exercise-question">
+                        Un módulo pasa un objeto complejo a otro módulo, y el receptor accede a varios campos del objeto para realizar diferentes operaciones. ¿Qué tipo de acoplamiento existe?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Acoplamiento de datos</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Acoplamiento de marca</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Acoplamiento de control</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt4" name="exercise4" value="d">
+                            <label for="ex4opt4">Acoplamiento común</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'b', 'ex4feedback')">Verificar Respuesta</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 5: Mejora de Diseño</h3>
+                    <div class="exercise-question">
+                        Un módulo que realiza las siguientes operaciones: validar entrada, calcular impuestos, generar reporte PDF, enviar email. ¿Cómo se podría mejorar la cohesión?
+                    </div>
+                    <div>
+                        <input type="text" class="exercise-input" id="exercise5_answer" placeholder="Ingrese su respuesta">
+                    </div>
+                    <button class="exercise-btn" onclick="checkTextAnswer('exercise5_answer', 'Separar en módulos con cohesión funcional', 'ex5feedback')">Verificar Respuesta</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode by default
+        document.body.classList.add('dark-mode');
+        
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remover clase activa de todos los botones
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const toggleButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selectedOption = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = 'Por favor, selecciona una opción.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = 'Incorrecto. Inténtalo de nuevo. ❌<br><br><strong>Explicación:</strong> ' + getExplanation(exerciseName, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function checkTextAnswer(inputId, correctAnswer, feedbackId) {
+            const userAnswer = document.getElementById(inputId).value.trim().toLowerCase();
+            const correctAnswerLower = correctAnswer.toLowerCase();
+            const feedbackElement = document.getElementById(feedbackId);
+            
+            if (userAnswer === '') {
+                feedbackElement.textContent = 'Por favor, ingresa tu respuesta.';
+                feedbackElement.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            if (userAnswer === correctAnswerLower) {
+                feedbackElement.innerHTML = '¡Correcto! ✅<br><br><strong>Explicación:</strong> ' + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback correct';
+            } else {
+                feedbackElement.innerHTML = `Incorrecto. La respuesta correcta es: ${correctAnswer} ❌<br><br><strong>Explicación:</strong> ` + getTextExplanation(inputId, correctAnswer);
+                feedbackElement.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        function getExplanation(exerciseName, correctAnswer) {
+            // This would be customized for each exercise
+            const explanations = {
+                'exercise1': {
+                    'a': 'La cohesión funcional es cuando todos los elementos contribuyen a una única función bien definida, pero este módulo realiza múltiples funciones relacionadas secuencialmente.',
+                    'b': '¡Correcto! La cohesión secuencial ocurre cuando los elementos están relacionados por el orden de ejecución, donde la salida de una parte es la entrada de la siguiente.',
+                    'c': 'La cohesión comunicacional es cuando los elementos operan sobre los mismos datos, pero aquí la relación es por orden de ejecución.',
+                    'd': 'La cohesión procedural es cuando los elementos están relacionados por el procedimiento de ejecución, pero aquí hay una relación más fuerte de secuencia.'
+                },
+                'exercise4': {
+                    'a': 'El acoplamiento de datos es cuando los módulos pasan datos simples como parámetros, no objetos complejos.',
+                    'b': '¡Correcto! El acoplamiento de marca ocurre cuando los módulos comparten partes de una estructura de datos, como cuando se pasa un objeto complejo y se accede a sus campos.',
+                    'c': 'El acoplamiento de control es cuando un módulo controla el flujo de otro pasando información de control, no datos.',
+                    'd': 'El acoplamiento común es cuando los módulos comparten variables globales, no parámetros pasados.'
+                }
+            };
+            
+            if (explanations[exerciseName] && explanations[exerciseName][correctAnswer]) {
+                return explanations[exerciseName][correctAnswer];
+            }
+            return 'Explicación detallada de por qué esta es la respuesta correcta.';
+        }
+
+        function getTextExplanation(inputId, correctAnswer) {
+            // This would be customized for each text exercise
+            const explanations = {
+                'exercise2_answer': 'Cuando dos módulos comparten información a través de variables globales, se denomina acoplamiento común. Es un tipo de acoplamiento relativamente alto que debe evitarse cuando sea posible.',
+                'exercise3_answer': 'El análisis de transacción es la técnica adecuada cuando un sistema debe seleccionar entre múltiples caminos de procesamiento basados en la entrada, como en este caso con las diferentes operaciones bancarias.',
+                'exercise5_answer': 'Para mejorar la cohesión, se debería separar este módulo en varios con cohesión funcional: uno para validar entrada, otro para calcular impuestos, otro para generar reportes y otro para enviar emails.'
+            };
+            
+            if (explanations[inputId]) {
+                return explanations[inputId];
+            }
+            return `Explicación detallada de por qué "${correctAnswer}" es la respuesta correcta.`;
+        }
+
+        // Animación de entrada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .stat-card, .key-point-card, .info-card, .definition-card, .example-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

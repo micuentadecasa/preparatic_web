@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 42 - Modelos TCP/IP y OSI</title>
+    <style>
+        :root {--bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530); --header-text: #f0f0f0; --tab-container-bg: #2c3e50; --tab-text: #ecf0f1; --tab-hover: rgba(52, 152, 219, 0.2); --tab-active: #2980b9; --content-bg: #2c2c2c; --card-bg: #2d2d2d; --card-text: #e0e0e0; --stat-card-bg: #333; --stat-number: #3498db; --checkmark-color: #4caf50; --highlight-box-bg: #1e3a5f; --success-box-bg: #2a4a2a; --table-header-bg: #1f618d; --table-header-text: white; --table-row-even: #3a3a3a; --exercise-bg: #2d2d2d; --exercise-border: #2980b9; --exercise-text: #e0e0e0; --feedback-correct: #2a4a2a; --feedback-incorrect: #5a2a2a;}
+        .light-mode {--bg-color: #f5f7fa; --text-color: #2c3e50; --content-bg: #f8f9fa; --card-bg: #f8f9fa; --card-text: #2c3e50; --stat-card-bg: white; --highlight-box-bg: #e8f4fc; --success-box-bg: #d4edda; --table-row-even: #f2f2f2; --exercise-bg: #f8f9fa; --exercise-text: #2c3e50; --feedback-correct: #d4edda; --feedback-incorrect: #f8d7da;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: all 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: var(--header-bg); color: var(--header-text); margin-bottom: 30px; border-radius: 12px; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; } .header p { font-size: 1.2em; opacity: 0.9; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 1.2em; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+        .tab-container { background: var(--tab-container-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .tabs { display: flex; background: var(--tab-container-bg); overflow-x: auto; }
+        .tab { padding: 15px 25px; cursor: pointer; white-space: nowrap; color: var(--tab-text); transition: all 0.3s ease; }
+        .tab:hover { background: var(--tab-hover); } .tab.active { background: var(--tab-active); }
+        .content-area { background: var(--content-bg); border: 4px solid var(--tab-active); border-top: none; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { display: none; padding: 30px; } .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-left: 4px solid var(--tab-active); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--card-text); }
+        .card h3 { margin-bottom: 15px; font-size: 1.3em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: var(--stat-card-bg); padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--stat-number); display: block; margin-bottom: 5px; }
+        .list-checkmark { list-style: none; }
+        .list-checkmark li { position: relative; padding-left: 30px; margin-bottom: 10px; }
+        .list-checkmark li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--checkmark-color); font-weight: bold; }
+        .highlight-box { background: var(--highlight-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .success-box { background: var(--success-box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid #555; }
+        .comparison-table tr:nth-child(even) { background: var(--table-row-even); }
+        .exam-tip { background: var(--highlight-box-bg); border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+        .exam-tip h4 { color: #f39c12; margin-bottom: 8px; }
+        .hot-tip { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .layer-box { background: var(--highlight-box-bg); border: 2px solid #3498db; padding: 15px; margin: 10px 0; border-radius: 8px; text-align: center; }
+        .exercise-container { background: var(--exercise-bg); border-left: 4px solid var(--exercise-border); padding: 20px; margin-bottom: 20px; border-radius: 8px; color: var(--exercise-text); }
+        .exercise-question { margin-bottom: 15px; font-weight: bold; }
+        .exercise-options { margin-left: 20px; margin-bottom: 15px; }
+        .exercise-btn { background: var(--tab-active); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 10px 5px 0 0; }
+        .exercise-feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; }
+        .exercise-feedback.correct { background: var(--feedback-correct); display: block; }
+        .exercise-feedback.incorrect { background: var(--feedback-incorrect); display: block; }
+        .ip-calc { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: monospace; }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 42: Modelos TCP/IP y OSI</h1>
+            <p>El modelo TCP/IP y el modelo de referencia de interconexión de sistemas abiertos (OSI) de ISO: arquitectura, capas, interfaces, protocolos, direccionamiento y encaminamiento. Principales protocolos de la arquitectura de comunicaciones TCP/IP.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('osi')">📘 Modelo OSI</div>
+                <div class="tab" onclick="showTab('tcpip')">📘 TCP/IP</div>
+                <div class="tab" onclick="showTab('protocols')">📘 Protocolos</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: OSI tiene 7 capas (mnemónico: "Por Favor No Traigan Sales Palomitas Arroz"), TCP/IP tiene 4 capas. ¡FUNDAMENTAL!
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number">7</span><div>Capas modelo OSI</div></div>
+                    <div class="stat-card"><span class="stat-number">4</span><div>Capas modelo TCP/IP</div></div>
+                    <div class="stat-card"><span class="stat-number">1973</span><div>Inicio proyecto TCP/IP</div></div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Diferencias Fundamentales (CLAVE EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Aspecto</th><th>Modelo OSI</th><th>Modelo TCP/IP</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Capas</strong></td><td>7 capas</td><td>4 capas</td></tr>
+                            <tr><td><strong>Origen</strong></td><td>ISO (1984)</td><td>DARPA (1973)</td></tr>
+                            <tr><td><strong>Enfoque</strong></td><td>Teórico/Conceptual</td><td>Práctico/Implementación</td></tr>
+                            <tr><td><strong>Uso</strong></td><td>Referencia educativa</td><td>Internet real</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA ESTRELLA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿En qué año se estableció el modelo OSI y quién lo desarrolló?</p>
+                        <p><strong>R:</strong> 1984, ISO (International Organization for Standardization)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Clave para Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Encapsulación:</strong> Cada capa añade cabecera</li>
+                        <li><strong>PDU (Protocol Data Unit):</strong> Unidad de datos por capa</li>
+                        <li><strong>SAP (Service Access Point):</strong> Interfaz entre capas</li>
+                        <li><strong>Peer-to-peer:</strong> Comunicación entre capas equivalentes</li>
+                        <li><strong>Stack:</strong> Pila de protocolos implementada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="osi" class="tab-content">
+                <div class="hot-tip">
+                    🔥 MNEMÓNICO OSI: "Por Favor No Traigan Sales Palomitas Arroz" = Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación
+                </div>
+
+                <div class="card">
+                    <h3>📘 Las 7 Capas OSI (MEMORIZACIÓN OBLIGATORIA)</h3>
+                    
+                    <div class="layer-box" style="border-color: #e74c3c;">
+                        <h4>Capa 7 - APLICACIÓN</h4>
+                        <p><strong>Función:</strong> Interfaz usuario-red</p>
+                        <p><strong>Protocolos:</strong> HTTP, HTTPS, FTP, SMTP, DNS</p>
+                        <p><strong>EXAMEN:</strong> Proporciona servicios de red a aplicaciones</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #f39c12;">
+                        <h4>Capa 6 - PRESENTACIÓN</h4>
+                        <p><strong>Función:</strong> Formato, cifrado, compresión</p>
+                        <p><strong>Protocolos:</strong> SSL/TLS, JPEG, MPEG, ASCII</p>
+                        <p><strong>EXAMEN:</strong> Traducción de datos</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #f1c40f;">
+                        <h4>Capa 5 - SESIÓN</h4>
+                        <p><strong>Función:</strong> Gestión de sesiones</p>
+                        <p><strong>Protocolos:</strong> NetBIOS, PPTP, RPC</p>
+                        <p><strong>EXAMEN:</strong> Establecer, mantener, cerrar sesiones</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #2ecc71;">
+                        <h4>Capa 4 - TRANSPORTE</h4>
+                        <p><strong>Función:</strong> Control extremo a extremo</p>
+                        <p><strong>Protocolos:</strong> TCP, UDP</p>
+                        <p><strong>EXAMEN:</strong> Fiabilidad, control de flujo, error</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #3498db;">
+                        <h4>Capa 3 - RED</h4>
+                        <p><strong>Función:</strong> Enrutamiento</p>
+                        <p><strong>Protocolos:</strong> IP, ICMP, OSPF, BGP</p>
+                        <p><strong>EXAMEN:</strong> Direccionamiento lógico</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #9b59b6;">
+                        <h4>Capa 2 - ENLACE</h4>
+                        <p><strong>Función:</strong> Control acceso medio</p>
+                        <p><strong>Protocolos:</strong> Ethernet, WiFi, PPP</p>
+                        <p><strong>EXAMEN:</strong> Direcciones MAC</p>
+                    </div>
+
+                    <div class="layer-box" style="border-color: #95a5a6;">
+                        <h4>Capa 1 - FÍSICA</h4>
+                        <p><strong>Función:</strong> Transmisión bits</p>
+                        <p><strong>Medios:</strong> Cable, fibra, radio</p>
+                        <p><strong>EXAMEN:</strong> Especificaciones eléctricas</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 PDU por Capa OSI (IMPORTANTE EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Capa</th><th>PDU (Protocol Data Unit)</th><th>Información Añadida</th></tr></thead>
+                        <tbody>
+                            <tr><td>Aplicación</td><td>Datos</td><td>Datos usuario</td></tr>
+                            <tr><td>Presentación</td><td>Datos</td><td>Formato/cifrado</td></tr>
+                            <tr><td>Sesión</td><td>Datos</td><td>Control sesión</td></tr>
+                            <tr><td>Transporte</td><td>Segmento</td><td>Puerto origen/destino</td></tr>
+                            <tr><td>Red</td><td>Paquete</td><td>IP origen/destino</td></tr>
+                            <tr><td>Enlace</td><td>Trama</td><td>MAC origen/destino</td></tr>
+                            <tr><td>Física</td><td>Bits</td><td>Señales eléctricas</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA TÍPICA</h4>
+                        <p><strong>P:</strong> ¿En qué capa OSI se añade la dirección MAC?</p>
+                        <p><strong>R:</strong> Capa 2 (Enlace de Datos) - crea la trama con MAC origen y destino</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tcpip" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: TCP/IP tiene 4 capas: Aplicación, Transporte, Internet, Acceso a Red. ¡No confundir con las 7 de OSI!
+                </div>
+
+                <div class="card">
+                    <h3>📘 Capas TCP/IP vs OSI (COMPARACIÓN EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>TCP/IP</th><th>OSI Equivalente</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Aplicación</strong></td><td>Aplicación + Presentación + Sesión</td><td>Servicios de usuario</td></tr>
+                            <tr><td><strong>Transporte</strong></td><td>Transporte</td><td>TCP/UDP</td></tr>
+                            <tr><td><strong>Internet</strong></td><td>Red</td><td>IP, ICMP</td></tr>
+                            <tr><td><strong>Acceso a Red</strong></td><td>Enlace + Física</td><td>Ethernet, WiFi</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 CLAVE EXAMEN</h4>
+                        <p>TCP/IP combina las capas superiores de OSI (5,6,7) en una sola capa de Aplicación</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Direccionamiento IP (CÁLCULOS EXAMEN)</h3>
+                    <div class="ip-calc">
+                        <h4>IPv4 - Clases de Red</h4>
+                        <p>Clase A: 1.0.0.0 - 126.255.255.255 (/8) - 16.7M hosts</p>
+                        <p>Clase B: 128.0.0.0 - 191.255.255.255 (/16) - 65K hosts</p>
+                        <p>Clase C: 192.0.0.0 - 223.255.255.255 (/24) - 254 hosts</p>
+                        <p>Clase D: 224.0.0.0 - 239.255.255.255 (Multicast)</p>
+                        <p>Clase E: 240.0.0.0 - 255.255.255.255 (Experimental)</p>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 IPs Privadas RFC 1918</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Clase A:</strong> 10.0.0.0/8 (10.0.0.0 - 10.255.255.255)</li>
+                            <li><strong>Clase B:</strong> 172.16.0.0/12 (172.16.0.0 - 172.31.255.255)</li>
+                            <li><strong>Clase C:</strong> 192.168.0.0/16 (192.168.0.0 - 192.168.255.255)</li>
+                        </ul>
+
+                        <div class="exam-tip">
+                            <h4>💡 PREGUNTA FRECUENTE</h4>
+                            <p><strong>P:</strong> ¿Cuántos hosts puede tener una red /24?</p>
+                            <p><strong>R:</strong> 254 hosts (2⁸-2 = 256-2, se excluyen red y broadcast)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="protocols" class="tab-content">
+                <div class="hot-tip">
+                    🔥 HOT TIP: Puertos conocidos (0-1023): HTTP=80, HTTPS=443, FTP=21, SSH=22, SMTP=25, DNS=53. ¡Memorizar!
+                </div>
+
+                <div class="card">
+                    <h3>📊 Protocolos por Capa TCP/IP</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Capa</th><th>Protocolo</th><th>Puerto</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td rowspan="6"><strong>Aplicación</strong></td><td>HTTP</td><td>80</td><td>Web</td></tr>
+                            <tr><td>HTTPS</td><td>443</td><td>Web seguro</td></tr>
+                            <tr><td>FTP</td><td>21</td><td>Transferencia archivos</td></tr>
+                            <tr><td>SSH</td><td>22</td><td>Acceso remoto seguro</td></tr>
+                            <tr><td>SMTP</td><td>25</td><td>Envío email</td></tr>
+                            <tr><td>DNS</td><td>53</td><td>Resolución nombres</td></tr>
+                            <tr><td rowspan="2"><strong>Transporte</strong></td><td>TCP</td><td>-</td><td>Confiable, orientado conexión</td></tr>
+                            <tr><td>UDP</td><td>-</td><td>No confiable, sin conexión</td></tr>
+                            <tr><td rowspan="3"><strong>Internet</strong></td><td>IP</td><td>-</td><td>Enrutamiento</td></tr>
+                            <tr><td>ICMP</td><td>-</td><td>Mensajes de error</td></tr>
+                            <tr><td>IGMP</td><td>-</td><td>Gestión multicast</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📘 TCP vs UDP (DIFERENCIAS CLAVE EXAMEN)</h3>
+                    <table class="comparison-table">
+                        <thead><tr><th>Característica</th><th>TCP</th><th>UDP</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Conexión</strong></td><td>Orientado a conexión</td><td>Sin conexión</td></tr>
+                            <tr><td><strong>Fiabilidad</strong></td><td>Confiable</td><td>No confiable</td></tr>
+                            <tr><td><strong>Control flujo</strong></td><td>Sí (ventana deslizante)</td><td>No</td></tr>
+                            <tr><td><strong>Control congestión</strong></td><td>Sí</td><td>No</td></tr>
+                            <tr><td><strong>Overhead</strong></td><td>Alto (20 bytes mínimo)</td><td>Bajo (8 bytes)</td></tr>
+                            <tr><td><strong>Velocidad</strong></td><td>Más lento</td><td>Más rápido</td></tr>
+                            <tr><td><strong>Uso típico</strong></td><td>Web, email, FTP</td><td>DNS, streaming, juegos</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA ESTRELLA</h4>
+                        <p><strong>P:</strong> ¿Por qué DNS usa UDP en lugar de TCP?</p>
+                        <p><strong>R:</strong> UDP es más rápido para consultas simples. TCP solo si respuesta > 512 bytes</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Proceso Three-Way Handshake TCP</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Establecimiento Conexión TCP:</h4>
+                        <p><strong>1. SYN:</strong> Cliente → Servidor (Synchronize)</p>
+                        <p><strong>2. SYN-ACK:</strong> Servidor → Cliente (Synchronize-Acknowledge)</p>
+                        <p><strong>3. ACK:</strong> Cliente → Servidor (Acknowledge)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA EXAMEN</h4>
+                        <p><strong>P:</strong> ¿Cuántos paquetes se intercambian en el Three-Way Handshake?</p>
+                        <p><strong>R:</strong> 3 paquetes (SYN, SYN-ACK, ACK)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios Prácticos: Cálculos de Redes y Protocolos</h3>
+                    <p>Problemas con cálculos reales de subnetting, ancho de banda, direccionamiento IP y análisis de protocolos.</p>
+                    <div class="hot-tip">
+                        🔥 FÓRMULAS CLAVE: Hosts = 2^n - 2, Subredes = 2^m, Ancho Banda = Datos/Tiempo, MTU Ethernet = 1500 bytes
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: VLSM (Variable Length Subnet Masking)</h3>
+                    <div class="exercise-question">
+                        Red 192.168.100.0/24. Necesitas subredes para: 50 hosts, 25 hosts, 10 hosts, 5 hosts.
+                        <br>¿Qué máscaras de subred usar para optimizar el espacio de direcciones?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">/26(50h), /27(25h), /28(10h), /29(5h) - 62,30,14,6 hosts disponibles</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">Todas /26 para simplificar</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">/25 para todas las subredes</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'a', 'ex1feedback')">Verificar</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Cálculo de Ancho de Banda</h3>
+                    <div class="exercise-question">
+                        Transferir 500 MB en 2 minutos por una línea. Considerando overhead TCP/IP del 20%.
+                        <br>¿Qué ancho de banda real necesitas?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt1" name="exercise2" value="a">
+                            <label for="ex2opt1">50 Mbps (500MB×8÷120s÷0.8 overhead = 41.67, redondeado a 50)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt2" name="exercise2" value="b">
+                            <label for="ex2opt2">33.3 Mbps sin overhead</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt3" name="exercise2" value="c">
+                            <label for="ex2opt3">25 Mbps</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise2', 'a', 'ex2feedback')">Verificar</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: Fragmentación IP</h3>
+                    <div class="exercise-question">
+                        Enviar datagrama IP de 3000 bytes por Ethernet (MTU 1500).
+                        <br>¿Cuántos fragmentos se crean y qué tamaños? (IP header = 20 bytes)
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt1" name="exercise3" value="a">
+                            <label for="ex3opt1">3 fragmentos: 1480+1480+40 bytes de datos (más headers IP)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt2" name="exercise3" value="b">
+                            <label for="ex3opt2">2 fragmentos: 1500+1500 bytes</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt3" name="exercise3" value="c">
+                            <label for="ex3opt3">No se fragmenta, cabe en un paquete</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise3', 'a', 'ex3feedback')">Verificar</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 4: TCP Window Size y Throughput</h3>
+                    <div class="exercise-question">
+                        Conexión TCP: RTT 100ms, ventana 64KB, sin pérdidas.
+                        <br>¿Cuál es el throughput máximo teórico?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">5.12 Mbps (64KB÷100ms×8 = 5,242,880 bps)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">10 Mbps</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">1 Mbps</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'a', 'ex4feedback')">Verificar</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 5: Supernetting (Agregación de Rutas)</h3>
+                    <div class="exercise-question">
+                        Agregar estas redes en una sola ruta: 192.168.8.0/24, 192.168.9.0/24, 192.168.10.0/24, 192.168.11.0/24
+                        <br>¿Cuál es la superred mínima?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt1" name="exercise5" value="a">
+                            <label for="ex5opt1">192.168.8.0/22 (cubre 192.168.8-11.x)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt2" name="exercise5" value="b">
+                            <label for="ex5opt2">192.168.0.0/16</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt3" name="exercise5" value="c">
+                            <label for="ex5opt3">192.168.8.0/21</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise5', 'a', 'ex5feedback')">Verificar</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 6: Latencia Total de Red</h3>
+                    <div class="exercise-question">
+                        Envío 1500 bytes por enlace 10 Mbps, distancia 1000 km (velocidad luz fibra 200,000 km/s).
+                        <br>¿Latencia total? (transmisión + propagación)
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt1" name="exercise6" value="a">
+                            <label for="ex6opt1">6.2 ms (1.2ms transmisión + 5ms propagación)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt2" name="exercise6" value="b">
+                            <label for="ex6opt2">5 ms (solo propagación)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex6opt3" name="exercise6" value="c">
+                            <label for="ex6opt3">1.2 ms (solo transmisión)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise6', 'a', 'ex6feedback')">Verificar</button>
+                    <div id="ex6feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 7: Eficiencia de Protocolo</h3>
+                    <div class="exercise-question">
+                        Enviar 1000 bytes datos aplicación por TCP/IP/Ethernet.
+                        <br>Headers: Ethernet 18, IP 20, TCP 20. ¿Eficiencia real?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt1" name="exercise7" value="a">
+                            <label for="ex7opt1">94.5% eficiencia (1000÷1058×100)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt2" name="exercise7" value="b">
+                            <label for="ex7opt2">90% eficiencia</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex7opt3" name="exercise7" value="c">
+                            <label for="ex7opt3">98% eficiencia</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise7', 'a', 'ex7feedback')">Verificar</button>
+                    <div id="ex7feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 8: ARP Table y Broadcast Domain</h3>
+                    <div class="exercise-question">
+                        Red 192.168.1.0/25 con 100 hosts activos, switch con 200 puertos.
+                        <br>¿Cuántas entradas ARP máximo en cada host y broadcasts ARP esperados?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt1" name="exercise8" value="a">
+                            <label for="ex8opt1">99 entradas ARP/host (todos menos él mismo), ~100 broadcasts</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt2" name="exercise8" value="b">
+                            <label for="ex8opt2">126 entradas (todos los posibles hosts)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex8opt3" name="exercise8" value="c">
+                            <label for="ex8opt3">200 entradas (todos los puertos)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise8', 'a', 'ex8feedback')">Verificar</button>
+                    <div id="ex8feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 9: QoS y Traffic Shaping</h3>
+                    <div class="exercise-question">
+                        Enlace 100 Mbps. Reservar: 40% VoIP, 30% datos críticos, 20% navegación, 10% otros.
+                        <br>Si VoIP usa solo 20 Mbps, ¿cuánto ancho banda disponible para datos críticos?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt1" name="exercise9" value="a">
+                            <label for="ex9opt1">50 Mbps (30 Mbps reservados + 20 Mbps no usados por VoIP)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt2" name="exercise9" value="b">
+                            <label for="ex9opt2">30 Mbps (solo reservados)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex9opt3" name="exercise9" value="c">
+                            <label for="ex9opt3">40 Mbps</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise9', 'a', 'ex9feedback')">Verificar</button>
+                    <div id="ex9feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 10: OSPF Convergencia y Métricas</h3>
+                    <div class="exercise-question">
+                        Red OSPF: Ruta A→B→C (10 Mbps cada enlace) vs A→D→C (100 Mbps cada enlace).
+                        <br>Métrica OSPF = 10^8/ancho_banda. ¿Qué ruta elige OSPF?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt1" name="exercise10" value="a">
+                            <label for="ex10opt1">A→D→C (costo 2: 1+1) vs A→B→C (costo 20: 10+10)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt2" name="exercise10" value="b">
+                            <label for="ex10opt2">A→B→C por menor número de saltos</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex10opt3" name="exercise10" value="c">
+                            <label for="ex10opt3">Ambas rutas con igual costo</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise10', 'a', 'ex10feedback')">Verificar</button>
+                    <div id="ex10feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 11: Identificación de Capas OSI</h3>
+                    <div class="exercise-question">
+                        ¿A qué capa del modelo OSI pertenecen los siguientes elementos?
+                        <br>a) Switch, b) Router, c) Hub, d) Proxy HTTP
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex11opt1" name="exercise11" value="a">
+                            <label for="ex11opt1">a) Capa 2, b) Capa 3, c) Capa 1, d) Capa 7</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex11opt2" name="exercise11" value="b">
+                            <label for="ex11opt2">a) Capa 3, b) Capa 2, c) Capa 1, d) Capa 5</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex11opt3" name="exercise11" value="c">
+                            <label for="ex11opt3">a) Capa 1, b) Capa 3, c) Capa 2, d) Capa 7</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise11', 'a', 'ex11feedback')">Verificar</button>
+                    <div id="ex11feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 12: Comparación de Modelos OSI y TCP/IP</h3>
+                    <div class="exercise-question">
+                        ¿Qué capas del modelo OSI se combinan en la capa de Aplicación del modelo TCP/IP?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex12opt1" name="exercise12" value="a">
+                            <label for="ex12opt1">Capas 5, 6 y 7 (Sesión, Presentación y Aplicación)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex12opt2" name="exercise12" value="b">
+                            <label for="ex12opt2">Capas 4, 5 y 6 (Transporte, Sesión y Presentación)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex12opt3" name="exercise12" value="c">
+                            <label for="ex12opt3">Capas 6 y 7 (Presentación y Aplicación)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise12', 'a', 'ex12feedback')">Verificar</button>
+                    <div id="ex12feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 13: Protocolos de Red</h3>
+                    <div class="exercise-question">
+                        ¿Qué protocolo se utiliza para la resolución de direcciones IP a direcciones MAC?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex13opt1" name="exercise13" value="a">
+                            <label for="ex13opt1">ARP (Address Resolution Protocol)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex13opt2" name="exercise13" value="b">
+                            <label for="ex13opt2">RARP (Reverse Address Resolution Protocol)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex13opt3" name="exercise13" value="c">
+                            <label for="ex13opt3">ICMP (Internet Control Message Protocol)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise13', 'a', 'ex13feedback')">Verificar</button>
+                    <div id="ex13feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 14: Subnetting Avanzado</h3>
+                    <div class="exercise-question">
+                        Dada la red 172.16.0.0/16, ¿cuántas subredes /24 se pueden crear y cuántos hosts por subred?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex14opt1" name="exercise14" value="a">
+                            <label for="ex14opt1">256 subredes, 254 hosts por subred</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex14opt2" name="exercise14" value="b">
+                            <label for="ex14opt2">128 subredes, 510 hosts por subred</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex14opt3" name="exercise14" value="c">
+                            <label for="ex14opt3">512 subredes, 126 hosts por subred</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise14', 'a', 'ex14feedback')">Verificar</button>
+                    <div id="ex14feedback" class="exercise-feedback"></div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 15: Cabeceras de Protocolos</h3>
+                    <div class="exercise-question">
+                        ¿Cuál es el tamaño mínimo de la cabecera de un paquete IP versión 4?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex15opt1" name="exercise15" value="a">
+                            <label for="ex15opt1">20 bytes</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex15opt2" name="exercise15" value="b">
+                            <label for="ex15opt2">16 bytes</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex15opt3" name="exercise15" value="c">
+                            <label for="ex15opt3">24 bytes</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise15', 'a', 'ex15feedback')">Verificar</button>
+                    <div id="ex15feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+
+            <div id="resources" class="tab-content">
+                <div class="hot-tip">
+                    🔥 REPASO FINAL: OSI=7 capas (1984), TCP/IP=4 capas (1973). HTTP=80, HTTPS=443, SSH=22, FTP=21. TCP confiable, UDP rápido. /24 = 254 hosts.
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Cheat Sheet Puertos</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">80</span>
+                            <div>HTTP</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">443</span>
+                            <div>HTTPS</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">22</span>
+                            <div>SSH</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">53</span>
+                            <div>DNS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Qué significa "Por Favor No Traigan Sales Palomitas Arroz"?</p>
+                        <p><strong>R:</strong> Mnemónico capas OSI: Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿Cuál es la diferencia principal entre switch y router?</p>
+                        <p><strong>R:</strong> Switch trabaja en Capa 2 (MAC), Router trabaja en Capa 3 (IP)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Qué protocolo usa ping?</p>
+                        <p><strong>R:</strong> ICMP (Internet Control Message Protocol)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> TCP/IP tiene 5 capas - ¡FALSO! Tiene 4</li>
+                        <li><strong>Error:</strong> UDP es más seguro que TCP - ¡FALSO! TCP es confiable</li>
+                        <li><strong>Error:</strong> DNS solo usa TCP - ¡FALSO! Principalmente UDP</li>
+                        <li><strong>Error:</strong> /8 significa 8 hosts - ¡FALSO! Significa 8 bits de red</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.querySelector('.theme-toggle').textContent = 
+                document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        }
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selected = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedback = document.getElementById(feedbackId);
+            if (!selected) {
+                feedback.textContent = 'Selecciona una opción.';
+                feedback.className = 'exercise-feedback incorrect';
+                return;
+            }
+            
+            const explanations = {
+                'ex1feedback': {
+                    'a': '¡Correcto! ✅ VLSM optimiza: /26 da 62 hosts (suficiente para 50), /27 da 30 (suficiente para 25), /28 da 14 (para 10), /29 da 6 (para 5).',
+                    'b': 'Incorrecto ❌ Usar todas /26 desperdicia direcciones. VLSM optimiza el uso de direcciones.',
+                    'c': 'Incorrecto ❌ /25 solo permite 2 subredes, necesitas 4 subredes diferentes.'
+                },
+                'ex2feedback': {
+                    'a': '¡Correcto! ✅ 500MB×8 bits=4Gb. 4Gb÷120s=33.33Mbps. Con 20% overhead: 33.33÷0.8=41.67≈50Mbps.',
+                    'b': 'Incorrecto ❌ No consideraste el overhead del 20% que reduce la eficiencia.',
+                    'c': 'Incorrecto ❌ Muy bajo. No calculaste correctamente la conversión MB a Mbps.'
+                },
+                'ex3feedback': {
+                    'a': '¡Correcto! ✅ MTU 1500 - IP header 20 = 1480 payload máximo. 3000÷1480≈3 fragmentos: 1480+1480+40 bytes.',
+                    'b': 'Incorrecto ❌ No consideraste que los headers IP ocupan espacio en cada fragmento.',
+                    'c': 'Incorrecto ❌ 3000 > 1500, definitivamente necesita fragmentación.'
+                },
+                'ex4feedback': {
+                    'a': '¡Correcto! ✅ Throughput = Window/RTT = 64KB÷100ms = 640KB/s = 5.12Mbps (64×8×1024÷100ms×1000).',
+                    'b': 'Incorrecto ❌ Sobrestimaste. La ventana TCP limita el throughput.',
+                    'c': 'Incorrecto ❌ Muy bajo. 64KB en 100ms da mayor throughput.'
+                },
+                'ex5feedback': {
+                    'a': '¡Correcto! ✅ 192.168.8-11 en binario: diferencia en bit 22. /22 cubre exactamente estas 4 redes consecutivas.',
+                    'b': 'Incorrecto ❌ Demasiado amplio. /16 cubriría 192.168.0-255.x, innecesario.',
+                    'c': 'Incorrecto ❌ /21 cubriría 192.168.8-15.x, más redes de las necesarias.'
+                },
+                'ex6feedback': {
+                    'a': '¡Correcto! ✅ Transmisión: 1500×8÷10Mbps=1.2ms. Propagación: 1000km÷200,000km/s=5ms. Total=6.2ms.',
+                    'b': 'Incorrecto ❌ Solo consideraste propagación, falta tiempo de transmisión.',
+                    'c': 'Incorrecto ❌ Solo consideraste transmisión, falta propagación por la fibra.'
+                },
+                'ex7feedback': {
+                    'a': '¡Correcto! ✅ Total: 1000+18+20+20=1058 bytes. Eficiencia: 1000÷1058×100=94.5%.',
+                    'b': 'Incorrecto ❌ Subestimaste la eficiencia. Los headers son relativamente pequeños.',
+                    'c': 'Incorrecto ❌ Sobrestimaste. Los headers sí tienen impacto en la eficiencia.'
+                },
+                'ex8feedback': {
+                    'a': '¡Correcto! ✅ Cada host conoce las MAC de los otros 99. Los broadcasts ARP son proporcionales al número de hosts activos.',
+                    'b': 'Incorrecto ❌ La tabla ARP solo tiene entradas de hosts activos, no todos los posibles.',
+                    'c': 'Incorrecto ❌ ARP trabaja con hosts, no puertos de switch.'
+                },
+                'ex9feedback': {
+                    'a': '¡Correcto! ✅ Datos críticos: 30Mbps reservados + 20Mbps no usados por VoIP = 50Mbps disponibles.',
+                    'b': 'Incorrecto ❌ Puedes usar el ancho de banda no utilizado por otras clases.',
+                    'c': 'Incorrecto ❌ 40Mbps estaba reservado para VoIP, no datos críticos.'
+                },
+                'ex10feedback': {
+                    'a': '¡Correcto! ✅ OSPF usa costo=10^8/ancho_banda. 10Mbps: 10^8÷10^7=10. 100Mbps: 10^8÷10^8=1. Ruta A-D-C: 1+1=2 vs A-B-C: 10+10=20.',
+                    'b': 'Incorrecto ❌ OSPF usa costo basado en ancho de banda, no hop count.',
+                    'c': 'Incorrecto ❌ Los costos son muy diferentes: 2 vs 20.'
+                },
+                'ex11feedback': {
+                    'a': '¡Correcto! ✅ Switch trabaja en Capa 2 (Enlace), Router en Capa 3 (Red), Hub en Capa 1 (Física), Proxy HTTP en Capa 7 (Aplicación).',
+                    'b': 'Incorrecto ❌ Confundiste las capas de Router y Switch. Router es Capa 3, Switch es Capa 2.',
+                    'c': 'Incorrecto ❌ Hub es Capa 1 (Física), no Capa 2.'
+                },
+                'ex12feedback': {
+                    'a': '¡Correcto! ✅ TCP/IP combina las capas 5 (Sesión), 6 (Presentación) y 7 (Aplicación) de OSI en una sola capa de Aplicación.',
+                    'b': 'Incorrecto ❌ No incluye la capa de Transporte (4) en la capa de Aplicación de TCP/IP.',
+                    'c': 'Incorrecto ❌ Falta incluir la capa de Sesión (5).'
+                },
+                'ex13feedback': {
+                    'a': '¡Correcto! ✅ ARP (Address Resolution Protocol) resuelve direcciones IP a direcciones MAC.',
+                    'b': 'Incorrecto ❌ RARP es para lo opuesto: resuelve direcciones MAC a direcciones IP.',
+                    'c': 'Incorrecto ❌ ICMP se usa para mensajes de error y control, no resolución de direcciones.'
+                },
+                'ex14feedback': {
+                    'a': '¡Correcto! ✅ /16 a /24 es 8 bits más, 2^8 = 256 subredes. /24 permite 2^8-2 = 254 hosts por subred.',
+                    'b': 'Incorrecto ❌ Confundiste el número de subredes y hosts. /24 da 254 hosts, no 510.',
+                    'c': 'Incorrecto ❌ Con 8 bits de subred, se crean 256 subredes, no 512.'
+                },
+                'ex15feedback': {
+                    'a': '¡Correcto! ✅ La cabecera IP mínima es de 20 bytes. Puede ser mayor si hay opciones.',
+                    'b': 'Incorrecto ❌ 16 bytes es demasiado poco para la cabecera IP.',
+                    'c': 'Incorrecto ❌ 24 bytes es el tamaño con opciones, no el mínimo.'
+                }
+            };
+            
+            if (selected.value === correctAnswer) {
+                feedback.innerHTML = explanations[feedbackId][correctAnswer];
+                feedback.className = 'exercise-feedback correct';
+            } else {
+                feedback.innerHTML = explanations[feedbackId][selected.value];
+                feedback.className = 'exercise-feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>
