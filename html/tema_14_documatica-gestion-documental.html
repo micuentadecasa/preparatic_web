@@ -488,6 +488,72 @@
                 transform: translateX(50%);
             }
         }
+
+        /* Exercise Styles */
+        .exercise-container {
+            background: var(--bg-secondary);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .exercise h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .formula {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 1rem 0;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .options label:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .feedback.correct {
+            background: var(--success);
+            color: white;
+        }
+        .feedback.incorrect {
+            background: var(--danger);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -508,6 +574,7 @@
             <button class="tab" onclick="showTab('legal')">⚖️ Marco Normativo</button>
             <button class="tab" onclick="showTab('implementation')">🚀 Implementación</button>
             <button class="tab" onclick="showTab('future')">🔮 Tendencias y Futuro</button>
+            <button class="tab" onclick="showTab('exercises')">✏️ Ejercicios</button>
         </div>
 
         <div id="overview" class="tab-content">
@@ -1884,6 +1951,214 @@
                 </ul>
             </div>
         </div>
+
+        <div id="exercises" class="tab-content hidden">
+            <div class="info-card">
+                <h2>✏️ Ejercicios de Documática y Gestión Documental</h2>
+                <p>Problemas prácticos sobre gestión documental, workflow, y cálculos de digitalización.</p>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 1: ROI Digitalización</h4>
+                    <p>Organización digitaliza 50,000 documentos. Coste proceso: €2/doc, ahorro anual: €75k, inversión scanner: €25k. ¿ROI a 3 años?</p>
+                    
+                    <div class="formula">
+                        <div>ROI = (Beneficios - Inversión Total) / Inversión Total</div>
+                        <div>Inversión Total = 50,000 × €2 + €25k = €125k</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex1" value="a"> a) 80% ROI</label>
+                        <label><input type="radio" name="ex1" value="b"> b) 65% ROI</label>
+                        <label><input type="radio" name="ex1" value="c"> c) 120% ROI</label>
+                        <label><input type="radio" name="ex1" value="d"> d) 95% ROI</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(1, 'a', 'Beneficio 3 años: €75k×3=€225k. ROI=(€225k-€125k)/€125k=80%')">Verificar</button>
+                    <div id="feed1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 2: Capacidad Almacenamiento</h4>
+                    <p>Archivo PDF promedio: 2.5MB, crecimiento: 1,200 docs/mes, retención: 10 años. ¿Almacenamiento total necesario?</p>
+                    
+                    <div class="formula">
+                        <div>Total docs = Docs/mes × Meses × Años = 1,200 × 12 × 10</div>
+                        <div>Almacenamiento = Total docs × Tamaño promedio</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex2" value="a"> a) 360 GB</label>
+                        <label><input type="radio" name="ex2" value="b"> b) 300 GB</label>
+                        <label><input type="radio" name="ex2" value="c"> c) 450 GB</label>
+                        <label><input type="radio" name="ex2" value="d"> d) 280 GB</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(2, 'a', 'Total: 1,200×12×10=144,000 docs. Almacenamiento: 144,000×2.5MB=360GB')">Verificar</button>
+                    <div id="feed2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 3: Tiempo Workflow</h4>
+                    <p>Proceso aprobación: Registro (5min) → Revisión (45min) → Aprobación (15min) → Archivo (10min). Con paralelización, Revisión y Archivo simultáneos. ¿Tiempo total optimizado?</p>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex3" value="a"> a) 65 minutos</label>
+                        <label><input type="radio" name="ex3" value="b"> b) 55 minutos</label>
+                        <label><input type="radio" name="ex3" value="c"> c) 75 minutos</label>
+                        <label><input type="radio" name="ex3" value="d"> d) 60 minutos</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(3, 'a', 'Secuencial: Registro(5) → Revisión(45) → Aprobación(15) = 65min. Archivo(10) paralelo con Revisión.')">Verificar</button>
+                    <div id="feed3" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 4: Precisión OCR</h4>
+                    <p>OCR procesa 1,000 docs/día con 99.2% precisión. Error promedio: 3 caracteres/página, páginas promedio: 4/doc. ¿Documentos con errores por día?</p>
+                    
+                    <div class="formula">
+                        <div>Documentos con errores = Total docs × (1 - Precisión)</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex4" value="a"> a) 8 documentos</label>
+                        <label><input type="radio" name="ex4" value="b"> b) 12 documentos</label>
+                        <label><input type="radio" name="ex4" value="c"> c) 6 documentos</label>
+                        <label><input type="radio" name="ex4" value="d"> d) 10 documentos</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(4, 'a', 'Docs con errores: 1,000 × (1-0.992) = 1,000 × 0.008 = 8 documentos/día')">Verificar</button>
+                    <div id="feed4" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 5: Coste Cloud vs On-Premise</h4>
+                    <p>Almacenamiento 5TB. Cloud: €0.025/GB/mes. On-premise: €8k inicial + €200/mes mantenimiento. ¿Break-even?</p>
+                    
+                    <div class="formula">
+                        <div>Cloud mensual = 5,000 GB × €0.025 = €125/mes</div>
+                        <div>Break-even cuando: €8k + €200×meses = €125×meses</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex5" value="a"> a) 106 meses</label>
+                        <label><input type="radio" name="ex5" value="b"> b) 89 meses</label>
+                        <label><input type="radio" name="ex5" value="c"> c) 64 meses</label>
+                        <label><input type="radio" name="ex5" value="d"> d) 133 meses</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(5, 'd', '€8k = (€125-€200)×meses → €8k = -€75×meses → meses = 8000/75 ≈ 133 meses (On-premise siempre más caro)')">Verificar</button>
+                    <div id="feed5" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 6: Clasificación Automática</h4>
+                    <p>IA clasifica docs con 94% precisión. Manual: 99.8% precisión, 3min/doc. IA: 0.1min/doc. Para 10,000 docs, ¿ahorro tiempo vs errores adicionales?</p>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex6" value="a"> a) Ahorro 29,000min, 580 errores extra</label>
+                        <label><input type="radio" name="ex6" value="b"> b) Ahorro 25,000min, 620 errores extra</label>
+                        <label><input type="radio" name="ex6" value="c"> c) Ahorro 28,000min, 480 errores extra</label>
+                        <label><input type="radio" name="ex6" value="d"> d) Ahorro 30,000min, 550 errores extra</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(6, 'a', 'Tiempo: Manual=30,000min, IA=1,000min, Ahorro=29,000min. Errores: (0.998-0.94)×10,000=580 errores')">Verificar</button>
+                    <div id="feed6" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 7: Retención Legal</h4>
+                    <p>Ley requiere retención 15 años. Docs fiscales: 8 años, laborales: 12 años, contratos: 20 años. ¿% total bajo período legal mínimo?</p>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex7" value="a"> a) Solo contratos superan mínimo</label>
+                        <label><input type="radio" name="ex7" value="b"> b) Fiscales y laborales bajo mínimo</label>
+                        <label><input type="radio" name="ex7" value="c"> c) Todos cumplen requisito mínimo</label>
+                        <label><input type="radio" name="ex7" value="d"> d) Solo fiscales bajo mínimo</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(7, 'b', 'Mínimo legal: 15 años. Fiscales(8) y Laborales(12) < 15 años. Solo Contratos(20) ≥ 15 años.')">Verificar</button>
+                    <div id="feed7" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 8: Indexación Performance</h4>
+                    <p>Base documental: 500k docs, índice crece 15% anual. Búsqueda promedio: 2.3 seg. Si performance se degrada 8%/100k docs adicionales, ¿tiempo búsqueda año 3?</p>
+                    
+                    <div class="formula">
+                        <div>Docs año 3 = 500k × 1.15³ = 760k docs</div>
+                        <div>Docs adicionales = 260k → Degradación = 260/100 × 8% = 20.8%</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex8" value="a"> a) 2.78 segundos</label>
+                        <label><input type="radio" name="ex8" value="b"> b) 2.95 segundos</label>
+                        <label><input type="radio" name="ex8" value="c"> c) 3.12 segundos</label>
+                        <label><input type="radio" name="ex8" value="d"> d) 2.65 segundos</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(8, 'a', 'Tiempo = 2.3 × (1 + 0.208) = 2.3 × 1.208 = 2.78 segundos')">Verificar</button>
+                    <div id="feed8" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 9: Backup Strategy</h4>
+                    <p>Datos críticos: 2TB, cambios diarios: 5%. Backup completo: 4 horas, incremental: 20min. Estrategia: completo dominical + 6 incrementales. ¿Tiempo total semanal?</p>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex9" value="a"> a) 6 horas</label>
+                        <label><input type="radio" name="ex9" value="b"> b) 5 horas 20 minutos</label>
+                        <label><input type="radio" name="ex9" value="c"> c) 4 horas 40 minutos</label>
+                        <label><input type="radio" name="ex9" value="d"> d) 7 horas</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(9, 'b', 'Completo: 4h. Incremental: 6×20min=120min=2h. Total: 4h+2h=6h. Pero 6h=5h20min')">Verificar</button>
+                    <div id="feed9" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-container">
+                <div class="exercise">
+                    <h4>Ejercicio 10: Compliance Audit</h4>
+                    <p>Auditoría RGPD: 15k documentos personales, 12% incumplen retención, 8% sin consentimiento, 3% ambos problemas. ¿Documentos sin problemas?</p>
+                    
+                    <div class="formula">
+                        <div>Principio inclusión-exclusión: |A∪B| = |A| + |B| - |A∩B|</div>
+                        <div>Problemas = 12% + 8% - 3% = 17%</div>
+                        <div>Sin problemas = 100% - 17% = 83%</div>
+                    </div>
+                    
+                    <div class="options">
+                        <label><input type="radio" name="ex10" value="a"> a) 12,450 documentos</label>
+                        <label><input type="radio" name="ex10" value="b"> b) 13,200 documentos</label>
+                        <label><input type="radio" name="ex10" value="c"> c) 11,850 documentos</label>
+                        <label><input type="radio" name="ex10" value="d"> d) 12,750 documentos</label>
+                    </div>
+                    <button class="btn" onclick="checkEx(10, 'a', 'Sin problemas: 15k × 0.83 = 12,450 documentos cumplen completamente RGPD')">Verificar</button>
+                    <div id="feed10" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <h3>📊 Conceptos Clave - Documática</h3>
+                <div class="key-concepts">
+                    <div><strong>ROI Digitalización:</strong> Beneficios vs costes implementación</div>
+                    <div><strong>OCR Precisión:</strong> Impacto en workflow y verificación manual</div>
+                    <div><strong>Workflow Optimization:</strong> Paralelización y automatización procesos</div>
+                    <div><strong>Storage Planning:</strong> Crecimiento datos y capacidad necesaria</div>
+                    <div><strong>Cloud vs On-premise:</strong> TCO y break-even analysis</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1958,6 +2233,23 @@
                 observer.observe(card);
             });
         });
+
+        function checkEx(n, correct, explanation) {
+            const selected = document.querySelector(`input[name="ex${n}"]:checked`);
+            const feedback = document.getElementById(`feed${n}`);
+            if (!selected) {
+                feedback.innerHTML = 'Selecciona una respuesta';
+                return;
+            }
+            const isCorrect = selected.value === correct;
+            if (isCorrect) {
+                feedback.innerHTML = `✅ ¡Correcto! ${explanation}`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.innerHTML = `❌ Incorrecto. ${explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+        }
     </script>
 </body>
 </html>

@@ -989,202 +989,160 @@ const resolvers = {
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 1: Cálculo de Throughput del Servidor</h4>
-                    <p>Un servidor web procesa 2400 requests en 4 minutos. ¿Cuál es el throughput en requests por segundo?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Throughput = Total Requests / Tiempo (segundos)</div>
-                    </div>
+                    <h4>Ejercicio 1: Arquitectura Frontend</h4>
+                    <p>¿Cuál es la principal diferencia entre una Single Page Application (SPA) y una aplicación web tradicional?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise1" value="a"> a) 10 req/s</label>
-                        <label><input type="radio" name="exercise1" value="b"> b) 10.5 req/s</label>
-                        <label><input type="radio" name="exercise1" value="c"> c) 10 req/s</label>
-                        <label><input type="radio" name="exercise1" value="d"> d) 12 req/s</label>
+                        <label><input type="radio" name="exercise1" value="a"> a) SPAs no pueden usar JavaScript</label>
+                        <label><input type="radio" name="exercise1" value="b"> b) SPAs cargan todo el contenido inicial y luego actualizan dinámicamente</label>
+                        <label><input type="radio" name="exercise1" value="c"> c) SPAs solo funcionan con PHP</label>
+                        <label><input type="radio" name="exercise1" value="d"> d) SPAs no necesitan un servidor backend</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(1, 'c', 'Throughput = 2400 requests / (4 × 60 segundos) = 2400 / 240 = 10 requests por segundo.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(1, 'b', 'Las SPAs cargan la aplicación completa inicialmente y luego actualizan el contenido dinámicamente sin recargar la página, mejorando la experiencia de usuario.')">Verificar Respuesta</button>
                     <div id="feedback1" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 2: Tiempo de Carga de Recursos</h4>
-                    <p>Una página web tiene 8 archivos CSS (50KB cada uno), 12 imágenes (200KB cada una) y 6 archivos JS (100KB cada uno). ¿Cuál es el tamaño total en MB?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Tamaño Total = Σ(Cantidad × Tamaño individual)</div>
-                    </div>
+                    <h4>Ejercicio 2: Protocolo HTTP</h4>
+                    <p>¿Cuál es la principal ventaja de HTTP/2 sobre HTTP/1.1?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise2" value="a"> a) 3.4 MB</label>
-                        <label><input type="radio" name="exercise2" value="b"> b) 3.6 MB</label>
-                        <label><input type="radio" name="exercise2" value="c"> c) 3.5 MB</label>
-                        <label><input type="radio" name="exercise2" value="d"> d) 3.8 MB</label>
+                        <label><input type="radio" name="exercise2" value="a"> a) Mayor seguridad únicamente</label>
+                        <label><input type="radio" name="exercise2" value="b"> b) Multiplexing y compresión de cabeceras</label>
+                        <label><input type="radio" name="exercise2" value="c"> c) Eliminación completa de las cookies</label>
+                        <label><input type="radio" name="exercise2" value="d"> d) Soporte exclusivo para HTTPS</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(2, 'c', 'CSS: 8×50KB=400KB, Imágenes: 12×200KB=2400KB, JS: 6×100KB=600KB. Total: 3400KB = 3.4MB ≈ 3.5MB.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(2, 'b', 'HTTP/2 introduce multiplexing (múltiples requests simultáneos en una conexión), compresión HPACK de cabeceras y server push, mejorando significativamente el rendimiento.')">Verificar Respuesta</button>
                     <div id="feedback2" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 3: Cálculo de Rate Limiting</h4>
-                    <p>Una API permite 1000 requests por hora por usuario. Un usuario ha hecho 750 requests en 45 minutos. ¿Cuántos requests puede hacer en los próximos 15 minutos?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Requests Disponibles = Límite - Requests Usados</div>
-                    </div>
+                    <h4>Ejercicio 3: APIs REST</h4>
+                    <p>¿Cuál es el método HTTP correcto para actualizar parcialmente un recurso en una API REST?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise3" value="a"> a) 200 requests</label>
-                        <label><input type="radio" name="exercise3" value="b"> b) 250 requests</label>
-                        <label><input type="radio" name="exercise3" value="c"> c) 150 requests</label>
-                        <label><input type="radio" name="exercise3" value="d"> d) 300 requests</label>
+                        <label><input type="radio" name="exercise3" value="a"> a) GET</label>
+                        <label><input type="radio" name="exercise3" value="b"> b) POST</label>
+                        <label><input type="radio" name="exercise3" value="c"> c) PATCH</label>
+                        <label><input type="radio" name="exercise3" value="d"> d) DELETE</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(3, 'b', 'Requests disponibles = 1000 - 750 = 250 requests. El rate limit se aplica por hora completa.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(3, 'c', 'PATCH se usa para actualizaciones parciales de recursos, mientras que PUT actualiza el recurso completo. GET recupera, POST crea, DELETE elimina.')">Verificar Respuesta</button>
                     <div id="feedback3" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 4: Optimización de Bundle JavaScript</h4>
-                    <p>Un bundle JS inicial pesa 2.5MB. Tras code splitting se divide en: chunk principal (800KB), chunk vendor (1.2MB) y 3 chunks lazy (200KB cada uno). ¿Cuál es la reducción del bundle inicial?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Bundle Inicial = Chunk Principal + Chunk Vendor</div>
-                    </div>
+                    <h4>Ejercicio 4: Framework React</h4>
+                    <p>¿Cuál es la principal función del Virtual DOM en React?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise4" value="a"> a) 500KB</label>
-                        <label><input type="radio" name="exercise4" value="b"> b) 600KB</label>
-                        <label><input type="radio" name="exercise4" value="c"> c) 700KB</label>
-                        <label><input type="radio" name="exercise4" value="d"> d) 400KB</label>
+                        <label><input type="radio" name="exercise4" value="a"> a) Reemplazar completamente el DOM del navegador</label>
+                        <label><input type="radio" name="exercise4" value="b"> b) Optimizar las actualizaciones del DOM mediante diffing</label>
+                        <label><input type="radio" name="exercise4" value="c"> c) Eliminar la necesidad de JavaScript</label>
+                        <label><input type="radio" name="exercise4" value="d"> d) Gestionar únicamente el CSS</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(4, 'a', 'Bundle inicial tras splitting = 800KB + 1200KB = 2000KB. Reducción = 2500KB - 2000KB = 500KB.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(4, 'b', 'El Virtual DOM permite a React comparar el estado anterior y nuevo (diffing), actualizando solo las partes del DOM real que cambiaron, mejorando el rendimiento.')">Verificar Respuesta</button>
                     <div id="feedback4" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 5: Cálculo de CDN Savings</h4>
-                    <p>Un servidor maneja 10,000 requests/día de archivos estáticos (ancho de banda: 500MB/día). Con CDN se reduce el tráfico en 80%. Si el coste por GB es $0.10, ¿cuál es el ahorro mensual?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Ahorro = Ancho Banda × % Reducción × Días × Coste/GB</div>
-                    </div>
+                    <h4>Ejercicio 5: Node.js Backend</h4>
+                    <p>¿Cuál es la principal característica de Node.js que lo hace adecuado para aplicaciones web en tiempo real?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise4" value="a"> a) $12.00</label>
-                        <label><input type="radio" name="exercise5" value="b"> b) $12.40</label>
-                        <label><input type="radio" name="exercise5" value="c"> c) $12.80</label>
-                        <label><input type="radio" name="exercise5" value="d"> d) $11.60</label>
+                        <label><input type="radio" name="exercise5" value="a"> a) Multithreading intensivo</label>
+                        <label><input type="radio" name="exercise5" value="b"> b) Event-driven y asynchronous I/O</label>
+                        <label><input type="radio" name="exercise5" value="c"> c) Limitado a aplicaciones de escritorio</label>
+                        <label><input type="radio" name="exercise5" value="d"> d) Solo funciona con bases de datos MySQL</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(5, 'a', 'Ahorro diario = 0.5GB × 0.8 × $0.10 = $0.04. Ahorro mensual = $0.04 × 30 = $12.00.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(5, 'b', 'Node.js usa un modelo event-driven con I/O no bloqueante, permitiendo manejar muchas conexiones concurrentes eficientemente, ideal para aplicaciones en tiempo real.')">Verificar Respuesta</button>
                     <div id="feedback5" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 6: Performance Budget</h4>
-                    <p>Una página tiene un presupuesto de 2 segundos para FCP. Los archivos tardan: HTML (200ms), CSS (300ms), JS crítico (800ms), fuentes (400ms). ¿Se cumple el presupuesto?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">FCP = max(HTML + CSS, HTML + JS crítico, HTML + Fuentes)</div>
-                    </div>
+                    <h4>Ejercicio 6: Seguridad Web</h4>
+                    <p>¿Qué hace la política CORS (Cross-Origin Resource Sharing) en las aplicaciones web?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise6" value="a"> a) No, 1.0s de exceso</label>
-                        <label><input type="radio" name="exercise6" value="b"> b) Sí, con 1.0s de margen</label>
-                        <label><input type="radio" name="exercise6" value="c"> c) No, 0.2s de exceso</label>
-                        <label><input type="radio" name="exercise6" value="d"> d) Sí, con 0.8s de margen</label>
+                        <label><input type="radio" name="exercise6" value="a"> a) Acelera la carga de imágenes</label>
+                        <label><input type="radio" name="exercise6" value="b"> b) Controla qué dominios pueden acceder a recursos del servidor</label>
+                        <label><input type="radio" name="exercise6" value="c"> c) Optimiza el código JavaScript</label>
+                        <label><input type="radio" name="exercise6" value="d"> d) Gestiona las cookies únicamente</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(6, 'b', 'FCP = max(500ms, 1000ms, 600ms) = 1000ms = 1.0s. Presupuesto: 2.0s. Margen = 1.0s.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(6, 'b', 'CORS es un mecanismo de seguridad que permite controlar qué dominios externos pueden acceder a los recursos de un servidor, previniendo ataques cross-origin maliciosos.')">Verificar Respuesta</button>
                     <div id="feedback6" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 7: Conexiones HTTP/2</h4>
-                    <p>Una página necesita cargar 20 recursos. Con HTTP/1.1 (máx 6 conexiones paralelas) vs HTTP/2 (multiplexing). Si cada recurso tarda 100ms, ¿cuál es la mejora de tiempo con HTTP/2?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">HTTP/1.1 = ⌈Recursos/Conexiones⌉ × Tiempo por recurso</div>
-                        <div class="formula">HTTP/2 = Tiempo por recurso (paralelo completo)</div>
-                    </div>
+                    <h4>Ejercicio 7: CSS Grid vs Flexbox</h4>
+                    <p>¿Cuándo es más apropiado usar CSS Grid en lugar de Flexbox?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise7" value="a"> a) 200ms mejora</label>
-                        <label><input type="radio" name="exercise7" value="b"> b) 250ms mejora</label>
-                        <label><input type="radio" name="exercise7" value="c"> c) 233ms mejora</label>
-                        <label><input type="radio" name="exercise7" value="d"> d) 300ms mejora</label>
+                        <label><input type="radio" name="exercise7" value="a"> a) Para layouts simples de una dimensión</label>
+                        <label><input type="radio" name="exercise7" value="b"> b) Para layouts complejos bidimensionales (filas y columnas)</label>
+                        <label><input type="radio" name="exercise7" value="c"> c) Solo para centrar elementos</label>
+                        <label><input type="radio" name="exercise7" value="d"> d) Grid y Flexbox son idénticos en funcionalidad</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(7, 'c', 'HTTP/1.1: ⌈20/6⌉ = 4 rounds × 100ms = 400ms. HTTP/2: 100ms. Mejora = 333ms - 100ms = 233ms.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(7, 'b', 'CSS Grid es ideal para layouts bidimensionales complejos con filas y columnas, mientras que Flexbox es mejor para layouts unidimensionales (fila o columna).')">Verificar Respuesta</button>
                     <div id="feedback7" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 8: Base de Datos - Pool de Conexiones</h4>
-                    <p>Un pool tiene 10 conexiones BD. Cada query tarda 50ms. Si llegan 25 requests simultáneos, ¿cuál es el tiempo total para procesar todas?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Tiempo Total = ⌈Requests/Pool Size⌉ × Tiempo por Query</div>
-                    </div>
+                    <h4>Ejercicio 8: Progressive Web Apps (PWA)</h4>
+                    <p>¿Cuál es una característica clave que debe tener una aplicación para ser considerada PWA?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise8" value="a"> a) 150ms</label>
-                        <label><input type="radio" name="exercise8" value="b"> b) 125ms</label>
-                        <label><input type="radio" name="exercise8" value="c"> c) 100ms</label>
-                        <label><input type="radio" name="exercise8" value="d"> d) 200ms</label>
+                        <label><input type="radio" name="exercise8" value="a"> a) Solo funcionar en Chrome</label>
+                        <label><input type="radio" name="exercise8" value="b"> b) Tener un Service Worker y Web App Manifest</label>
+                        <label><input type="radio" name="exercise8" value="c"> c) Usar únicamente jQuery</label>
+                        <label><input type="radio" name="exercise8" value="d"> d) No necesitar conexión a internet nunca</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(8, 'a', 'Rounds necesarios = ⌈25/10⌉ = 3. Tiempo total = 3 × 50ms = 150ms.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(8, 'b', 'Las PWAs requieren un Service Worker (para caching y offline) y un Web App Manifest (metadatos de instalación), además de ser servidas sobre HTTPS.')">Verificar Respuesta</button>
                     <div id="feedback8" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 9: API Caching - Hit Rate</h4>
-                    <p>Una API recibe 1000 requests. El cache tiene 750 hits y 250 misses. Cada hit tarda 10ms y cada miss 80ms. ¿Cuál es el tiempo promedio de respuesta?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Tiempo Promedio = (Hits × T_hit + Misses × T_miss) / Total</div>
-                    </div>
+                    <h4>Ejercicio 9: WebSocket</h4>
+                    <p>¿Cuándo es más apropiado usar WebSocket en lugar de HTTP tradicional?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise9" value="a"> a) 25.5ms</label>
-                        <label><input type="radio" name="exercise9" value="b"> b) 27.5ms</label>
-                        <label><input type="radio" name="exercise9" value="c"> c) 30.0ms</label>
-                        <label><input type="radio" name="exercise9" value="d"> d) 32.5ms</label>
+                        <label><input type="radio" name="exercise9" value="a"> a) Para cargar imágenes estáticas</label>
+                        <label><input type="radio" name="exercise9" value="b"> b) Para comunicación bidireccional en tiempo real</label>
+                        <label><input type="radio" name="exercise9" value="c"> c) Para formularios simples</label>
+                        <label><input type="radio" name="exercise9" value="d"> d) Solo para páginas de login</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(9, 'b', 'Tiempo promedio = (750×10ms + 250×80ms) / 1000 = (7500 + 20000) / 1000 = 27.5ms.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(9, 'b', 'WebSocket es ideal para comunicación bidireccional en tiempo real (chat, gaming, notificaciones live) donde el servidor necesita enviar datos al cliente instantáneamente.')">Verificar Respuesta</button>
                     <div id="feedback9" class="feedback"></div>
                 </div>
             </div>
 
             <div class="exercise-container">
                 <div class="exercise">
-                    <h4>Ejercicio 10: WebSocket vs HTTP Overhead</h4>
-                    <p>Una aplicación envía 100 mensajes de 50 bytes cada uno. HTTP añade 500 bytes de headers por request. WebSocket añade solo 2 bytes por mensaje tras la conexión inicial. ¿Cuál es la reducción de overhead?</p>
-                    
-                    <div class="formula-box">
-                        <div class="formula">Overhead HTTP = Mensajes × Headers por mensaje</div>
-                        <div class="formula">Overhead WS = Mensajes × Headers por mensaje WS</div>
-                    </div>
+                    <h4>Ejercicio 10: Performance Web</h4>
+                    <p>¿Qué métrica de Core Web Vitals mide el tiempo hasta que el elemento más grande de contenido es visible?</p>
                     
                     <div class="exercise-options">
-                        <label><input type="radio" name="exercise10" value="a"> a) 49.6KB</label>
-                        <label><input type="radio" name="exercise10" value="b"> b) 49.8KB</label>
-                        <label><input type="radio" name="exercise10" value="c"> c) 48.8KB</label>
-                        <label><input type="radio" name="exercise10" value="d"> d) 50.2KB</label>
+                        <label><input type="radio" name="exercise10" value="a"> a) First Contentful Paint (FCP)</label>
+                        <label><input type="radio" name="exercise10" value="b"> b) Largest Contentful Paint (LCP)</label>
+                        <label><input type="radio" name="exercise10" value="c"> c) Cumulative Layout Shift (CLS)</label>
+                        <label><input type="radio" name="exercise10" value="d"> d) First Input Delay (FID)</label>
                     </div>
-                    <button class="btn-check" onclick="checkAnswer(10, 'b', 'HTTP overhead: 100×500B = 50KB. WS overhead: 100×2B = 0.2KB. Reducción = 50KB - 0.2KB = 49.8KB.')">Verificar Respuesta</button>
+                    <button class="btn-check" onclick="checkAnswer(10, 'b', 'LCP (Largest Contentful Paint) mide cuándo el elemento de contenido más grande (imagen, texto, etc.) se renderiza completamente en la ventana del navegador.')">Verificar Respuesta</button>
                     <div id="feedback10" class="feedback"></div>
                 </div>
             </div>

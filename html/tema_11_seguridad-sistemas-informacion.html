@@ -198,6 +198,31 @@
             color: var(--info);
         }
 
+        .exercise-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .exercise-box .solution {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .exercise-box .solution h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .exercise-box .solution p {
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
         .alert-warning {
             background: rgba(243, 156, 18, 0.1);
             border-color: var(--warning);
@@ -396,6 +421,7 @@
             <button class="tab" onclick="showTab('cryptography')">🔐 Criptografía</button>
             <button class="tab" onclick="showTab('threats')">⚠️ Amenazas</button>
             <button class="tab" onclick="showTab('governance')">⚖️ Gobernanza</button>
+            <button class="tab" onclick="showTab('exercises')">✏️ Ejercicios</button>
         </div>
 
         <div id="overview" class="tab-content">
@@ -420,7 +446,7 @@
                     <span class="stat-number">99.9%</span>
                     <div>Disponibilidad Objetivo</div>
                 </div>
-            </stats-grid>
+            </div>
 
             <div class="card">
                 <h3>🎯 Triada CIA de la Seguridad</h3>
@@ -795,7 +821,7 @@
                         <span class="stat-number">PDCA</span>
                         <div>Metodología Mejora</div>
                     </div>
-                </stats-grid>
+                </div>
             </div>
 
             <div class="card">
@@ -1109,7 +1135,7 @@
                         <span class="stat-number">24h</span>
                         <div>Actualización CRL</div>
                     </div>
-                </stats-grid>
+                </div>
             </card>
 
             <div class="card">
@@ -1660,6 +1686,233 @@
                     <li><strong>Risk Management:</strong> ISO 31000 - Contexto → Identificar → Analizar → Evaluar → Tratar</li>
                     <li><strong>Tratamiento:</strong> Aceptar, Evitar, Transferir, Mitigar</li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- Exercises Tab -->
+        <div id="exercises" class="tab-content hidden">
+            <div class="card">
+                <h2>✏️ Ejercicios Prácticos - Seguridad de Sistemas</h2>
+                <p style="margin-bottom: 2rem;">Ejercicios prácticos sobre criptografía, gestión de riesgos y seguridad en sistemas de información.</p>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 1: Cálculo de entropía en contraseñas</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Calcular la entropía de una contraseña de 8 caracteres que usa: minúsculas (26), mayúsculas (26), números (10) y símbolos (14). ¿Cuántos bits de entropía tiene?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p>Caracteres disponibles = 26 + 26 + 10 + 14 = 76</p>
+                        <p>Longitud de contraseña = 8 caracteres</p>
+                        <p>Número de combinaciones posibles = 76^8</p>
+                        <p>Entropía = log2(76^8) = 8 × log2(76)</p>
+                        <p>log2(76) = 6.248</p>
+                        <p>Entropía = 8 × 6.248 = 49.98 bits</p>
+                        <p><strong>Respuesta:</strong> La contraseña tiene aproximadamente 50 bits de entropía.</p>
+                        <p>Tiempo de fuerza bruta (10^12 intentos/seg): 2^50 / 10^12 = 1,125 segundos ≈ 19 minutos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 2: RSA - Cifrado y descifrado</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Dado p=7, q=11 en RSA, e=13. Calcular n, φ(n), d. Cifrar mensaje m=6.</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p>n = p × q = 7 × 11 = 77</p>
+                        <p>φ(n) = (p-1) × (q-1) = 6 × 10 = 60</p>
+                        <p>d = e^(-1) mod φ(n) = 13^(-1) mod 60</p>
+                        <p>Usando algoritmo extendido de Euclides: d = 37</p>
+                        <p>Verificación: (13 × 37) mod 60 = 481 mod 60 = 1 ✓</p>
+                        <p>Cifrado: c = m^e mod n = 6^13 mod 77</p>
+                        <p>6^13 = 13,060,694,016</p>
+                        <p>c = 13,060,694,016 mod 77 = 62</p>
+                        <p><strong>Respuesta:</strong> n=77, φ(n)=60, d=37, mensaje cifrado c=62</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 3: Cálculo ALE (Annual Loss Expectancy)</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Un servidor tiene SLE (Single Loss Expectancy) de 50,000€ por caída. La probabilidad anual de caída es 15%. ¿Cuál es el ALE? Si una solución de backup cuesta 5,000€ y reduce la probabilidad al 2%, ¿es rentable?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p>ALE actual = SLE × ARO = 50,000€ × 0.15 = 7,500€/año</p>
+                        <p>ALE con backup = 50,000€ × 0.02 = 1,000€/año</p>
+                        <p>Ahorro anual = 7,500 - 1,000 = 6,500€/año</p>
+                        <p>Coste de la solución = 5,000€</p>
+                        <p>ROI primer año = (6,500 - 5,000) / 5,000 × 100 = 30%</p>
+                        <p>Periodo de recuperación = 5,000 / 6,500 = 0.77 años (9.2 meses)</p>
+                        <p><strong>Respuesta:</strong> ALE actual = 7,500€. La solución SÍ es rentable con ROI del 30%.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 4: Hash y función resumen</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Un archivo de 1GB se transmite por red insegura. SHA-256 tarda 2 segundos en calcularse. MD5 tarda 0.5 segundos pero tiene colisiones conocidas. ¿Qué hash usar considerando el tiempo vs seguridad?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>MD5:</strong></p>
+                        <p>- Tiempo: 0.5 segundos</p>
+                        <p>- Seguridad: INSEGURO (colisiones desde 2004)</p>
+                        <p>- Uso: NO recomendado para seguridad</p>
+                        <p><strong>SHA-256:</strong></p>
+                        <p>- Tiempo: 2 segundos</p>
+                        <p>- Seguridad: Alto (no hay colisiones conocidas)</p>
+                        <p>- Resistencia: 2^128 operaciones para colisión</p>
+                        <p><strong>Recomendación:</strong> Usar SHA-256</p>
+                        <p>Justificación: 1.5 segundos extra es despreciable vs riesgo de integridad</p>
+                        <p>Para 1GB, diferencia: 1.5s vs años de vulnerabilidad</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 5: Cálculo CVSS v3.1</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Vulnerabilidad SQL Injection: Vector de Ataque=Red, Complejidad=Baja, Privilegios=Ninguno, Interacción=Ninguna, Impacto CIA=Alto/Alto/Alto. Calcular CVSS Base Score.</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Métricas Base:</strong></p>
+                        <p>AV (Attack Vector) = Network = 0.85</p>
+                        <p>AC (Attack Complexity) = Low = 0.77</p>
+                        <p>PR (Privileges Required) = None = 0.85</p>
+                        <p>UI (User Interaction) = None = 0.85</p>
+                        <p>S (Scope) = Unchanged = 1</p>
+                        <p>C (Confidentiality) = High = 0.56</p>
+                        <p>I (Integrity) = High = 0.56</p>
+                        <p>A (Availability) = High = 0.56</p>
+                        <p><strong>Cálculos:</strong></p>
+                        <p>ISS = 1 - [(1-C) × (1-I) × (1-A)]</p>
+                        <p>ISS = 1 - [(1-0.56) × (1-0.56) × (1-0.56)] = 1 - 0.085 = 0.915</p>
+                        <p>Exploitability = 8.22 × AV × AC × PR × UI</p>
+                        <p>Exploitability = 8.22 × 0.85 × 0.77 × 0.85 × 0.85 = 3.9</p>
+                        <p>Base Score = min(10, ISS × Exploitability) = min(10, 0.915 × 3.9) = 9.0</p>
+                        <p><strong>Respuesta:</strong> CVSS Base Score = 9.0 (CRÍTICO)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 6: Firewall - Análisis de reglas</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Reglas firewall: 1) ALLOW 192.168.1.0/24 ANY, 2) DENY 192.168.1.100 port 22, 3) ALLOW ANY port 80,443. ¿Se permite SSH desde 192.168.1.100? ¿HTTP desde 10.0.0.1?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Análisis SSH desde 192.168.1.100:</strong></p>
+                        <p>Regla 1: ALLOW 192.168.1.0/24 ANY → PERMITE (192.168.1.100 está en rango)</p>
+                        <p>Regla 2: DENY 192.168.1.100 port 22 → DENIEGA (más específica)</p>
+                        <p>Resultado: DENEGADO (regla más específica tiene prioridad)</p>
+                        <p><strong>Análisis HTTP desde 10.0.0.1:</strong></p>
+                        <p>Regla 1: ALLOW 192.168.1.0/24 ANY → NO APLICA (IP fuera de rango)</p>
+                        <p>Regla 2: DENY 192.168.1.100 port 22 → NO APLICA (IP diferente)</p>
+                        <p>Regla 3: ALLOW ANY port 80,443 → PERMITE (HTTP puerto 80)</p>
+                        <p>Resultado: PERMITIDO</p>
+                        <p><strong>Respuesta:</strong> SSH desde 192.168.1.100 = DENEGADO, HTTP desde 10.0.0.1 = PERMITIDO</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 7: Matriz de riesgos</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Clasificar riesgos en matriz 5x5: A) Malware (Probabilidad=4, Impacto=3), B) Terremoto (P=1, I=5), C) Fallo disco (P=3, I=2), D) Ataque DDoS (P=3, I=4). Establecer tratamiento para cada uno.</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Cálculo de Riesgo (P × I):</strong></p>
+                        <p>A) Malware: 4 × 3 = 12 (ALTO)</p>
+                        <p>B) Terremoto: 1 × 5 = 5 (BAJO-MEDIO)</p>
+                        <p>C) Fallo disco: 3 × 2 = 6 (MEDIO)</p>
+                        <p>D) Ataque DDoS: 3 × 4 = 12 (ALTO)</p>
+                        <p><strong>Estrategia de Tratamiento:</strong></p>
+                        <p>A) Malware (ALTO): MITIGAR - Antivirus, EDR, formación usuarios</p>
+                        <p>B) Terremoto (BAJO): TRANSFERIR - Seguro, datacenter externo</p>
+                        <p>C) Fallo disco (MEDIO): MITIGAR - RAID, backups, monitoring</p>
+                        <p>D) DDoS (ALTO): MITIGAR + TRANSFERIR - CDN, servicio anti-DDoS</p>
+                        <p><strong>Prioridad:</strong> 1º) Malware y DDoS, 2º) Fallo disco, 3º) Terremoto</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 8: PKI - Cadena de certificados</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Validar certificado: Root CA (auto-firmado, válido 20 años) → Intermediate CA (firmado por Root, válido 10 años) → End Entity (firmado por Intermediate, válido 2 años). ¿Qué verificaciones hacer?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Verificaciones en orden:</strong></p>
+                        <p>1. <strong>Root CA:</strong></p>
+                        <p>   - Verificar auto-firma válida</p>
+                        <p>   - Comprobar fechas validez (not before/not after)</p>
+                        <p>   - Verificar que está en trust store</p>
+                        <p>2. <strong>Intermediate CA:</strong></p>
+                        <p>   - Verificar firma con clave pública de Root CA</p>
+                        <p>   - Comprobar fechas validez</p>
+                        <p>   - Verificar extensiones (CA=TRUE, Key Usage=keyCertSign)</p>
+                        <p>3. <strong>End Entity:</strong></p>
+                        <p>   - Verificar firma con clave pública de Intermediate</p>
+                        <p>   - Comprobar fechas validez</p>
+                        <p>   - Verificar SAN/CN match con servidor</p>
+                        <p>4. <strong>Verificaciones adicionales:</strong></p>
+                        <p>   - CRL/OCSP revocation status</p>
+                        <p>   - Path length constraints</p>
+                        <p><strong>Respuesta:</strong> Cadena válida si todas las verificaciones pasan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 9: IDS/IPS - Análisis de logs</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Log IDS: "10.0.0.100 → 192.168.1.50:22 [SYN SCAN] 1000 puertos en 2 seg". ¿Qué tipo de ataque? ¿Cómo responder?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Análisis del ataque:</strong></p>
+                        <p>Tipo: PORT SCAN - Reconocimiento de puertos abiertos</p>
+                        <p>Método: SYN Scan (stealth scan)</p>
+                        <p>Volumen: 1000 puertos en 2 segundos = escaneo automatizado</p>
+                        <p>Objetivo: Puerto 22 (SSH) - busca acceso remoto</p>
+                        <p><strong>Respuesta inmediata:</strong></p>
+                        <p>1. BLOQUEAR IP 10.0.0.100 en firewall</p>
+                        <p>2. Alertar al SOC/administrador</p>
+                        <p>3. Aumentar monitoring en 192.168.1.50</p>
+                        <p>4. Revisar logs de intentos de login SSH</p>
+                        <p><strong>Respuesta a medio plazo:</strong></p>
+                        <p>1. Implementar rate limiting en SSH</p>
+                        <p>2. Configurar fail2ban</p>
+                        <p>3. Considerar cambiar puerto SSH por defecto</p>
+                        <p>4. Implementar autenticación por clave pública</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejercicio 10: Backup y RTO/RPO</h3>
+                <div class="exercise-box">
+                    <p><strong>Enunciado:</strong> Sistema crítico: RTO=2h, RPO=15min. Opciones: A) Backup diario (coste 1000€/mes, restauración 8h), B) Backup cada 4h (coste 3000€/mes, restauración 2h), C) Replicación continua (coste 8000€/mes, restauración 10min). ¿Qué solución elegir?</p>
+                    <div class="solution">
+                        <h4>Solución:</h4>
+                        <p><strong>Análisis de cumplimiento:</strong></p>
+                        <p>Requisitos: RTO ≤ 2h, RPO ≤ 15min</p>
+                        <p><strong>Opción A:</strong> Backup diario</p>
+                        <p>- RPO: 24 horas (NO CUMPLE → requiere ≤ 15min)</p>
+                        <p>- RTO: 8 horas (NO CUMPLE → requiere ≤ 2h)</p>
+                        <p>- Resultado: DESCARTADA</p>
+                        <p><strong>Opción B:</strong> Backup cada 4h</p>
+                        <p>- RPO: 4 horas (NO CUMPLE → requiere ≤ 15min)</p>
+                        <p>- RTO: 2 horas (SÍ CUMPLE)</p>
+                        <p>- Resultado: DESCARTADA</p>
+                        <p><strong>Opción C:</strong> Replicación continua</p>
+                        <p>- RPO: Tiempo real < 15min (SÍ CUMPLE)</p>
+                        <p>- RTO: 10min < 2h (SÍ CUMPLE)</p>
+                        <p>- Resultado: Única opción válida</p>
+                        <p><strong>Respuesta:</strong> Elegir opción C (8000€/mes) - única que cumple RTO y RPO.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

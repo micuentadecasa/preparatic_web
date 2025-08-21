@@ -405,6 +405,31 @@
             box-shadow: var(--shadow);
         }
 
+        .exercise-box {
+            background: var(--surface-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .exercise-box .solution {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .exercise-box .solution h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .exercise-box .solution p {
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
         .exam-alert::before {
             content: "⚠️ IMPORTANTE PARA EXAMEN: ";
             font-weight: bold;
@@ -479,6 +504,7 @@
                 <button class="tab-button" onclick="showTab('tools')">🛠️ Herramientas</button>
                 <button class="tab-button" onclick="showTab('metrics')">📊 Métricas y KPIs</button>
                 <button class="tab-button" onclick="showTab('best-practices')">✨ Mejores Prácticas</button>
+                <button class="tab-button" onclick="showTab('exercises')">✏️ Ejercicios</button>
             </div>
 
             <div id="overview" class="tab-content active">
@@ -1967,6 +1993,182 @@ ROI Anual:
 
                     <div class="exam-alert">
                         CONCEPTO CLAVE EXAMEN: Service Desk exitoso = Personas + Procesos + Tecnología en equilibrio. Fallar en uno impacta todos. 40% personas, 40% procesos, 20% tecnología.
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="content-section">
+                    <h2>✏️ Ejercicios Prácticos - Gestión de Atención a Clientes</h2>
+                    <p style="margin-bottom: 2rem;">Ejercicios prácticos sobre Service Desk, ITIL, KPIs y gestión de incidencias.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 1: Cálculo SLA y disponibilidad</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Un servicio estuvo caído 4 horas durante el mes de enero (744 horas totales). ¿Cuál es el porcentaje de disponibilidad? ¿Cumple un SLA del 99.5%?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Tiempo total del mes = 744 horas</p>
+                            <p>Tiempo de caída = 4 horas</p>
+                            <p>Tiempo disponible = 744 - 4 = 740 horas</p>
+                            <p>Disponibilidad = (740 / 744) × 100 = 99.46%</p>
+                            <p>SLA objetivo = 99.5%</p>
+                            <p><strong>Respuesta:</strong> Disponibilidad = 99.46%. NO cumple el SLA del 99.5% (falta 0.04%)</p>
+                            <p>Tiempo máximo de caída permitido: 744 × 0.005 = 3.72 horas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 2: Cálculo FCR (First Call Resolution)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En un mes se recibieron 1,200 tickets. 840 se resolvieron en el primer contacto. ¿Cuál es el FCR? ¿Cumple el objetivo del 70%?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>FCR = (Tickets resueltos en primer contacto / Total tickets) × 100</p>
+                            <p>FCR = (840 / 1,200) × 100 = 70%</p>
+                            <p>Objetivo FCR = 70%</p>
+                            <p><strong>Respuesta:</strong> FCR = 70%. SÍ cumple exactamente el objetivo del 70%.</p>
+                            <p>Para mejorar FCR: Mejorar knowledge base, formación agentes, herramientas diagnóstico.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 3: Tiempo promedio de resolución (MTTR)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> 5 incidencias se resolvieron en: 2h, 4h, 1h, 6h, 3h. ¿Cuál es el MTTR? Si el SLA es 4h, ¿qué porcentaje cumple?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Tiempos de resolución: 2h, 4h, 1h, 6h, 3h</p>
+                            <p>MTTR = (2 + 4 + 1 + 6 + 3) / 5 = 16 / 5 = 3.2 horas</p>
+                            <p>Incidencias dentro de SLA (4h): 2h, 4h, 1h, 3h = 4 incidencias</p>
+                            <p>Cumplimiento SLA = (4 / 5) × 100 = 80%</p>
+                            <p><strong>Respuesta:</strong> MTTR = 3.2h. Cumplimiento SLA = 80%</p>
+                            <p>La incidencia de 6h incumple el SLA de 4h.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 4: Cálculo de escalamiento</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> De 800 tickets del mes, 240 fueron escalados al nivel 2. ¿Cuál es la tasa de escalamiento? ¿Cumple el objetivo del 25%?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Tasa de escalamiento = (Tickets escalados / Total tickets) × 100</p>
+                            <p>Tasa de escalamiento = (240 / 800) × 100 = 30%</p>
+                            <p>Objetivo = 25%</p>
+                            <p><strong>Respuesta:</strong> Tasa de escalamiento = 30%. NO cumple el objetivo del 25%.</p>
+                            <p>Exceso = 30% - 25% = 5%</p>
+                            <p>Acciones: Mejorar formación L1, actualizar KB, revisar categorización.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 5: CSAT (Customer Satisfaction)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Encuesta CSAT: 50 respuestas “Muy satisfecho” (5), 30 “Satisfecho” (4), 15 “Neutral” (3), 4 “Insatisfecho” (2), 1 “Muy insatisfecho” (1). ¿Cuál es el CSAT promedio?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Total respuestas = 50 + 30 + 15 + 4 + 1 = 100</p>
+                            <p>Puntuación total = (50×5) + (30×4) + (15×3) + (4×2) + (1×1)</p>
+                            <p>Puntuación total = 250 + 120 + 45 + 8 + 1 = 424</p>
+                            <p>CSAT promedio = 424 / 100 = 4.24</p>
+                            <p><strong>Respuesta:</strong> CSAT = 4.24/5 (84.8%)</p>
+                            <p>También se puede calcular: (50+30)/100 = 80% satisfacción (ratings 4-5)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 6: Cálculo de costes por ticket</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Service Desk con 8 agentes (salario 30,000€/año), software 15,000€/año, infraestructura 10,000€/año. Gestionan 12,000 tickets/año. ¿Coste por ticket?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Coste personal = 8 agentes × 30,000€ = 240,000€/año</p>
+                            <p>Coste software = 15,000€/año</p>
+                            <p>Coste infraestructura = 10,000€/año</p>
+                            <p>Coste total anual = 240,000 + 15,000 + 10,000 = 265,000€</p>
+                            <p>Tickets anuales = 12,000</p>
+                            <p>Coste por ticket = 265,000 / 12,000 = 22.08€</p>
+                            <p><strong>Respuesta:</strong> Coste por ticket = 22.08€</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 7: Dimensionamiento de plantilla</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Se esperan 1,500 tickets/mes. Tiempo promedio de resolución: 45 min. Jornada: 8h/día, 22 días/mes. Ocupación objetivo: 80%. ¿Cuántos agentes necesitas?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Tiempo total tickets/mes = 1,500 tickets × 45 min = 67,500 min</p>
+                            <p>Tiempo total tickets/mes = 67,500 / 60 = 1,125 horas</p>
+                            <p>Tiempo disponible/agente/mes = 8h × 22 días = 176 horas</p>
+                            <p>Tiempo productivo/agente = 176h × 80% = 140.8 horas</p>
+                            <p>Agentes necesarios = 1,125 / 140.8 = 7.99 ≈ 8 agentes</p>
+                            <p><strong>Respuesta:</strong> Se necesitan 8 agentes para cubrir la carga de trabajo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 8: Clasificación de prioridades según ITIL</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Clasifica estas incidencias según prioridad ITIL: A) Caída servidor email (500 usuarios), B) Impresora averiada (10 usuarios), C) Caída aplicación crítica (toda la empresa), D) Problema de acceso VPN (1 usuario)</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Criterios ITIL: Impacto (usuarios afectados) + Urgencia (tiempo crítico)</p>
+                            <p><strong>Prioridad 1 (Crítica):</strong> C) Caída aplicación crítica</p>
+                            <p>- Impacto: Alto (toda empresa), Urgencia: Alta</p>
+                            <p><strong>Prioridad 2 (Alta):</strong> A) Caída servidor email</p>
+                            <p>- Impacto: Alto (500 usuarios), Urgencia: Media-Alta</p>
+                            <p><strong>Prioridad 3 (Media):</strong> B) Impresora averiada</p>
+                            <p>- Impacto: Bajo (10 usuarios), Urgencia: Baja</p>
+                            <p><strong>Prioridad 4 (Baja):</strong> D) Problema VPN</p>
+                            <p>- Impacto: Muy bajo (1 usuario), Urgencia: Baja</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 9: Cálculo de disponibilidad con ventanas de mantenimiento</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Sistema con 720h de operación mensual. Mantenimiento programado: 4h. Caída no programada: 2h. ¿Disponibilidad operacional? ¿Disponibilidad total?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Tiempo total = 720 horas</p>
+                            <p>Mantenimiento programado = 4 horas</p>
+                            <p>Caída no programada = 2 horas</p>
+                            <p><strong>Disponibilidad Operacional (excluyendo mantenimiento):</strong></p>
+                            <p>Tiempo operacional = 720 - 4 = 716 horas</p>
+                            <p>Disponibilidad = (716 - 2) / 716 = 714 / 716 = 99.72%</p>
+                            <p><strong>Disponibilidad Total (incluyendo mantenimiento):</strong></p>
+                            <p>Disponibilidad = (720 - 2 - 4) / 720 = 714 / 720 = 99.17%</p>
+                            <p><strong>Respuesta:</strong> Operacional = 99.72%, Total = 99.17%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 10: ROI de mejoras en Service Desk</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Inversión en nueva herramienta: 50,000€. Reduce MTTR de 4h a 2h. 1,000 tickets/mes × coste hora parada 200€. ¿ROI en el primer año?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Reducción MTTR = 4h - 2h = 2 horas por ticket</p>
+                            <p>Tickets anuales = 1,000 × 12 = 12,000 tickets</p>
+                            <p>Ahorro tiempo total = 12,000 × 2h = 24,000 horas</p>
+                            <p>Ahorro económico = 24,000h × 200€ = 4,800,000€</p>
+                            <p>Inversión = 50,000€</p>
+                            <p>Beneficio neto = 4,800,000 - 50,000 = 4,750,000€</p>
+                            <p>ROI = (4,750,000 / 50,000) × 100 = 9,500%</p>
+                            <p><strong>Respuesta:</strong> ROI = 9,500% (retorno en 0.38 días!)</p>
+                        </div>
                     </div>
                 </div>
             </div>

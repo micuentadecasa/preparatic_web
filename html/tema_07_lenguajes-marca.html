@@ -1746,6 +1746,311 @@ xmlstarlet sel -t -v "//titulo" doc.xml # XPath query
                     </div>
                 </div>
             </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="content-section">
+                    <h2>✏️ Ejercicios Prácticos - Lenguajes de Marca</h2>
+                    <p style="margin-bottom: 2rem;">Ejercicios prácticos sobre XML, HTML, DTD, XSD y transformaciones XSLT.</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 1: Estructura básica XML</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Escribe un documento XML bien formado que represente una biblioteca con 3 libros. Cada libro debe tener: título, autor, año de publicación e ISBN.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</p>
+                            <p>&lt;biblioteca&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;libro isbn="978-84-376-0494-7"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;Cien años de soledad&lt;/titulo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Gabriel García Márquez&lt;/autor&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;año&gt;1967&lt;/año&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/libro&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;libro isbn="978-84-376-0495-8"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;Don Quijote de la Mancha&lt;/titulo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Miguel de Cervantes&lt;/autor&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;año&gt;1605&lt;/año&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/libro&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;libro isbn="978-84-376-0496-9"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;titulo&gt;La Casa de Bernarda Alba&lt;/titulo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;autor&gt;Federico García Lorca&lt;/autor&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;año&gt;1936&lt;/año&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/libro&gt;</p>
+                            <p>&lt;/biblioteca&gt;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 2: DTD (Document Type Definition)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Crear una DTD que valide el XML de la biblioteca del ejercicio anterior. Definir que título y autor son obligatorios, año es opcional e ISBN es un atributo requerido.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;!DOCTYPE biblioteca [</p>
+                            <p>&nbsp;&nbsp;&lt;!ELEMENT biblioteca (libro+)&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;!ELEMENT libro (titulo, autor, año?)&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;!ATTLIST libro isbn CDATA #REQUIRED&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;!ELEMENT titulo (#PCDATA)&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;!ELEMENT autor (#PCDATA)&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;!ELEMENT año (#PCDATA)&gt;</p>
+                            <p>]&gt;</p>
+                            <p><strong>Explicación:</strong> + significa uno o más, ? significa opcional, #PCDATA es texto, #REQUIRED hace el atributo obligatorio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 3: XSD (XML Schema Definition)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Convertir la DTD anterior a un esquema XSD, añadiendo restricciones: el año debe ser entre 1000 y 2024, el ISBN debe seguir el patrón 978-XX-XXX-XXXX-X.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;xs:element name="biblioteca"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:complexType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:sequence&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:element name="libro" maxOccurs="unbounded"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:complexType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:sequence&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:element name="titulo" type="xs:string"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:element name="autor" type="xs:string"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:element name="año" minOccurs="0"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:simpleType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:restriction base="xs:int"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:minInclusive value="1000"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:maxInclusive value="2024"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:restriction&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:simpleType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:element&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:sequence&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:attribute name="isbn" use="required"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:simpleType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:restriction base="xs:string"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:pattern value="978-\\d{2}-\\d{3}-\\d{4}-\\d"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:restriction&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:simpleType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:attribute&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:complexType&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:element&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:sequence&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xs:complexType&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/xs:element&gt;</p>
+                            <p>&lt;/xs:schema&gt;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 4: XPath - Consultas básicas</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Dado el XML de la biblioteca, escribir expresiones XPath para: 1) Seleccionar todos los títulos, 2) Libros publicados antes de 1950, 3) El autor del primer libro.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>1) Todos los títulos: <strong>//titulo</strong> o <strong>/biblioteca/libro/titulo</strong></p>
+                            <p>2) Libros antes de 1950: <strong>//libro[año &lt; 1950]</strong></p>
+                            <p>3) Autor del primer libro: <strong>/biblioteca/libro[1]/autor</strong></p>
+                            <p>Alternativa para 2: <strong>//libro[position() &lt; 3 and año &lt; 1950]</strong></p>
+                            <p><strong>Explicación:</strong> // busca en cualquier nivel, [] son predicados de filtro, position() da la posición del elemento.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 5: XSLT - Transformación a HTML</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Crear una hoja de estilo XSLT que transforme el XML de la biblioteca en una tabla HTML con columnas: Título, Autor, Año.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;xsl:template match="/"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;html&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;head&gt;&lt;title&gt;Biblioteca&lt;/title&gt;&lt;/head&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;body&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;table border="1"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;&lt;th&gt;Título&lt;/th&gt;&lt;th&gt;Autor&lt;/th&gt;&lt;th&gt;Año&lt;/th&gt;&lt;/tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:for-each select="biblioteca/libro"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;&lt;xsl:value-of select="titulo"/&gt;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;&lt;xsl:value-of select="autor"/&gt;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;&lt;xsl:value-of select="año"/&gt;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xsl:for-each&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/table&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/body&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/html&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/xsl:template&gt;</p>
+                            <p>&lt;/xsl:stylesheet&gt;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 6: HTML5 - Estructura semántica</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Crear una página HTML5 con estructura semántica que incluya: header con navegación, main con article, aside con información adicional, y footer.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;!DOCTYPE html&gt;</p>
+                            <p>&lt;html lang="es"&gt;</p>
+                            <p>&lt;head&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;title&gt;Biblioteca Digital&lt;/title&gt;</p>
+                            <p>&lt;/head&gt;</p>
+                            <p>&lt;body&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;header&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Biblioteca Digital&lt;/h1&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;nav&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ul&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;a href="#inicio"&gt;Inicio&lt;/a&gt;&lt;/li&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;a href="#catalogo"&gt;Catálogo&lt;/a&gt;&lt;/li&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;&lt;a href="#contacto"&gt;Contacto&lt;/a&gt;&lt;/li&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ul&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/nav&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/header&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;main&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;article&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;Libros Destacados&lt;/h2&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;section&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;Cien años de soledad&lt;/h3&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Una obra maestra de Gabriel García Márquez.&lt;/p&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/section&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/article&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;aside&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;Información adicional&lt;/h3&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Horario: L-V 9:00-18:00&lt;/p&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/aside&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/main&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;footer&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;&copy; 2024 Biblioteca Digital&lt;/p&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/footer&gt;</p>
+                            <p>&lt;/body&gt;</p>
+                            <p>&lt;/html&gt;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 7: Espacios de nombres (Namespaces)</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Crear un documento XML que use dos espacios de nombres: uno para información de libros y otro para información de préstamos.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</p>
+                            <p>&lt;biblioteca</p>
+                            <p>&nbsp;&nbsp;xmlns:lib="http://biblioteca.com/libros"</p>
+                            <p>&nbsp;&nbsp;xmlns:prest="http://biblioteca.com/prestamos"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;lib:libro isbn="978-84-376-0494-7"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;lib:titulo&gt;Cien años de soledad&lt;/lib:titulo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;lib:autor&gt;Gabriel García Márquez&lt;/lib:autor&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;prest:prestamo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;prest:usuario&gt;Juan Pérez&lt;/prest:usuario&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;prest:fechaPrestamo&gt;2024-01-15&lt;/prest:fechaPrestamo&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;prest:fechaDevolucion&gt;2024-02-15&lt;/prest:fechaDevolucion&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/prest:prestamo&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/lib:libro&gt;</p>
+                            <p>&lt;/biblioteca&gt;</p>
+                            <p><strong>Explicación:</strong> Los prefijos lib: y prest: distinguen elementos de diferentes vocabularios XML.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 8: Validación con expresiones regulares</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En un esquema XSD, crear un tipo personalizado para validar emails con el patrón usuario@dominio.extension</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;xs:simpleType name="tipoEmail"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;xs:restriction base="xs:string"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;xs:pattern value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"/&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/xs:restriction&gt;</p>
+                            <p>&lt;/xs:simpleType&gt;</p>
+                            <p>&lt;xs:element name="email" type="tipoEmail"/&gt;</p>
+                            <p><strong>Explicación del patrón:</strong></p>
+                            <p>- [a-zA-Z0-9._%+-]+ : uno o más caracteres alfanuméricos y símbolos permitidos</p>
+                            <p>- @ : símbolo arroba literal</p>
+                            <p>- [a-zA-Z0-9.-]+ : dominio con caracteres alfanuméricos, puntos y guiones</p>
+                            <p>- \\. : punto literal (escapado)</p>
+                            <p>- [a-zA-Z]{2,} : extensión de al menos 2 letras</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 9: XSLT avanzado - Condicionales y ordenación</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Modificar la transformación XSLT anterior para: 1) Ordenar libros por año, 2) Mostrar solo libros posteriores a 1950, 3) Colorear en rojo los años anteriores a 2000.</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;xsl:template match="/"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;html&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;head&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Biblioteca Filtrada&lt;/title&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;style&gt;.antiguo { color: red; }&lt;/style&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/head&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;body&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;table border="1"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;&lt;th&gt;Título&lt;/th&gt;&lt;th&gt;Autor&lt;/th&gt;&lt;th&gt;Año&lt;/th&gt;&lt;/tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:for-each select="biblioteca/libro[año &gt; 1950]"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:sort select="año" data-type="number"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;&lt;xsl:value-of select="titulo"/&gt;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;&lt;xsl:value-of select="autor"/&gt;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:choose&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:when test="año &lt; 2000"&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="antiguo"&gt;&lt;xsl:value-of select="año"/&gt;&lt;/span&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xsl:when&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:otherwise&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:value-of select="año"/&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xsl:otherwise&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xsl:choose&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/xsl:for-each&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/table&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/body&gt;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/html&gt;</p>
+                            <p>&nbsp;&nbsp;&lt;/xsl:template&gt;</p>
+                            <p>&lt;/xsl:stylesheet&gt;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>📝 Ejercicio 10: Comparación XML vs JSON</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Convertir el XML de la biblioteca a formato JSON y comparar ventajas/desventajas de cada formato.</p>
+                        <div class="solution">
+                            <h4>Solución JSON:</h4>
+                            <p>{</p>
+                            <p>&nbsp;&nbsp;"biblioteca": {</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;"libros": [</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"isbn": "978-84-376-0494-7",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"titulo": "Cien años de soledad",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"autor": "Gabriel García Márquez",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"año": 1967</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"isbn": "978-84-376-0495-8",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"titulo": "Don Quijote de la Mancha",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"autor": "Miguel de Cervantes",</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"año": 1605</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;]</p>
+                            <p>&nbsp;&nbsp;}</p>
+                            <p>}</p>
+                            <p><strong>Comparación:</strong></p>
+                            <p>XML: Más verboso, soporte DTD/XSD, namespaces, mejor para documentos complejos</p>
+                            <p>JSON: Más ligero, nativo en JavaScript, mejor para APIs REST, menos funcionalidades de validación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

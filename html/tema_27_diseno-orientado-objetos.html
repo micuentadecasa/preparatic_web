@@ -590,52 +590,272 @@
             <h2>UML (Unified Modeling Language)</h2>
             
             <div class="highlight-box">
-                <h4>📊 Diagramas Estructurales</h4>
-                <p>Representan la estructura estática del sistema: clases, objetos, componentes, despliegue, paquetes, estructura compuesta y perfiles.</p>
+                <h4>🏗️ Lenguaje de Modelado Unificado</h4>
+                <p>UML es un lenguaje estándar para especificar, visualizar, construir y documentar sistemas de software. Se divide en 14 tipos de diagramas organizados en 3 categorías principales.</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">14</span>
+                    <span class="stat-label">Tipos de Diagramas</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">Diagramas Estructurales</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">Diagramas Comportamiento</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Diagramas Interacción</span>
+                </div>
+            </div>
+
+            <!-- DIAGRAMAS ESTRUCTURALES -->
+            <div class="highlight-box">
+                <h4>🏛️ Diagramas Estructurales (7 tipos)</h4>
+                <p>Muestran la estructura estática del sistema: elementos que deben estar presentes en el sistema modelado.</p>
             </div>
 
             <div class="content-grid">
                 <div class="content-card">
-                    <h3>Diagrama de Clases</h3>
+                    <h3>1. Diagrama de Clases</h3>
+                    <p><strong>Propósito:</strong> Mostrar clases del sistema y relaciones entre ellas</p>
                     <ul>
-                        <li>Clases: atributos y métodos</li>
-                        <li>Relaciones: asociación, agregación, composición</li>
-                        <li>Herencia e interfaces</li>
-                        <li>Multiplicidades y restricciones</li>
-                        <li>Clases abstractas e interfaces</li>
+                        <li><strong>Elementos:</strong> Clases, interfaces, atributos, métodos</li>
+                        <li><strong>Relaciones:</strong> Asociación, agregación, composición, herencia</li>
+                        <li><strong>Multiplicidades:</strong> 0..1, 1, 1..*, 0..*, n..m</li>
+                        <li><strong>Visibilidad:</strong> + (público), - (privado), # (protegido), ~ (paquete)</li>
+                        <li><strong>Uso:</strong> Análisis y diseño detallado</li>
                     </ul>
                 </div>
 
                 <div class="content-card">
-                    <h3>Diagrama de Componentes</h3>
+                    <h3>2. Diagrama de Objetos</h3>
+                    <p><strong>Propósito:</strong> Mostrar instancias específicas de clases en un momento dado</p>
                     <ul>
-                        <li>Componentes de software</li>
-                        <li>Interfaces proporcionadas y requeridas</li>
-                        <li>Dependencias entre componentes</li>
-                        <li>Puertos y conectores</li>
-                        <li>Empaquetado y despliegue</li>
+                        <li><strong>Elementos:</strong> Objetos (instancias), enlaces (relaciones)</li>
+                        <li><strong>Notación:</strong> nombre:Clase con valores concretos</li>
+                        <li><strong>Enlaces:</strong> Instancias de asociaciones entre objetos</li>
+                        <li><strong>Uso:</strong> Ejemplificar casos específicos, validar modelo de clases</li>
+                        <li><strong>Momento:</strong> Instantánea del sistema</li>
                     </ul>
                 </div>
 
                 <div class="content-card">
-                    <h3>Diagrama de Despliegue</h3>
+                    <h3>3. Diagrama de Componentes</h3>
+                    <p><strong>Propósito:</strong> Mostrar organización y dependencias entre componentes</p>
                     <ul>
-                        <li>Nodos de hardware y software</li>
-                        <li>Artefactos y manifestaciones</li>
-                        <li>Protocolos de comunicación</li>
-                        <li>Especificaciones de despliegue</li>
-                        <li>Entornos de ejecución</li>
+                        <li><strong>Elementos:</strong> Componentes, interfaces, puertos, conectores</li>
+                        <li><strong>Interfaces:</strong> Proporcionadas (lollipop) y requeridas (socket)</li>
+                        <li><strong>Dependencias:</strong> Relaciones entre componentes</li>
+                        <li><strong>Manifestación:</strong> Artefactos que implementan componentes</li>
+                        <li><strong>Uso:</strong> Arquitectura de software, modularización</li>
                     </ul>
                 </div>
 
                 <div class="content-card">
-                    <h3>Diagramas de Comportamiento</h3>
+                    <h3>4. Diagrama de Estructura Compuesta</h3>
+                    <p><strong>Propósito:</strong> Mostrar estructura interna de un clasificador</p>
                     <ul>
-                        <li>Casos de uso: actores y escenarios</li>
-                        <li>Secuencia: líneas de vida y mensajes</li>
-                        <li>Colaboración: objetos e interacciones</li>
-                        <li>Estados: transiciones y eventos</li>
-                        <li>Actividades: flujos y decisiones</li>
+                        <li><strong>Elementos:</strong> Partes, puertos, conectores, colaboraciones</li>
+                        <li><strong>Partes:</strong> Propiedades con tipo que representan instancias</li>
+                        <li><strong>Puertos:</strong> Puntos de interacción con el entorno</li>
+                        <li><strong>Conectores:</strong> Enlaces entre partes y puertos</li>
+                        <li><strong>Uso:</strong> Arquitectura interna, patrones de diseño</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>5. Diagrama de Despliegue</h3>
+                    <p><strong>Propósito:</strong> Mostrar configuración física del sistema</p>
+                    <ul>
+                        <li><strong>Nodos:</strong> Recursos computacionales (hardware/software)</li>
+                        <li><strong>Artefactos:</strong> Elementos físicos del software</li>
+                        <li><strong>Manifestaciones:</strong> Utilización de artefactos por nodos</li>
+                        <li><strong>Protocolos:</strong> Comunicación entre nodos</li>
+                        <li><strong>Uso:</strong> Arquitectura de despliegue, distribución</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>6. Diagrama de Paquetes</h3>
+                    <p><strong>Propósito:</strong> Mostrar organización del modelo en paquetes</p>
+                    <ul>
+                        <li><strong>Paquetes:</strong> Contenedores de elementos del modelo</li>
+                        <li><strong>Dependencias:</strong> Relaciones entre paquetes</li>
+                        <li><strong>Importación:</strong> Import, access (público/privado)</li>
+                        <li><strong>Merge:</strong> Combinación de contenidos de paquetes</li>
+                        <li><strong>Uso:</strong> Arquitectura de gran escala, organización</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>7. Diagrama de Perfiles</h3>
+                    <p><strong>Propósito:</strong> Definir extensiones específicas de dominio</p>
+                    <ul>
+                        <li><strong>Estereotipos:</strong> Extensiones de metaclases UML</li>
+                        <li><strong>Valores etiquetados:</strong> Propiedades adicionales</li>
+                        <li><strong>Restricciones:</strong> Reglas en OCL o lenguaje natural</li>
+                        <li><strong>Metaclases:</strong> Elementos UML que se extienden</li>
+                        <li><strong>Uso:</strong> Adaptación a dominios específicos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DIAGRAMAS DE COMPORTAMIENTO -->
+            <div class="highlight-box">
+                <h4>🎭 Diagramas de Comportamiento (7 tipos)</h4>
+                <p>Muestran el comportamiento dinámico del sistema: qué debe suceder en el sistema modelado.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>8. Diagrama de Casos de Uso</h3>
+                    <p><strong>Propósito:</strong> Mostrar funcionalidades del sistema desde perspectiva del usuario</p>
+                    <ul>
+                        <li><strong>Actores:</strong> Usuarios, sistemas externos, roles</li>
+                        <li><strong>Casos de uso:</strong> Funcionalidades del sistema</li>
+                        <li><strong>Relaciones:</strong> Include, extend, generalización</li>
+                        <li><strong>Sistema:</strong> Límite del sistema (boundary)</li>
+                        <li><strong>Uso:</strong> Captura de requisitos, análisis funcional</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>9. Diagrama de Actividades</h3>
+                    <p><strong>Propósito:</strong> Mostrar flujo de actividades y decisiones</p>
+                    <ul>
+                        <li><strong>Actividades:</strong> Unidades de trabajo</li>
+                        <li><strong>Acciones:</strong> Pasos atómicos dentro de actividades</li>
+                        <li><strong>Flujos:</strong> Control y objeto (tokens)</li>
+                        <li><strong>Decisiones:</strong> Bifurcaciones, uniones, forks</li>
+                        <li><strong>Uso:</strong> Procesos de negocio, algoritmos</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>10. Diagrama de Estados</h3>
+                    <p><strong>Propósito:</strong> Mostrar ciclo de vida de objetos mediante estados</p>
+                    <ul>
+                        <li><strong>Estados:</strong> Situaciones en la vida de un objeto</li>
+                        <li><strong>Transiciones:</strong> Cambios entre estados</li>
+                        <li><strong>Eventos:</strong> Disparadores de transiciones</li>
+                        <li><strong>Acciones:</strong> Entry, exit, do activities</li>
+                        <li><strong>Uso:</strong> Objetos con comportamiento reactivo</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>11. Diagrama de Secuencia (Interacción)</h3>
+                    <p><strong>Propósito:</strong> Mostrar interacciones ordenadas temporalmente</p>
+                    <ul>
+                        <li><strong>Líneas de vida:</strong> Participantes en la interacción</li>
+                        <li><strong>Mensajes:</strong> Comunicación entre participantes</li>
+                        <li><strong>Activaciones:</strong> Períodos de actividad</li>
+                        <li><strong>Fragmentos:</strong> Alt, opt, loop, par, seq</li>
+                        <li><strong>Uso:</strong> Escenarios, casos de uso detallados</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>12. Diagrama de Comunicación (Interacción)</h3>
+                    <p><strong>Propósito:</strong> Mostrar interacciones enfatizando estructura</p>
+                    <ul>
+                        <li><strong>Objetos:</strong> Participantes con roles</li>
+                        <li><strong>Enlaces:</strong> Conexiones entre objetos</li>
+                        <li><strong>Mensajes:</strong> Numerados secuencialmente</li>
+                        <li><strong>Estructura:</strong> Organización espacial</li>
+                        <li><strong>Uso:</strong> Alternativa a diagramas de secuencia</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>13. Diagrama de Tiempo (Interacción)</h3>
+                    <p><strong>Propósito:</strong> Mostrar cambios de estado a lo largo del tiempo</p>
+                    <ul>
+                        <li><strong>Líneas de tiempo:</strong> Eje temporal explícito</li>
+                        <li><strong>Estados:</strong> Valores a lo largo del tiempo</li>
+                        <li><strong>Eventos:</strong> Puntos de cambio</li>
+                        <li><strong>Restricciones:</strong> Temporales entre eventos</li>
+                        <li><strong>Uso:</strong> Sistemas de tiempo real, embedded</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>14. Diagrama de Vista Global (Interacción)</h3>
+                    <p><strong>Propósito:</strong> Mostrar flujo de control entre interacciones</p>
+                    <ul>
+                        <li><strong>Referencias:</strong> Otros diagramas de interacción</li>
+                        <li><strong>Actividades:</strong> Nodos del flujo de control</li>
+                        <li><strong>Decisiones:</strong> Bifurcaciones en el flujo</li>
+                        <li><strong>Sincronización:</strong> Fork y join</li>
+                        <li><strong>Uso:</strong> Procesos complejos con múltiples escenarios</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RELACIONES UML -->
+            <div class="highlight-box">
+                <h4>🔗 Relaciones en UML</h4>
+                <p>Conexiones semánticas entre elementos del modelo que definen cómo interactúan.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Relaciones Estructurales</h3>
+                    <ul>
+                        <li><strong>Asociación (─────):</strong> Relación semántica entre clases</li>
+                        <li><strong>Agregación (◇────):</strong> "Parte de", relación débil</li>
+                        <li><strong>Composición (◆────):</strong> "Compuesto por", relación fuerte</li>
+                        <li><strong>Generalización (────▷):</strong> Herencia, "es un tipo de"</li>
+                        <li><strong>Realización (┈┈┈▷):</strong> Implementación de interfaz</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Relaciones de Dependencia</h3>
+                    <ul>
+                        <li><strong>Dependencia (┈┈┈>):</strong> Uso, relación semántica débil</li>
+                        <li><strong>Abstracción:</strong> Relación entre niveles de abstracción</li>
+                        <li><strong>Uso:</strong> Un elemento requiere otro para funcionar</li>
+                        <li><strong>Permiso:</strong> Acceso a elementos de otro paquete</li>
+                        <li><strong>Instanciación:</strong> Creación de instancias</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ESTEREOTIPOS COMUNES -->
+            <div class="highlight-box">
+                <h4>🏷️ Estereotipos UML Comunes</h4>
+                <p>Extensiones del vocabulario UML para adaptarse a dominios específicos.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Estereotipos de Clases</h3>
+                    <ul>
+                        <li><strong>«interface»:</strong> Contrato de operaciones</li>
+                        <li><strong>«abstract»:</strong> Clase abstracta</li>
+                        <li><strong>«enumeration»:</strong> Tipo enumerado</li>
+                        <li><strong>«utility»:</strong> Clase con métodos estáticos</li>
+                        <li><strong>«entity»:</strong> Clase de dominio persistente</li>
+                        <li><strong>«control»:</strong> Clase de control</li>
+                        <li><strong>«boundary»:</strong> Clase de interfaz</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3>Estereotipos de Componentes</h3>
+                    <ul>
+                        <li><strong>«executable»:</strong> Programa ejecutable</li>
+                        <li><strong>«library»:</strong> Biblioteca de código</li>
+                        <li><strong>«database»:</strong> Base de datos</li>
+                        <li><strong>«file»:</strong> Archivo del sistema</li>
+                        <li><strong>«framework»:</strong> Marco de trabajo</li>
+                        <li><strong>«service»:</strong> Servicio web</li>
                     </ul>
                 </div>
             </div>
@@ -643,8 +863,10 @@
             <div class="formula-box">
                 <h4>Métricas de Diseño UML</h4>
                 <div class="formula">CBO (Coupling Between Objects) = Σ clases acopladas</div>
-                <div class="formula">DIT (Depth of Inheritance Tree) = máxima profundidad</div>
-                <div class="formula">NOC (Number of Children) = subclases directas</div>
+                <div class="formula">DIT (Depth of Inheritance Tree) = máxima profundidad herencia</div>
+                <div class="formula">NOC (Number of Children) = número subclases directas</div>
+                <div class="formula">WMC (Weighted Methods per Class) = Σ complejidad métodos</div>
+                <div class="formula">LCOM (Lack of Cohesion in Methods) = métodos no relacionados</div>
             </div>
 
             <div class="timeline">
@@ -652,21 +874,28 @@
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
                         <h4>UML 1.0 (1997)</h4>
-                        <p>Primera versión estándar por la OMG, unificando metodologías de Booch, Rumbaugh y Jacobson.</p>
+                        <p>Primera versión estándar por la OMG, unificando metodologías de Booch, Rumbaugh y Jacobson. 9 tipos de diagramas iniciales.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h4>UML 1.4 (2001)</h4>
+                        <p>Refinamientos importantes en semántica y notación. Mejora en profiles y constraints.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
                         <h4>UML 2.0 (2004)</h4>
-                        <p>Revisión mayor con nuevos diagramas, mejor semántica y soporte para MDA.</p>
+                        <p>Revisión mayor: 13 tipos de diagramas, mejor estructura interna, soporte completo para MDA.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
                         <h4>UML 2.5 (2015)</h4>
-                        <p>Versión actual con simplificaciones y mejoras en la especificación.</p>
+                        <p>Versión actual con 14 tipos de diagramas, simplificaciones y mejoras en especificación.</p>
                     </div>
                 </div>
             </div>

@@ -558,6 +558,31 @@
             border-radius: 15px;
             color: var(--text-muted);
         }
+
+        .exercise-box {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .exercise-box .solution {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--primary);
+        }
+
+        .exercise-box .solution h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .exercise-box .solution p {
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -588,6 +613,7 @@
                 <button class="tab-button" onclick="showTab('design')">Diseño</button>
                 <button class="tab-button" onclick="showTab('transformation')">Transformación</button>
                 <button class="tab-button" onclick="showTab('case-study')">Caso Práctico</button>
+                <button class="tab-button" onclick="showTab('exercises')">Ejercicios</button>
             </nav>
 
             <div id="overview" class="tab-content active">
@@ -2477,6 +2503,203 @@ ORDER BY fecha;
                                 <li><strong>Móvil:</strong> Aplicación para médicos y pacientes</li>
                                 <li><strong>IoT:</strong> Dispositivos médicos conectados</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="section-title">
+                    <div class="section-icon">✏️</div>
+                    <span>Ejercicios Prácticos - Modelo E-R</span>
+                </div>
+
+                <div class="highlight">
+                    <h3>📝 Ejercicios con Cálculos y Resolución Detallada</h3>
+                    <p>Ejercicios prácticos para preparación de exámenes sobre diseño de bases de datos y modelos E-R.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 1: Cardinalidades y Entidades</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En una universidad, cada profesor puede impartir máximo 4 asignaturas y cada asignatura debe ser impartida por exactamente 1 profesor. Si hay 50 profesores y 180 asignaturas, ¿cuál es el número mínimo de profesores que deben impartir exactamente 4 asignaturas?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Sean x profesores con 4 asignaturas e y profesores con menos de 4</p>
+                            <p>x + y = 50 (total profesores)</p>
+                            <p>4x + z = 180 (total asignaturas, donde z < 4y)</p>
+                            <p>Para minimizar x, maximizamos z = 3y</p>
+                            <p>4x + 3(50-x) = 180</p>
+                            <p>4x + 150 - 3x = 180</p>
+                            <p>x = 30</p>
+                            <p><strong>Respuesta:</strong> 30 profesores deben impartir exactamente 4 asignaturas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 2: Normalización de Relaciones</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Una relación R(A,B,C,D,E) tiene dependencias funcionales: A→BC, D→E, C→D. ¿En qué forma normal está y cómo normalizarla hasta 3FN?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Clave candidata: A (porque A→BC, C→D, D→E, entonces A→BCDE)</p>
+                            <p>Análisis: C→D viola 2FN (C es parte de BC que depende de A)</p>
+                            <p>D→E viola 2FN (dependencia transitiva)</p>
+                            <p><strong>Descomposición para 3FN:</strong></p>
+                            <p>R1(A,B,C) - A→BC</p>
+                            <p>R2(C,D) - C→D</p>
+                            <p>R3(D,E) - D→E</p>
+                            <p><strong>Respuesta:</strong> Estaba en 1FN, se normaliza en 3 tablas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 3: Cálculo de Atributos</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En una tabla EMPLEADO con 10,000 registros, el atributo SALARIO (DECIMAL(10,2)) ocupa 6 bytes. Si agregamos un atributo calculado SALARIO_ANUAL = SALARIO * 12, ¿cuánto espacio adicional se necesita vs calcular dinámicamente?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Espacio para SALARIO_ANUAL almacenado:</p>
+                            <p>10,000 registros × 6 bytes = 60,000 bytes = 58.6 KB</p>
+                            <p>Cálculo dinámico: 0 bytes de almacenamiento</p>
+                            <p>Pero costo computacional por consulta: 10,000 multiplicaciones</p>
+                            <p>Trade-off: 58.6 KB vs tiempo de CPU</p>
+                            <p><strong>Recomendación:</strong> Calcular dinámicamente (poco espacio, cálculo simple)</p>
+                            <p><strong>Respuesta:</strong> 58.6 KB adicionales si se almacena</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 4: Diseño de Índices</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Una tabla VENTAS(id, fecha, cliente_id, producto_id, cantidad, precio) tiene 1 millón de registros. Se consulta frecuentemente por fecha y cliente_id. ¿Cuántos índices crear y cuál sería el costo de almacenamiento estimado?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Índices recomendados:</p>
+                            <p>1. Índice compuesto: (fecha, cliente_id)</p>
+                            <p>2. Índice simple: (cliente_id) para consultas solo por cliente</p>
+                            <p>Estimación de tamaño por índice:</p>
+                            <p>Índice DATE (4 bytes) + puntero (8 bytes) = 12 bytes/registro</p>
+                            <p>Índice INT (4 bytes) + puntero (8 bytes) = 12 bytes/registro</p>
+                            <p>Costo total: 2 × 1M × 12 bytes = 24 MB</p>
+                            <p><strong>Respuesta:</strong> 2 índices, ~24 MB adicionales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 5: Relaciones Ternarias</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En un hospital, la relación CIRUGIA(Médico, Paciente, Quirófano) tiene restricciones: cada médico puede operar max 3 pacientes/día, cada quirófano 8 cirugías/día. Con 20 médicos y 5 quirófanos, ¿cuál es el máximo de cirugías diarias?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Límite por médicos: 20 × 3 = 60 cirugías/día</p>
+                            <p>Límite por quirófanos: 5 × 8 = 40 cirugías/día</p>
+                            <p>El cuello de botella son los quirófanos</p>
+                            <p>Máximo teórico = min(60, 40) = 40 cirugías/día</p>
+                            <p>Utilización médicos: 40/60 = 66.7%</p>
+                            <p>Utilización quirófanos: 40/40 = 100%</p>
+                            <p><strong>Respuesta:</strong> 40 cirugías diarias máximo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 6: Especialización/Generalización</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Una entidad EMPLEADO se especializa en MEDICO y ENFERMERO (disjunta, total). EMPLEADO tiene 500 registros, 60% médicos. Compare el espacio usando: a) Tabla única, b) Tabla por subclase, c) Tabla por clase</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Datos: 500 empleados, 300 médicos, 200 enfermeros</p>
+                            <p><strong>a) Tabla única:</strong></p>
+                            <p>1 tabla con todos los atributos + tipo_empleado</p>
+                            <p>Desperdicios: campos NULL en especializaciones</p>
+                            <p><strong>b) Tabla por subclase:</strong></p>
+                            <p>EMPLEADO (500 registros) + MEDICO (300) + ENFERMERO (200) = 1000 registros</p>
+                            <p><strong>c) Tabla por clase:</strong></p>
+                            <p>MEDICO (300) + ENFERMERO (200) = 500 registros</p>
+                            <p><strong>Respuesta:</strong> Opción c) es más eficiente (500 vs 1000 registros)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 7: Atributos Derivados</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> En PEDIDO(fecha, total), EDAD se deriva de fecha_nacimiento en CLIENTE. Si recalcular EDAD toma 0.1ms por registro y hay 100,000 consultas/hora que usan EDAD, ¿conviene almacenarla o calcularla?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Costo de cálculo dinámico:</p>
+                            <p>100,000 consultas/hora × 0.1ms = 10,000ms/hora = 10s/hora CPU</p>
+                            <p>En 24h: 240s = 4 minutos CPU/día</p>
+                            <p>Costo de almacenamiento: +4 bytes/cliente</p>
+                            <p>Problema: la EDAD cambia diariamente</p>
+                            <p>Necesitaría recalcular almacenada vs siempre correcta calculada</p>
+                            <p><strong>Recomendación:</strong> Calcular dinámicamente</p>
+                            <p><strong>Respuesta:</strong> Cálculo dinámico (4 min CPU vs inconsistencias)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 8: Integridad Referencial</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> PEDIDO referencia CLIENTE con DELETE CASCADE. CLIENTE tiene 10,000 registros, promedio 5 pedidos/cliente. Si se elimina 1% de clientes, ¿cuántos registros se eliminan en cascada y cuál es el costo transaccional?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p>Clientes eliminados: 10,000 × 1% = 100 clientes</p>
+                            <p>Pedidos en cascada: 100 × 5 = 500 pedidos</p>
+                            <p>Total eliminaciones: 100 + 500 = 600 registros</p>
+                            <p>Costo transaccional:</p>
+                            <p>- 100 DELETE en CLIENTE</p>
+                            <p>- 500 DELETE en PEDIDO (automáticas)</p>
+                            <p>- Actualización de índices en ambas tablas</p>
+                            <p>- Log de transacciones para rollback</p>
+                            <p><strong>Respuesta:</strong> 600 registros eliminados, alto costo transaccional</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 9: Desnormalización Estratégica</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Una consulta JOIN entre CLIENTE y PEDIDO se ejecuta 50,000 veces/hora. El JOIN toma 2ms. Almacenar nombre_cliente en PEDIDO evita el JOIN pero requiere 50 bytes extra por pedido. Con 1M pedidos, ¿evalúa la desnormalización?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p><strong>Costo de JOIN:</strong></p>
+                            <p>50,000 consultas/hora × 2ms = 100,000ms/hora = 100s/hora</p>
+                            <p>En 24h: 2,400s = 40 minutos CPU/día</p>
+                            <p><strong>Costo de desnormalización:</strong></p>
+                            <p>Espacio: 1M pedidos × 50 bytes = 50MB</p>
+                            <p>Mantenimiento: actualizar nombre en todos los pedidos del cliente</p>
+                            <p>Inconsistencias potenciales si nombre cambia</p>
+                            <p><strong>Recomendación:</strong> Mantener normalización + optimizar JOIN</p>
+                            <p><strong>Respuesta:</strong> NO desnormalizar (50MB + complejidad vs 40min CPU)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejercicio 10: Optimización de Consultas E-R</h3>
+                    <div class="exercise-box">
+                        <p><strong>Enunciado:</strong> Consulta: "Clientes que han comprado productos de categoría 'Electrónicos' en los últimos 30 días". Requiere 4 JOINs: CLIENTE-PEDIDO-DETALLE_PEDIDO-PRODUCTO-CATEGORIA. ¿Cómo optimizar si se ejecuta 1000 veces/día?</p>
+                        <div class="solution">
+                            <h4>Solución:</h4>
+                            <p><strong>Optimizaciones posibles:</strong></p>
+                            <p>1. Índices: CREATE INDEX idx_pedido_fecha ON PEDIDO(fecha)</p>
+                            <p>2. Índice compuesto: (categoria_id, fecha) en consultas frecuentes</p>
+                            <p>3. Vista materializada para electrónicos</p>
+                            <p>4. Particionado por fecha en PEDIDO</p>
+                            <p>5. Caché de aplicación (TTL 1 hora)</p>
+                            <p><strong>Estimación mejora:</strong></p>
+                            <p>Sin optimización: ~50ms por consulta</p>
+                            <p>Con índices: ~5ms por consulta</p>
+                            <p>Reducción: 90% del tiempo de ejecución</p>
+                            <p><strong>Respuesta:</strong> Índices estratégicos + caché, mejora 10x</p>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 44 - Redes Conmutadas</title>
+    <style>
+        :root {
+            /* Dark theme colors (default) */
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1c5a8a, #1a2530);
+            --header-text: #f0f0f0;
+            --tab-container-bg: #2c3e50;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.2);
+            --tab-active: #2980b9;
+            --tab-border: #1f618d;
+            --content-area-border: #2980b9;
+            --content-bg: #2c2c2c;
+            --card-bg: #2d2d2d;
+            --card-border: #2980b9;
+            --card-text: #e0e0e0;
+            --stat-card-bg: #333;
+            --stat-card-border: #444;
+            --stat-number: #3498db;
+            --checkmark-color: #4caf50;
+            --highlight-box-bg: #1e3a5f;
+            --warning-box-bg: #5a4a1f;
+            --danger-box-bg: #5a2a2a;
+            --success-box-bg: #2a4a2a;
+            --table-header-bg: #1f618d;
+            --table-header-text: white;
+            --table-row-even: #3a3a3a;
+            --exercise-bg: #2d2d2d;
+            --exercise-border: #2980b9;
+            --exercise-text: #e0e0e0;
+            --feedback-correct: #2a4a2a;
+            --feedback-incorrect: #5a2a2a;
+        }
+
+        .light-mode {
+            /* Light theme colors */
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+            --header-text: white;
+            --tab-container-bg: #34495e;
+            --tab-text: #ecf0f1;
+            --tab-hover: rgba(52, 152, 219, 0.1);
+            --tab-active: #3498db;
+            --content-bg: #f8f9fa;
+            --card-bg: #f8f9fa;
+            --card-border: #3498db;
+            --card-text: #2c3e50;
+            --stat-card-bg: white;
+            --stat-card-border: #ddd;
+            --stat-number: #2980b9;
+            --checkmark-color: #27ae60;
+            --highlight-box-bg: #e8f4fc;
+            --warning-box-bg: #fff3cd;
+            --danger-box-bg: #f8d7da;
+            --success-box-bg: #d4edda;
+            --table-header-bg: #3498db;
+            --table-header-text: white;
+            --table-row-even: #f2f2f2;
+            --exercise-bg: #f8f9fa;
+            --exercise-border: #3498db;
+            --exercise-text: #2c3e50;
+            --feedback-correct: #d4edda;
+            --feedback-incorrect: #f8d7da;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--header-bg);
+            color: var(--header-text);
+            margin-bottom: 30px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2em;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-container {
+            background: var(--tab-container-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--tab-container-bg);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--tab-text);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--tab-hover);
+        }
+
+        .tab.active {
+            background: var(--tab-active);
+            border-bottom-color: var(--tab-border);
+        }
+
+        .content-area {
+            background: var(--content-bg);
+            border: 4px solid var(--content-area-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--card-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            color: var(--card-text);
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .card h3 {
+            color: var(--card-text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--stat-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--stat-number);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--tab-active);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--tab-active);
+        }
+
+        .list-checkmark {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .list-checkmark li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .list-checkmark li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--checkmark-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight-box {
+            background: var(--highlight-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: var(--warning-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: var(--danger-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: var(--success-box-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #555;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--table-row-even);
+        }
+
+        .exam-tip {
+            background: var(--highlight-box-bg);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tip h4 {
+            color: #f39c12;
+            margin-bottom: 8px;
+        }
+
+        .exercise-container {
+            background: var(--exercise-bg);
+            border-left: 4px solid var(--exercise-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            color: var(--exercise-text);
+        }
+
+        .exercise-question {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .exercise-options {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .exercise-option {
+            margin-bottom: 10px;
+        }
+
+        .exercise-btn {
+            background: var(--tab-active);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+            transition: background 0.3s ease;
+        }
+
+        .exercise-btn:hover {
+            background: #1f5582;
+        }
+
+        .exercise-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .exercise-feedback.correct {
+            background: var(--feedback-correct);
+            display: block;
+        }
+
+        .exercise-feedback.incorrect {
+            background: var(--feedback-incorrect);
+            display: block;
+        }
+
+        .hot-tip {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: var(--content-bg);
+            color: var(--text-color);
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                min-width: 120px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        
+        <div class="header">
+            <h1>Tema 44: Redes Conmutadas</h1>
+            <p>Redes conmutadas y de difusión. Conmutación de circuitos y de paquetes. Integración voz-datos. Protocolos de encaminamiento. Ethernet conmutada. MPLS. Calidad de servicio (QOS).</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('overview')">📋 Visión General</div>
+                <div class="tab" onclick="showTab('content1')">📘 Conmutación</div>
+                <div class="tab" onclick="showTab('content2')">📘 Ethernet & MPLS</div>
+                <div class="tab" onclick="showTab('content3')">📘 Protocolos</div>
+                <div class="tab" onclick="showTab('content4')">📘 QoS</div>
+                <div class="tab" onclick="showTab('exercises')">✏️ Ejercicios</div>
+                <div class="tab" onclick="showTab('resources')">📚 Tips Examen</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="hot-tip">
+                    🔥 HOT TIP EXAMEN: Diferencias entre conmutación de circuitos vs paquetes y clasificación QoS. ¡Pregunta estrella!
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">1000</span>
+                        <div>Mbps Gigabit Ethernet</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4094</span>
+                        <div>VLANs máximas 802.1Q</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">8</span>
+                        <div>Clases CoS 802.1p</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">64</span>
+                        <div>Valores DSCP</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Conceptos Fundamentales para el Examen</h3>
+                    <ul class="list-checkmark">
+                        <li>Tipos de conmutación: Circuitos vs paquetes vs celdas</li>
+                        <li>Ethernet conmutada: VLANs, STP, agregación de enlaces</li>
+                        <li>MPLS: Labels, LSP, ingeniería de tráfico</li>
+                        <li>Protocolos de enrutamiento: OSPF, BGP, RIP</li>
+                        <li>QoS: Clasificación, marcado, shaping, policing</li>
+                        <li>Integración voz-datos: VoIP, ToIP, convergencia</li>
+                    </ul>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Tips para el Examen</h4>
+                        <p>Los cálculos de ancho de banda, latencia y jitter en QoS son frecuentes. Memoriza las diferencias entre protocolos de enrutamiento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 1 Tab -->
+            <div id="content1" class="tab-content">
+                <div class="card">
+                    <h3>🔄 Tipos de Conmutación</h3>
+                    <p>Los métodos de conmutación determinan cómo se establece la comunicación y se transfieren los datos entre origen y destino.</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Características</th>
+                                <th>Ventajas</th>
+                                <th>Desventajas</th>
+                                <th>Ejemplos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Circuitos</strong></td>
+                                <td>Camino dedicado durante comunicación</td>
+                                <td>Latencia constante, QoS garantizada</td>
+                                <td>Ineficiente, caro</td>
+                                <td>PSTN, ISDN</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Paquetes</strong></td>
+                                <td>Datos divididos en paquetes</td>
+                                <td>Eficiente, flexible, escalable</td>
+                                <td>Latencia variable</td>
+                                <td>IP, Internet</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Celdas</strong></td>
+                                <td>Paquetes de tamaño fijo (53 bytes)</td>
+                                <td>Latencia predecible, QoS</td>
+                                <td>Overhead, complejidad</td>
+                                <td>ATM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📡 Redes de Difusión vs Conmutadas</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Redes de Difusión (Broadcast)</h4>
+                            <p>Un solo canal compartido por todos los nodos. Ejemplos: Ethernet clásico (bus), WiFi. Problema: colisiones y escalabilidad limitada.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Redes Conmutadas (Switched)</h4>
+                            <p>Múltiples enlaces punto a punto conectados por switches. Ventajas: sin colisiones, full-duplex, microsegmentación, escalabilidad.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Evolución Tecnológica</h4>
+                            <p>Migración de hubs (difusión) a switches (conmutación) para mejor rendimiento y seguridad en redes LAN modernas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Integración Voz-Datos</h3>
+                    <div class="highlight-box">
+                        <h4>Convergencia de Servicios</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>VoIP (Voice over IP):</strong> Digitalización de voz sobre redes IP</li>
+                            <li><strong>ToIP (Telephony over IP):</strong> Sistemas telefónicos completos sobre IP</li>
+                            <li><strong>Unified Communications:</strong> Integración voz, video, mensajería, presencia</li>
+                            <li><strong>Requisitos QoS:</strong> Latencia <150ms, jitter <30ms, pérdidas <1%</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 Pregunta de Examen Típica</h4>
+                        <p>¿Cuáles son los requisitos de QoS para VoIP?</p>
+                        <p><strong>Respuesta:</strong> Latencia máxima 150ms, jitter menor 30ms, pérdida de paquetes inferior al 1%.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 2 Tab -->
+            <div id="content2" class="tab-content">
+                <div class="card">
+                    <h3>🌐 Ethernet Conmutada</h3>
+                    <p>Evolución de Ethernet desde redes compartidas (hubs) a redes conmutadas (switches) para eliminar dominios de colisión.</p>
+                    
+                    <div class="success-box">
+                        <h4>Características Principales</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Microsegmentación:</strong> Cada puerto = dominio de colisión independiente</li>
+                            <li><strong>Full-Duplex:</strong> Transmisión simultánea en ambas direcciones</li>
+                            <li><strong>Auto-negotiation:</strong> Velocidad y duplex automáticos</li>
+                            <li><strong>Store-and-forward:</strong> Verificación de integridad de tramas</li>
+                            <li><strong>VLAN 802.1Q:</strong> Segmentación lógica, hasta 4094 VLANs</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏷️ MPLS (Multiprotocol Label Switching)</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Componente</th>
+                                <th>Función</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Labels</strong></td>
+                                <td>Identificadores de 20 bits</td>
+                                <td>Conmutación rápida, sin lookup IP</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LSR</strong></td>
+                                <td>Label Switch Router</td>
+                                <td>Conmuta basado en labels</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LSP</strong></td>
+                                <td>Label Switched Path</td>
+                                <td>Camino predeterminado para tráfico</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LDP</strong></td>
+                                <td>Label Distribution Protocol</td>
+                                <td>Distribución de labels entre LSRs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Traffic Engineering</strong></td>
+                                <td>Control explícito de rutas</td>
+                                <td>Optimización de ancho de banda</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Tecnologías de Agregación</h3>
+                    <div class="warning-box">
+                        <h4>Link Aggregation (802.3ad / LACP)</h4>
+                        <p><strong>Objetivo:</strong> Aumentar ancho de banda y redundancia</p>
+                        <p><strong>Métodos:</strong> Static LAG, LACP (Link Aggregation Control Protocol)</p>
+                        <p><strong>Balanceo:</strong> Por MAC, IP, puerto, hash algorithms</p>
+                        <p><strong>Capacidad:</strong> Hasta 8 enlaces físicos por grupo lógico</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">8</span>
+                            <div>Enlaces máximos LAG</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">10</span>
+                            <div>Gbps por enlace típico</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">80</span>
+                            <div>Gbps capacidad total</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">99.9%</span>
+                            <div>Disponibilidad con redundancia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 3 Tab -->
+            <div id="content3" class="tab-content">
+                <div class="card">
+                    <h3>🗺️ Protocolos de Encaminamiento</h3>
+                    <p>Algoritmos que permiten a los routers construir y mantener tablas de enrutamiento para determinar el mejor camino hacia destinos.</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Tipo</th>
+                                <th>Métrica</th>
+                                <th>Convergencia</th>
+                                <th>Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>RIP v1/v2</strong></td>
+                                <td>Distance Vector</td>
+                                <td>Hop count (máx 15)</td>
+                                <td>Lenta (minutos)</td>
+                                <td>Redes pequeñas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OSPF</strong></td>
+                                <td>Link State</td>
+                                <td>Coste (ancho banda)</td>
+                                <td>Rápida (segundos)</td>
+                                <td>Redes corporativas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EIGRP</strong></td>
+                                <td>Hybrid</td>
+                                <td>Compuesta (BW, delay)</td>
+                                <td>Muy rápida</td>
+                                <td>Cisco (propietario)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>BGP</strong></td>
+                                <td>Path Vector</td>
+                                <td>Políticas AS-Path</td>
+                                <td>Lenta pero estable</td>
+                                <td>Internet (ISPs)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🌍 OSPF - Características Avanzadas</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Áreas Jerárquicas</h4>
+                            <p>Área 0 (backbone) + áreas normales. Reduce tabla de enrutamiento y tráfico LSA. ABRs conectan áreas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Tipos de LSA</h4>
+                            <p>LSA Type 1 (Router), Type 2 (Network), Type 3 (Summary), Type 4 (ASBR Summary), Type 5 (External).</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Elección DR/BDR</h4>
+                            <p>Designated Router en redes multi-acceso. Reduce adjacencias de n² a 2n. Prioridad configurable.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🌐 BGP - Border Gateway Protocol</h3>
+                    <div class="highlight-box">
+                        <h4>Conceptos Clave BGP</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>AS (Autonomous System):</strong> Dominio administrativo único</li>
+                            <li><strong>eBGP:</strong> Entre diferentes AS (External BGP)</li>
+                            <li><strong>iBGP:</strong> Dentro del mismo AS (Internal BGP)</li>
+                            <li><strong>AS-Path:</strong> Lista de AS atravesados, previene loops</li>
+                            <li><strong>Atributos:</strong> Next-hop, Local-preference, MED, Community</li>
+                            <li><strong>Route Reflectors:</strong> Solución al full-mesh iBGP</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content 4 Tab -->
+            <div id="content4" class="tab-content">
+                <div class="card">
+                    <h3>⭐ Calidad de Servicio (QoS)</h3>
+                    <p>Conjunto de tecnologías que garantizan niveles predecibles de servicio para aplicaciones críticas mediante gestión de recursos de red.</p>
+                    
+                    <div class="success-box">
+                        <h4>Modelos de QoS</h4>
+                        <ul class="list-checkmark">
+                            <li><strong>Best Effort:</strong> Sin garantías, tratamiento igual para todo tráfico</li>
+                            <li><strong>Integrated Services (IntServ):</strong> Reserva recursos por flujo (RSVP)</li>
+                            <li><strong>Differentiated Services (DiffServ):</strong> Clasificación por clases de tráfico</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏷️ Marcado y Clasificación QoS</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Capa</th>
+                                <th>Campo</th>
+                                <th>Valores</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Capa 2</strong></td>
+                                <td>CoS (802.1p)</td>
+                                <td>0-7 (3 bits)</td>
+                                <td>Prioridad en trama Ethernet</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Capa 3</strong></td>
+                                <td>ToS/DSCP</td>
+                                <td>0-63 (6 bits)</td>
+                                <td>Marcado en cabecera IP</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MPLS</strong></td>
+                                <td>EXP bits</td>
+                                <td>0-7 (3 bits)</td>
+                                <td>Experimental bits en label</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🚦 Mecanismos de QoS</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Classification & Marking</h4>
+                            <p>Identificación de tráfico (ACLs, protocolos) y marcado con valores CoS/DSCP para tratamiento diferenciado.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Policing & Shaping</h4>
+                            <p>Control de velocidad: Policing descarta exceso, Shaping bufferiza para suavizar ráfagas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Queuing & Scheduling</h4>
+                            <p>Algoritmos: FIFO, PQ, WFQ, CBWFQ. Asignación de ancho de banda por cola de tráfico.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Congestion Avoidance</h4>
+                            <p>RED, WRED: Descarte proactivo antes de congestión total para evitar tail drops masivos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Clases de Servicio Estándar</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Clase</th>
+                                <th>DSCP</th>
+                                <th>Aplicaciones</th>
+                                <th>Requisitos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Expedited Forwarding</strong></td>
+                                <td>EF (46)</td>
+                                <td>VoIP, videoconferencia</td>
+                                <td>Baja latencia, baja pérdida</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Assured Forwarding</strong></td>
+                                <td>AF11-AF43</td>
+                                <td>Datos críticos</td>
+                                <td>Ancho banda garantizado</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Class Selector</strong></td>
+                                <td>CS1-CS7</td>
+                                <td>Compatibilidad ToS</td>
+                                <td>Prioridad relativa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Default</strong></td>
+                                <td>0</td>
+                                <td>Best effort</td>
+                                <td>Sin garantías</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Exercises Tab -->
+            <div id="exercises" class="tab-content">
+                <div class="card">
+                    <h3>✏️ Ejercicios Prácticos: Cálculos de Redes y QoS</h3>
+                    <p>Problemas con cálculos de ancho de banda, latencia, configuración QoS y análisis de protocolos de enrutamiento.</p>
+                    <div class="hot-tip">
+                        🔥 FÓRMULAS CLAVE: Throughput = Datos/Tiempo, Latencia total = Propagación + Transmisión + Cola, Utilización = Tráfico/Capacidad
+                    </div>
+                </div>
+                
+                <div class="exercise-container">
+                    <h3>Ejercicio 1: Cálculo de Eficiencia MPLS</h3>
+                    <div class="exercise-question">
+                        Red MPLS con overhead de 4 bytes por label. Paquete IP de 1500 bytes con 2 labels apilados.
+                        <br>¿Cuál es la eficiencia de transmisión?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt1" name="exercise1" value="a">
+                            <label for="ex1opt1">99.5% (1500 / (1500 + 8) × 100)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt2" name="exercise1" value="b">
+                            <label for="ex1opt2">99.7% (1500 / (1500 + 4) × 100)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex1opt3" name="exercise1" value="c">
+                            <label for="ex1opt3">98.9% (1500 / (1500 + 16) × 100)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise1', 'a', 'ex1feedback')">Verificar</button>
+                    <div id="ex1feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 2: Latencia en QoS</h3>
+                    <div class="exercise-question">
+                        Enlace 100 Mbps, paquete VoIP 200 bytes. Ahead hay 5 paquetes de datos de 1500 bytes cada uno.
+                        <br>¿Cuál es la latencia de cola para el paquete VoIP sin priorización?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt1" name="exercise2" value="a">
+                            <label for="ex2opt1">0.6 ms (5 × 1500 × 8 bits / 100 Mbps)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt2" name="exercise2" value="b">
+                            <label for="ex2opt2">0.75 ms (incluye paquete propio)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex2opt3" name="exercise2" value="c">
+                            <label for="ex2opt3">0.12 ms (solo 1 paquete ahead)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise2', 'a', 'ex2feedback')">Verificar</button>
+                    <div id="ex2feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 3: Cálculo de Ancho de Banda Agregado</h3>
+                    <div class="exercise-question">
+                        LAG con 4 enlaces de 10 Gbps cada uno, balanceo por flujo IP. 100 flujos activos distribuidos uniformemente.
+                        <br>¿Cuál es el throughput máximo teórico y real considerando distribución?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt1" name="exercise3" value="a">
+                            <label for="ex3opt1">Teórico: 40 Gbps, Real: ~39.6 Gbps (considerando distribución estadística)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt2" name="exercise3" value="b">
+                            <label for="ex3opt2">Teórico: 40 Gbps, Real: 40 Gbps (distribución perfecta)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex3opt3" name="exercise3" value="c">
+                            <label for="ex3opt3">Teórico: 10 Gbps, Real: 10 Gbps (limitado por enlace individual)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise3', 'a', 'ex3feedback')">Verificar</button>
+                    <div id="ex3feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 4: OSPF - Cálculo de Coste</h3>
+                    <div class="exercise-question">
+                        Red OSPF con referencia 100 Mbps. Ruta A: 2 enlaces 1 Gbps. Ruta B: 1 enlace 100 Mbps + 1 enlace 10 Mbps.
+                        <br>¿Qué ruta elige OSPF y por qué?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt1" name="exercise4" value="a">
+                            <label for="ex4opt1">Ruta A (coste 2: 1+1) vs Ruta B (coste 11: 1+10)</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt2" name="exercise4" value="b">
+                            <label for="ex4opt2">Ruta B por menor número de saltos</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex4opt3" name="exercise4" value="c">
+                            <label for="ex4opt3">Ambas rutas con igual coste (load balancing)</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise4', 'a', 'ex4feedback')">Verificar</button>
+                    <div id="ex4feedback" class="exercise-feedback"></div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3>Ejercicio 5: Traffic Shaping vs Policing</h3>
+                    <div class="exercise-question">
+                        Interfaz 100 Mbps con tráfico de 150 Mbps. Comparar traffic shaping (buffer 100 KB) vs policing.
+                        <br>¿Cuál es el comportamiento de cada mecanismo?
+                    </div>
+                    <div class="exercise-options">
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt1" name="exercise5" value="a">
+                            <label for="ex5opt1">Shaping: bufferiza exceso 50 Mbps. Policing: descarta 50 Mbps inmediatamente</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt2" name="exercise5" value="b">
+                            <label for="ex5opt2">Ambos descartan el tráfico excedente igualmente</label>
+                        </div>
+                        <div class="exercise-option">
+                            <input type="radio" id="ex5opt3" name="exercise5" value="c">
+                            <label for="ex5opt3">Shaping permite 150 Mbps, policing limita a 100 Mbps</label>
+                        </div>
+                    </div>
+                    <button class="exercise-btn" onclick="checkAnswer('exercise5', 'a', 'ex5feedback')">Verificar</button>
+                    <div id="ex5feedback" class="exercise-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Resources Tab -->
+            <div id="resources" class="tab-content">
+                <div class="card">
+                    <h3>🎯 Estrategias de Estudio para el Examen</h3>
+                    <div class="highlight-box">
+                        <h4>📖 Plan de Estudio Recomendado</h4>
+                        <ol>
+                            <li><strong>Domina diferencias conmutación:</strong> Circuitos vs paquetes vs celdas</li>
+                            <li><strong>Memoriza protocolos enrutamiento:</strong> Características, métricas, convergencia</li>
+                            <li><strong>Practica cálculos QoS:</strong> Latencia, jitter, ancho de banda</li>
+                            <li><strong>Conoce tecnologías Ethernet:</strong> VLANs, agregación, STP</li>
+                            <li><strong>Entiende MPLS:</strong> Labels, LSP, traffic engineering</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Banco Preguntas Examen</h3>
+                    
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 1</h4>
+                        <p><strong>P:</strong> ¿Cuál es la diferencia principal entre conmutación de circuitos y paquetes?</p>
+                        <p><strong>R:</strong> Circuitos: camino dedicado durante comunicación. Paquetes: recursos compartidos, enrutamiento por paquete</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 2</h4>
+                        <p><strong>P:</strong> ¿Qué requisitos tiene VoIP para funcionar correctamente?</p>
+                        <p><strong>R:</strong> Latencia <150ms, jitter <30ms, pérdida paquetes <1%</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 3</h4>
+                        <p><strong>P:</strong> ¿Cuántas VLANs soporta el estándar 802.1Q?</p>
+                        <p><strong>R:</strong> 4094 VLANs (12 bits, excluyendo 0 y 4095 reservadas)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <h4>💡 PREGUNTA 4</h4>
+                        <p><strong>P:</strong> ¿Qué protocolo usa OSPF para intercambio de información de enrutamiento?</p>
+                        <p><strong>R:</strong> LSAs (Link State Advertisements) y algoritmo SPF (Shortest Path First)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Errores Comunes Examen</h3>
+                    <ul class="list-checkmark">
+                        <li><strong>Error:</strong> Confundir shaping con policing - Shaping bufferiza, policing descarta</li>
+                        <li><strong>Error:</strong> OSPF usa hop count - Usa coste basado en ancho de banda</li>
+                        <li><strong>Error:</strong> BGP es protocolo IGP - Es EGP para conexión entre AS</li>
+                        <li><strong>Error:</strong> MPLS trabaja en capa 3 - Opera entre capa 2 y 3 (2.5)</li>
+                        <li><strong>Error:</strong> VLANs aumentan dominios de colisión - Los reducen mediante segmentación</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces Útiles</h3>
+                    <ul>
+                        <li><a href="https://www.cisco.com/c/en/us/support/docs/quality-of-service-qos/qos-policing/19645-policevsshape.html" target="_blank">Cisco - QoS Policing vs Shaping</a></li>
+                        <li><a href="https://tools.ietf.org/html/rfc2328" target="_blank">RFC 2328 - OSPF Version 2</a></li>
+                        <li><a href="https://tools.ietf.org/html/rfc3031" target="_blank">RFC 3031 - MPLS Architecture</a></li>
+                        <li><a href="https://www.ieee802.org/1/pages/802.1Q.html" target="_blank">IEEE 802.1Q - VLAN Standard</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            body.classList.toggle('light-mode');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                themeToggle.textContent = '🌙';
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        function checkAnswer(exerciseName, correctAnswer, feedbackId) {
+            const selected = document.querySelector(`input[name="${exerciseName}"]:checked`);
+            const feedback = document.getElementById(feedbackId);
+            
+            if (!selected) {
+                feedback.innerHTML = '<p style="color: orange;">Por favor, selecciona una respuesta.</p>';
+                feedback.className = 'exercise-feedback';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            const explanations = {
+                'ex1feedback': {
+                    'a': '¡Correcto! ✅ 2 labels × 4 bytes = 8 bytes overhead. Eficiencia = 1500/(1500+8) × 100 = 99.5%',
+                    'b': 'Incorrecto ❌ Son 2 labels apilados, no 1. Overhead total = 8 bytes.',
+                    'c': 'Incorrecto ❌ El overhead no es de 16 bytes, son 4 bytes por label.'
+                },
+                'ex2feedback': {
+                    'a': '¡Correcto! ✅ 5 paquetes × 1500 bytes × 8 bits/byte ÷ 100×10⁶ bps = 0.6 ms de espera en cola.',
+                    'b': 'Incorrecto ❌ No incluyes el paquete VoIP propio en la latencia de cola (va después).',
+                    'c': 'Incorrecto ❌ Hay 5 paquetes ahead, no solo 1.'
+                },
+                'ex3feedback': {
+                    'a': '¡Correcto! ✅ Teórico 40 Gbps, pero distribución estadística de flujos causa pequeña degradación (~1%).',
+                    'b': 'Incorrecto ❌ La distribución perfecta es estadísticamente improbable con 100 flujos.',
+                    'c': 'Incorrecto ❌ LAG permite agregación total, no está limitado a un enlace individual.'
+                },
+                'ex4feedback': {
+                    'a': '¡Correcto! ✅ OSPF coste = 100/ancho_banda. Ruta A: 100/1000+100/1000=2. Ruta B: 100/100+100/10=11.',
+                    'b': 'Incorrecto ❌ OSPF usa coste basado en ancho de banda, no hop count.',
+                    'c': 'Incorrecto ❌ Los costes son diferentes: 2 vs 11.'
+                },
+                'ex5feedback': {
+                    'a': '¡Correcto! ✅ Shaping retrasa el exceso usando buffer. Policing descarta inmediatamente el tráfico excedente.',
+                    'b': 'Incorrecto ❌ Los mecanismos son diferentes: shaping bufferiza, policing descarta.',
+                    'c': 'Incorrecto ❌ Shaping no permite más ancho de banda, solo suaviza el tráfico.'
+                }
+            };
+            
+            if (selected.value === correctAnswer) {
+                feedback.innerHTML = explanations[feedbackId][correctAnswer];
+                feedback.className = 'exercise-feedback correct';
+            } else {
+                feedback.innerHTML = explanations[feedbackId][selected.value];
+                feedback.className = 'exercise-feedback incorrect';
+            }
+            feedback.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

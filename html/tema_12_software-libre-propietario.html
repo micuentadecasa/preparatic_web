@@ -448,6 +448,101 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Exercise Styles */
+        .exercise-container {
+            background: var(--surface-color);
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .exercise h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+        
+        .exercise-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 1rem 0;
+        }
+        
+        .exercise-options label {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--hover-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .exercise-options label:hover {
+            background: var(--secondary-color)20;
+            border-color: var(--secondary-color);
+        }
+        
+        .exercise-options input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--secondary-color);
+        }
+        
+        .btn-check {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-check:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            margin-top: 1rem;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .feedback.correct {
+            background: var(--success-color)20;
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+        
+        .feedback.incorrect {
+            background: var(--accent-color)20;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+        
+        .formula-box {
+            background: var(--hover-color);
+            border-left: 4px solid var(--info-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            color: var(--info-color);
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -468,6 +563,7 @@
                 <button class="tab-button" onclick="showTab('ecosystem')">🌍 Ecosistema</button>
                 <button class="tab-button" onclick="showTab('business')">💼 Modelos Negocio</button>
                 <button class="tab-button" onclick="showTab('adoption')">🚀 Adopción</button>
+                <button class="tab-button" onclick="showTab('exercises')">✏️ Ejercicios</button>
             </div>
 
             <div id="overview" class="tab-content active">
@@ -1802,6 +1898,208 @@ copies of the Software...
                     </div>
                 </div>
             </div>
+
+            <div id="exercises" class="tab-content">
+                <div class="content-section">
+                    <h2>✏️ Ejercicios de Software Libre y Propietario</h2>
+                    
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 1: Licencias de Software</h4>
+                            <p>Una empresa quiere modificar código bajo licencia GPL v3 para uso interno sin distribuir. ¿Qué restricciones aplican?</p>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise1" value="a"> a) Debe abrir todo el código</label>
+                                <label><input type="radio" name="exercise1" value="b"> b) Solo modificaciones GPL</label>
+                                <label><input type="radio" name="exercise1" value="c"> c) Ninguna restricción</label>
+                                <label><input type="radio" name="exercise1" value="d"> d) Pagar royalties</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(1, 'c', 'GPL v3 permite modificaciones internas sin distribución. Solo al distribuir se activa el copyleft.')">Verificar Respuesta</button>
+                            <div id="feedback1" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 2: TCO (Total Cost of Ownership)</h4>
+                            <p>Una empresa evalúa migrar 1000 estaciones Windows (€200 licencia/año) a Linux. Capacitación: €50k, soporte: €30k/año. ¿ROI en 3 años?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">TCO Windows = Licencias × Estaciones × Años</div>
+                                <div class="formula">TCO Linux = Capacitación inicial + (Soporte × Años)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise2" value="a"> a) €510k ahorro</label>
+                                <label><input type="radio" name="exercise2" value="b"> b) €440k ahorro</label>
+                                <label><input type="radio" name="exercise2" value="c"> c) €390k ahorro</label>
+                                <label><input type="radio" name="exercise2" value="d"> d) €460k ahorro</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(2, 'a', 'Windows: 1000×€200×3=€600k. Linux: €50k+(€30k×3)=€140k. Ahorro: €600k-€140k=€510k')">Verificar Respuesta</button>
+                            <div id="feedback2" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 3: Compatibilidad de Licencias</h4>
+                            <p>¿Qué combinación de licencias es INCOMPATIBLE en un proyecto redistributable?</p>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise3" value="a"> a) GPL v3 + Apache 2.0</label>
+                                <label><input type="radio" name="exercise3" value="b"> b) BSD + MIT</label>
+                                <label><input type="radio" name="exercise3" value="c"> c) GPL v2 + GPL v3</label>
+                                <label><input type="radio" name="exercise3" value="d"> d) LGPL + Propietario</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(3, 'c', 'GPL v2 y v3 son incompatibles por diferencias en términos. GPL v2 no permite actualizar a v3 automáticamente.')">Verificar Respuesta</button>
+                            <div id="feedback3" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 4: Modelos de Negocio OSS</h4>
+                            <p>Red Hat genera €3B anuales con RHEL. Si 70% viene de suscripciones enterprise ($1200/servidor/año), ¿cuántos servidores gestionan?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Ingresos Suscripción = €3B × 0.70 = €2.1B</div>
+                                <div class="formula">Servidores = Ingresos ÷ Precio por servidor</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise4" value="a"> a) 1.75M servidores</label>
+                                <label><input type="radio" name="exercise4" value="b"> b) 2.1M servidores</label>
+                                <label><input type="radio" name="exercise4" value="c"> c) 1.5M servidores</label>
+                                <label><input type="radio" name="exercise4" value="d"> d) 2.5M servidores</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(4, 'a', 'Ingresos suscripción: €3B×0.70=€2.1B. Conversión: €2.1B≈$2.1B. Servidores: $2.1B÷$1200=1.75M servidores')">Verificar Respuesta</button>
+                            <div id="feedback4" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 5: Migración de Sistema</h4>
+                            <p>Organización migra 500 usuarios de Office 365 ($12/usuario/mes) a LibreOffice. Capacitación: $25k. ¿Payback period?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Ahorro mensual = Usuarios × Costo mensual</div>
+                                <div class="formula">Payback = Inversión ÷ Ahorro mensual</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise5" value="a"> a) 4.2 meses</label>
+                                <label><input type="radio" name="exercise5" value="b"> b) 3.5 meses</label>
+                                <label><input type="radio" name="exercise5" value="c"> c) 5.0 meses</label>
+                                <label><input type="radio" name="exercise5" value="d"> d) 4.8 meses</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(5, 'a', 'Ahorro mensual: 500×$12=$6,000. Payback: $25,000÷$6,000=4.17≈4.2 meses')">Verificar Respuesta</button>
+                            <div id="feedback5" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 6: Análisis de Vulnerabilidades</h4>
+                            <p>En 2023, se reportaron 25,000 CVE. Si software propietario representa 65% y OSS 35%, ¿cuántas CVE afectan OSS?</p>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise6" value="a"> a) 8,750 CVE</label>
+                                <label><input type="radio" name="exercise6" value="b"> b) 9,200 CVE</label>
+                                <label><input type="radio" name="exercise6" value="c"> c) 8,500 CVE</label>
+                                <label><input type="radio" name="exercise6" value="d"> d) 9,750 CVE</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(6, 'a', 'CVE en OSS: 25,000 × 0.35 = 8,750 vulnerabilidades. OSS tiene mayor transparencia en reporte.')">Verificar Respuesta</button>
+                            <div id="feedback6" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 7: Cálculo de Dependencias</h4>
+                            <p>Proyecto JavaScript usa 450 dependencias npm. Si 78% son OSS y cada OSS tiene promedio 12 sub-dependencias, ¿total componentes OSS?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">Dependencias OSS directas = 450 × 0.78</div>
+                                <div class="formula">Dependencias totales = Directas × (1 + Sub-dependencias)</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise7" value="a"> a) 4,563 componentes</label>
+                                <label><input type="radio" name="exercise7" value="b"> b) 5,421 componentes</label>
+                                <label><input type="radio" name="exercise7" value="c"> c) 4,914 componentes</label>
+                                <label><input type="radio" name="exercise7" value="d"> d) 4,212 componentes</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(7, 'a', 'Directas OSS: 450×0.78=351. Total: 351×(1+12)=351×13=4,563 componentes OSS')">Verificar Respuesta</button>
+                            <div id="feedback7" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 8: Fork y Gobernanza</h4>
+                            <p>Proyecto OSS con 100 contribuidores se bifurca. Fork A retiene 65%, Fork B 35%. Si desarrolladores aportan promedio 15 commits/mes, ¿productividad total?</p>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise8" value="a"> a) 1,500 commits/mes</label>
+                                <label><input type="radio" name="exercise8" value="b"> b) 1,400 commits/mes</label>
+                                <label><input type="radio" name="exercise8" value="c"> c) 1,200 commits/mes</label>
+                                <label><input type="radio" name="exercise8" value="d"> d) 1,350 commits/mes</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(8, 'a', 'Total contribuidores: 100. Productividad: 100×15=1,500 commits/mes (fork no reduce productividad individual)')">Verificar Respuesta</button>
+                            <div id="feedback8" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 9: Cálculo SaaS vs On-Premise</h4>
+                            <p>Solución CRM: SaaS €50/usuario/mes vs On-premise €500/usuario (una vez) + €15k/año soporte. ¿Break-even para 200 usuarios?</p>
+                            
+                            <div class="formula-box">
+                                <div class="formula">SaaS anual = Usuarios × €50 × 12</div>
+                                <div class="formula">On-premise anual = (Usuarios × €500)/años + €15k</div>
+                            </div>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise9" value="a"> a) 14 meses</label>
+                                <label><input type="radio" name="exercise9" value="b"> b) 16 meses</label>
+                                <label><input type="radio" name="exercise9" value="c"> c) 12 meses</label>
+                                <label><input type="radio" name="exercise9" value="d"> d) 18 meses</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(9, 'a', 'SaaS: €120k/año. On-premise: €100k inicial+€15k soporte=€115k año 1. Break-even: €100k÷(€120k-€15k)×12≈14 meses')">Verificar Respuesta</button>
+                            <div id="feedback9" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-container">
+                        <div class="exercise">
+                            <h4>Ejercicio 10: Métricas de Adopción</h4>
+                            <p>Stack Overflow 2023: JavaScript 63% adopción, Python 49%, Java 33%. Si encuesta incluye 90,000 desarrolladores, ¿cuántos usan cada lenguaje?</p>
+                            
+                            <div class="exercise-options">
+                                <label><input type="radio" name="exercise10" value="a"> a) JS:56.7k, Py:44.1k, Ja:29.7k</label>
+                                <label><input type="radio" name="exercise10" value="b"> b) JS:58.5k, Py:42.3k, Ja:31.2k</label>
+                                <label><input type="radio" name="exercise10" value="c"> c) JS:54.9k, Py:45.8k, Ja:28.5k</label>
+                                <label><input type="radio" name="exercise10" value="d"> d) JS:59.1k, Py:43.7k, Ja:30.3k</label>
+                            </div>
+                            <button class="btn-check" onclick="checkAnswer(10, 'a', 'JS: 90k×0.63=56.7k. Python: 90k×0.49=44.1k. Java: 90k×0.33=29.7k desarrolladores')">Verificar Respuesta</button>
+                            <div id="feedback10" class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <h3>📊 Puntos Clave para Examen</h3>
+                        <ul class="list-checkmark">
+                            <li><strong>Licencias:</strong> GPL, MIT, Apache 2.0 compatibilidad</li>
+                            <li><strong>TCO:</strong> Costes ocultos migración y capacitación</li>
+                            <li><strong>Modelos negocio:</strong> Dual licensing, support, SaaS</li>
+                            <li><strong>Gobernanza:</strong> Fundaciones vs empresas (Apache, Linux Foundation)</li>
+                            <li><strong>Adopción:</strong> Infraestructura dominance vs desktop challenges</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1856,6 +2154,28 @@ copies of the Software...
             
             setTimeout(typeWriter, 500);
         });
+
+        // Exercise functions
+        function checkAnswer(questionNumber, correctAnswer, explanation) {
+            const selectedOption = document.querySelector(`input[name="exercise${questionNumber}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback${questionNumber}`);
+            
+            if (!selectedOption) {
+                feedbackDiv.innerHTML = '<span style="color: var(--warning-color);">Por favor, selecciona una respuesta.</span>';
+                feedbackDiv.className = 'feedback';
+                return;
+            }
+            
+            const isCorrect = selectedOption.value === correctAnswer;
+            
+            if (isCorrect) {
+                feedbackDiv.innerHTML = `<strong>✅ ¡Correcto!</strong><br>${explanation}`;
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.innerHTML = `<strong>❌ Incorrecto.</strong><br>Respuesta correcta: ${correctAnswer.toUpperCase()}<br>${explanation}`;
+                feedbackDiv.className = 'feedback incorrect';
+            }
+        }
     </script>
 </body>
 </html>

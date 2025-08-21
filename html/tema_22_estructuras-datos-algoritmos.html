@@ -70,13 +70,24 @@
         <div class="content-area">
             <div id="overview" class="tab-content active">
                 <div class="hot-tip">
-                    🔥 HOT TIP EXAMEN: Notación Big O es CLAVE. O(1)<O(log n)<O(n)<O(n log n)<O(n²)<O(2ⁿ). ¡Memoriza este orden!
+                    🔥 HOT TIP EXAMEN: Notación Big O es CLAVE. O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ). ¡Memoriza este orden!
+                </div>
+
+                <div class="highlight-box">
+                    <h4>📊 ¿Por qué O(log n) es MEJOR que O(n log n)?</h4>
+                    <p><strong>CLAVE:</strong> O(log n) significa que crece logarítmicamente, O(n log n) crece n veces más rápido.</p>
+                    <ul class="list-checkmark">
+                        <li><strong>O(log n):</strong> Para 1 millón elementos → ~20 operaciones (búsqueda binaria)</li>
+                        <li><strong>O(n log n):</strong> Para 1 millón elementos → ~20 millones operaciones (merge sort)</li>
+                        <li><strong>Diferencia:</strong> O(n log n) = n × O(log n), es n veces más lento</li>
+                        <li><strong>Ejemplo práctico:</strong> log₂(1,000,000) = 20 vs 1,000,000 × 20 = 20,000,000</li>
+                    </ul>
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card"><span class="stat-number">O(log n)</span><div>Búsqueda binaria</div></div>
-                    <div class="stat-card"><span class="stat-number">O(n log n)</span><div>Merge Sort, Quick Sort</div></div>
-                    <div class="stat-card"><span class="stat-number">O(n²)</span><div>Bubble Sort, Selection Sort</div></div>
+                    <div class="stat-card"><span class="stat-number">O(log n)</span><div>Búsqueda binaria - MÁS RÁPIDO</div></div>
+                    <div class="stat-card"><span class="stat-number">O(n log n)</span><div>Merge Sort, Quick Sort - INTERMEDIO</div></div>
+                    <div class="stat-card"><span class="stat-number">O(n²)</span><div>Bubble Sort, Selection Sort - LENTO</div></div>
                 </div>
 
                 <div class="card">
@@ -767,6 +778,49 @@
             } else {
                 feedback.innerHTML = explanations[feedbackId][selected.value];
                 feedback.className = 'exercise-feedback incorrect';
+            }
+        }
+
+        // Tab switching functionality
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            const clickedTab = event.target;
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+        }
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeButton = document.querySelector('.theme-toggle');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                themeButton.textContent = '☀️';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                themeButton.textContent = '🌙';
             }
         }
     </script>
