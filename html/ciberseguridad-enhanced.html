@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciberseguridad - Guía de Estudio Completa</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-tertiary: #3d3d3d;
+            --bg-card: #2a2a2a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-accent: #ffffff;
+            --accent-primary: #e74c3c;
+            --accent-secondary: #c0392b;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fa;
+            --bg-tertiary: #ecf0f1;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-accent: #2c3e50;
+            --accent-primary: #e74c3c;
+            --accent-secondary: #c0392b;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: var(--accent-primary); border: none; border-radius: 50px;
+            padding: 12px 20px; color: white; cursor: pointer;
+            font-size: 14px; font-weight: 500; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .header {
+            text-align: center; margin-bottom: 40px; padding: 40px 0;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 12px; color: white; box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; font-weight: 700; }
+        .header p { font-size: 1.2em; opacity: 0.9; }
+
+        .tabs {
+            background: var(--bg-secondary); border-radius: 12px; margin-bottom: 30px;
+            box-shadow: 0 2px 10px var(--shadow-color); overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-buttons { display: flex; min-width: fit-content; }
+
+        .tab-button {
+            background: none; border: none; padding: 15px 25px;
+            color: var(--text-secondary); cursor: pointer; transition: all 0.3s ease;
+            font-size: 16px; white-space: nowrap; border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover { background: var(--bg-tertiary); color: var(--text-accent); }
+        
+        .tab-button.active {
+            color: var(--text-accent); background: var(--bg-tertiary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: var(--bg-card); border-left: 4px solid var(--accent-primary);
+            border-radius: 8px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 2px 10px var(--shadow-color); transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card); padding: 25px; border-radius: 12px;
+            text-align: center; box-shadow: 0 2px 10px var(--shadow-color);
+            border: 1px solid var(--border-color); transition: all 0.3s ease;
+        }
+
+        .stat-number { font-size: 2em; font-weight: bold; color: var(--accent-primary); margin-bottom: 5px; }
+        .stat-label { color: var(--text-secondary); font-size: 0.9em; }
+
+        .question-card {
+            background: var(--bg-card); border-radius: 8px; padding: 20px; margin: 15px 0;
+            border-left: 4px solid var(--info-color); box-shadow: 0 2px 10px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text { font-weight: bold; color: var(--text-accent); margin-bottom: 15px; }
+
+        .answer-options { list-style: none; margin: 10px 0; }
+
+        .answer-options li {
+            margin: 5px 0; padding: 8px 15px; background: var(--bg-tertiary);
+            border-radius: 4px; cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .answer-options li:hover { background: var(--accent-primary); color: white; }
+        .correct-answer { background: var(--success-color) !important; color: white !important; }
+
+        .check-list { list-style: none; margin: 15px 0; }
+        .check-list li { margin: 8px 0; padding-left: 25px; position: relative; }
+        .check-list li::before {
+            content: '✓'; position: absolute; left: 0;
+            color: var(--success-color); font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white; padding: 20px; border-radius: 8px; margin: 20px 0;
+        }
+
+        .warning-box { background: var(--warning-color); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .danger-box { background: var(--danger-color); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .info-box { background: var(--info-color); color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+
+        .tip-card {
+            background: linear-gradient(135deg, var(--success-color), #45a049);
+            color: white; border-radius: 8px; padding: 15px; margin: 15px 0;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        .tip-title { font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; }
+        .tip-icon { margin-right: 8px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2em; }
+            .tab-buttons { flex-wrap: wrap; }
+            .tab-button { flex: 1; min-width: 120px; }
+            .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .theme-toggle { top: 10px; right: 10px; padding: 8px 15px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Ciberseguridad</h1>
+            <p>Estrategia Nacional de Ciberseguridad y Marco Normativo</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('overview')">📋 Introducción</button>
+                <button class="tab-button" onclick="showTab('estrategia')">🎯 Estrategia Nacional</button>
+                <button class="tab-button" onclick="showTab('normativa')">⚖️ Marco Normativo</button>
+                <button class="tab-button" onclick="showTab('organismos')">🏛️ Organismos</button>
+                <button class="tab-button" onclick="showTab('amenazas')">⚠️ Amenazas</button>
+                <button class="tab-button" onclick="showTab('questions')">❓ Examen</button>
+                <button class="tab-button" onclick="showTab('tips')">💡 Tips</button>
+            </div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="content-card">
+                <h2>🛡️ Ciberseguridad</h2>
+                <p>Conjunto de <strong>herramientas, políticas, conceptos de seguridad, salvaguardas, directrices, métodos de gestión de riesgos, acciones, formación, prácticas idóneas, seguros y tecnologías</strong> que pueden utilizarse para proteger los activos de la organización y los usuarios en el ciberentorno.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">2013</div>
+                    <div class="stat-label">Estrategia Nacional</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2019</div>
+                    <div class="stat-label">Nueva Estrategia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Objetivos Estratégicos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">CCN</div>
+                    <div class="stat-label">Centro Criptológico</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">CNPIC</div>
+                    <div class="stat-label">Centro Nacional PIC</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">CERT</div>
+                    <div class="stat-label">Equipos Respuesta</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Objetivos de la Ciberseguridad</h3>
+                <ul class="check-list">
+                    <li><strong>Confidencialidad:</strong> Información accesible solo a personas autorizadas</li>
+                    <li><strong>Integridad:</strong> Información exacta y completa, métodos de procesamiento confiables</li>
+                    <li><strong>Disponibilidad:</strong> Acceso y uso de información por personas autorizadas cuando sea necesario</li>
+                    <li><strong>Autenticidad:</strong> Garantía de que la información proviene de fuente legítima</li>
+                    <li><strong>Trazabilidad:</strong> Capacidad de rastrear actividades en el sistema</li>
+                    <li><strong>No repudio:</strong> Imposibilidad de negar la autoría de una acción</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3>🌐 Ciberespacio</h3>
+                <p>Dominio global dentro del entorno de la información que comprende la <strong>infraestructura de red interdependiente de tecnologías de información</strong>, incluidos Internet, las redes de telecomunicaciones, los sistemas informáticos y los procesadores y controladores integrados.</p>
+            </div>
+        </div>
+
+        <div id="estrategia" class="tab-content">
+            <div class="content-card">
+                <h2>🎯 Estrategia Nacional de Ciberseguridad</h2>
+                <p>Aprobada en <strong>2013</strong> y actualizada en <strong>2019</strong>, establece las líneas de actuación para garantizar un uso seguro del ciberespacio en España.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📋 12 Objetivos de la Estrategia 2019</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Gobernanza Nacional</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Prevención Detección</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Respuesta Recuperación</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Educación Cultura</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">I+D+i</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Industria Tecnologías</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🏛️ Estructura de Gobernanza</h3>
+                <ul class="check-list">
+                    <li><strong>Consejo Nacional de Ciberseguridad:</strong> Órgano colegiado de coordinación</li>
+                    <li><strong>Comité Especializado de Ciberseguridad:</strong> Apoyo técnico especializado</li>
+                    <li><strong>Consejo de Seguridad Nacional:</strong> Dirección política superior</li>
+                    <li><strong>Secretaría de Estado de Digitalización:</strong> Coordinación ejecutiva</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="normativa" class="tab-content">
+            <div class="content-card">
+                <h2>⚖️ Marco Normativo de Ciberseguridad</h2>
+                <p>Conjunto de leyes, reales decretos y directivas que regulan la ciberseguridad en España.</p>
+            </div>
+
+            <div class="danger-box">
+                <h3>🇪🇺 Directiva NIS</h3>
+                <p><strong>Directiva (UE) 2016/1148:</strong> Primera legislación europea sobre ciberseguridad. Transpuesta a España mediante Real Decreto-ley 12/2018.</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>📜 Ley de Seguridad Nacional</h3>
+                <p><strong>Ley 36/2015:</strong> Establece el marco jurídico para la protección de la seguridad nacional, incluyendo el ciberespacio como ámbito de especial relevancia.</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🔒 Real Decreto ENS</h3>
+                <p><strong>RD 311/2022:</strong> Regula el Esquema Nacional de Seguridad en el ámbito de la Administración Electrónica.</p>
+            </div>
+        </div>
+
+        <div id="organismos" class="tab-content">
+            <div class="content-card">
+                <h2>🏛️ Organismos de Ciberseguridad</h2>
+                <p>Estructura organizativa española para la gestión de la ciberseguridad nacional.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">CCN</div>
+                    <div class="stat-label">Centro Criptológico Nacional</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">CNPIC</div>
+                    <div class="stat-label">Centro Nacional PIC</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">INCIBE</div>
+                    <div class="stat-label">Instituto Nacional</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">ESPDEF</div>
+                    <div class="stat-label">Mando Conjunto</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏢 Principales Organismos</h3>
+                <ul class="check-list">
+                    <li><strong>CCN-CERT:</strong> Capacidades de prevención, detección y respuesta</li>
+                    <li><strong>CNPIC:</strong> Protección de Infraestructuras Críticas</li>
+                    <li><strong>INCIBE:</strong> Ciberseguridad de ciudadanos y empresas</li>
+                    <li><strong>Mando Conjunto del Ciberespacio (MCCE):</strong> Defensa militar</li>
+                    <li><strong>Cuerpos y Fuerzas de Seguridad:</strong> Ciberdelincuencia</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="amenazas" class="tab-content">
+            <div class="content-card">
+                <h2>⚠️ Amenazas y Ciberriesgos</h2>
+                <p>Principales riesgos y amenazas del ciberespacio que afectan a la seguridad nacional.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">APT</div>
+                    <div class="stat-label">Amenazas Persistentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">DDoS</div>
+                    <div class="stat-label">Denegación Servicio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Malware</div>
+                    <div class="stat-label">Software Malicioso</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Phishing</div>
+                    <div class="stat-label">Ingeniería Social</div>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🎯 Tipos de Ciberamenazas</h3>
+                <ul class="check-list">
+                    <li><strong>Ciberespionaje:</strong> Robo de información sensible</li>
+                    <li><strong>Cibersabotaje:</strong> Destrucción o alteración de sistemas</li>
+                    <li><strong>Ciberdelincuencia:</strong> Actividades criminales en línea</li>
+                    <li><strong>Ciberterrorismo:</strong> Ataques para causar terror o pánico</li>
+                    <li><strong>Hacktivismo:</strong> Activismo político mediante ciberataques</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="questions" class="tab-content">
+            <div class="content-card">
+                <h2>❓ Preguntas Tipo Examen</h2>
+                <p>Preguntas frecuentes sobre ciberseguridad en oposiciones.</p>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">1. ¿En qué año se aprobó la primera Estrategia Nacional de Ciberseguridad de España?</div>
+                <ul class="answer-options">
+                    <li>a) 2011</li>
+                    <li>b) 2012</li>
+                    <li class="correct-answer">c) 2013</li>
+                    <li>d) 2014</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">2. ¿Qué organismo es responsable del CCN-CERT?</div>
+                <ul class="answer-options">
+                    <li class="correct-answer">a) Centro Criptológico Nacional</li>
+                    <li>b) INCIBE</li>
+                    <li>c) CNPIC</li>
+                    <li>d) Ministerio del Interior</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">3. ¿Cuántos objetivos tiene la Estrategia Nacional de Ciberseguridad 2019?</div>
+                <ul class="answer-options">
+                    <li>a) 10</li>
+                    <li class="correct-answer">b) 12</li>
+                    <li>c) 15</li>
+                    <li>d) 8</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">4. ¿Qué significa APT en ciberseguridad?</div>
+                <ul class="answer-options">
+                    <li>a) Advanced Protection Technology</li>
+                    <li class="correct-answer">b) Advanced Persistent Threat</li>
+                    <li>c) Automated Prevention Tool</li>
+                    <li>d) Access Point Technology</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">5. ¿Cuál es el objetivo del principio de disponibilidad en ciberseguridad?</div>
+                <ul class="answer-options">
+                    <li>a) Proteger la información de accesos no autorizados</li>
+                    <li>b) Garantizar que la información no se modifique</li>
+                    <li class="correct-answer">c) Asegurar el acceso a la información cuando sea necesario</li>
+                    <li>d) Verificar la identidad de los usuarios</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">6. ¿Qué directiva europea regula la ciberseguridad?</div>
+                <ul class="answer-options">
+                    <li>a) Directiva GDPR</li>
+                    <li class="correct-answer">b) Directiva NIS</li>
+                    <li>c) Directiva PSD2</li>
+                    <li>d) Directiva eIDAS</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">7. ¿Qué significa CNPIC?</div>
+                <ul class="answer-options">
+                    <li>a) Centro Nacional de Protección de Infraestructuras Cibernéticas</li>
+                    <li class="correct-answer">b) Centro Nacional para la Protección de Infraestructuras Críticas</li>
+                    <li>c) Centro Nacional de Prevención de Incidentes Críticos</li>
+                    <li>d) Centro Nacional de Protección de Información Clasificada</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">8. ¿Cuál de estos NO es un principio básico de la ciberseguridad?</div>
+                <ul class="answer-options">
+                    <li>a) Confidencialidad</li>
+                    <li>b) Integridad</li>
+                    <li>c) Disponibilidad</li>
+                    <li class="correct-answer">d) Velocidad</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">9. ¿Qué ley establece el marco jurídico de la seguridad nacional en España?</div>
+                <ul class="answer-options">
+                    <li>a) Ley 34/2002</li>
+                    <li class="correct-answer">b) Ley 36/2015</li>
+                    <li>c) Ley 39/2015</li>
+                    <li>d) Ley 40/2015</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">10. ¿Cuál es el acrónimo del Centro Nacional de Ciberseguridad?</div>
+                <ul class="answer-options">
+                    <li>a) CNCS</li>
+                    <li>b) CCN</li>
+                    <li class="correct-answer">c) INCIBE</li>
+                    <li>d) CERT</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tips" class="tab-content">
+            <div class="content-card">
+                <h2>💡 Tips y Consejos de Estudio</h2>
+                <p>Consejos prácticos para dominar la ciberseguridad en exámenes.</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-title">
+                    <span class="tip-icon">📅</span>
+                    Fechas Clave
+                </div>
+                <p><strong>2013:</strong> Primera Estrategia Nacional de Ciberseguridad</p>
+                <p><strong>2019:</strong> Nueva Estrategia (12 objetivos)</p>
+                <p><strong>2016:</strong> Directiva NIS europea</p>
+                <p><strong>2018:</strong> Transposición Directiva NIS a España</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-title">
+                    <span class="tip-icon">🏛️</span>
+                    Organismos - Mnemotecnia
+                </div>
+                <p><strong>"CCN INCIBE CNPIC"</strong></p>
+                <p><strong>CCN:</strong> Centro Criptológico (CCN-CERT)</p>
+                <p><strong>INCIBE:</strong> Instituto Nacional (ciudadanos/empresas)</p>
+                <p><strong>CNPIC:</strong> Infraestructuras Críticas</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-title">
+                    <span class="tip-icon">🛡️</span>
+                    Principios CIA+
+                </div>
+                <p><strong>CIA:</strong> Confidencialidad, Integridad, Disponibilidad</p>
+                <p><strong>+:</strong> Autenticidad, Trazabilidad, No repudio</p>
+                <p><strong>Truco:</strong> "CIA ATN" - Los básicos + extra</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-title">
+                    <span class="tip-icon">⚠️</span>
+                    Tipos Amenazas
+                </div>
+                <p><strong>Las 5 C's:</strong></p>
+                <p>• <strong>C</strong>iberespionaje</p>
+                <p>• <strong>C</strong>ibersabotaje</p>
+                <p>• <strong>C</strong>iberdelincuencia</p>
+                <p>• <strong>C</strong>iberterrorismo</p>
+                <p>• <strong>C</strong>iberactivismo (Hacktivismo)</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-title">
+                    <span class="tip-icon">🎯</span>
+                    Estrategia 2019
+                </div>
+                <p><strong>12 Objetivos:</strong> Muy preguntado el número</p>
+                <p><strong>Pilares:</strong> Gobernanza, Prevención, Respuesta, Educación, I+D, Industria</p>
+                <p><strong>Enfoque:</strong> Integral y transversal</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeButton();
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+            updateThemeButton();
+        }
+
+        function updateThemeButton() {
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = currentTheme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Interactividad en preguntas
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.answer-options li').forEach(option => {
+                option.addEventListener('click', function() {
+                    const siblings = this.parentNode.querySelectorAll('li');
+                    siblings.forEach(sibling => {
+                        sibling.style.background = '';
+                        sibling.style.color = '';
+                    });
+                    
+                    if (this.classList.contains('correct-answer')) {
+                        this.style.background = 'var(--success-color)';
+                        this.style.color = 'white';
+                    } else {
+                        this.style.background = 'var(--danger-color)';
+                        this.style.color = 'white';
+                        
+                        setTimeout(() => {
+                            const correctAnswer = this.parentNode.querySelector('.correct-answer');
+                            if (correctAnswer) {
+                                correctAnswer.style.background = 'var(--success-color)';
+                                correctAnswer.style.color = 'white';
+                            }
+                        }, 1000);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
