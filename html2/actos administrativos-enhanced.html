@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actos Administrativos - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            gap: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .highlight-box {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .law-reference {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1rem;
+            margin-left: 2rem;
+            border-left: 2px solid var(--accent-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .quiz-question {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-options {
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            display: block;
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .quiz-option.correct {
+            background: #28a745;
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background: #dc3545;
+            color: white;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty.basico { background: #28a745; color: white; }
+        .difficulty.intermedio { background: #ffc107; color: #333; }
+        .difficulty.avanzado { background: #dc3545; color: white; }
+
+        .glossary-term {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            background: var(--bg-card);
+        }
+
+        .progress-indicator {
+            background: var(--bg-secondary);
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .header { padding: 1rem; }
+            .tabs { flex-direction: column; }
+            .tab-btn { text-align: center; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <header class="header">
+        <h1>📋 Actos Administrativos - Guía de Estudio</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Cambiar Tema</button>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">📖 Resumen General</button>
+            <button class="tab-btn" onclick="showTab(1)">⚖️ Conceptos Fundamentales</button>
+            <button class="tab-btn" onclick="showTab(2)">🔍 Validez e Invalidez</button>
+            <button class="tab-btn" onclick="showTab(3)">🔄 Revisión Administrativa</button>
+            <button class="tab-btn" onclick="showTab(4)">📝 Recursos Administrativos</button>
+            <button class="tab-btn" onclick="showTab(5)">⚡ Ejercicios Prácticos</button>
+            <button class="tab-btn" onclick="showTab(6)">📚 Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div class="tab-content active">
+            <div class="card">
+                <h3>📋 Resumen Ejecutivo</h3>
+                <p>Los actos administrativos son manifestaciones de la voluntad de la Administración Pública en ejercicio de potestades administrativas. Este tema abarca su revisión en vía administrativa, los recursos disponibles y el procedimiento contencioso-administrativo.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🎯 Objetivos de Aprendizaje</h4>
+                <ul>
+                    <li>Comprender la naturaleza y clasificación de los actos administrativos</li>
+                    <li>Dominar los procedimientos de revisión en vía administrativa</li>
+                    <li>Conocer los recursos administrativos disponibles</li>
+                    <li>Entender el recurso contencioso-administrativo</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📊 Estadísticas Clave</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Ley 39/2015</strong>: Régimen jurídico básico de los actos administrativos
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ley 29/1998</strong>: Jurisdicción Contencioso-Administrativa
+                    </div>
+                    <div class="timeline-item">
+                        <strong>6 meses</strong>: Plazo máximo para revisión de actos nulos
+                    </div>
+                    <div class="timeline-item">
+                        <strong>4 años</strong>: Plazo para declaración de lesividad
+                    </div>
+                </div>
+            </div>
+
+            <div class="law-reference">
+                <h4>📜 Normativa Principal</h4>
+                <p><strong>Ley 39/2015</strong> - Procedimiento Administrativo Común (Título I - Actos Administrativos)</p>
+                <p><strong>Ley 29/1998</strong> - Jurisdicción Contencioso-Administrativa</p>
+            </div>
+        </div>
+
+        <!-- Tab 2: Conceptos Fundamentales -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>⚖️ Definición de Actos Administrativos</h3>
+                <p>Definen la voluntad, juicio, deseo o conocimiento realizado por la AAPP en el ejercicio de una potestad administrativa. Recogidos en <strong>Ley 39/2015, Título I</strong>.</p>
+            </div>
+
+            <div class="card">
+                <h3>📊 Clasificación Principal</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Acto</th>
+                            <th>Características</th>
+                            <th>Efectos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Actos Favorables</strong></td>
+                            <td>Amplían la esfera jurídica de los particulares<br>Fáciles de dictar, difíciles de anular</td>
+                            <td>Excepcionalmente retroactivos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Actos de Gravamen</strong></td>
+                            <td>Limitan libertades o imponen sanciones<br>Requieren audiencia y motivación</td>
+                            <td>Efecto retroactivo prohibido (art. 9.3 CE)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>📝 Requisitos (Art. 34-36 L39/2015)</h3>
+                <div class="highlight-box">
+                    <h4>Contenido y Forma</h4>
+                    <ul>
+                        <li><strong>Contenido</strong>: Ajustado al procedimiento y ordenamiento jurídico</li>
+                        <li><strong>Forma</strong>: Por escrito a través de medios electrónicos</li>
+                        <li><strong>Excepción</strong>: Otra forma si la naturaleza lo exige</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Eficacia de los Actos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Inderogabilidad Singular</h4>
+                        <p>Una resolución administrativa no puede vulnerar una disposición general</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Ejecutividad</h4>
+                        <p>Capacidad de producir efectos contra la voluntad del afectado</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Efectos</h4>
+                        <p>Se presumen válidos y producen efectos desde su dictado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Validez e Invalidez -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>❌ Nulidad de Pleno Derecho (Art. 47 L39/2015)</h3>
+                <div class="highlight-box">
+                    <h4>Causas Principales</h4>
+                    <ul>
+                        <li>Lesión de derechos susceptibles de amparo constitucional</li>
+                        <li>Dictados por órgano manifiestamente incompetente</li>
+                        <li>Contenido imposible</li>
+                        <li>Constitutivos de infracción penal</li>
+                        <li>Prescindiendo del procedimiento establecido</li>
+                        <li>Contrarios al ordenamiento jurídico</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚠️ Anulabilidad (Art. 48 L39/2015)</h3>
+                <p>Son anulables los actos que incurran en <strong>cualquier infracción del ordenamiento jurídico</strong>, incluso la desviación de poder.</p>
+                
+                <div class="law-reference">
+                    <h4>Excepciones Importantes</h4>
+                    <ul>
+                        <li>El defecto de forma solo determina anulabilidad si carece de requisitos indispensables</li>
+                        <li>Actuaciones fuera de tiempo solo implican anulabilidad si lo impone la naturaleza del plazo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Límites de la Nulidad</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Situación</th>
+                            <th>Efecto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nulidad de un acto</td>
+                            <td>No implica la de actos sucesivos independientes</td>
+                        </tr>
+                        <tr>
+                            <td>Nulidad de una parte</td>
+                            <td>No implica la del resto si son independientes</td>
+                        </tr>
+                        <tr>
+                            <td>Parte esencial nula</td>
+                            <td>Nulidad total si sin ella no se hubiera dictado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🔧 Convalidación</h3>
+                <p>Las AAPP pueden <strong>convalidar actos anulables</strong> subsanando los vicios. El acto de convalidación es efectivo desde su fecha, salvo retroactividad dispuesta.</p>
+            </div>
+
+            <div class="card">
+                <h3>🏁 Fin a la Vía Administrativa (Art. 114 L39/2015)</h3>
+                <div class="highlight-box">
+                    <h4>Actos que Ponen Fin</h4>
+                    <ul>
+                        <li>Resoluciones de recursos de alzada</li>
+                        <li>Resoluciones de órganos sin superior jerárquico</li>
+                        <li>Acuerdos, pactos y convenios finalizadores</li>
+                        <li>Resoluciones de responsabilidad patrimonial</li>
+                        <li>En AGE: actos de Gobierno, Ministros y Secretarios de Estado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Revisión Administrativa -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>🔍 Revisión de Actos Nulos</h3>
+                <p>Las AAPP pueden declarar la nulidad en cualquier momento, previo <strong>dictamen favorable del Consejo de Estado</strong>.</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Requisitos</h4>
+                        <ul>
+                            <li>Actos que hayan puesto fin a la vía administrativa</li>
+                            <li>No recurridos en plazo</li>
+                            <li>Iniciativa propia o solicitud del interesado</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Plazo de Resolución</h4>
+                        <p><strong>6 meses</strong> - Si no se resuelve: caducidad (oficio) o desestimación (solicitud)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Declaración de Lesividad</h3>
+                <div class="highlight-box">
+                    <p>Para impugnar ante la Jurisdicción Contencioso-Administrativa <strong>actos favorables anulables</strong> (art. 48).</p>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Plazo para declarar</td>
+                            <td>4 años desde dictado del acto</td>
+                        </tr>
+                        <tr>
+                            <td>Resolución</td>
+                            <td>6 meses (sino caduca)</td>
+                        </tr>
+                        <tr>
+                            <td>Objetivo</td>
+                            <td>Requisito previo para impugnación judicial</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>⏸️ Suspensión</h3>
+                <p>El órgano competente puede <strong>suspender la ejecutividad</strong> si causa perjuicios de imposible o difícil reparación.</p>
+            </div>
+
+            <div class="card">
+                <h3>📝 Revocación y Rectificación</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Revocación</h4>
+                        <p>Actos desfavorables no prescritos que no constituyan dispensa o exención</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Rectificación</h4>
+                        <p>En cualquier momento: errores materiales, de hecho o aritméticos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🚫 Límites a la Revisión</h3>
+                <div class="law-reference">
+                    <p>No se puede iniciar revisión si hay:</p>
+                    <ul>
+                        <li>Prescripción por paso del tiempo</li>
+                        <li>Contrario a equidad, buena fe, derechos de particulares o leyes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Recursos Administrativos -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>📈 Recurso de Alzada</h3>
+                <div class="highlight-box">
+                    <p>Contra resoluciones que <strong>NO pongan fin</strong> a la vía administrativa. Lo resuelve el superior jerárquico.</p>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Plazo/Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interposición (acto expreso)</td>
+                            <td>1 mes</td>
+                        </tr>
+                        <tr>
+                            <td>Interposición (silencio)</td>
+                            <td>Cualquier momento tras efectos</td>
+                        </tr>
+                        <tr>
+                            <td>Resolución</td>
+                            <td>3 meses (silencio negativo)</td>
+                        </tr>
+                        <tr>
+                            <td>Siguiente paso</td>
+                            <td>Recurso Extraordinario o Contencioso</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Recurso Potestativo de Reposición</h3>
+                <div class="highlight-box">
+                    <p>Contra actos que <strong>pongan FIN</strong> a la vía administrativa. Lo resuelve el mismo órgano.</p>
+                </div>
+                
+                <div class="law-reference">
+                    <h4>Características Especiales</h4>
+                    <ul>
+                        <li>Plazo interposición: <strong>1 mes</strong> (expreso) o cualquier momento (silencio)</li>
+                        <li>Plazo resolución: <strong>1 mes</strong> (silencio negativo)</li>
+                        <li>Solo se puede acceder una vez resuelto o desestimado</li>
+                        <li>No se puede interponer de nuevo el mismo recurso</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⭐ Recurso Extraordinario de Revisión</h3>
+                <p>Contra <strong>actos firmes</strong> en vía administrativa. Solo si cumple causas del <strong>artículo 125.1</strong>.</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Causa a) - Error de hecho</h4>
+                        <p>Plazo: <strong>4 años</strong> desde notificación</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Resto de causas (b, c, d)</h4>
+                        <p>Plazo: <strong>3 meses</strong> desde conocimiento</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Causas del Art. 125.1</h3>
+                <div class="highlight-box">
+                    <h4>Circunstancias que permiten el recurso</h4>
+                    <ul>
+                        <li><strong>a)</strong> Error de hecho de los propios documentos</li>
+                        <li><strong>b)</strong> Documentos posteriores de valor esencial</li>
+                        <li><strong>c)</strong> Documentos declarados falsos por sentencia firme</li>
+                        <li><strong>d)</strong> Prevaricación, cohecho, violencia u otra conducta punible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ Competencias en la AGE</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Órgano</th>
+                            <th>Competencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Consejo de Ministros</td>
+                            <td>Sus propios actos y de Ministros</td>
+                        </tr>
+                        <tr>
+                            <td>Ministros</td>
+                            <td>Actos de Secretarios de Estado</td>
+                        </tr>
+                        <tr>
+                            <td>Secretarios de Estado</td>
+                            <td>Actos de órganos dependientes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>⚡ Ejercicios Prácticos - Actos Administrativos</h3>
+                <p>Pon a prueba tus conocimientos con estos ejercicios basados en el contenido del tema.</p>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>1. ¿Qué ley regula los actos administrativos?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Ley 30/1992</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Ley 39/2015</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Ley 29/1998</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Ley 40/2015</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>2. Los actos favorables se caracterizan por ser:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Difíciles de dictar, fáciles de anular</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Fáciles de dictar, difíciles de anular</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Siempre retroactivos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Nunca retroactivos</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>3. ¿Cuál es el plazo para resolver la revisión de actos nulos?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) 3 meses</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) 6 meses</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) 1 año</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) 4 años</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>4. El recurso de alzada se interpone contra:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Actos que pongan fin a la vía administrativa</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Actos que NO pongan fin a la vía administrativa</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Actos firmes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Disposiciones generales</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>5. ¿Qué órgano debe emitir dictamen favorable para la revisión de actos nulos?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Tribunal Supremo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Consejo de Estado</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Tribunal Constitucional</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Consejo General del Poder Judicial</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>6. ¿Cuál NO es causa de nulidad de pleno derecho según el art. 47?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Dictados por órgano incompetente por razón de materia</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) Contenido imposible</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">c) Defecto de forma sin indefensión</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Constitutivos de infracción penal</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>7. El plazo para declarar la lesividad es de:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) 1 año</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) 2 años</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) 3 años</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">d) 4 años</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>8. Los actos administrativos se presumen:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Nulos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Válidos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Anulables</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Ineficaces</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>9. ¿Cuál es el plazo para interponer recurso extraordinario de revisión por error de hecho?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) 1 mes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) 3 meses</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) 1 año</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">d) 4 años</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>10. El recurso potestativo de reposición se resuelve en:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">a) 1 mes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) 2 meses</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) 3 meses</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) 6 meses</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>11. La representación de la Administración en el contencioso corresponde a:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Procuradores del Estado</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Abogados del Estado</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Letrados de la Administración</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Ministerio Fiscal</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>12. ¿Qué ley regula la jurisdicción contencioso-administrativa?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Ley 39/2015</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Ley 29/1998</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Ley 40/2015</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Ley 1/2000</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>13. En el procedimiento abreviado, la cuantía no debe superar:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) 18.000 euros</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) 24.000 euros</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">c) 30.000 euros</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) 60.000 euros</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>14. La sentencia contenciosa se dicta en:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) 5 días</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) 10 días</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) 15 días</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) 20 días</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>15. Los actos de gravamen se caracterizan por:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Poder tener efecto retroactivo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Tener prohibido el efecto retroactivo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) No requerir motivación</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Ser fáciles de anular</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>16. ¿Qué caracteriza la inderogabilidad singular?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">a) Una resolución no puede vulnerar una disposición general</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) Los actos no pueden ser revocados</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) Solo se aplica a actos favorables</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Impide la anulación judicial</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>17. La convalidación de actos anulables:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Solo puede ser retroactiva</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Es efectiva desde su fecha salvo retroactividad dispuesta</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) No es posible en Derecho administrativo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Requiere dictamen del Consejo de Estado</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty basico">Básico</div>
+                <h4>18. La ejecutividad de los actos significa que:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Deben ejecutarse inmediatamente</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) Pueden producir efectos contra la voluntad del afectado</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) No pueden ser suspendidos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Solo se aplica a actos favorables</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty intermedio">Intermedio</div>
+                <h4>19. ¿Cuándo pueden las AAPP rectificar errores?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) Solo en el plazo de 1 mes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">b) Solo si son errores de derecho</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">c) En cualquier momento si son materiales, de hecho o aritméticos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) Nunca pueden rectificar</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <div class="difficulty avanzado">Avanzado</div>
+                <h4>20. El emplazamiento en el contencioso lo realiza:</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">a) El tribunal</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">b) La administración</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">c) El demandante</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">d) El Ministerio Fiscal</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="progress-indicator">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <p>Progreso del cuestionario: <span id="progressText">0/20</span></p>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div class="tab-content">
+            <div class="card">
+                <h3>📚 Glosario de Términos</h3>
+                
+                <div class="glossary-term">
+                    <h4>Acto Administrativo</h4>
+                    <p>Manifestación de voluntad, juicio, deseo o conocimiento de la AAPP en ejercicio de potestad administrativa.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Convalidación</h4>
+                    <p>Acto por el que la AAPP subsana los vicios de un acto anulable, haciéndolo válido.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Ejecutividad</h4>
+                    <p>Capacidad de los actos administrativos para producir efectos contra la voluntad del afectado.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Fin de la Vía Administrativa</h4>
+                    <p>Situación en la que se agota la posibilidad de recurrir en vía administrativa, quedando solo la vía judicial.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Inderogabilidad Singular</h4>
+                    <p>Principio que impide que una resolución administrativa vulnere una disposición general.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Lesividad</h4>
+                    <p>Declaración previa necesaria para que la AAPP pueda impugnar judicialmente sus propios actos favorables.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Nulidad de Pleno Derecho</h4>
+                    <p>Invalidez más grave de un acto administrativo, que produce efectos desde el momento del dictado.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Recurso de Alzada</h4>
+                    <p>Recurso administrativo contra actos que no ponen fin a la vía administrativa.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Recurso Potestativo de Reposición</h4>
+                    <p>Recurso administrativo opcional contra actos que ponen fin a la vía administrativa.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Silencio Administrativo</h4>
+                    <p>Efectos jurídicos que se producen cuando la Administración no resuelve en plazo (positivo o negativo).</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❓ Preguntas Frecuentes</h3>
+                
+                <div class="law-reference">
+                    <h4>¿Cuándo prescinden del procedimiento los actos nulos?</h4>
+                    <p>Cuando se prescinde <strong>total y absolutamente</strong> del procedimiento o de las normas esenciales para la formación de la voluntad de órganos colegiados.</p>
+                </div>
+
+                <div class="law-reference">
+                    <h4>¿Pueden ser retroactivos los actos de gravamen?</h4>
+                    <p>No, está <strong>prohibido constitucionalmente</strong> (art. 9.3 CE). Solo los actos favorables pueden tener efectos retroactivos.</p>
+                </div>
+
+                <div class="law-reference">
+                    <h4>¿Qué pasa si no se resuelve un recurso en plazo?</h4>
+                    <p>Se produce <strong>silencio negativo</strong> (desestimación), permitiendo acudir al siguiente recurso o al contencioso.</p>
+                </div>
+
+                <div class="law-reference">
+                    <h4>¿Se puede recurrir dos veces en reposición?</h4>
+                    <p>No, el recurso potestativo de reposición <strong>solo se puede interponer una vez</strong> por acto.</p>
+                </div>
+
+                <div class="law-reference">
+                    <h4>¿Cuál es la diferencia entre nulidad y anulabilidad?</h4>
+                    <p><strong>Nulidad</strong>: vicios más graves, causas tasadas. <strong>Anulabilidad</strong>: cualquier infracción del ordenamiento jurídico.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📖 Referencias Normativas</h3>
+                <ul>
+                    <li><strong>Ley 39/2015</strong> - Procedimiento Administrativo Común de las AAPP</li>
+                    <li><strong>Ley 40/2015</strong> - Régimen Jurídico del Sector Público</li>
+                    <li><strong>Ley 29/1998</strong> - Jurisdicción Contencioso-Administrativa</li>
+                    <li><strong>Constitución Española 1978</strong> - Art. 9.3 (Prohibición retroactividad)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        let answeredQuestions = 0;
+        const totalQuestions = 20;
+
+        function showTab(index) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            currentTab = index;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '🌙 Cambiar Tema' : '☀️ Cambiar Tema';
+        }
+
+        function selectAnswer(element, isCorrect) {
+            const options = element.parentNode.children;
+            
+            for (let option of options) {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                } else if (option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            }
+            
+            if (!element.parentNode.parentNode.classList.contains('answered')) {
+                element.parentNode.parentNode.classList.add('answered');
+                answeredQuestions++;
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const percentage = (answeredQuestions / totalQuestions) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = answeredQuestions + '/' + totalQuestions;
+        }
+
+        // Load theme preference
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = savedTheme === 'dark' ? '🌙 Cambiar Tema' : '☀️ Cambiar Tema';
+        });
+    </script>
+</body>
+</html>

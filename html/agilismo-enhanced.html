@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agilismo y Metodologías Ágiles - Guía Completa para Oposiciones</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #888888;
+            --accent-color: #4a9eff;
+            --accent-hover: #3d8bdb;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --border-color: #444444;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e9e9e9;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-color: #0066cc;
+            --accent-hover: #0052a3;
+            --success-color: #388e3c;
+            --warning-color: #f57c00;
+            --error-color: #d32f2f;
+            --border-color: #dddddd;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: var(--transition);
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+        }
+
+        .tabs-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .methodology-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .methodology-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .methodology-header {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .exercise-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .exercise-header {
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .exercise-header:hover {
+            background: #45a049;
+        }
+
+        .exercise-content {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .exercise-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 1000px; }
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-basic {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermediate {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty-advanced {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            transition: width 0.3s ease;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .list-group {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .list-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .list-item:before {
+            content: '✓';
+            background: var(--success-color);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                min-width: 100%;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--bg-primary);
+        }
+
+        .code-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-icon">🌙</span> <span id="theme-text">Modo Claro</span>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>Agilismo y Metodologías Ágiles</h1>
+                <p class="subtitle">Guía Completa para Oposiciones del Sector Público</p>
+            </div>
+        </header>
+
+        <div class="tabs-container">
+            <nav class="tabs-nav">
+                <button class="tab-btn active" onclick="showTab('resumen')">Resumen General</button>
+                <button class="tab-btn" onclick="showTab('manifiesto')">Manifiesto Ágil</button>
+                <button class="tab-btn" onclick="showTab('metodologias')">Metodologías</button>
+                <button class="tab-btn" onclick="showTab('escalado')">Escalado Ágil</button>
+                <button class="tab-btn" onclick="showTab('lean')">Lean y DevOps</button>
+                <button class="tab-btn" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+                <button class="tab-btn" onclick="showTab('recursos')">Recursos y FAQ</button>
+            </nav>
+
+            <div id="resumen" class="tab-content active">
+                <h2>🎯 Resumen General del Agilismo</h2>
+                
+                <div class="highlight-box">
+                    <h3>📊 Conceptos Clave para Exámenes</h3>
+                    <p><strong>Agilismo:</strong> Filosofía de desarrollo de software que prioriza la adaptabilidad, colaboración y entrega continua de valor. Se basa en principios fundamentales que revolucionaron la industria del software desde 2001.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <div class="stat-label">Valores del Manifiesto</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">12</span>
+                        <div class="stat-label">Principios Ágiles</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2001</span>
+                        <div class="stat-label">Año del Manifiesto</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5+</span>
+                        <div class="stat-label">Metodologías Principales</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Objetivos de Aprendizaje</h3>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-item">Comprender los valores y principios del Manifiesto Ágil</li>
+                        <li class="list-item">Dominar las metodologías ágiles principales (Scrum, Kanban, XP)</li>
+                        <li class="list-item">Conocer frameworks de escalado (SAFe, LeSS, Nexus)</li>
+                        <li class="list-item">Entender la relación entre Lean, DevOps y Agilismo</li>
+                        <li class="list-item">Aplicar principios ágiles en proyectos del sector público</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">Ventajas del Agilismo</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>🚀 Entrega Rápida</h4>
+                            <p>Incrementos funcionales cada 1-4 semanas, permitiendo retroalimentación temprana y ajustes continuos.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🔄 Adaptabilidad</h4>
+                            <p>Capacidad de responder rápidamente a cambios en requisitos, tecnología o condiciones del mercado.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🤝 Colaboración</h4>
+                            <p>Trabajo conjunto entre equipos multidisciplinarios y partes interesadas.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📈 Calidad</h4>
+                            <p>Énfasis en pruebas continuas, refactorización y mejora constante del código.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🏛️</div>
+                        <h3 class="card-title">Aplicación en el Sector Público</h3>
+                    </div>
+                    <p>Las metodologías ágiles se adaptan al sector público para mejorar la eficiencia, transparencia y capacidad de respuesta a las necesidades ciudadanas.</p>
+                    <ul class="list-group">
+                        <li class="list-item">Desarrollo de servicios digitales centrados en el ciudadano</li>
+                        <li class="list-item">Implementación iterativa de políticas públicas</li>
+                        <li class="list-item">Mejora continua de procesos administrativos</li>
+                        <li class="list-item">Adaptación rápida a cambios normativos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="manifiesto" class="tab-content">
+                <h2>📜 Manifiesto Ágil y Principios Fundamentales</h2>
+
+                <div class="highlight-box">
+                    <h3>🎯 Manifiesto para el Desarrollo Ágil de Software (2001)</h3>
+                    <p>Declaración firmada por 17 desarrolladores que estableció los fundamentos del movimiento ágil, priorizando la adaptabilidad sobre los procesos rígidos.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⭐</div>
+                        <h3 class="card-title">Los 4 Valores Fundamentales</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <h4>1. Individuos e Interacciones</h4>
+                            </div>
+                            <p><strong>Sobre</strong> procesos y herramientas</p>
+                            <ul>
+                                <li>Comunicación directa y efectiva</li>
+                                <li>Equipos autoorganizados</li>
+                                <li>Colaboración cara a cara</li>
+                                <li>Confianza mutua</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <h4>2. Software Funcionando</h4>
+                            </div>
+                            <p><strong>Sobre</strong> documentación extensiva</p>
+                            <ul>
+                                <li>Entregables tangibles</li>
+                                <li>Prototipos funcionales</li>
+                                <li>Retroalimentación temprana</li>
+                                <li>Validación continua</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <h4>3. Colaboración con el Cliente</h4>
+                            </div>
+                            <p><strong>Sobre</strong> negociación contractual</p>
+                            <ul>
+                                <li>Participación activa</li>
+                                <li>Feedback constante</li>
+                                <li>Transparencia total</li>
+                                <li>Adaptación de requisitos</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <h4>4. Respuesta ante el Cambio</h4>
+                            </div>
+                            <p><strong>Sobre</strong> seguir un plan</p>
+                            <ul>
+                                <li>Flexibilidad estratégica</li>
+                                <li>Adaptación rápida</li>
+                                <li>Mejora continua</li>
+                                <li>Innovación constante</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <h3 class="card-title">Los 12 Principios del Manifiesto Ágil</h3>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>1. Satisfacción del Cliente</h4>
+                                <p>Nuestra mayor prioridad es satisfacer al cliente mediante la entrega temprana y continua de software con valor.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>2. Bienvenida a los Cambios</h4>
+                                <p>Aceptamos que los requisitos cambien, incluso en etapas tardías del desarrollo.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>3. Entrega Frecuente</h4>
+                                <p>Entregamos software funcional frecuentemente, entre dos semanas y dos meses.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>4. Colaboración Diaria</h4>
+                                <p>Los responsables de negocio y los desarrolladores trabajamos juntos de forma cotidiana.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>5. Individuos Motivados</h4>
+                                <p>Los proyectos se desarrollan en torno a individuos motivados con el entorno y apoyo necesario.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>6. Comunicación Cara a Cara</h4>
+                                <p>El método más eficiente de comunicar información es la conversación cara a cara.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Impacto y Evolución del Manifiesto</h3>
+                    </div>
+                    <p>El Manifiesto Ágil transformó no solo el desarrollo de software, sino también la gestión de proyectos en múltiples sectores:</p>
+                    <ul class="list-group">
+                        <li class="list-item">Adopción masiva en la industria tecnológica (90%+ empresas)</li>
+                        <li class="list-item">Extensión a sectores no tecnológicos (marketing, RRHH, educación)</li>
+                        <li class="list-item">Influencia en metodologías de gestión organizacional</li>
+                        <li class="list-item">Base para frameworks de escalado empresarial</li>
+                        <li class="list-item">Integración con prácticas DevOps y Lean</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="metodologias" class="tab-content">
+                <h2>🔧 Metodologías Ágiles Principales</h2>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🏃‍♂️ SCRUM</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">2-4</span>
+                                <div class="stat-label">Semanas por Sprint</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">3</span>
+                                <div class="stat-label">Roles Principales</div>
+                            </div>
+                        </div>
+                        <h4>Características Principales:</h4>
+                        <ul>
+                            <li><strong>Sprints:</strong> Iteraciones de 2-4 semanas</li>
+                            <li><strong>Product Owner:</strong> Define y prioriza requisitos</li>
+                            <li><strong>Scrum Master:</strong> Facilita el proceso</li>
+                            <li><strong>Development Team:</strong> Equipo multidisciplinario</li>
+                        </ul>
+                        <h4>Eventos SCRUM:</h4>
+                        <ul>
+                            <li>Sprint Planning</li>
+                            <li>Daily Scrum</li>
+                            <li>Sprint Review</li>
+                            <li>Sprint Retrospective</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>📊 KANBAN</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">WIP</span>
+                                <div class="stat-label">Límites de Trabajo</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">3</span>
+                                <div class="stat-label">Columnas Básicas</div>
+                            </div>
+                        </div>
+                        <h4>Principios Fundamentales:</h4>
+                        <ul>
+                            <li><strong>Visualización:</strong> Tablero con columnas de estado</li>
+                            <li><strong>WIP Limits:</strong> Límites de trabajo en progreso</li>
+                            <li><strong>Flujo Continuo:</strong> Sin sprints fijos</li>
+                            <li><strong>Mejora Continua:</strong> Optimización del flujo</li>
+                        </ul>
+                        <h4>Columnas Típicas:</h4>
+                        <ul>
+                            <li>To Do (Por Hacer)</li>
+                            <li>In Progress (En Progreso)</li>
+                            <li>Done (Terminado)</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>⚡ EXTREME PROGRAMMING (XP)</h3>
+                        </div>
+                        <h4>Prácticas Técnicas:</h4>
+                        <ul>
+                            <li><strong>TDD:</strong> Test-Driven Development</li>
+                            <li><strong>Pair Programming:</strong> Programación en pareja</li>
+                            <li><strong>Refactoring:</strong> Mejora continua del código</li>
+                            <li><strong>CI/CD:</strong> Integración y entrega continua</li>
+                        </ul>
+                        <h4>Valores XP:</h4>
+                        <ul>
+                            <li>Comunicación</li>
+                            <li>Simplicidad</li>
+                            <li>Feedback</li>
+                            <li>Coraje</li>
+                            <li>Respeto</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>💎 CRYSTAL</h3>
+                        </div>
+                        <h4>Características:</h4>
+                        <ul>
+                            <li><strong>Familia de metodologías</strong> según tamaño del equipo</li>
+                            <li><strong>Crystal Clear:</strong> Equipos de 2-8 personas</li>
+                            <li><strong>Crystal Yellow:</strong> Equipos de 10-20 personas</li>
+                            <li><strong>Enfoque en comunicación</strong> y competencias técnicas</li>
+                        </ul>
+                        <h4>Propiedades:</h4>
+                        <ul>
+                            <li>Entrega frecuente</li>
+                            <li>Mejora reflexiva</li>
+                            <li>Comunicación osmótica</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚖️</div>
+                        <h3 class="card-title">Comparación de Metodologías</h3>
+                    </div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metodología</th>
+                                <th>Estructura</th>
+                                <th>Enfoque Principal</th>
+                                <th>Tamaño de Equipo</th>
+                                <th>Frecuencia de Entrega</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SCRUM</strong></td>
+                                <td>Sprints fijos</td>
+                                <td>Gestión de producto</td>
+                                <td>5-9 personas</td>
+                                <td>2-4 semanas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>KANBAN</strong></td>
+                                <td>Flujo continuo</td>
+                                <td>Optimización del flujo</td>
+                                <td>Variable</td>
+                                <td>Continua</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XP</strong></td>
+                                <td>Iteraciones cortas</td>
+                                <td>Calidad técnica</td>
+                                <td>2-12 personas</td>
+                                <td>1-2 semanas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Crystal</strong></td>
+                                <td>Adaptable</td>
+                                <td>Comunicación</td>
+                                <td>2-40+ personas</td>
+                                <td>Variable</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Elección de Metodología</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>🏃‍♂️ Usar SCRUM cuando:</h4>
+                            <ul>
+                                <li>Proyectos con requisitos cambiantes</li>
+                                <li>Equipos nuevos en agilismo</li>
+                                <li>Necesidad de estructura clara</li>
+                                <li>Participación activa del Product Owner</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📊 Usar KANBAN cuando:</h4>
+                            <ul>
+                                <li>Trabajo de mantenimiento o soporte</li>
+                                <li>Flujo de trabajo continuo</li>
+                                <li>Equipos maduros y estables</li>
+                                <li>Prioridad en optimización del flujo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="escalado" class="tab-content">
+                <h2>🏢 Escalado de Metodologías Ágiles</h2>
+
+                <div class="highlight-box">
+                    <h3>📈 ¿Por qué Escalar Agilismo?</h3>
+                    <p>Las organizaciones grandes necesitan coordinar múltiples equipos ágiles manteniendo la flexibilidad y eficiencia de las metodologías ágiles tradicionales.</p>
+                </div>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🎯 SAFe (Scaled Agile Framework)</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">4</span>
+                                <div class="stat-label">Niveles de Escalado</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">10+</span>
+                                <div class="stat-label">Equipos por ART</div>
+                            </div>
+                        </div>
+                        <h4>Niveles SAFe:</h4>
+                        <ul>
+                            <li><strong>Essential SAFe:</strong> Nivel básico para 50-125 personas</li>
+                            <li><strong>Large Solution SAFe:</strong> Para sistemas complejos</li>
+                            <li><strong>Portfolio SAFe:</strong> Alineación estratégica</li>
+                            <li><strong>Full SAFe:</strong> Implementación completa</li>
+                        </ul>
+                        <h4>Roles Clave:</h4>
+                        <ul>
+                            <li>Release Train Engineer (RTE)</li>
+                            <li>Product Manager</li>
+                            <li>System Architect</li>
+                            <li>Business Owner</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🔄 LeSS (Large-Scale Scrum)</h3>
+                        </div>
+                        <h4>Principios LeSS:</h4>
+                        <ul>
+                            <li><strong>Scrum Scaled Up:</strong> Mantiene simplicidad de Scrum</li>
+                            <li><strong>Un Product Owner:</strong> Para todo el producto</li>
+                            <li><strong>Un Product Backlog:</strong> Priorización unificada</li>
+                            <li><strong>Equipos Feature:</strong> Orientados a funcionalidades</li>
+                        </ul>
+                        <h4>Configuraciones:</h4>
+                        <ul>
+                            <li><strong>LeSS:</strong> 2-8 equipos</li>
+                            <li><strong>LeSS Huge:</strong> 8+ equipos con Areas</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🔗 NEXUS</h3>
+                        </div>
+                        <h4>Características:</h4>
+                        <ul>
+                            <li><strong>Framework de Scrum.org</strong></li>
+                            <li><strong>3-9 equipos Scrum</strong></li>
+                            <li><strong>Nexus Integration Team:</strong> Facilita integración</li>
+                            <li><strong>Eventos escalados:</strong> Sprint Planning, Review, Retrospective</li>
+                        </ul>
+                        <h4>Artefactos Nexus:</h4>
+                        <ul>
+                            <li>Nexus Sprint Backlog</li>
+                            <li>Integrated Increment</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🌊 DISCIPLINED AGILE (DA)</h3>
+                        </div>
+                        <h4>Enfoque:</h4>
+                        <ul>
+                            <li><strong>Toolkit híbrido</strong> de prácticas</li>
+                            <li><strong>Context-sensitive:</strong> Adaptable al contexto</li>
+                            <li><strong>Goal-driven:</strong> Orientado a objetivos</li>
+                            <li><strong>Enterprise-ready:</strong> Para toda la empresa</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚖️</div>
+                        <h3 class="card-title">Comparación de Frameworks de Escalado</h3>
+                    </div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Complejidad</th>
+                                <th>Tamaño Óptimo</th>
+                                <th>Enfoque Principal</th>
+                                <th>Adopción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SAFe</strong></td>
+                                <td>Alta</td>
+                                <td>100+ personas</td>
+                                <td>Portfolio y estrategia</td>
+                                <td>Más popular</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LeSS</strong></td>
+                                <td>Media</td>
+                                <td>50-500 personas</td>
+                                <td>Simplicidad de Scrum</td>
+                                <td>Creciente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nexus</strong></td>
+                                <td>Baja</td>
+                                <td>20-80 personas</td>
+                                <td>Integración técnica</td>
+                                <td>Emergente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DA</strong></td>
+                                <td>Variable</td>
+                                <td>Cualquier tamaño</td>
+                                <td>Adaptabilidad contextual</td>
+                                <td>Nicho</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Desafíos del Escalado Ágil</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>🚧 Desafíos Técnicos</h4>
+                            <ul>
+                                <li>Integración continua compleja</li>
+                                <li>Arquitectura escalable</li>
+                                <li>Gestión de dependencias</li>
+                                <li>Testing a gran escala</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🤝 Desafíos Organizacionales</h4>
+                            <ul>
+                                <li>Alineación de objetivos</li>
+                                <li>Comunicación inter-equipos</li>
+                                <li>Gestión del cambio cultural</li>
+                                <li>Coordinación de releases</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">✅</div>
+                        <h3 class="card-title">Mejores Prácticas para Escalado</h3>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-item">Comenzar con equipos individuales maduros en agilismo</li>
+                        <li class="list-item">Establecer arquitectura técnica que soporte el escalado</li>
+                        <li class="list-item">Invertir en automatización de testing y despliegue</li>
+                        <li class="list-item">Crear comunidades de práctica inter-equipos</li>
+                        <li class="list-item">Mantener la autonomía de los equipos individuales</li>
+                        <li class="list-item">Establecer métricas y KPIs consistentes</li>
+                        <li class="list-item">Proporcionar coaching y formación continua</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="lean" class="tab-content">
+                <h2>⚡ Lean, DevOps y Prácticas Complementarias</h2>
+
+                <div class="highlight-box">
+                    <h3>🔄 Sinergia entre Metodologías</h3>
+                    <p>Lean, DevOps y Agilismo se complementan para crear un ecosistema completo de desarrollo y entrega de software eficiente.</p>
+                </div>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🏭 LEAN SOFTWARE DEVELOPMENT</h3>
+                        </div>
+                        <h4>7 Principios Lean:</h4>
+                        <ul>
+                            <li><strong>1. Eliminar desperdicios</strong> (Muda)</li>
+                            <li><strong>2. Amplificar el aprendizaje</strong></li>
+                            <li><strong>3. Decidir lo más tarde posible</strong></li>
+                            <li><strong>4. Entregar lo más rápido posible</strong></li>
+                            <li><strong>5. Empoderar al equipo</strong></li>
+                            <li><strong>6. Construir integridad</strong></li>
+                            <li><strong>7. Ver el conjunto</strong></li>
+                        </ul>
+                        <h4>Tipos de Desperdicios (Muda):</h4>
+                        <ul>
+                            <li>Sobreproducción</li>
+                            <li>Esperas</li>
+                            <li>Transporte</li>
+                            <li>Sobreprocesamiento</li>
+                            <li>Inventario</li>
+                            <li>Movimientos</li>
+                            <li>Defectos</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🚀 DEVOPS</h3>
+                        </div>
+                        <h4>Pilares DevOps:</h4>
+                        <ul>
+                            <li><strong>Culture:</strong> Colaboración Dev-Ops</li>
+                            <li><strong>Automation:</strong> Automatización de procesos</li>
+                            <li><strong>Lean:</strong> Eliminación de desperdicios</li>
+                            <li><strong>Measurement:</strong> Métricas y monitoreo</li>
+                            <li><strong>Sharing:</strong> Compartir conocimiento</li>
+                        </ul>
+                        <h4>Prácticas Clave:</h4>
+                        <ul>
+                            <li>Continuous Integration (CI)</li>
+                            <li>Continuous Deployment (CD)</li>
+                            <li>Infrastructure as Code</li>
+                            <li>Monitoring y Logging</li>
+                            <li>Microservicios</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>📊 LEAN STARTUP</h3>
+                        </div>
+                        <h4>Ciclo Build-Measure-Learn:</h4>
+                        <ul>
+                            <li><strong>Build:</strong> Construir MVP</li>
+                            <li><strong>Measure:</strong> Medir resultados</li>
+                            <li><strong>Learn:</strong> Aprender y decidir</li>
+                        </ul>
+                        <h4>Conceptos Clave:</h4>
+                        <ul>
+                            <li>Minimum Viable Product (MVP)</li>
+                            <li>Validated Learning</li>
+                            <li>Innovation Accounting</li>
+                            <li>Pivot or Persevere</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <h3>🔄 CONTINUOUS DELIVERY</h3>
+                        </div>
+                        <h4>Principios:</h4>
+                        <ul>
+                            <li><strong>Deployment Pipeline:</strong> Automatizado</li>
+                            <li><strong>Configuration Management:</strong> Versionado</li>
+                            <li><strong>Continuous Testing:</strong> Automático</li>
+                            <li><strong>Low-risk Releases:</strong> Despliegues seguros</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔗</div>
+                        <h3 class="card-title">Integración Lean + Agile + DevOps</h3>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>🏭 Lean (Principios)</h4>
+                                <p>Proporciona la filosofía base: eliminar desperdicios, entregar valor, mejora continua</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>🏃‍♂️ Agile (Metodología)</h4>
+                                <p>Aporta las prácticas de desarrollo: sprints, retrospectivas, colaboración</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="card">
+                                <h4>🚀 DevOps (Operaciones)</h4>
+                                <p>Extiende la agilidad a operaciones: automatización, monitoreo, despliegue</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <h3 class="card-title">Métricas y KPIs</h3>
+                    </div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Métrica</th>
+                                <th>Descripción</th>
+                                <th>Objetivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Lean</td>
+                                <td>Lead Time</td>
+                                <td>Tiempo desde solicitud hasta entrega</td>
+                                <td>Minimizar</td>
+                            </tr>
+                            <tr>
+                                <td>Lean</td>
+                                <td>Cycle Time</td>
+                                <td>Tiempo de trabajo activo</td>
+                                <td>Optimizar</td>
+                            </tr>
+                            <tr>
+                                <td>Agile</td>
+                                <td>Velocity</td>
+                                <td>Puntos completados por sprint</td>
+                                <td>Estabilizar</td>
+                            </tr>
+                            <tr>
+                                <td>Agile</td>
+                                <td>Burndown</td>
+                                <td>Trabajo restante vs tiempo</td>
+                                <td>Predecir</td>
+                            </tr>
+                            <tr>
+                                <td>DevOps</td>
+                                <td>MTTR</td>
+                                <td>Tiempo medio de recuperación</td>
+                                <td>Minimizar</td>
+                            </tr>
+                            <tr>
+                                <td>DevOps</td>
+                                <td>Deployment Frequency</td>
+                                <td>Frecuencia de despliegues</td>
+                                <td>Maximizar</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Beneficios de la Integración</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">50%</span>
+                            <div class="stat-label">Reducción Lead Time</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">3x</span>
+                            <div class="stat-label">Más despliegues</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">90%</span>
+                            <div class="stat-label">Menos errores</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">60%</span>
+                            <div class="stat-label">Mayor satisfacción</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ejercicios" class="tab-content">
+                <h2>🎯 Ejercicios Prácticos</h2>
+
+                <div class="highlight-box">
+                    <h3>💡 Instrucciones de Uso</h3>
+                    <p>Los siguientes ejercicios están diseñados para practicar conceptos clave que aparecen frecuentemente en exámenes de oposiciones. Haz clic en cada ejercicio para ver la solución detallada.</p>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex1')">
+                        <span class="difficulty-badge difficulty-basic">Básico</span>
+                        Ejercicio 1: Valores del Manifiesto Ágil
+                    </div>
+                    <div class="exercise-content" id="ex1">
+                        <h4>Enunciado:</h4>
+                        <p>Completa los 4 valores del Manifiesto Ágil:</p>
+                        <ol>
+                            <li>_______ e _______ sobre procesos y herramientas</li>
+                            <li>_______ _______ sobre documentación extensiva</li>
+                            <li>_______ con el _______ sobre negociación contractual</li>
+                            <li>_______ ante el _______ sobre seguir un plan</li>
+                        </ol>
+                        
+                        <h4>Solución:</h4>
+                        <ol>
+                            <li><strong>Individuos</strong> e <strong>interacciones</strong> sobre procesos y herramientas</li>
+                            <li><strong>Software</strong> <strong>funcionando</strong> sobre documentación extensiva</li>
+                            <li><strong>Colaboración</strong> con el <strong>cliente</strong> sobre negociación contractual</li>
+                            <li><strong>Respuesta</strong> ante el <strong>cambio</strong> sobre seguir un plan</li>
+                        </ol>
+
+                        <h4>Explicación:</h4>
+                        <p>Estos cuatro valores establecen las prioridades fundamentales del desarrollo ágil, enfatizando la flexibilidad, colaboración y entrega de valor por encima de procesos rígidos.</p>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex2')">
+                        <span class="difficulty-badge difficulty-basic">Básico</span>
+                        Ejercicio 2: Roles en SCRUM
+                    </div>
+                    <div class="exercise-content" id="ex2">
+                        <h4>Enunciado:</h4>
+                        <p>Relaciona cada rol de SCRUM con su responsabilidad principal:</p>
+                        <table class="comparison-table">
+                            <tr><td>Product Owner</td><td>A) Facilita el proceso y elimina impedimentos</td></tr>
+                            <tr><td>Scrum Master</td><td>B) Define y prioriza el Product Backlog</td></tr>
+                            <tr><td>Development Team</td><td>C) Desarrolla el incremento del producto</td></tr>
+                        </table>
+
+                        <h4>Solución:</h4>
+                        <ul>
+                            <li><strong>Product Owner</strong> - B) Define y prioriza el Product Backlog</li>
+                            <li><strong>Scrum Master</strong> - A) Facilita el proceso y elimina impedimentos</li>
+                            <li><strong>Development Team</strong> - C) Desarrolla el incremento del producto</li>
+                        </ul>
+
+                        <h4>Detalles adicionales:</h4>
+                        <ul>
+                            <li><strong>Product Owner:</strong> Voz del cliente, ROI, priorización</li>
+                            <li><strong>Scrum Master:</strong> Coach del equipo, servant leader</li>
+                            <li><strong>Development Team:</strong> Multidisciplinario, auto-organizado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex3')">
+                        <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                        Ejercicio 3: Cálculo de Velocity
+                    </div>
+                    <div class="exercise-content" id="ex3">
+                        <h4>Enunciado:</h4>
+                        <p>Un equipo SCRUM ha completado los siguientes Story Points en sus últimos 5 sprints:</p>
+                        <ul>
+                            <li>Sprint 1: 23 puntos</li>
+                            <li>Sprint 2: 27 puntos</li>
+                            <li>Sprint 3: 19 puntos</li>
+                            <li>Sprint 4: 25 puntos</li>
+                            <li>Sprint 5: 26 puntos</li>
+                        </ul>
+                        <p>¿Cuál es la velocity promedio del equipo y cuántos puntos deberían planificar para el próximo sprint?</p>
+
+                        <h4>Solución:</h4>
+                        <div class="code-block">
+Cálculo de Velocity:
+Total de puntos = 23 + 27 + 19 + 25 + 26 = 120 puntos
+Número de sprints = 5
+Velocity promedio = 120 ÷ 5 = 24 puntos por sprint
+                        </div>
+                        <p><strong>Respuesta:</strong> La velocity promedio es de 24 puntos por sprint. Para el próximo sprint deberían planificar entre 22-26 puntos (±10% de variación normal).</p>
+
+                        <h4>Consideraciones:</h4>
+                        <ul>
+                            <li>La velocity es una medida de capacidad, no de productividad</li>
+                            <li>Se usa para planificación, no para comparar equipos</li>
+                            <li>Debe calcularse con al menos 3-5 sprints de historia</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex4')">
+                        <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                        Ejercicio 4: Principios Lean
+                    </div>
+                    <div class="exercise-content" id="ex4">
+                        <h4>Enunciado:</h4>
+                        <p>Identifica qué principio Lean se aplica en cada situación:</p>
+                        <ol>
+                            <li>Un equipo elimina reuniones innecesarias que no aportan valor</li>
+                            <li>Se implementa un sistema de feedback rápido con usuarios</li>
+                            <li>El equipo tiene autonomía para tomar decisiones técnicas</li>
+                            <li>Se pospone la elección de tecnología hasta tener más información</li>
+                        </ol>
+
+                        <h4>Solución:</h4>
+                        <ol>
+                            <li><strong>Eliminar desperdicios</strong> - Las reuniones sin valor son un tipo de desperdicio (muda)</li>
+                            <li><strong>Amplificar el aprendizaje</strong> - El feedback rápido acelera el ciclo de aprendizaje</li>
+                            <li><strong>Empoderar al equipo</strong> - Dar autonomía al equipo para decisiones</li>
+                            <li><strong>Decidir lo más tarde posible</strong> - Posponer decisiones hasta tener mejor información</li>
+                        </ol>
+
+                        <h4>Los 7 principios Lean recordatorio:</h4>
+                        <ol>
+                            <li>Eliminar desperdicios</li>
+                            <li>Amplificar el aprendizaje</li>
+                            <li>Decidir lo más tarde posible</li>
+                            <li>Entregar lo más rápido posible</li>
+                            <li>Empoderar al equipo</li>
+                            <li>Construir integridad</li>
+                            <li>Ver el conjunto</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex5')">
+                        <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        Ejercicio 5: Escalado SAFe
+                    </div>
+                    <div class="exercise-content" id="ex5">
+                        <h4>Enunciado:</h4>
+                        <p>Una organización con 150 desarrolladores divididos en 15 equipos Scrum quiere implementar SAFe. Responde:</p>
+                        <ol>
+                            <li>¿Qué configuración de SAFe recomendarías?</li>
+                            <li>¿Cuántos ARTs (Agile Release Trains) necesitarían?</li>
+                            <li>¿Cuáles serían los roles clave a implementar?</li>
+                        </ol>
+
+                        <h4>Solución:</h4>
+                        <ol>
+                            <li><strong>Essential SAFe</strong> - Para 150 personas, Essential SAFe es la configuración apropiada (cubre de 50-125 personas, pero es flexible).</li>
+                            
+                            <li><strong>2 ARTs aproximadamente</strong>:
+                                <ul>
+                                    <li>ART típico: 5-12 equipos (50-125 personas)</li>
+                                    <li>Con 15 equipos: 2 ARTs de 7-8 equipos cada uno</li>
+                                    <li>Esto permite mejor coordinación y comunicación</li>
+                                </ul>
+                            </li>
+                            
+                            <li><strong>Roles clave por ART</strong>:
+                                <ul>
+                                    <li>1 Release Train Engineer (RTE)</li>
+                                    <li>1 Product Manager</li>
+                                    <li>1 System Architect/Engineer</li>
+                                    <li>Business Owners (2-3 por ART)</li>
+                                    <li>Mantener Scrum Masters y Product Owners existentes</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h4>Consideraciones adicionales:</h4>
+                        <ul>
+                            <li><strong>PI Planning:</strong> Eventos trimestrales de 2 días para sincronización</li>
+                            <li><strong>System Demo:</strong> Demo integrada cada 2 semanas</li>
+                            <li><strong>Inspect & Adapt:</strong> Retrospectiva y mejora continua a nivel ART</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex6')">
+                        <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                        Ejercicio 6: Kanban WIP Limits
+                    </div>
+                    <div class="exercise-content" id="ex6">
+                        <h4>Enunciado:</h4>
+                        <p>Un equipo tiene el siguiente tablero Kanban:</p>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>To Do</th>
+                                <th>In Progress (WIP: 3)</th>
+                                <th>Testing (WIP: 2)</th>
+                                <th>Done</th>
+                            </tr>
+                            <tr>
+                                <td>8 elementos</td>
+                                <td>4 elementos</td>
+                                <td>1 elemento</td>
+                                <td>12 elementos</td>
+                            </tr>
+                        </table>
+                        <p>¿Qué acciones debe tomar el equipo?</p>
+
+                        <h4>Solución:</h4>
+                        <p><strong>Problema identificado:</strong> La columna "In Progress" tiene 4 elementos pero su límite WIP es 3. Esto viola las reglas de Kanban.</p>
+
+                        <p><strong>Acciones recomendadas:</strong></p>
+                        <ol>
+                            <li><strong>Detener nuevos inicios:</strong> No mover elementos de "To Do" a "In Progress"</li>
+                            <li><strong>Enfocar en completar:</strong> Todo el equipo debe ayudar a terminar elementos en "In Progress"</li>
+                            <li><strong>Identificar bloqueos:</strong> ¿Por qué se acumularon 4 elementos?</li>
+                            <li><strong>Pull cuando sea posible:</strong> Mover 1 elemento de "In Progress" a "Testing"</li>
+                        </ol>
+
+                        <h4>Beneficios de los límites WIP:</h4>
+                        <ul>
+                            <li>Reducen multitasking</li>
+                            <li>Mejoran el flujo</li>
+                            <li>Identifican cuellos de botella</li>
+                            <li>Aumentan la calidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex7')">
+                        <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        Ejercicio 7: DevOps Metrics
+                    </div>
+                    <div class="exercise-content" id="ex7">
+                        <h4>Enunciado:</h4>
+                        <p>Una organización quiere medir su madurez DevOps. Sus métricas actuales son:</p>
+                        <ul>
+                            <li><strong>Deploy Frequency:</strong> Una vez por semana</li>
+                            <li><strong>Lead Time for Changes:</strong> 2 semanas</li>
+                            <li><strong>Mean Time to Recovery (MTTR):</strong> 4 horas</li>
+                            <li><strong>Change Failure Rate:</strong> 15%</li>
+                        </ul>
+                        <p>Clasifica su nivel de rendimiento según el State of DevOps Report.</p>
+
+                        <h4>Solución:</h4>
+                        <p>Según el State of DevOps Report, los niveles de rendimiento son:</p>
+
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Métrica</th>
+                                    <th>Elite</th>
+                                    <th>High</th>
+                                    <th>Medium</th>
+                                    <th>Low</th>
+                                    <th>Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Deploy Frequency</td>
+                                    <td>On-demand</td>
+                                    <td>1x/día-1x/sem</td>
+                                    <td>1x/sem-1x/mes</td>
+                                    <td>&lt;1x/mes</td>
+                                    <td><strong>1x/sem</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Lead Time</td>
+                                    <td>&lt;1 hora</td>
+                                    <td>1 día-1 sem</td>
+                                    <td>1 sem-1 mes</td>
+                                    <td>&gt;1 mes</td>
+                                    <td><strong>2 semanas</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>MTTR</td>
+                                    <td>&lt;1 hora</td>
+                                    <td>&lt;1 día</td>
+                                    <td>1 día-1 sem</td>
+                                    <td>&gt;1 semana</td>
+                                    <td><strong>4 horas</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Change Failure</td>
+                                    <td>0-15%</td>
+                                    <td>0-15%</td>
+                                    <td>16-45%</td>
+                                    <td>46-60%</td>
+                                    <td><strong>15%</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p><strong>Clasificación: Medium/High Performance</strong></p>
+                        <ul>
+                            <li>Deploy Frequency: High (1x/semana)</li>
+                            <li>Lead Time: Medium (2 semanas)</li>
+                            <li>MTTR: High (4 horas &lt; 1 día)</li>
+                            <li>Change Failure Rate: High (15%)</li>
+                        </ul>
+
+                        <p><strong>Recomendaciones de mejora:</strong></p>
+                        <ul>
+                            <li>Reducir Lead Time mediante automatización de pipelines</li>
+                            <li>Implementar feature flags para deploys más seguros</li>
+                            <li>Mejorar testing automatizado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-header" onclick="toggleExercise('ex8')">
+                        <span class="difficulty-badge difficulty-basic">Básico</span>
+                        Ejercicio 8: Eventos SCRUM
+                    </div>
+                    <div class="exercise-content" id="ex8">
+                        <h4>Enunciado:</h4>
+                        <p>Ordena cronológicamente los eventos SCRUM en un sprint de 2 semanas:</p>
+                        <ul style="list-style-type: none;">
+                            <li>A) Sprint Retrospective</li>
+                            <li>B) Daily Scrum (diario)</li>
+                            <li>C) Sprint Planning</li>
+                            <li>D) Sprint Review</li>
+                        </ul>
+
+                        <h4>Solución:</h4>
+                        <p><strong>Orden cronológico:</strong></p>
+                        <ol>
+                            <li><strong>C) Sprint Planning</strong> - Al inicio del sprint (4-8 horas para sprint de 2 semanas)</li>
+                            <li><strong>B) Daily Scrum</strong> - Cada día durante el sprint (15 minutos máximo)</li>
+                            <li><strong>D) Sprint Review</strong> - Al final del sprint (2-4 horas)</li>
+                            <li><strong>A) Sprint Retrospective</strong> - Después del Review (1.5-3 horas)</li>
+                        </ol>
+
+                        <h4>Detalles de cada evento:</h4>
+                        <ul>
+                            <li><strong>Sprint Planning:</strong> Qué se va a hacer y cómo</li>
+                            <li><strong>Daily Scrum:</strong> Sincronización diaria del equipo</li>
+                            <li><strong>Sprint Review:</strong> Demostración del incremento</li>
+                            <li><strong>Sprint Retrospective:</strong> Mejora del proceso</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Progreso de Ejercicios</h3>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" id="progress"></div>
+                    </div>
+                    <p id="progress-text">Completa los ejercicios para ver tu progreso</p>
+                </div>
+            </div>
+
+            <div id="recursos" class="tab-content">
+                <h2>📚 Recursos Adicionales y FAQ</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <h3 class="card-title">Bibliografía Esencial</h3>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-item"><strong>"Agile Manifesto"</strong> - Beck, Beedle, et al. (2001)</li>
+                        <li class="list-item"><strong>"Scrum: The Art of Doing Twice the Work in Half the Time"</strong> - Jeff Sutherland</li>
+                        <li class="list-item"><strong>"Kanban: Successful Evolutionary Change for Your Technology Business"</strong> - David J. Anderson</li>
+                        <li class="list-item"><strong>"Scaling Agile @ Spotify"</strong> - Henrik Kniberg</li>
+                        <li class="list-item"><strong>"The Lean Startup"</strong> - Eric Ries</li>
+                        <li class="list-item"><strong>"Continuous Delivery"</strong> - Jez Humble, David Farley</li>
+                        <li class="list-item"><strong>"SAFe Reference Guide"</strong> - Dean Leffingwell</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🛠️</div>
+                        <h3 class="card-title">Herramientas Recomendadas</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>📊 Gestión de Proyectos</h4>
+                            <ul>
+                                <li><strong>Jira</strong> - Atlassian (Scrum/Kanban)</li>
+                                <li><strong>Azure DevOps</strong> - Microsoft</li>
+                                <li><strong>Trello</strong> - Kanban simple</li>
+                                <li><strong>Monday.com</strong> - Gestión visual</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🚀 DevOps y CI/CD</h4>
+                            <ul>
+                                <li><strong>Jenkins</strong> - Automatización CI/CD</li>
+                                <li><strong>GitLab CI</strong> - Integración completa</li>
+                                <li><strong>GitHub Actions</strong> - Workflows</li>
+                                <li><strong>Docker</strong> - Containerización</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📈 Métricas y Monitoreo</h4>
+                            <ul>
+                                <li><strong>SonarQube</strong> - Calidad de código</li>
+                                <li><strong>New Relic</strong> - APM y monitoreo</li>
+                                <li><strong>Grafana</strong> - Dashboards</li>
+                                <li><strong>ELK Stack</strong> - Logs y analytics</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🤝 Colaboración</h4>
+                            <ul>
+                                <li><strong>Slack</strong> - Comunicación de equipo</li>
+                                <li><strong>Microsoft Teams</strong> - Colaboración</li>
+                                <li><strong>Miro/Mural</strong> - Pizarras virtuales</li>
+                                <li><strong>Confluence</strong> - Documentación</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">❓</div>
+                        <h3 class="card-title">Preguntas Frecuentes (FAQ)</h3>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq('faq1')">
+                            ¿Cuál es la diferencia principal entre Scrum y Kanban?
+                        </div>
+                        <div class="faq-answer" id="faq1">
+                            <p><strong>Scrum</strong> es un framework prescriptivo con roles, eventos y artefactos definidos. Usa sprints fijos (timeboxes) y requiere cambios organizacionales.</p>
+                            <p><strong>Kanban</strong> es un método evolutivo que se enfoca en visualizar y optimizar el flujo de trabajo. No requiere cambios organizacionales y permite mejora continua gradual.</p>
+                            <p><strong>Cuándo usar cada uno:</strong></p>
+                            <ul>
+                                <li><strong>Scrum:</strong> Proyectos con requisitos cambiantes, equipos nuevos en agilismo</li>
+                                <li><strong>Kanban:</strong> Trabajo operativo, soporte, equipos maduros</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq('faq2')">
+                            ¿Qué es DevOps y cómo se relaciona con Agile?
+                        </div>
+                        <div class="faq-answer" id="faq2">
+                            <p><strong>DevOps</strong> es una cultura y conjunto de prácticas que integra desarrollo (Dev) y operaciones (Ops) para acelerar la entrega de software.</p>
+                            <p><strong>Relación con Agile:</strong></p>
+                            <ul>
+                                <li>Agile se enfoca en el proceso de desarrollo</li>
+                                <li>DevOps extiende la agilidad a toda la cadena de valor</li>
+                                <li>Ambos priorizan colaboración, automatización y mejora continua</li>
+                                <li>DevOps permite que Agile funcione a escala empresarial</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq('faq3')">
+                            ¿Cuándo es necesario usar frameworks de escalado como SAFe?
+                        </div>
+                        <div class="faq-answer" id="faq3">
+                            <p>Los frameworks de escalado son necesarios cuando:</p>
+                            <ul>
+                                <li><strong>Tamaño:</strong> Más de 50-100 personas en desarrollo</li>
+                                <li><strong>Complejidad:</strong> Múltiples productos interdependientes</li>
+                                <li><strong>Coordinación:</strong> Necesidad de sincronizar múltiples equipos</li>
+                                <li><strong>Governance:</strong> Requisitos de compliance y auditoria</li>
+                            </ul>
+                            <p><strong>Señales de que necesitas escalado:</strong></p>
+                            <ul>
+                                <li>Dependencias entre equipos causan retrasos</li>
+                                <li>Falta de visión compartida del producto</li>
+                                <li>Dificultad para integrar trabajo de múltiples equipos</li>
+                                <li>Desalineación entre estrategia y ejecución</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq('faq4')">
+                            ¿Cómo se implementa agilismo en el sector público?
+                        </div>
+                        <div class="faq-answer" id="faq4">
+                            <p>La implementación en el sector público requiere adaptaciones:</p>
+                            <p><strong>Desafíos específicos:</strong></p>
+                            <ul>
+                                <li>Procesos de contratación rígidos</li>
+                                <li>Regulaciones y compliance estrictos</li>
+                                <li>Presupuestos anuales inflexibles</li>
+                                <li>Cultura organizacional tradicional</li>
+                            </ul>
+                            <p><strong>Estrategias de adaptación:</strong></p>
+                            <ul>
+                                <li>Comenzar con proyectos piloto pequeños</li>
+                                <li>Adaptar ceremonias a regulaciones existentes</li>
+                                <li>Enfocarse en transparencia y trazabilidad</li>
+                                <li>Involucrar stakeholders gubernamentales como Product Owners</li>
+                                <li>Documentar según requisitos normativos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq('faq5')">
+                            ¿Qué métricas son más importantes en proyectos ágiles?
+                        </div>
+                        <div class="faq-answer" id="faq5">
+                            <p><strong>Métricas de equipo (Scrum):</strong></p>
+                            <ul>
+                                <li><strong>Velocity:</strong> Story points completados por sprint</li>
+                                <li><strong>Burndown Chart:</strong> Trabajo restante vs tiempo</li>
+                                <li><strong>Sprint Goal Success Rate:</strong> % de objetivos cumplidos</li>
+                            </ul>
+                            <p><strong>Métricas de flujo (Kanban):</strong></p>
+                            <ul>
+                                <li><strong>Lead Time:</strong> Tiempo total desde solicitud hasta entrega</li>
+                                <li><strong>Cycle Time:</strong> Tiempo de trabajo activo</li>
+                                <li><strong>Throughput:</strong> Elementos completados por período</li>
+                            </ul>
+                            <p><strong>Métricas de calidad:</strong></p>
+                            <ul>
+                                <li><strong>Defect Density:</strong> Defectos por unidad de código</li>
+                                <li><strong>Code Coverage:</strong> % de código cubierto por tests</li>
+                                <li><strong>Technical Debt:</strong> Tiempo estimado para resolver deuda técnica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎓</div>
+                        <h3 class="card-title">Certificaciones Profesionales</h3>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>🏃‍♂️ Certificaciones SCRUM</h4>
+                            <ul>
+                                <li><strong>CSM</strong> - Certified Scrum Master</li>
+                                <li><strong>CSPO</strong> - Certified Scrum Product Owner</li>
+                                <li><strong>PSM</strong> - Professional Scrum Master</li>
+                                <li><strong>PSPO</strong> - Professional Scrum Product Owner</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📊 Certificaciones Lean/Kanban</h4>
+                            <ul>
+                                <li><strong>TKP</strong> - Team Kanban Practitioner</li>
+                                <li><strong>KMP</strong> - Kanban Management Professional</li>
+                                <li><strong>Lean Six Sigma</strong> - Green Belt, Black Belt</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🏢 Certificaciones de Escalado</h4>
+                            <ul>
+                                <li><strong>SA</strong> - SAFe Agilist</li>
+                                <li><strong>SP</strong> - SAFe Practitioner</li>
+                                <li><strong>LeSS</strong> - Large-Scale Scrum</li>
+                                <li><strong>ICP-ENT</strong> - Enterprise Agile Coaching</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🚀 Certificaciones DevOps</h4>
+                            <ul>
+                                <li><strong>AWS DevOps</strong> - Professional</li>
+                                <li><strong>Azure DevOps</strong> - Engineer Expert</li>
+                                <li><strong>Docker</strong> - Certified Associate</li>
+                                <li><strong>Kubernetes</strong> - CKA, CKAD</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">Consejos para Exámenes de Oposición</h3>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>📝 Conceptos que Siempre Aparecen:</h4>
+                        <ul>
+                            <li>Los 4 valores del Manifiesto Ágil (memorizar exactamente)</li>
+                            <li>Roles y responsabilidades en SCRUM</li>
+                            <li>Diferencias entre Scrum, Kanban y XP</li>
+                            <li>Eventos SCRUM y su duración</li>
+                            <li>Principios Lean y tipos de desperdicio</li>
+                            <li>Frameworks de escalado (SAFe, LeSS)</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>💡 Técnicas de Estudio:</h4>
+                        <ul>
+                            <li><strong>Mnemotecnias:</strong> Crear acrónimos para listas (ej: los 4 valores)</li>
+                            <li><strong>Comparaciones:</strong> Hacer tablas comparativas entre metodologías</li>
+                            <li><strong>Casos prácticos:</strong> Practicar con situaciones reales</li>
+                            <li><strong>Dibujos:</strong> Crear esquemas visuales de procesos</li>
+                            <li><strong>Repetición espaciada:</strong> Repasar conceptos en intervalos crecientes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <h3 class="card-title">Glosario de Términos Clave</h3>
+                    </div>
+                    <table class="comparison-table">
+                        <tbody>
+                            <tr><td><strong>Backlog</strong></td><td>Lista priorizada de funcionalidades pendientes</td></tr>
+                            <tr><td><strong>Burndown</strong></td><td>Gráfico que muestra trabajo restante vs tiempo</td></tr>
+                            <tr><td><strong>Daily Scrum</strong></td><td>Reunión diaria de 15 min para sincronización</td></tr>
+                            <tr><td><strong>Epic</strong></td><td>Historia de usuario grande que se divide en historias menores</td></tr>
+                            <tr><td><strong>Increment</strong></td><td>Suma de todos los elementos completados en un sprint</td></tr>
+                            <tr><td><strong>Kanban</strong></td><td>Método visual para gestionar flujo de trabajo</td></tr>
+                            <tr><td><strong>MVP</strong></td><td>Minimum Viable Product - versión mínima funcional</td></tr>
+                            <tr><td><strong>Product Owner</strong></td><td>Responsable de definir y priorizar el product backlog</td></tr>
+                            <tr><td><strong>Retrospective</strong></td><td>Evento para reflexionar y mejorar el proceso</td></tr>
+                            <tr><td><strong>Scrum Master</strong></td><td>Facilitador del proceso Scrum, elimina impedimentos</td></tr>
+                            <tr><td><strong>Sprint</strong></td><td>Iteración de trabajo de duración fija (1-4 semanas)</td></tr>
+                            <tr><td><strong>Story Points</strong></td><td>Unidad de medida relativa para estimar esfuerzo</td></tr>
+                            <tr><td><strong>User Story</strong></td><td>Descripción informal de funcionalidad desde perspectiva del usuario</td></tr>
+                            <tr><td><strong>Velocity</strong></td><td>Cantidad promedio de story points completados por sprint</td></tr>
+                            <tr><td><strong>WIP Limit</strong></td><td>Límite de trabajo en progreso para optimizar flujo</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Oscuro';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Claro';
+            }
+        });
+
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Save active tab
+            localStorage.setItem('activeTab', tabName);
+        }
+
+        // Load saved tab
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTab = localStorage.getItem('activeTab') || 'resumen';
+            const tabElement = document.getElementById(savedTab);
+            if (tabElement) {
+                // Hide all tabs first
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                // Remove active from all buttons
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                
+                // Show saved tab
+                tabElement.classList.add('active');
+                
+                // Activate corresponding button
+                const activeButton = document.querySelector(`[onclick="showTab('${savedTab}')"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+            }
+        });
+
+        // Exercise management
+        function toggleExercise(exerciseId) {
+            const content = document.getElementById(exerciseId);
+            content.classList.toggle('active');
+            
+            // Update progress
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const exercises = document.querySelectorAll('.exercise-content');
+            const completedExercises = document.querySelectorAll('.exercise-content.active');
+            const progress = (completedExercises.length / exercises.length) * 100;
+            
+            const progressBar = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progressBar && progressText) {
+                progressBar.style.width = progress + '%';
+                progressText.textContent = `Progreso: ${completedExercises.length}/${exercises.length} ejercicios completados (${Math.round(progress)}%)`;
+            }
+        }
+
+        // FAQ management
+        function toggleFaq(faqId) {
+            const answer = document.getElementById(faqId);
+            answer.classList.toggle('active');
+        }
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Alt + T for theme toggle
+            if (e.altKey && e.key === 't') {
+                e.preventDefault();
+                toggleTheme();
+            }
+            
+            // Alt + 1-7 for tab navigation
+            if (e.altKey && e.key >= '1' && e.key <= '7') {
+                e.preventDefault();
+                const tabs = ['resumen', 'manifiesto', 'metodologias', 'escalado', 'lean', 'ejercicios', 'recursos'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabIndex < tabs.length) {
+                    showTab(tabs[tabIndex]);
+                }
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.3s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

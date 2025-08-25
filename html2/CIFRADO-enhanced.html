@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmos de Cifrado Simétricos y Asimétricos - Tema 079</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #2e7d32;
+            --error-color: #d32f2f;
+            --warning-color: #f57c00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .header {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-card);
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+            margin-bottom: 0;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            background: transparent;
+            border: none;
+            padding: 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 12px 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .tab-content {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--bg-hover);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .algorithm-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .algorithm-table th,
+        .algorithm-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .algorithm-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .algorithm-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-recommended {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-not-recommended {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .quiz-container {
+            margin: 1rem 0;
+        }
+
+        .question {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .option {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+        }
+
+        .option.correct {
+            border-color: var(--success-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--error-color);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty.avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .process-step {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .comparison-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, rgba(74, 158, 255, 0.2) 50%, transparent 100%);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+                flex: none;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: var(--bg-card);
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--bg-hover);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .progress-bar {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 3px;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: var(--accent-color);
+            height: 20px;
+            border-radius: 7px;
+            transition: width 0.3s ease;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, var(--accent-color), #6a5acd);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-point::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌞/🌙</button>
+            <h1>Algoritmos de Cifrado</h1>
+            <p>Tema 079: Simétricos, Asimétricos, Función Hash y Notariado Digital</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">Resumen</button>
+            <button class="tab" onclick="showTab(1)">Cifrado Simétrico</button>
+            <button class="tab" onclick="showTab(2)">Cifrado Asimétrico</button>
+            <button class="tab" onclick="showTab(3)">Funciones Hash</button>
+            <button class="tab" onclick="showTab(4)">Esquemas Híbridos</button>
+            <button class="tab" onclick="showTab(5)">Ejercicios</button>
+            <button class="tab" onclick="showTab(6)">Recursos</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tab 1: Resumen General -->
+            <div class="content-section active">
+                <h2>Resumen General del Tema</h2>
+                
+                <div class="key-point">
+                    <h3>🎯 Objetivo Principal</h3>
+                    <p>Comprender los fundamentos de la criptografía moderna, incluyendo algoritmos simétricos, asimétricos, funciones hash y esquemas híbridos para garantizar la seguridad de la información.</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>📊 Estadísticas Clave</h3>
+                        <ul style="text-align: left;">
+                            <li><strong>AES:</strong> Estándar actual con claves de 128/192/256 bits</li>
+                            <li><strong>RSA:</strong> Claves típicas de 2048-4096 bits</li>
+                            <li><strong>SHA-2:</strong> Hash recomendado con 256-512 bits</li>
+                            <li><strong>Velocidad:</strong> Simétrico 100x más rápido que asimétrico</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h3>🔑 Conceptos Fundamentales</h3>
+                        <ul style="text-align: left;">
+                            <li><strong>Confidencialidad:</strong> Solo el destinatario lee</li>
+                            <li><strong>Integridad:</strong> Detectar modificaciones</li>
+                            <li><strong>Autenticidad:</strong> Verificar origen</li>
+                            <li><strong>No repudio:</strong> Prueba irrefutable</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Objetivos de Aprendizaje</h3>
+                    <ul>
+                        <li>Distinguir entre cifrado simétrico y asimétrico</li>
+                        <li>Identificar algoritmos recomendados y obsoletos</li>
+                        <li>Comprender las propiedades de las funciones hash</li>
+                        <li>Aplicar esquemas híbridos en casos prácticos</li>
+                        <li>Evaluar la seguridad de sistemas criptográficos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎖️ Relevancia para Oposiciones</h3>
+                    <p>Este tema es <span class="highlight">fundamental</span> en exámenes de administración pública, especialmente en:</p>
+                    <ul>
+                        <li>TIC (Tecnologías de la Información y Comunicación)</li>
+                        <li>Ciberseguridad y protección de datos</li>
+                        <li>Administración electrónica</li>
+                        <li>Gestión de sistemas de información</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 2: Cifrado Simétrico -->
+            <div class="content-section">
+                <h2>Algoritmos de Cifrado Simétrico</h2>
+                
+                <div class="key-point">
+                    <h3>🔐 Característica Principal</h3>
+                    <p>Una única clave (KA = KB) para cifrar y descifrar. La clave debe ser secreta y conocida solo por emisor y receptor.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌊 Cifradores de Flujo</h3>
+                    <p>Combinan dígito a dígito el flujo de datos con un keystream generado pseudo-aleatoriamente.</p>
+                    
+                    <h4>Perfiles de Uso:</h4>
+                    <ul>
+                        <li><strong>Aplicaciones críticas:</strong> Requisitos estrictos de velocidad</li>
+                        <li><strong>Hardware limitado:</strong> Capacidad limitada de cómputo y almacenamiento</li>
+                    </ul>
+
+                    <table class="algorithm-table">
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Estado</th>
+                            <th>Uso Histórico</th>
+                            <th>Observaciones</th>
+                        </tr>
+                        <tr>
+                            <td>A5/1 y A5/2</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>GSM</td>
+                            <td>Obsoleto, vulnerabilidades conocidas</td>
+                        </tr>
+                        <tr>
+                            <td>RC4</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>WEP, WPA, SSL</td>
+                            <td>Vulnerabilidades críticas</td>
+                        </tr>
+                        <tr>
+                            <td>E0</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>Bluetooth</td>
+                            <td>Reemplazado por algoritmos más seguros</td>
+                        </tr>
+                        <tr>
+                            <td>Rabbit</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>Actual</td>
+                            <td>Clave de 128 bits</td>
+                        </tr>
+                        <tr>
+                            <td>SNOW3G</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>UMTS</td>
+                            <td>Clave de 128 bits, telecomunicaciones</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🧱 Cifradores de Bloque</h3>
+                    <p>El texto se divide en bloques de tamaño fijo para su cifrado.</p>
+                    
+                    <h4>Modos de Operación:</h4>
+                    <div class="process-step">
+                        <strong>ECB (Electronic Code Book):</strong> Bloques cifrados independientemente
+                    </div>
+                    <div class="process-step">
+                        <strong>CBC (Cipher Block Chaining):</strong> Cifrado depende del bloque anterior
+                    </div>
+                    <div class="process-step">
+                        <strong>CTR (Contador):</strong> Usa cifrador de bloque para generar keystream
+                    </div>
+                    <div class="process-step">
+                        <strong>OFB (Output Feedback):</strong> Realimentación de salida
+                    </div>
+                    <div class="process-step">
+                        <strong>CFB (Cipher Feedback):</strong> Realimentación de cifrador
+                    </div>
+
+                    <table class="algorithm-table">
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Estado</th>
+                            <th>Características</th>
+                        </tr>
+                        <tr>
+                            <td>DES</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>56 bits + 8 paridad, Feistel</td>
+                        </tr>
+                        <tr>
+                            <td>TripleDES</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>112 bits, DES en cascada</td>
+                        </tr>
+                        <tr>
+                            <td>Blowfish</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>32-448 bits</td>
+                        </tr>
+                        <tr>
+                            <td>AES</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>128/192/256 bits, Rijndael</td>
+                        </tr>
+                        <tr>
+                            <td>Camellia</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>128/192/256 bits</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Cifrado Asimétrico -->
+            <div class="content-section">
+                <h2>Algoritmos de Cifrado Asimétrico</h2>
+                
+                <div class="key-point">
+                    <h3>🔑 Característica Principal</h3>
+                    <p>Dos claves diferentes pero complementarias: una pública y una privada (KA ≠ KB)</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>🔒 Cifrado (Confidencialidad)</h3>
+                        <p><strong>Emisor:</strong> Cifra con clave pública del receptor</p>
+                        <p><strong>Receptor:</strong> Descifra con su clave privada</p>
+                        <p>✅ Solo el destinatario puede leer</p>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h3>✍️ Firma (Autenticidad)</h3>
+                        <p><strong>Emisor:</strong> Cifra con su clave privada</p>
+                        <p><strong>Receptor:</strong> Descifra con clave pública del emisor</p>
+                        <p>✅ Garantiza origen y no repudio</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Clasificación por Problemas Matemáticos</h3>
+                    
+                    <div class="process-step">
+                        <h4>🧮 Factorización Entera</h4>
+                        <p><strong>RSA:</strong> El más utilizado, basado en la dificultad de factorizar números grandes</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>📈 Logaritmo Discreto</h4>
+                        <p><strong>Diffie-Hellman:</strong> Intercambio de claves</p>
+                        <p><strong>DSA:</strong> Digital Signature Algorithm</p>
+                        <p><strong>ElGamal:</strong> Cifrado y firma</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>🔄 Logaritmo Discreto Elíptico</h4>
+                        <p><strong>ECDH:</strong> Elliptic Curve Diffie-Hellman</p>
+                        <p><strong>ECDSA:</strong> Elliptic Curve DSA</p>
+                        <p><em>Ventaja:</em> Claves más cortas con igual seguridad</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Ventajas vs Desventajas</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <h4 style="color: var(--success-color);">✅ Ventajas</h4>
+                            <ul>
+                                <li>No repudio</li>
+                                <li>Distribución de claves</li>
+                                <li>Escalabilidad</li>
+                                <li>Autenticación</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--error-color);">❌ Desventajas</h4>
+                            <ul>
+                                <li>Alto coste computacional</li>
+                                <li>Claves más largas</li>
+                                <li>Velocidad más lenta</li>
+                                <li>Gestión compleja</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Funciones Hash -->
+            <div class="content-section">
+                <h2>Función Hash</h2>
+                
+                <div class="key-point">
+                    <h3>🎯 Definición</h3>
+                    <p>Funciones que transforman un mensaje de cualquier longitud en una salida de longitud fija (hash o digest)</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Propiedades Fundamentales</h3>
+                    
+                    <div class="process-step">
+                        <h4>📏 Compresión</h4>
+                        <p>La salida es de longitud fija e independiente de la longitud del mensaje</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>🌊 Difusión</h4>
+                        <p>La salida es aleatoria y función de todos los bits de entrada</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>🔒 Resistencia a la Preimagen</h4>
+                        <p>Dado un hash, es computacionalmente imposible obtener el mensaje original</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>⚡ Resistencia Débil a Colisión</h4>
+                        <p>Dado m1 y h(m1), imposible encontrar m2 tal que h(m1) = h(m2)</p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <h4>💪 Resistencia Fuerte a Colisión</h4>
+                        <p>Imposible encontrar dos mensajes diferentes con el mismo hash</p>
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>🕵️ MDC (Message Detection Code)</h3>
+                        <p>Detección de modificaciones en el mensaje</p>
+                        <p><strong>Uso:</strong> h(mensaje) = hash</p>
+                        <p><strong>Verifica:</strong> Integridad</p>
+                    </div>
+                    
+                    <div class="comparison-card">
+                        <h3>🛡️ MAC (Message Authentication Code)</h3>
+                        <p>Detección + autenticación del origen</p>
+                        <p><strong>Uso:</strong> h(mensaje + clave) = MAC</p>
+                        <p><strong>Verifica:</strong> Integridad + Autenticidad</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Algoritmos Hash Principales</h3>
+                    
+                    <table class="algorithm-table">
+                        <tr>
+                            <th>Algoritmo</th>
+                            <th>Estado</th>
+                            <th>Longitud</th>
+                            <th>Observaciones</th>
+                        </tr>
+                        <tr>
+                            <td>MD5</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>128 bits</td>
+                            <td>Vulnerabilidades críticas</td>
+                        </tr>
+                        <tr>
+                            <td>RIPMD-128</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>128 bits</td>
+                            <td>Longitud insuficiente</td>
+                        </tr>
+                        <tr>
+                            <td>RIPMD-160</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>160 bits</td>
+                            <td>Longitud insuficiente</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-1</td>
+                            <td><span class="status-badge status-not-recommended">NO</span></td>
+                            <td>160 bits</td>
+                            <td>Colisiones encontradas</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-2</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>224/256/384/512 bits</td>
+                            <td>Estándar actual</td>
+                        </tr>
+                        <tr>
+                            <td>SHA-3</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>Configurable</td>
+                            <td>Nueva generación</td>
+                        </tr>
+                        <tr>
+                            <td>Whirlpool</td>
+                            <td><span class="status-badge status-recommended">SÍ</span></td>
+                            <td>512 bits</td>
+                            <td>Alternativa robusta</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 5: Esquemas Híbridos -->
+            <div class="content-section">
+                <h2>Esquemas Híbridos</h2>
+                
+                <div class="key-point">
+                    <h3>💡 Concepto</h3>
+                    <p>Combinan lo mejor de ambos mundos: <strong>velocidad del simétrico</strong> + <strong>seguridad del asimétrico</strong></p>
+                </div>
+
+                <div class="card">
+                    <h3>📧 Sobre Digital (Confidencialidad)</h3>
+                    
+                    <h4>🚀 Proceso del Emisor:</h4>
+                    <div class="process-step">
+                        <strong>1.</strong> Genera una clave simétrica aleatoria
+                    </div>
+                    <div class="process-step">
+                        <strong>2.</strong> Cifra el mensaje con algoritmo simétrico y la clave generada
+                    </div>
+                    <div class="process-step">
+                        <strong>3.</strong> Cifra la clave simétrica con algoritmo asimétrico y clave pública del receptor
+                    </div>
+                    <div class="process-step">
+                        <strong>4.</strong> Envía: mensaje cifrado + clave cifrada
+                    </div>
+
+                    <h4>📥 Proceso del Receptor:</h4>
+                    <div class="process-step">
+                        <strong>1.</strong> Descifra la clave simétrica con su clave privada (algoritmo asimétrico)
+                    </div>
+                    <div class="process-step">
+                        <strong>2.</strong> Descifra el mensaje con la clave simétrica (algoritmo simétrico)
+                    </div>
+
+                    <div class="highlight" style="margin-top: 1rem; padding: 1rem; background: rgba(74, 158, 255, 0.1); border-radius: 8px;">
+                        <strong>💡 Ventaja Principal:</strong> Especialmente útil en envíos multidestino, permitiendo cifrar el mensaje una única vez
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>✍️ Firma Digital (Autenticidad + Integridad + No Repudio)</h3>
+                    
+                    <h4>📝 Proceso del Emisor:</h4>
+                    <div class="process-step">
+                        <strong>1.</strong> Calcula el hash del mensaje
+                    </div>
+                    <div class="process-step">
+                        <strong>2.</strong> Cifra el hash con algoritmo asimétrico y su clave privada
+                    </div>
+                    <div class="process-step">
+                        <strong>3.</strong> Envía: mensaje + hash cifrado (firma)
+                    </div>
+
+                    <h4>🔍 Proceso del Receptor:</h4>
+                    <div class="process-step">
+                        <strong>1.</strong> Calcula el hash del mensaje recibido
+                    </div>
+                    <div class="process-step">
+                        <strong>2.</strong> Descifra el hash firmado con la clave pública del emisor
+                    </div>
+                    <div class="process-step">
+                        <strong>3.</strong> Compara ambos hashes: si coinciden, la firma es válida
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>🔄 Comparación Simétrico vs Asimétrico</h3>
+                        <table style="width: 100%; font-size: 0.9rem;">
+                            <tr>
+                                <td><strong>Aspecto</strong></td>
+                                <td><strong>Simétrico</strong></td>
+                                <td><strong>Asimétrico</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Velocidad</td>
+                                <td>🟢 Rápido</td>
+                                <td>🔴 Lento</td>
+                            </tr>
+                            <tr>
+                                <td>Longitud clave</td>
+                                <td>🟢 Corta</td>
+                                <td>🔴 Larga</td>
+                            </tr>
+                            <tr>
+                                <td>No repudio</td>
+                                <td>🔴 No</td>
+                                <td>🟢 Sí</td>
+                            </tr>
+                            <tr>
+                                <td>Distribución</td>
+                                <td>🔴 Compleja</td>
+                                <td>🟢 Simple</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div class="content-section">
+                <h2>Ejercicios Prácticos</h2>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+                </div>
+                <p>Progreso: <span id="progressText">0/20</span> preguntas completadas</p>
+
+                <div class="quiz-container">
+                    <!-- Pregunta 1 -->
+                    <div class="question">
+                        <h4>1. ¿Cuál es la principal característica de los algoritmos de cifrado simétrico? <span class="difficulty basico">BÁSICO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Utilizan dos claves diferentes</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) Utilizan la misma clave para cifrar y descifrar</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) No requieren claves</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Solo funcionan con números primos</div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="question">
+                        <h4>2. ¿Cuál de los siguientes algoritmos de cifrado simétrico está recomendado actualmente? <span class="difficulty basico">BÁSICO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) DES</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) AES</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) RC4</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) MD5</div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="question">
+                        <h4>3. ¿Qué longitud de clave utiliza el algoritmo DES? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) 128 bits</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) 56 bits (más 8 de paridad)</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) 256 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) 512 bits</div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="question">
+                        <h4>4. En el cifrado asimétrico, para garantizar confidencialidad, ¿con qué clave cifra el emisor? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Con su clave privada</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) Con la clave pública del receptor</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Con una clave simétrica</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Sin clave</div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="question">
+                        <h4>5. ¿Cuál de estas NO es una propiedad de las funciones hash? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Compresión</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) Resistencia a colisión</div>
+                        <div class="option" onclick="selectAnswer(this, true)">C) Reversibilidad</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Difusión</div>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="question">
+                        <h4>6. ¿Qué algoritmo hash está recomendado actualmente? <span class="difficulty basico">BÁSICO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) MD5</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) SHA-1</div>
+                        <div class="option" onclick="selectAnswer(this, true)">C) SHA-2</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) RIPMD-128</div>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="question">
+                        <h4>7. En un esquema híbrido de sobre digital, ¿qué se cifra con algoritmo asimétrico? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Todo el mensaje</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) La clave simétrica</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) El hash del mensaje</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Nada</div>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="question">
+                        <h4>8. ¿Cuál es la diferencia entre MDC y MAC? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) No hay diferencia</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) MAC incluye una clave para autenticación</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) MDC es más seguro que MAC</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) MAC solo detecta errores</div>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="question">
+                        <h4>9. ¿Qué modo de operación de cifrado de bloque es más inseguro? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, true)">A) ECB (Electronic Code Book)</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) CBC (Cipher Block Chaining)</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) CTR (Counter)</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) OFB (Output Feedback)</div>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="question">
+                        <h4>10. ¿Cuál de estos algoritmos está basado en curvas elípticas? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) RSA</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) Diffie-Hellman tradicional</div>
+                        <div class="option" onclick="selectAnswer(this, true)">C) ECDSA</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) AES</div>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="question">
+                        <h4>11. ¿Qué garantiza la firma digital? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Solo integridad</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) Solo autenticidad</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Solo no repudio</div>
+                        <div class="option" onclick="selectAnswer(this, true)">D) Integridad, autenticidad y no repudio</div>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="question">
+                        <h4>12. ¿Cuántos bits tiene una clave AES-256? <span class="difficulty basico">BÁSICO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) 128 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) 192 bits</div>
+                        <div class="option" onclick="selectAnswer(this, true)">C) 256 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) 512 bits</div>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="question">
+                        <h4>13. ¿Qué algoritmo se usaba en las primeras implementaciones de Bluetooth? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, true)">A) E0</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) A5/1</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) RC4</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) AES</div>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="question">
+                        <h4>14. ¿Cuál es la principal ventaja de los cifradores de flujo? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Mayor seguridad</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) Mayor velocidad de procesamiento</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Menor consumo de memoria</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Facilidad de implementación</div>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="question">
+                        <h4>15. ¿En qué problema matemático se basa RSA? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, true)">A) Factorización de enteros grandes</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) Logaritmo discreto</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Problema del viajante</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Curvas elípticas</div>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="question">
+                        <h4>16. ¿Cuál es la longitud típica del hash SHA-1? <span class="difficulty basico">BÁSICO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) 128 bits</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) 160 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) 256 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) 512 bits</div>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="question">
+                        <h4>17. ¿Qué característica tienen las claves asimétricas comparadas con las simétricas? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Son más cortas</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) Tienen mayor tiempo de vida</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Son más rápidas de generar</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Son menos seguras</div>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="question">
+                        <h4>18. ¿Cuál de estos NO es un modo de operación de cifrado por bloques? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) CBC</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) ECB</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) CTR</div>
+                        <div class="option" onclick="selectAnswer(this, true)">D) RSA</div>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="question">
+                        <h4>19. ¿Qué longitud de hash produce Whirlpool? <span class="difficulty avanzado">AVANZADO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) 256 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">B) 384 bits</div>
+                        <div class="option" onclick="selectAnswer(this, true)">C) 512 bits</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Variable</div>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="question">
+                        <h4>20. ¿Por qué se utilizan esquemas híbridos en lugar de solo cifrado asimétrico? <span class="difficulty intermedio">INTERMEDIO</span></h4>
+                        <div class="option" onclick="selectAnswer(this, false)">A) Son más seguros</div>
+                        <div class="option" onclick="selectAnswer(this, true)">B) Son más eficientes computacionalmente</div>
+                        <div class="option" onclick="selectAnswer(this, false)">C) Son más fáciles de implementar</div>
+                        <div class="option" onclick="selectAnswer(this, false)">D) Requieren menos claves</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div class="content-section">
+                <h2>Recursos y FAQ</h2>
+                
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <ul>
+                        <li><strong>NIST SP 800-57:</strong> Recomendaciones para gestión de claves criptográficas</li>
+                        <li><strong>RFC 7539:</strong> ChaCha20 y Poly1305 (algoritmos modernos)</li>
+                        <li><strong>FIPS 140-2:</strong> Estándares de seguridad para módulos criptográficos</li>
+                        <li><strong>Common Criteria:</strong> Evaluación de seguridad de productos TI</li>
+                        <li><strong>ENISA:</strong> Recomendaciones de algoritmos criptográficos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Herramientas y Software</h3>
+                    <ul>
+                        <li><strong>OpenSSL:</strong> Biblioteca criptográfica de código abierto</li>
+                        <li><strong>GnuPG:</strong> Implementación libre de PGP</li>
+                        <li><strong>Cryptool:</strong> Herramienta educativa para criptografía</li>
+                        <li><strong>HashCalc:</strong> Calculadora de funciones hash</li>
+                        <li><strong>KeyStore Explorer:</strong> Gestor de almacenes de claves</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Por qué DES se considera inseguro?
+                        </div>
+                        <div class="faq-answer">
+                            DES utiliza claves de solo 56 bits, lo que permite ataques de fuerza bruta con hardware moderno en tiempo razonable. Fue diseñado en los años 70 cuando la potencia computacional era limitada.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Cuál es la diferencia entre SHA-2 y SHA-3?
+                        </div>
+                        <div class="faq-answer">
+                            SHA-2 y SHA-3 son diferentes familias de funciones hash. SHA-3 utiliza la construcción Keccak, mientras que SHA-2 usa Merkle-Damgård. Ambos son seguros, pero SHA-3 ofrece mayor flexibilidad y resistencia a ciertos tipos de ataques.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Qué longitud de clave RSA se recomienda actualmente?
+                        </div>
+                        <div class="faq-answer">
+                            Se recomiendan claves RSA de al menos 2048 bits para uso general, y 3072-4096 bits para información muy sensible o uso a largo plazo. Claves de 1024 bits se consideran inseguras.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Por qué las curvas elípticas son más eficientes?
+                        </div>
+                        <div class="faq-answer">
+                            Las curvas elípticas ofrecen el mismo nivel de seguridad con claves más cortas. Por ejemplo, una clave ECC de 256 bits equivale aproximadamente a una RSA de 3072 bits, resultando en menor uso de recursos.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Cuándo usar cifrado de flujo vs cifrado de bloque?
+                        </div>
+                        <div class="faq-answer">
+                            Cifrado de flujo: cuando se necesita velocidad extrema o en dispositivos con recursos limitados. Cifrado de bloque: para la mayoría de aplicaciones generales, especialmente cuando se requiere procesamiento de grandes volúmenes de datos.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            ¿Qué es la criptoagilidad?
+                        </div>
+                        <div class="faq-answer">
+                            Es la capacidad de cambiar rápidamente algoritmos criptográficos en un sistema cuando se descubren vulnerabilidades o aparecen nuevas amenazas, sin afectar significativamente la funcionalidad del sistema.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📖 Glossario de Términos Clave</h3>
+                    <div style="display: grid; gap: 0.5rem;">
+                        <div><strong>Algoritmo:</strong> Conjunto de reglas matemáticas para cifrar/descifrar</div>
+                        <div><strong>Clave:</strong> Información secreta usada por el algoritmo</div>
+                        <div><strong>Cifrado:</strong> Proceso de convertir texto plano en texto cifrado</div>
+                        <div><strong>Descifrado:</strong> Proceso inverso al cifrado</div>
+                        <div><strong>Hash:</strong> Función que produce una salida de longitud fija</div>
+                        <div><strong>Keystream:</strong> Secuencia de bits pseudo-aleatoria</div>
+                        <div><strong>Nonce:</strong> Número usado solo una vez</div>
+                        <div><strong>Padding:</strong> Relleno para completar bloques</div>
+                        <div><strong>Salt:</strong> Valor aleatorio añadido antes del hash</div>
+                        <div><strong>Vector de Inicialización (IV):</strong> Valor inicial aleatorio</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Mejores Prácticas</h3>
+                    <ul>
+                        <li>Usar solo algoritmos criptográficos recomendados por organismos oficiales</li>
+                        <li>Generar claves con suficiente entropía usando generadores seguros</li>
+                        <li>Implementar rotación periódica de claves</li>
+                        <li>Nunca reutilizar nonces o vectores de inicialización</li>
+                        <li>Validar y actualizar regularmente bibliotecas criptográficas</li>
+                        <li>Usar esquemas híbridos para combinar eficiencia y seguridad</li>
+                        <li>Implementar gestión segura del ciclo de vida de las claves</li>
+                        <li>Documentar y auditar implementaciones criptográficas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        let quizAnswered = Array(20).fill(false);
+        let correctAnswers = 0;
+
+        function showTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.content-section');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            tabs[tabIndex].classList.add('active');
+            contents[tabIndex].classList.add('active');
+            
+            currentTab = tabIndex;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function selectAnswer(option, isCorrect) {
+            const question = option.parentNode;
+            const options = question.querySelectorAll('.option');
+            const questionNumber = parseInt(question.querySelector('h4').textContent.split('.')[0]) - 1;
+            
+            if (quizAnswered[questionNumber]) return;
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt === option) {
+                    if (isCorrect) {
+                        opt.classList.add('correct');
+                        correctAnswers++;
+                    } else {
+                        opt.classList.add('incorrect');
+                    }
+                } else if (opt.onclick.toString().includes('true')) {
+                    opt.classList.add('correct');
+                }
+            });
+            
+            quizAnswered[questionNumber] = true;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = quizAnswered.filter(a => a).length;
+            const progress = (answered / 20) * 100;
+            
+            document.getElementById('quizProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${answered}/20`;
+            
+            if (answered === 20) {
+                setTimeout(() => {
+                    alert(`¡Quiz completado! Puntuación: ${correctAnswers}/20 (${Math.round(correctAnswers/20*100)}%)`);
+                }, 500);
+            }
+        }
+
+        function toggleFAQ(question) {
+            const answer = question.nextElementSibling;
+            const isActive = answer.classList.contains('active');
+            
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+            
+            if (!isActive) {
+                answer.classList.add('active');
+            }
+        }
+
+        // Cargar tema guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        // Navegación por teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentTab > 0) {
+                showTab(currentTab - 1);
+            } else if (e.key === 'ArrowRight' && currentTab < 6) {
+                showTab(currentTab + 1);
+            }
+        });
+    </script>
+</body>
+</html>

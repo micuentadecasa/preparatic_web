@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptos de Sistemas Operativos - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --accent-hover: #6bb6ff;
+            --border-color: #444;
+            --card-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --accent-hover: #0052a3;
+            --border-color: #ddd;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs-container {
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--card-shadow);
+        }
+
+        .card-header {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            background: var(--accent-color)15;
+            border-color: var(--accent-color);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--card-shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .exercise-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .difficulty-basico {
+            background: #4ade80;
+            color: #166534;
+        }
+
+        .difficulty-intermedio {
+            background: #fbbf24;
+            color: #92400e;
+        }
+
+        .difficulty-avanzado {
+            background: #f87171;
+            color: #991b1b;
+        }
+
+        .solution-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .solution-toggle:hover {
+            background: var(--accent-hover);
+        }
+
+        .solution {
+            display: none;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .solution.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--accent-color)15;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.show {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                text-align: center;
+            }
+
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Conceptos de Sistemas Operativos</h1>
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Modo Claro</span>
+        </button>
+    </header>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="tabs-container">
+            <nav class="tabs-nav" role="tablist">
+                <button class="tab-btn active" data-tab="resumen" role="tab" aria-selected="true" aria-controls="resumen">Resumen General</button>
+                <button class="tab-btn" data-tab="caracteristicas" role="tab" aria-selected="false" aria-controls="caracteristicas">Características</button>
+                <button class="tab-btn" data-tab="evolucion" role="tab" aria-selected="false" aria-controls="evolucion">Evolución</button>
+                <button class="tab-btn" data-tab="estructura" role="tab" aria-selected="false" aria-controls="estructura">Estructura</button>
+                <button class="tab-btn" data-tab="multiprocesador" role="tab" aria-selected="false" aria-controls="multiprocesador">Multiprocesador</button>
+                <button class="tab-btn" data-tab="ejercicios" role="tab" aria-selected="false" aria-controls="ejercicios">Ejercicios</button>
+                <button class="tab-btn" data-tab="recursos" role="tab" aria-selected="false" aria-controls="recursos">Recursos y FAQ</button>
+            </nav>
+
+            <div id="resumen" class="tab-content active" role="tabpanel" aria-labelledby="resumen-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Resumen Ejecutivo</h2>
+                        <p class="card-subtitle">Conceptos fundamentales de sistemas operativos para oposiciones</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📊 Datos Clave</h3>
+                        <ul>
+                            <li><strong>Definición:</strong> Software que gestiona recursos de hardware y software</li>
+                            <li><strong>Funciones principales:</strong> 5 categorías esenciales</li>
+                            <li><strong>Evolución:</strong> 6 generaciones históricas</li>
+                            <li><strong>Arquitecturas:</strong> Monolítica, microkernel, híbrida</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3>🎯 Objetivos de Aprendizaje</h3>
+                            <ul>
+                                <li>Comprender características fundamentales</li>
+                                <li>Analizar evolución histórica</li>
+                                <li>Identificar componentes estructurales</li>
+                                <li>Evaluar sistemas multiprocesador</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card">
+                            <h3>📚 Conceptos Clave</h3>
+                            <ul>
+                                <li>Kernel y espacio de usuario</li>
+                                <li>Gestión de procesos y memoria</li>
+                                <li>Sistemas de archivos</li>
+                                <li>Concurrencia y paralelismo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="caracteristicas" class="tab-content" role="tabpanel" aria-labelledby="caracteristicas-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Características de los Sistemas Operativos</h2>
+                        <p class="card-subtitle">Propiedades fundamentales y funcionalidades esenciales</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🔍 Definición</h3>
+                        <p>Un sistema operativo es un conjunto de programas que gestiona los recursos de hardware y proporciona servicios a las aplicaciones de usuario, actuando como intermediario entre el usuario y el hardware.</p>
+                    </div>
+
+                    <h3>Funciones Principales</h3>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h4>1. Gestión de Procesos</h4>
+                            <ul>
+                                <li>Creación y terminación de procesos</li>
+                                <li>Planificación de CPU</li>
+                                <li>Sincronización y comunicación</li>
+                                <li>Manejo de interbloqueos</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card">
+                            <h4>2. Gestión de Memoria</h4>
+                            <ul>
+                                <li>Asignación y liberación de memoria</li>
+                                <li>Memoria virtual</li>
+                                <li>Paginación y segmentación</li>
+                                <li>Protección de memoria</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card">
+                            <h4>3. Gestión de E/S</h4>
+                            <ul>
+                                <li>Control de dispositivos</li>
+                                <li>Buffering y caching</li>
+                                <li>Drivers de dispositivos</li>
+                                <li>Interrupciones</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card">
+                            <h4>4. Sistema de Archivos</h4>
+                            <ul>
+                                <li>Organización de datos</li>
+                                <li>Control de acceso</li>
+                                <li>Respaldo y recuperación</li>
+                                <li>Compresión y encriptación</li>
+                            </ul>
+                        </div>
+                        <div class="concept-card">
+                            <h4>5. Interfaz de Usuario</h4>
+                            <ul>
+                                <li>Línea de comandos (CLI)</li>
+                                <li>Interfaz gráfica (GUI)</li>
+                                <li>APIs y system calls</li>
+                                <li>Shells y entornos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Multitarea</td>
+                                <td>Ejecución simultánea de múltiples procesos</td>
+                                <td>Windows, Linux, macOS</td>
+                            </tr>
+                            <tr>
+                                <td>Multiusuario</td>
+                                <td>Soporte para múltiples usuarios simultáneos</td>
+                                <td>UNIX, Linux, Windows Server</td>
+                            </tr>
+                            <tr>
+                                <td>Multiprocesador</td>
+                                <td>Utilización de múltiples CPUs</td>
+                                <td>Sistemas SMP, NUMA</td>
+                            </tr>
+                            <tr>
+                                <td>Tiempo Real</td>
+                                <td>Respuesta garantizada en tiempo específico</td>
+                                <td>QNX, VxWorks, RT-Linux</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="evolucion" class="tab-content" role="tabpanel" aria-labelledby="evolucion-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Evolución y Tendencias</h2>
+                        <p class="card-subtitle">Historia y desarrollo de los sistemas operativos</p>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h3>1ª Generación (1940-1955)</h3>
+                            <p><strong>Sistemas sin SO:</strong> Programación directa en lenguaje máquina. Los programadores operaban directamente el hardware. Ejemplos: ENIAC, UNIVAC I.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>2ª Generación (1955-1965)</h3>
+                            <p><strong>Sistemas por lotes:</strong> Procesamiento secuencial de trabajos. Introducción de tarjetas perforadas y cintas magnéticas. Ejemplos: IBM 704, 709.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>3ª Generación (1965-1980)</h3>
+                            <p><strong>Multiprogramación:</strong> Múltiples programas en memoria simultaneamente. Time-sharing y sistemas interactivos. Ejemplos: OS/360, MULTICS, UNIX.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>4ª Generación (1980-1990)</h3>
+                            <p><strong>PCs y GUIs:</strong> Computadoras personales y interfaces gráficas. Redes locales y distribuidas. Ejemplos: MS-DOS, Windows, Mac OS.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>5ª Generación (1990-2010)</h3>
+                            <p><strong>Internet y Movilidad:</strong> Sistemas conectados en red, SO móviles y embebidos. Ejemplos: Linux, Windows NT/XP, Palm OS, Windows Mobile.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>6ª Generación (2010-presente)</h3>
+                            <p><strong>Cloud y IoT:</strong> Computación en la nube, virtualización, Internet de las Cosas. Ejemplos: Android, iOS, Windows 10/11, macOS, distribuciones Linux.</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🚀 Tendencias Actuales</h3>
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <h4>Virtualización</h4>
+                                <p>Hypervisors, contenedores (Docker, Kubernetes), máquinas virtuales para optimizar recursos.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Computación en la Nube</h4>
+                                <p>IaaS, PaaS, SaaS. Escalabilidad automática y recursos bajo demanda.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Seguridad</h4>
+                                <p>Sandboxing, control de acceso avanzado, cifrado de datos, autenticación biométrica.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Inteligencia Artificial</h4>
+                                <p>SO que se adaptan al comportamiento del usuario, optimización automática de recursos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="estructura" class="tab-content" role="tabpanel" aria-labelledby="estructura-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Estructura, Componentes y Funciones</h2>
+                        <p class="card-subtitle">Arquitectura interna y organización de sistemas operativos</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🏗️ Arquitecturas Principales</h3>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h4>1. Arquitectura Monolítica</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Kernel único y grande</li>
+                                <li>Todos los servicios en espacio kernel</li>
+                                <li>Comunicación directa entre componentes</li>
+                                <li>Alta eficiencia, menor seguridad</li>
+                            </ul>
+                            <p><strong>Ejemplos:</strong> Linux tradicional, Windows 9x</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4>2. Arquitectura Microkernel</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Kernel mínimo</li>
+                                <li>Servicios en espacio usuario</li>
+                                <li>Comunicación por mensajes</li>
+                                <li>Alta modularidad y seguridad</li>
+                            </ul>
+                            <p><strong>Ejemplos:</strong> Minix, QNX, L4</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4>3. Arquitectura Híbrida</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Combina ambos enfoques</li>
+                                <li>Servicios críticos en kernel</li>
+                                <li>Servicios no críticos fuera</li>
+                                <li>Balance eficiencia-seguridad</li>
+                            </ul>
+                            <p><strong>Ejemplos:</strong> Windows NT+, macOS, Linux moderno</p>
+                        </div>
+                    </div>
+
+                    <h3>Componentes del Kernel</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Componente</th>
+                                <th>Función Principal</th>
+                                <th>Responsabilidades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Scheduler</td>
+                                <td>Planificación de procesos</td>
+                                <td>Asignación de CPU, políticas de scheduling, context switching</td>
+                            </tr>
+                            <tr>
+                                <td>Memory Manager</td>
+                                <td>Gestión de memoria</td>
+                                <td>Asignación, paginación, swapping, memoria virtual</td>
+                            </tr>
+                            <tr>
+                                <td>I/O Manager</td>
+                                <td>Control de entrada/salida</td>
+                                <td>Drivers, interrupciones, DMA, buffering</td>
+                            </tr>
+                            <tr>
+                                <td>File System</td>
+                                <td>Gestión de archivos</td>
+                                <td>Almacenamiento, organización, permisos, metadatos</td>
+                            </tr>
+                            <tr>
+                                <td>Network Stack</td>
+                                <td>Comunicación en red</td>
+                                <td>Protocolos, sockets, routing, seguridad</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <h3>⚙️ Niveles de Privilegio</h3>
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <h4>Modo Kernel (Ring 0)</h4>
+                                <ul>
+                                    <li>Acceso completo al hardware</li>
+                                    <li>Ejecución de instrucciones privilegiadas</li>
+                                    <li>Gestión de recursos críticos</li>
+                                </ul>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Modo Usuario (Ring 3)</h4>
+                                <ul>
+                                    <li>Acceso restringido</li>
+                                    <li>Uso de system calls</li>
+                                    <li>Protección entre aplicaciones</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="multiprocesador" class="tab-content" role="tabpanel" aria-labelledby="multiprocesador-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Sistemas Operativos Multiprocesador</h2>
+                        <p class="card-subtitle">Arquitecturas paralelas y sistemas distribuidos</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🔄 Conceptos Fundamentales</h3>
+                        <p>Los sistemas multiprocesador utilizan múltiples CPUs para mejorar el rendimiento y la confiabilidad mediante procesamiento paralelo y concurrente.</p>
+                    </div>
+
+                    <h3>Tipos de Arquitecturas Multiprocesador</h3>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h4>SMP (Symmetric Multiprocessing)</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Procesadores idénticos</li>
+                                <li>Memoria compartida uniforme</li>
+                                <li>Un solo SO controla todos los CPUs</li>
+                                <li>Balanceador de carga automático</li>
+                            </ul>
+                            <p><strong>Ventajas:</strong> Simplicidad, balance automático</p>
+                            <p><strong>Desventajas:</strong> Escalabilidad limitada</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4>NUMA (Non-Uniform Memory Access)</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Memoria distribuida</li>
+                                <li>Acceso no uniforme a memoria</li>
+                                <li>Nodos con CPU y memoria local</li>
+                                <li>Interconexión de alta velocidad</li>
+                            </ul>
+                            <p><strong>Ventajas:</strong> Mayor escalabilidad</p>
+                            <p><strong>Desventajas:</strong> Complejidad de programación</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4>MPP (Massively Parallel Processing)</h4>
+                            <p><strong>Características:</strong></p>
+                            <ul>
+                                <li>Miles de procesadores</li>
+                                <li>Memoria distribuida</li>
+                                <li>Red de interconexión especializada</li>
+                                <li>SO distribuido</li>
+                            </ul>
+                            <p><strong>Ventajas:</strong> Máximo rendimiento</p>
+                            <p><strong>Desventajas:</strong> Alta complejidad</p>
+                        </div>
+                    </div>
+
+                    <h3>Desafíos en Sistemas Multiprocesador</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Desafío</th>
+                                <th>Descripción</th>
+                                <th>Soluciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sincronización</td>
+                                <td>Coordinación entre procesos paralelos</td>
+                                <td>Semáforos, mutex, monitores, barreras</td>
+                            </tr>
+                            <tr>
+                                <td>Balanceo de Carga</td>
+                                <td>Distribución equitativa de trabajo</td>
+                                <td>Algoritmos de scheduling, migración de procesos</td>
+                            </tr>
+                            <tr>
+                                <td>Coherencia de Cache</td>
+                                <td>Consistencia de datos en múltiples caches</td>
+                                <td>Protocolos MESI, MOESI, snooping</td>
+                            </tr>
+                            <tr>
+                                <td>Escalabilidad</td>
+                                <td>Rendimiento con aumento de procesadores</td>
+                                <td>Arquitecturas jerárquicas, NUMA</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <h3>🎯 Técnicas de Optimización</h3>
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <h4>Afinidad de Procesador</h4>
+                                <p>Mantener procesos en el mismo CPU para optimizar cache y reducir migraciones.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Particionamiento</h4>
+                                <p>Dividir el SO en secciones independientes para reducir contención.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Lock-free Programming</h4>
+                                <p>Algoritmos que evitan bloqueos usando operaciones atómicas.</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Work Stealing</h4>
+                                <p>Procesadores ociosos "roban" trabajo de colas de otros procesadores.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ejercicios" class="tab-content" role="tabpanel" aria-labelledby="ejercicios-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Ejercicios Prácticos</h2>
+                        <p class="card-subtitle">Problemas y casos prácticos para oposiciones</p>
+                    </div>
+
+                    <div class="exercise-card">
+                        <div class="difficulty-badge difficulty-basico">Básico</div>
+                        <h3>Ejercicio 1: Funciones del SO</h3>
+                        <p><strong>Pregunta:</strong> Enumera y explica brevemente las 5 funciones principales de un sistema operativo.</p>
+                        <button class="solution-toggle" onclick="toggleSolution(1)">Ver Solución</button>
+                        <div id="solution1" class="solution">
+                            <h4>Solución:</h4>
+                            <ol>
+                                <li><strong>Gestión de Procesos:</strong> Creación, planificación y terminación de procesos</li>
+                                <li><strong>Gestión de Memoria:</strong> Asignación y liberación de memoria, memoria virtual</li>
+                                <li><strong>Gestión de E/S:</strong> Control de dispositivos y manejo de interrupciones</li>
+                                <li><strong>Sistema de Archivos:</strong> Organización y acceso a datos almacenados</li>
+                                <li><strong>Interfaz de Usuario:</strong> Comunicación entre usuario y sistema</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <div class="difficulty-badge difficulty-basico">Básico</div>
+                        <h3>Ejercicio 2: Evolución Histórica</h3>
+                        <p><strong>Pregunta:</strong> Ordena cronológicamente las siguientes generaciones de SO y asocia cada una con su característica principal: Multiprogramación, Sin SO, Internet/Móviles, PCs/GUIs, Sistemas por lotes, Cloud/IoT.</p>
+                        <button class="solution-toggle" onclick="toggleSolution(2)">Ver Solución</button>
+                        <div id="solution2" class="solution">
+                            <h4>Solución:</h4>
+                            <ol>
+                                <li><strong>1ª Gen (1940-1955):</strong> Sin SO</li>
+                                <li><strong>2ª Gen (1955-1965):</strong> Sistemas por lotes</li>
+                                <li><strong>3ª Gen (1965-1980):</strong> Multiprogramación</li>
+                                <li><strong>4ª Gen (1980-1990):</strong> PCs/GUIs</li>
+                                <li><strong>5ª Gen (1990-2010):</strong> Internet/Móviles</li>
+                                <li><strong>6ª Gen (2010-presente):</strong> Cloud/IoT</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                        <h3>Ejercicio 3: Arquitecturas de SO</h3>
+                        <p><strong>Pregunta:</strong> Compare las arquitecturas monolítica y microkernel indicando ventajas y desventajas de cada una. Proporcione ejemplos.</p>
+                        <button class="solution-toggle" onclick="toggleSolution(3)">Ver Solución</button>
+                        <div id="solution3" class="solution">
+                            <h4>Solución:</h4>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Monolítica</th>
+                                    <th>Microkernel</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ventajas</strong></td>
+                                    <td>• Alta eficiencia<br>• Menos overhead<br>• Comunicación directa</td>
+                                    <td>• Modularidad<br>• Seguridad<br>• Confiabilidad</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Desventajas</strong></td>
+                                    <td>• Difícil mantenimiento<br>• Menos segura<br>• Monolítica</td>
+                                    <td>• Mayor overhead<br>• Complejidad<br>• Comunicación lenta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ejemplos</strong></td>
+                                    <td>Linux, Windows 9x</td>
+                                    <td>Minix, QNX, L4</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                        <h3>Ejercicio 4: Sistemas Multiprocesador</h3>
+                        <p><strong>Pregunta:</strong> Explique las diferencias entre SMP y NUMA. ¿En qué escenarios sería más apropiado cada uno?</p>
+                        <button class="solution-toggle" onclick="toggleSolution(4)">Ver Solución</button>
+                        <div id="solution4" class="solution">
+                            <h4>Solución:</h4>
+                            <p><strong>SMP (Symmetric Multiprocessing):</strong></p>
+                            <ul>
+                                <li>Memoria compartida uniforme</li>
+                                <li>Todos los CPUs tienen mismo acceso a memoria</li>
+                                <li>Escalabilidad limitada (2-64 CPUs típicamente)</li>
+                                <li><strong>Apropiado para:</strong> Servidores pequeños-medianos, estaciones de trabajo</li>
+                            </ul>
+                            <p><strong>NUMA (Non-Uniform Memory Access):</strong></p>
+                            <ul>
+                                <li>Memoria distribuida por nodos</li>
+                                <li>Acceso local más rápido que remoto</li>
+                                <li>Mayor escalabilidad (cientos de CPUs)</li>
+                                <li><strong>Apropiado para:</strong> Servidores de alto rendimiento, supercomputadoras</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card">
+                        <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                        <h3>Ejercicio 5: Análisis de Rendimiento</h3>
+                        <p><strong>Pregunta:</strong> Un sistema tiene 4 CPUs y ejecuta 8 procesos que requieren: P1=10ms, P2=5ms, P3=8ms, P4=3ms, P5=12ms, P6=7ms, P7=4ms, P8=6ms. Calcule el tiempo total usando Round-Robin con quantum=2ms.</p>
+                        <button class="solution-toggle" onclick="toggleSolution(5)">Ver Solución</button>
+                        <div id="solution5" class="solution">
+                            <h4>Solución:</h4>
+                            <p><strong>Análisis con Round-Robin (quantum=2ms) en 4 CPUs:</strong></p>
+                            <ol>
+                                <li>Tiempo total de CPU requerido: 10+5+8+3+12+7+4+6 = 55ms</li>
+                                <li>Con 4 CPUs trabajando en paralelo: 55ms ÷ 4 = 13.75ms teórico</li>
+                                <li>Considerando overhead de context switch (~0.1ms por switch):</li>
+                                <li>Número aproximado de context switches: 28</li>
+                                <li>Overhead total: 28 × 0.1ms = 2.8ms</li>
+                                <li><strong>Tiempo total estimado: 13.75ms + 2.8ms = 16.55ms</strong></li>
+                            </ol>
+                            <p><em>Nota: En la práctica, el tiempo puede variar debido a la sincronización entre CPUs y la política específica de balanceo de carga.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="recursos" class="tab-content" role="tabpanel" aria-labelledby="recursos-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recursos y FAQ</h2>
+                        <p class="card-subtitle">Referencias, preguntas frecuentes y herramientas adicionales</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📚 Referencias Recomendadas</h3>
+                        <ul>
+                            <li><strong>Libros Técnicos:</strong> Tanenbaum "Sistemas Operativos Modernos", Silberschatz "Operating System Concepts"</li>
+                            <li><strong>Documentación Oficial:</strong> Manual del kernel Linux, Microsoft Documentation, Apple Developer</li>
+                            <li><strong>Cursos Online:</strong> MIT 6.828, Stanford CS140, edX Operating Systems</li>
+                        </ul>
+                    </div>
+
+                    <h3>❓ Preguntas Frecuentes</h3>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(1)">
+                            <span>¿Cuál es la diferencia entre proceso y thread?</span>
+                            <span>+</span>
+                        </div>
+                        <div id="faq1" class="faq-answer">
+                            <p><strong>Proceso:</strong> Programa en ejecución con su propio espacio de memoria, recursos independientes y mayor overhead de creación.</p>
+                            <p><strong>Thread (Hilo):</strong> Unidad de ejecución ligera dentro de un proceso, comparte memoria y recursos con otros threads del mismo proceso.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(2)">
+                            <span>¿Qué es el kernel panic y por qué ocurre?</span>
+                            <span>+</span>
+                        </div>
+                        <div id="faq2" class="faq-answer">
+                            <p><strong>Kernel Panic:</strong> Error crítico del kernel que impide continuar la operación normal del sistema.</p>
+                            <p><strong>Causas comunes:</strong> Hardware defectuoso, drivers incompatibles, corrupción de memoria, bugs en el kernel.</p>
+                            <p><strong>Solución:</strong> Reinicio del sistema, análisis de logs, actualización de drivers/kernel.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(3)">
+                            <span>¿Cómo funciona la memoria virtual?</span>
+                            <span>+</span>
+                        </div>
+                        <div id="faq3" class="faq-answer">
+                            <p><strong>Memoria Virtual:</strong> Abstracción que permite usar más memoria de la físicamente disponible.</p>
+                            <p><strong>Mecanismos:</strong></p>
+                            <ul>
+                                <li>Paginación: División en páginas fijas</li>
+                                <li>Segmentación: División en segmentos lógicos</li>
+                                <li>Swapping: Intercambio con almacenamiento secundario</li>
+                                <li>TLB: Cache de traducciones de direcciones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(4)">
+                            <span>¿Qué son los deadlocks y cómo se previenen?</span>
+                            <span>+</span>
+                        </div>
+                        <div id="faq4" class="faq-answer">
+                            <p><strong>Deadlock:</strong> Situación donde dos o más procesos se bloquean mutuamente esperando recursos.</p>
+                            <p><strong>Condiciones necesarias (todas deben cumplirse):</strong></p>
+                            <ol>
+                                <li>Exclusión mutua</li>
+                                <li>Hold and wait</li>
+                                <li>No preemption</li>
+                                <li>Espera circular</li>
+                            </ol>
+                            <p><strong>Prevención:</strong> Romper alguna de las 4 condiciones mediante políticas del SO.</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>🔧 Herramientas Útiles</h3>
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <h4>Monitoreo de Sistema</h4>
+                                <ul>
+                                    <li><strong>Linux:</strong> top, htop, iotop, vmstat</li>
+                                    <li><strong>Windows:</strong> Task Manager, Resource Monitor, PerfMon</li>
+                                    <li><strong>macOS:</strong> Activity Monitor, Console, Instruments</li>
+                                </ul>
+                            </div>
+                            <div class="concept-card">
+                                <h4>Simuladores y Labs</h4>
+                                <ul>
+                                    <li>MINIX (SO educativo)</li>
+                                    <li>xv6 (SO de enseñanza del MIT)</li>
+                                    <li>VirtualBox/VMware para pruebas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📖 Glosario de Términos Clave</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Término</th>
+                                    <th>Definición</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>API</td>
+                                    <td>Application Programming Interface - Conjunto de funciones para interactuar con el SO</td>
+                                </tr>
+                                <tr>
+                                    <td>Bootloader</td>
+                                    <td>Programa que carga el SO en memoria durante el arranque</td>
+                                </tr>
+                                <tr>
+                                    <td>Context Switch</td>
+                                    <td>Cambio de contexto entre procesos o threads</td>
+                                </tr>
+                                <tr>
+                                    <td>DMA</td>
+                                    <td>Direct Memory Access - Acceso directo a memoria sin CPU</td>
+                                </tr>
+                                <tr>
+                                    <td>Hypervisor</td>
+                                    <td>Software que gestiona máquinas virtuales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeButton(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+
+        function updateThemeButton(theme) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Claro';
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Oscuro';
+            }
+        }
+
+        // Tabs functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const progressFill = document.getElementById('progressFill');
+
+        tabButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                // Remove active class from all
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked
+                button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+                const targetTab = document.getElementById(button.getAttribute('data-tab'));
+                targetTab.classList.add('active');
+
+                // Update progress bar
+                const progress = ((index + 1) / tabButtons.length) * 100;
+                progressFill.style.width = progress + '%';
+            });
+
+            // Keyboard navigation
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+        });
+
+        // Exercise solutions toggle
+        function toggleSolution(exerciseNumber) {
+            const solution = document.getElementById(`solution${exerciseNumber}`);
+            const button = solution.previousElementSibling;
+            
+            if (solution.classList.contains('show')) {
+                solution.classList.remove('show');
+                button.textContent = 'Ver Solución';
+            } else {
+                solution.classList.add('show');
+                button.textContent = 'Ocultar Solución';
+            }
+        }
+
+        // FAQ toggle
+        function toggleFAQ(faqNumber) {
+            const answer = document.getElementById(`faq${faqNumber}`);
+            const question = answer.previousElementSibling;
+            const icon = question.querySelector('span:last-child');
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                icon.textContent = '+';
+            } else {
+                answer.classList.add('show');
+                icon.textContent = '−';
+            }
+        }
+
+        // Smooth scrolling for internal links
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial progress
+            progressFill.style.width = '14.3%'; // 1/7 tabs
+            
+            // Add keyboard navigation support
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') return; // Allow normal tab navigation
+                
+                const currentActiveIndex = Array.from(tabButtons).findIndex(btn => btn.classList.contains('active'));
+                let newIndex = currentActiveIndex;
+                
+                if (e.key === 'ArrowRight' && e.ctrlKey) {
+                    newIndex = (currentActiveIndex + 1) % tabButtons.length;
+                } else if (e.key === 'ArrowLeft' && e.ctrlKey) {
+                    newIndex = currentActiveIndex > 0 ? currentActiveIndex - 1 : tabButtons.length - 1;
+                }
+                
+                if (newIndex !== currentActiveIndex) {
+                    e.preventDefault();
+                    tabButtons[newIndex].click();
+                    tabButtons[newIndex].focus();
+                }
+            });
+
+            // Add tooltips for accessibility
+            tabButtons.forEach((button, index) => {
+                button.setAttribute('title', `Presiona Ctrl + Flechas para navegar entre pestañas`);
+            });
+        });
+    </script>
+</body>
+</html>

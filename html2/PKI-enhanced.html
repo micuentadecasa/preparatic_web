@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infraestructura de Clave Pública (PKI) - Guía de Estudio Completa</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #00d084;
+            --error-color: #ff6b6b;
+            --warning-color: #ffa726;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #00a65a;
+            --error-color: #d73527;
+            --warning-color: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .theme-toggle {
+            background: var(--bg-hover);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .info-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-container {
+            margin-top: 2rem;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .difficulty-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .difficulty-basic { background: var(--success-color); color: white; }
+        .difficulty-intermediate { background: var(--warning-color); color: white; }
+        .difficulty-advanced { background: var(--error-color); color: white; }
+
+        .options {
+            display: grid;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .option {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: var(--accent-color);
+            background: var(--bg-hover);
+        }
+
+        .option.selected {
+            border-color: var(--accent-color);
+            background: var(--accent-color)20;
+        }
+
+        .option.correct {
+            border-color: var(--success-color);
+            background: var(--success-color)20;
+        }
+
+        .option.incorrect {
+            border-color: var(--error-color);
+            background: var(--error-color)20;
+        }
+
+        .show-answer {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .show-answer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        .answer-explanation {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-button {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .timeline-content {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>🔐 Infraestructura de Clave Pública (PKI)</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                🌙 Cambiar Tema
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('resumen')">📋 Resumen General</button>
+            <button class="tab-button" onclick="showTab('servicios')">🏛️ Servicios de Confianza</button>
+            <button class="tab-button" onclick="showTab('pki')">🔑 Infraestructura PKI</button>
+            <button class="tab-button" onclick="showTab('mecanismos')">💳 Mecanismos</button>
+            <button class="tab-button" onclick="showTab('dni')">📄 DNI Electrónico</button>
+            <button class="tab-button" onclick="showTab('ejercicios')">✍️ Ejercicios Prácticos</button>
+            <button class="tab-button" onclick="showTab('recursos')">📚 Recursos y FAQ</button>
+        </div>
+
+        <div id="resumen" class="tab-content active">
+            <div class="card fade-in">
+                <h2>🎯 Resumen Ejecutivo</h2>
+                <div class="highlight-box">
+                    <p><strong>La Infraestructura de Clave Pública (PKI)</strong> es el conjunto de elementos hardware, software, procedimientos, políticas y personal que permiten crear, almacenar, distribuir y revocar certificados digitales de clave pública.</p>
+                </div>
+
+                <h3>📊 Conceptos Clave</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🔐 Servicios de Confianza</h4>
+                        <p>Servicios electrónicos que incluyen expedición, validación y gestión de certificados digitales, firmas electrónicas y sellos de tiempo.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🏢 TSP (Prestadores)</h4>
+                        <p>Personas físicas o jurídicas que prestan servicios de confianza, clasificados como cualificados (QTSP) o no cualificados.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🌐 eIDAS 2.0</h4>
+                        <p>Marco europeo de identidad digital que introduce la Cartera Europea de Identidad Digital (EUDI) con nuevos niveles de seguridad.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>💳 DNI Electrónico</h4>
+                        <p>Documento que permite acreditar electrónicamente la identidad y firmar documentos con validez jurídica equivalente a la firma manuscrita.</p>
+                    </div>
+                </div>
+
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <ul>
+                    <li>Comprender los fundamentos de las infraestructuras PKI</li>
+                    <li>Conocer el marco regulatorio eIDAS y su evolución</li>
+                    <li>Dominar los mecanismos de identificación y firma electrónica</li>
+                    <li>Entender el funcionamiento del DNI electrónico</li>
+                    <li>Aplicar conocimientos en exámenes de administración pública</li>
+                </ul>
+
+                <h3>📈 Estadísticas Importantes</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">24h</div>
+                        <div class="stat-label">Plazo máximo notificación violaciones seguridad</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24 meses</div>
+                        <div class="stat-label">Auditorías QTSP</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5 años</div>
+                        <div class="stat-label">Vigencia máxima certificados</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15 años</div>
+                        <div class="stat-label">Conservación información TSP</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="servicios" class="tab-content">
+            <div class="card fade-in">
+                <h2>🏛️ Servicios de Confianza y Marco Regulatorio</h2>
+                
+                <h3>📋 Reglamento eIDAS (UE) 910/2014</h3>
+                <div class="highlight-box">
+                    <p>El Reglamento eIDAS establece el marco legal para la identificación electrónica y los servicios de confianza en la UE, derogando la Directiva 1999/93/CE.</p>
+                </div>
+
+                <h4>🔧 Servicios de Confianza Definidos</h4>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>📜 Certificados</h4>
+                        <ul>
+                            <li>Expedición de certificados digitales</li>
+                            <li>Validación de certificados</li>
+                            <li>Gestión del ciclo de vida</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>✍️ Firmas y Sellos</h4>
+                        <ul>
+                            <li>Creación de firmas electrónicas</li>
+                            <li>Validación de firmas</li>
+                            <li>Conservación a largo plazo</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>⏰ Sellos de Tiempo</h4>
+                        <ul>
+                            <li>Creación de sellos temporales</li>
+                            <li>Validación de timestamps</li>
+                            <li>Garantía de integridad temporal</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>📧 Entrega Certificada</h4>
+                        <ul>
+                            <li>Servicios de entrega electrónica</li>
+                            <li>Validación de transmisiones</li>
+                            <li>Pruebas de entrega</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🆕 eIDAS 2.0 - Cartera Europea de Identidad Digital</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🎯 Principales Novedades</h4>
+                            <ul>
+                                <li>Cartera Europea de Identidad Digital (EUDI)</li>
+                                <li>Nuevos tipos de credenciales verificables</li>
+                                <li>Cuarto nivel de seguridad "muy alto"</li>
+                                <li>Extensión a sectores: salud, movilidad, educación</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>📱 Características EUDI</h4>
+                            <ul>
+                                <li>Expedida por Estados miembros</li>
+                                <li>Control total del usuario sobre sus datos</li>
+                                <li>Uso online y offline</li>
+                                <li>Gratuita para personas físicas</li>
+                                <li>Válida en toda la UE</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🇪🇸 Ley 6/2020 - Aspectos Nacionales</h3>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Requisito</th>
+                                <th>Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Vigencia Certificados</td>
+                                <td>Máximo 5 años</td>
+                                <td>Caducidad por expiración o revocación</td>
+                            </tr>
+                            <tr>
+                                <td>Seguro Responsabilidad</td>
+                                <td>Mínimo 1.500.000€</td>
+                                <td>+500.000€ por cada servicio cualificado adicional</td>
+                            </tr>
+                            <tr>
+                                <td>Conservación Datos</td>
+                                <td>15 años</td>
+                                <td>Desde extinción certificado o fin servicio</td>
+                            </tr>
+                            <tr>
+                                <td>Notificación Cese</td>
+                                <td>2 meses</td>
+                                <td>Antelación mínima antes del cese</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="pki" class="tab-content">
+            <div class="card fade-in">
+                <h2>🔑 Infraestructura de Clave Pública (PKI)</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>PKI (Public Key Infrastructure)</strong> es el conjunto de elementos hardware, software, procedimientos, políticas y personal que permiten crear, almacenar, distribuir y revocar certificados digitales.</p>
+                </div>
+
+                <h3>🏗️ Tipos de PKI</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🏢 PKI basadas en Autoridades de Certificación</h4>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Certificados firmados por CA (tercera parte de confianza)</li>
+                            <li>Estructura jerárquica</li>
+                            <li>Estándar X.509</li>
+                            <li>Uso en Administraciones Públicas</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>🕸️ PKI basadas en Redes de Confianza</h4>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Confianza descentralizada</li>
+                            <li>Usuarios otorgan confianza</li>
+                            <li>Certificados autofirmados</li>
+                            <li>No utilizada en AAPP</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🔧 Componentes de PKI X.509</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🏛️ Autoridad de Certificación (CA)</h4>
+                            <ul>
+                                <li>Tercera parte de confianza</li>
+                                <li>Emite, gestiona y revoca certificados</li>
+                                <li>Estructura jerárquica: CA root → CA subordinadas</li>
+                                <li>Declaración de Prácticas de Certificación</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>📝 Autoridad de Registro (RA)</h4>
+                            <ul>
+                                <li>Verifica identidad del titular</li>
+                                <li>Procesa solicitudes de certificados</li>
+                                <li>No firma certificados directamente</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>✅ Autoridad de Validación (VA)</h4>
+                            <ul>
+                                <li>Valida certificados mediante CRL</li>
+                                <li>Protocolo OCSP (Online Certificate Status Protocol)</li>
+                                <li>Consultas en tiempo real</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📊 Comparativa Tipos de PKI</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>PKI X.509</th>
+                            <th>PKI Red de Confianza</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Firma de certificados</td>
+                            <td>CA (Autoridad Certificación)</td>
+                            <td>Autofirmado por usuarios</td>
+                        </tr>
+                        <tr>
+                            <td>Confianza</td>
+                            <td>Centralizada en CA</td>
+                            <td>Descentralizada</td>
+                        </tr>
+                        <tr>
+                            <td>Revocación</td>
+                            <td>Por la CA</td>
+                            <td>Por el usuario</td>
+                        </tr>
+                        <tr>
+                            <td>Uso en AAPP</td>
+                            <td>✅ Sí</td>
+                            <td>❌ No</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔧 Estándares y Tecnologías</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>📜 X.509 v3</h4>
+                        <p>Estándar ITU-T para infraestructuras de clave pública. Define formato y campos de certificados digitales.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🌐 XKMS</h4>
+                        <p>XML Key Management Specification de W3C:</p>
+                        <ul>
+                            <li><strong>XKRSS:</strong> Registro y revocación de claves</li>
+                            <li><strong>XKISS:</strong> Obtención y validación de claves</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mecanismos" class="tab-content">
+            <div class="card fade-in">
+                <h2>💳 Mecanismos de Identificación y Firma</h2>
+
+                <h3>🔐 Control de Acceso (AAA)</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🔍 Autenticación</h4>
+                        <p>Verificación de identidad del usuario</p>
+                        <ul>
+                            <li>Algo que sabes (PIN, contraseña)</li>
+                            <li>Algo que tienes (token, móvil)</li>
+                            <li>Algo que eres (biometría)</li>
+                            <li>Algo que haces (conducta)</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>🛡️ Autorización</h4>
+                        <p>Determinación de permisos y restricciones</p>
+                        <ul>
+                            <li><strong>DAC:</strong> Discretionary Access Control</li>
+                            <li><strong>MAC:</strong> Mandatory Access Control</li>
+                            <li><strong>RBAC:</strong> Role Based Access Control</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>📋 Trazabilidad</h4>
+                        <p>Monitorización y registro de accesos</p>
+                        <ul>
+                            <li>Registro de permisos concedidos</li>
+                            <li>Auditoría de recursos accedidos</li>
+                            <li>Análisis de patrones de uso</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>💳 Smart Cards</h3>
+                <div class="highlight-box">
+                    <p>Las tarjetas inteligentes son chips criptográficos que realizan autenticación y firma sin que la clave privada salga del dispositivo. Estándar ISO 7816.</p>
+                </div>
+
+                <h4>🔧 Clasificación por Capacidad</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>💾 Tarjeta de Memoria</h4>
+                            <ul>
+                                <li>Solo almacenamiento (EPROM/EEPROM)</li>
+                                <li>Identificación y control de acceso</li>
+                                <li>Contenido sin necesidad de energía</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🖥️ Tarjeta Microprocesadora</h4>
+                            <ul>
+                                <li>Ficheros y aplicaciones</li>
+                                <li>Memoria RAM, ROM, EPROM</li>
+                                <li>Capacidades de procesamiento</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🔐 Tarjeta Criptográfica</h4>
+                            <ul>
+                                <li>Operaciones criptográficas</li>
+                                <li>Firma electrónica</li>
+                                <li>Almacena claves privadas y certificados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>📡 Clasificación por Conectividad</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Conexión</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Contacto</td>
+                            <td>Física (chip)</td>
+                            <td>Inserción en lector, similar SIM</td>
+                        </tr>
+                        <tr>
+                            <td>Sin contacto</td>
+                            <td>RFID</td>
+                            <td>Radiofrecuencia, alcance 10cm</td>
+                        </tr>
+                        <tr>
+                            <td>Híbrida</td>
+                            <td>2 chips</td>
+                            <td>Uno con contacto + uno sin contacto</td>
+                        </tr>
+                        <tr>
+                            <td>Dual</td>
+                            <td>1 chip</td>
+                            <td>Interfaces con y sin contacto</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>✍️ Mecanismos de Firma</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>📱 PADS</h4>
+                        <p>Dispositivos para captura digital de firmas manuscritas. Típicos en comercios y mensajería.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>💻 Software</h4>
+                        <p>Certificados digitales almacenados en aplicaciones o sistemas operativos.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🔑 Tokens</h4>
+                        <p>Hardware (OTP, USB) y software. Dispositivos dedicados para criptografía.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🏢 HSM</h4>
+                        <p>Hardware Security Module: dispositivo criptográfico que genera, almacena y protege claves.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dni" class="tab-content">
+            <div class="card fade-in">
+                <h2>📄 DNI Electrónico</h2>
+                
+                <div class="highlight-box">
+                    <p>El DNI electrónico permite <strong>acreditar electrónicamente la identidad</strong> y <strong>firmar documentos</strong> con validez jurídica equivalente a la firma manuscrita. <em>¡No permite cifrado de datos del usuario!</em></p>
+                </div>
+
+                <h3>⚖️ Marco Jurídico</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🇪🇺 Reglamento eIDAS 910/2014</h4>
+                            <p>Marco europeo de identificación electrónica y servicios de confianza.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🇪🇸 Ley 39/2015</h4>
+                            <p>Procedimiento Administrativo Común de las Administraciones Públicas.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>📜 RD 1553/2005</h4>
+                            <p>Regula el DNI y sus certificados. Validez: 5 años con presencia física para renovación.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>🆕 Reglamento 2019/1157</h4>
+                            <p>Formato común documentos UE. Implementado en DNIe 4.0.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🏗️ Estructura PKI del DNI</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🏛️ Autoridad de Certificación</h4>
+                        <p><strong>Ministerio del Interior</strong><br>
+                        (Dirección General de la Policía)</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>✅ Autoridad de Validación</h4>
+                        <p><strong>FNMT y MINHAC</strong><br>
+                        Validación de certificados</p>
+                    </div>
+                </div>
+
+                <h3>📜 Certificados del DNIe</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🔐 Autenticación</h4>
+                        <p>Claves RSA para identificación (DigitalSignature)</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>✍️ Firma</h4>
+                        <p>Claves RSA para no repudio (ContentCommitment)</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🏛️ CA Emisora</h4>
+                        <p>Clave pública root CA para certificados card-verifiable</p>
+                    </div>
+                </div>
+
+                <h3>🔄 Evolución del DNI Electrónico</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>DNIe v2</th>
+                            <th>DNIe 3.0</th>
+                            <th>DNIe 4.0</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interfaz</td>
+                            <td>Solo contacto</td>
+                            <td>Dual (contacto + NFC)</td>
+                            <td>Dual + App móvil</td>
+                        </tr>
+                        <tr>
+                            <td>Chip</td>
+                            <td>ST19LW34</td>
+                            <td>SLE78CLFX408AP</td>
+                            <td>SoC ARM Cortex M</td>
+                        </tr>
+                        <tr>
+                            <td>Capacidad</td>
+                            <td>32K</td>
+                            <td>8K RAM - 400K Flash</td>
+                            <td>8K RAM - 750K Flash</td>
+                        </tr>
+                        <tr>
+                            <td>RFID</td>
+                            <td>❌ No</td>
+                            <td>✅ ISO 14443</td>
+                            <td>✅ ISO 14443</td>
+                        </tr>
+                        <tr>
+                            <td>Criptografía</td>
+                            <td>❌ Básica</td>
+                            <td>AES/3DES + RSA</td>
+                            <td>AES/3DES + RSA 2048</td>
+                        </tr>
+                        <tr>
+                            <td>Certificación CCN</td>
+                            <td>EAL4+</td>
+                            <td>EAL5+</td>
+                            <td>EAL5+</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>💾 Contenido del Chip DNIe 4.0</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🌍 Zona Pública</h4>
+                        <p>Accesible read-only sin restricciones:</p>
+                        <ul>
+                            <li>Claves Diffie-Hellman</li>
+                            <li>Certificado CA intermedia emisora</li>
+                            <li>Certificado de Autenticación</li>
+                            <li>Certificado de componente</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>🔒 Zona Seguridad</h4>
+                        <p>Solo accesible en puntos DGP:</p>
+                        <ul>
+                            <li>Datos de filiación e ID</li>
+                            <li>Imagen de la fotografía</li>
+                            <li>Imagen de firma manuscrita</li>
+                            <li>Datos biométricos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ejercicios" class="tab-content">
+            <div class="card fade-in">
+                <h2>✍️ Ejercicios Prácticos</h2>
+                <p>Pon a prueba tus conocimientos con estas preguntas tipo examen de oposición.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="correctCount">0</div>
+                        <div class="stat-label">Correctas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="incorrectCount">0</div>
+                        <div class="stat-label">Incorrectas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalAnswered">0</div>
+                        <div class="stat-label">Respondidas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quizContainer">
+                <!-- Las preguntas se generarán dinámicamente con JavaScript -->
+            </div>
+        </div>
+
+        <div id="recursos" class="tab-content">
+            <div class="card fade-in">
+                <h2>📚 Recursos y Referencias</h2>
+
+                <h3>📖 Normativa Principal</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🇪🇺 Normativa Europea</h4>
+                        <ul>
+                            <li>Reglamento (UE) 910/2014 (eIDAS)</li>
+                            <li>Reglamento (UE) 2024/1183 (eIDAS 2)</li>
+                            <li>Reglamento 2019/1157 (formato común documentos)</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>🇪🇸 Normativa Nacional</h4>
+                        <ul>
+                            <li>Ley 6/2020 (servicios electrónicos confianza)</li>
+                            <li>Ley 39/2015 (procedimiento administrativo)</li>
+                            <li>RD 1553/2005 (DNI electrónico)</li>
+                            <li>Orden ETD/465/2021 (identificación por vídeo)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>❓ Preguntas Frecuentes</h3>
+                <div class="info-item">
+                    <h4>¿Cuál es la diferencia entre TSP y QTSP?</h4>
+                    <p><strong>TSP:</strong> Prestador de servicios de confianza general. <strong>QTSP:</strong> Prestador cualificado supervisado por autoridades competentes con requisitos más estrictos.</p>
+                </div>
+
+                <div class="info-item">
+                    <h4>¿Qué es la Cartera Europea de Identidad Digital?</h4>
+                    <p>Sistema propuesto en eIDAS 2 que permite almacenar y compartir atributos de identidad de forma segura, válida en toda la UE, con control total del usuario sobre sus datos.</p>
+                </div>
+
+                <div class="info-item">
+                    <h4>¿Cuánto tiempo deben conservar los TSP la información?</h4>
+                    <p>Los prestadores de servicios de confianza deben conservar la información relativa a los servicios prestados durante <strong>15 años</strong> desde la extinción del certificado.</p>
+                </div>
+
+                <h3>🔧 Herramientas y Software</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🏢 Proveedores CA</h4>
+                        <ul>
+                            <li>Safelayer</li>
+                            <li>Entrust</li>
+                            <li>Microsoft ADCS</li>
+                            <li>FNMT-RCM</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>📱 Aplicaciones DNI</h4>
+                        <ul>
+                            <li>@firma (MINHAC)</li>
+                            <li>AutoFirma</li>
+                            <li>DNIe Tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>📝 Glosario de Términos</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>PKI</h4>
+                            <p>Public Key Infrastructure - Infraestructura de clave pública que gestiona certificados digitales.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>QTSP</h4>
+                            <p>Qualified Trusted Service Provider - Prestador cualificado de servicios de confianza.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>EUDI</h4>
+                            <p>European Union Digital Identity - Cartera europea de identidad digital.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4>HSM</h4>
+                            <p>Hardware Security Module - Dispositivo criptográfico dedicado para protección de claves.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>💡 Consejos para el Examen</h3>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Memoriza los plazos clave: 24h notificaciones, 24 meses auditorías, 5 años validez certificados</li>
+                        <li>Distingue claramente entre eIDAS 1 y eIDAS 2 (Cartera Digital Europea)</li>
+                        <li>Recuerda que el DNI electrónico NO permite cifrado de datos del usuario</li>
+                        <li>Las PKI de red de confianza NO se utilizan en Administraciones Públicas</li>
+                        <li>El seguro de responsabilidad mínimo es 1.500.000€ + 500.000€ por servicio adicional</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestión de temas
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
+        }
+
+        // Cargar tema guardado
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = savedTheme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
+        }
+
+        // Gestión de pestañas
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+
+            // Actualizar botones
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Cargar quiz si es la pestaña de ejercicios
+            if (tabName === 'ejercicios') {
+                loadQuiz();
+            }
+        }
+
+        // Datos del quiz
+        const quizQuestions = [
+            {
+                id: 1,
+                question: "¿Cuál es el plazo máximo para notificar violaciones de seguridad según eIDAS?",
+                options: [
+                    "12 horas",
+                    "24 horas",
+                    "48 horas",
+                    "72 horas"
+                ],
+                correct: 1,
+                difficulty: "basic",
+                explanation: "Según el artículo 19 del Reglamento eIDAS, los prestadores deben notificar violaciones de seguridad en un plazo máximo de 24 horas."
+            },
+            {
+                id: 2,
+                question: "¿Cada cuánto tiempo deben ser auditados los QTSP?",
+                options: [
+                    "Cada 12 meses",
+                    "Cada 18 meses", 
+                    "Cada 24 meses",
+                    "Cada 36 meses"
+                ],
+                correct: 2,
+                difficulty: "basic",
+                explanation: "El artículo 20 de eIDAS establece que los QTSP deben ser auditados al menos cada 24 meses."
+            },
+            {
+                id: 3,
+                question: "¿Qué significa QTSP?",
+                options: [
+                    "Quality Trust Service Provider",
+                    "Qualified Trusted Service Provider",
+                    "Qualified Trust Security Provider",
+                    "Quality Technical Service Provider"
+                ],
+                correct: 1,
+                difficulty: "basic",
+                explanation: "QTSP significa Qualified Trusted Service Provider (Prestador Cualificado de Servicios de Confianza)."
+            },
+            {
+                id: 4,
+                question: "¿Cuál es la vigencia máxima de los certificados electrónicos según la Ley 6/2020?",
+                options: [
+                    "3 años",
+                    "4 años",
+                    "5 años",
+                    "6 años"
+                ],
+                correct: 2,
+                difficulty: "basic",
+                explanation: "Según el artículo 4 de la Ley 6/2020, la vigencia de los certificados no puede ser superior a 5 años."
+            },
+            {
+                id: 5,
+                question: "¿Qué NO permite hacer el DNI electrónico?",
+                options: [
+                    "Identificación electrónica",
+                    "Firma de documentos",
+                    "Cifrado de datos del usuario", 
+                    "Autenticación en servicios públicos"
+                ],
+                correct: 2,
+                difficulty: "intermediate",
+                explanation: "El DNI electrónico permite identificación y firma, pero NO permite el cifrado de datos del usuario."
+            },
+            {
+                id: 6,
+                question: "¿Qué es EUDI en el contexto de eIDAS 2?",
+                options: [
+                    "European Union Data Infrastructure",
+                    "European Union Digital Identity",
+                    "European Unified Digital Initiative",
+                    "European Universal Data Integration"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "EUDI significa European Union Digital Identity (Cartera Europea de Identidad Digital)."
+            },
+            {
+                id: 7,
+                question: "¿Cuántos niveles de seguridad introduce eIDAS 2?",
+                options: [
+                    "3 niveles (bajo, sustancial, alto)",
+                    "4 niveles (bajo, sustancial, alto, muy alto)",
+                    "5 niveles",
+                    "2 niveles (básico, avanzado)"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "eIDAS 2 introduce un cuarto nivel de seguridad 'muy alto' para transacciones de alto riesgo."
+            },
+            {
+                id: 8,
+                question: "¿Cuál es el importe mínimo del seguro de responsabilidad civil para TSP cualificados?",
+                options: [
+                    "1.000.000 euros",
+                    "1.500.000 euros",
+                    "2.000.000 euros",
+                    "500.000 euros"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "La Ley 6/2020 establece un seguro mínimo de 1.500.000€, más 500.000€ por cada servicio cualificado adicional."
+            },
+            {
+                id: 9,
+                question: "¿Durante cuánto tiempo deben conservar los TSP la información de servicios prestados?",
+                options: [
+                    "10 años",
+                    "12 años",
+                    "15 años",
+                    "20 años"
+                ],
+                correct: 2,
+                difficulty: "basic",
+                explanation: "Según la Ley 6/2020, los TSP deben conservar la información durante 15 años desde la extinción del certificado."
+            },
+            {
+                id: 10,
+                question: "¿Qué tipo de PKI NO se utiliza en las Administraciones Públicas?",
+                options: [
+                    "PKI basada en Autoridades de Certificación",
+                    "PKI basada en redes de confianza",
+                    "PKI con estándar X.509",
+                    "PKI jerárquica"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "Las PKI basadas en redes de confianza (descentralizadas) NO se utilizan en Administraciones Públicas."
+            },
+            {
+                id: 11,
+                question: "¿Qué significa HSM en el contexto de seguridad?",
+                options: [
+                    "High Security Module",
+                    "Hardware Security Management", 
+                    "Hardware Security Module",
+                    "Hybrid Security Method"
+                ],
+                correct: 2,
+                difficulty: "intermediate",
+                explanation: "HSM significa Hardware Security Module, dispositivo criptográfico dedicado para proteger claves."
+            },
+            {
+                id: 12,
+                question: "¿Cuál es el estándar para tarjetas con circuito integrado?",
+                options: [
+                    "ISO 7810",
+                    "ISO 7816",
+                    "ISO 14443",
+                    "ISO 9798"
+                ],
+                correct: 1,
+                difficulty: "advanced",
+                explanation: "La norma ISO 7816 estandariza las tarjetas con circuito integrado (smart cards)."
+            },
+            {
+                id: 13,
+                question: "¿Qué autoridad actúa como CA en la PKI del DNI electrónico?",
+                options: [
+                    "FNMT-RCM",
+                    "Centro Criptológico Nacional",
+                    "Ministerio del Interior (DGP)",
+                    "INCIBE"
+                ],
+                correct: 2,
+                difficulty: "intermediate",
+                explanation: "El Ministerio del Interior (Dirección General de la Policía) actúa como Autoridad de Certificación del DNI electrónico."
+            },
+            {
+                id: 14,
+                question: "¿Cuál es la principal novedad de eIDAS 2 respecto al original?",
+                options: [
+                    "Mayor nivel de seguridad criptográfica",
+                    "Cartera Europea de Identidad Digital",
+                    "Nuevos tipos de certificados", 
+                    "Ampliación a más países"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "La principal novedad de eIDAS 2 es la introducción de la Cartera Europea de Identidad Digital (EUDI)."
+            },
+            {
+                id: 15,
+                question: "¿Qué significa CRL en el contexto de PKI?",
+                options: [
+                    "Certificate Revocation List",
+                    "Cryptographic Resource Library",
+                    "Certificate Registration Log",
+                    "Central Repository List"
+                ],
+                correct: 0,
+                difficulty: "advanced",
+                explanation: "CRL significa Certificate Revocation List, lista de certificados revocados por una CA."
+            },
+            {
+                id: 16,
+                question: "¿Con qué antelación mínima debe comunicar un QTSP el cese de su actividad?",
+                options: [
+                    "1 mes",
+                    "2 meses",
+                    "3 meses",
+                    "6 meses"
+                ],
+                correct: 1,
+                difficulty: "basic",
+                explanation: "Según la Ley 6/2020, los QTSP deben comunicar el cese con una antelación mínima de 2 meses."
+            },
+            {
+                id: 17,
+                question: "¿Qué nivel de certificación EAL tiene el DNIe 4.0?",
+                options: [
+                    "EAL4",
+                    "EAL4+",
+                    "EAL5",
+                    "EAL5+"
+                ],
+                correct: 3,
+                difficulty: "advanced",
+                explanation: "El DNIe 4.0 tiene certificación EAL5+ (Semi-formally Designed and Tested)."
+            },
+            {
+                id: 18,
+                question: "¿Qué protocolo permite consultas en tiempo real del estado de certificados?",
+                options: [
+                    "CRL",
+                    "OCSP",
+                    "LDAP",
+                    "SCEP"
+                ],
+                correct: 1,
+                difficulty: "advanced",
+                explanation: "OCSP (Online Certificate Status Protocol) permite consultas en tiempo real del estado de los certificados."
+            },
+            {
+                id: 19,
+                question: "¿Cuál es la capacidad de memoria del DNIe 4.0?",
+                options: [
+                    "8K RAM - 400K Flash",
+                    "8K RAM - 750K Flash", 
+                    "16K RAM - 500K Flash",
+                    "32K RAM - 1M Flash"
+                ],
+                correct: 1,
+                difficulty: "advanced",
+                explanation: "El DNIe 4.0 tiene 8K de RAM y 750K de memoria Flash."
+            },
+            {
+                id: 20,
+                question: "¿Qué significa MAC en el contexto de control de acceso?",
+                options: [
+                    "Media Access Control",
+                    "Mandatory Access Control", 
+                    "Multiple Authentication Control",
+                    "Managed Access Control"
+                ],
+                correct: 1,
+                difficulty: "intermediate",
+                explanation: "MAC significa Mandatory Access Control, un tipo de política de control de acceso obligatorio."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let answeredQuestions = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            quizQuestions.forEach((question, index) => {
+                const questionCard = createQuestionCard(question, index);
+                container.appendChild(questionCard);
+            });
+            
+            updateStats();
+        }
+
+        function createQuestionCard(question, index) {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${question.id}</span>
+                    <span class="difficulty-badge difficulty-${question.difficulty}">
+                        ${question.difficulty === 'basic' ? 'Básico' : 
+                          question.difficulty === 'intermediate' ? 'Intermedio' : 'Avanzado'}
+                    </span>
+                </div>
+                <h3>${question.question}</h3>
+                <div class="options">
+                    ${question.options.map((option, optIndex) => `
+                        <div class="option" onclick="selectOption(${question.id}, ${optIndex})">
+                            ${String.fromCharCode(65 + optIndex)}) ${option}
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="show-answer" onclick="showAnswer(${question.id})">Ver Respuesta</button>
+                <div class="answer-explanation" id="explanation-${question.id}">
+                    <strong>Respuesta correcta:</strong> ${String.fromCharCode(65 + question.correct)}) ${question.options[question.correct]}<br>
+                    <strong>Explicación:</strong> ${question.explanation}
+                </div>
+            `;
+            return card;
+        }
+
+        function selectOption(questionId, optionIndex) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            const questionCard = document.querySelector(`[onclick="showAnswer(${questionId})"]`).parentNode;
+            const options = questionCard.querySelectorAll('.option');
+            
+            // Limpiar selecciones previas
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Marcar opción seleccionada
+            options[optionIndex].classList.add('selected');
+        }
+
+        function showAnswer(questionId) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            const questionCard = document.querySelector(`[onclick="showAnswer(${questionId})"]`).parentNode;
+            const options = questionCard.querySelectorAll('.option');
+            const explanation = document.getElementById(`explanation-${questionId}`);
+            const selectedOption = questionCard.querySelector('.option.selected');
+            
+            if (!selectedOption) {
+                alert('Por favor, selecciona una respuesta primero.');
+                return;
+            }
+            
+            // Mostrar respuesta correcta
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (option.classList.contains('selected')) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Actualizar estadísticas
+            const selectedIndex = Array.from(options).indexOf(selectedOption);
+            if (selectedIndex === question.correct) {
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+            
+            answeredQuestions++;
+            updateStats();
+            
+            // Mostrar explicación
+            explanation.style.display = 'block';
+            
+            // Deshabilitar botón
+            const button = questionCard.querySelector('.show-answer');
+            button.textContent = 'Respuesta mostrada';
+            button.disabled = true;
+            button.style.opacity = '0.5';
+        }
+
+        function updateStats() {
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('incorrectCount').textContent = incorrectAnswers;
+            document.getElementById('totalAnswered').textContent = answeredQuestions;
+            
+            const progress = (answeredQuestions / quizQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+        });
+    </script>
+</body>
+</html>

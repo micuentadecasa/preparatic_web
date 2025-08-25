@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptos y Fundamentos de Sistemas Operativos - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #3583d4);
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 15px 15px 0 0;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            padding: 2rem;
+            min-height: 500px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tab-content {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            background: var(--bg-hover);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(53, 131, 212, 0.1));
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .process-diagram {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .quiz-container {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .options li {
+            background: var(--bg-secondary);
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .options li.correct {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .options li.incorrect {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .basic { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+        .intermediate { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .advanced { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+
+        .glossary-term {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-left: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .comparison-table {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .progress-bar {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-color), #3583d4);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .theme-toggle {
+                position: static;
+                margin: 1rem auto 0;
+                display: block;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .list-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Cambiar Tema</button>
+        <h1>Conceptos y Fundamentos de Sistemas Operativos</h1>
+        <p>Guía completa para oposiciones de administración pública</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">Resumen General</button>
+            <button class="tab" onclick="showTab(1)">Fundamentos y Definiciones</button>
+            <button class="tab" onclick="showTab(2)">Gestión de Procesos</button>
+            <button class="tab" onclick="showTab(3)">Administración de Memoria</button>
+            <button class="tab" onclick="showTab(4)">Sistemas de Archivos</button>
+            <button class="tab" onclick="showTab(5)">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab(6)">Recursos y FAQ</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tab 0: Resumen General -->
+            <div class="tab-pane active">
+                <h2>📋 Resumen General: Sistemas Operativos</h2>
+                
+                <div class="card">
+                    <h3>🎯 Objetivos de Aprendizaje</h3>
+                    <ul>
+                        <li>Comprender las funciones básicas de un sistema operativo</li>
+                        <li>Conocer los componentes principales: gestión de procesos, memoria, E/S y archivos</li>
+                        <li>Identificar tipos de sistemas operativos y sus características</li>
+                        <li>Entender la evolución histórica de los sistemas operativos</li>
+                        <li>Familiarizarse con sistemas móviles modernos (Android, iOS)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Conceptos Clave</h3>
+                    <div class="list-grid">
+                        <div class="definition-box">
+                            <h4>Sistema Operativo (SO)</h4>
+                            <p>Componente software más importante que gestiona recursos de la máquina y actúa como interfaz entre hardware y usuario.</p>
+                        </div>
+                        <div class="definition-box">
+                            <h4>Proceso</h4>
+                            <p>Programa en ejecución caracterizado por instrucciones, estado actual y recursos del sistema asociados.</p>
+                        </div>
+                        <div class="definition-box">
+                            <h4>Multiprogramación</h4>
+                            <p>Técnica de multiplexación que proporciona la ilusión de ejecución paralela de varios procesos en un único procesador.</p>
+                        </div>
+                        <div class="definition-box">
+                            <h4>Scheduler</h4>
+                            <p>Elemento del SO encargado de repartir el tiempo disponible del microprocesador entre todos los procesos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔢 Datos Importantes</h3>
+                    <ul>
+                        <li><strong>Estados mínimos de proceso:</strong> Activo, Preparado, Bloqueado</li>
+                        <li><strong>Algoritmos de memoria:</strong> FIFO, NRU, LRU, NFU, LFU</li>
+                        <li><strong>Sistemas de archivos Windows:</strong> FAT, HPFS, NTFS</li>
+                        <li><strong>Sistemas de archivos Linux:</strong> EXT2, EXT3, EXT4, ReiserFS, SWAP</li>
+                        <li><strong>Generaciones:</strong> 1ª (1945-1955), 2ª (1955-1965), 3ª (1965-1980), 4ª (1980-actualidad)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 1: Fundamentos y Definiciones -->
+            <div class="tab-pane">
+                <h2>🏗️ Fundamentos y Definiciones</h2>
+                
+                <div class="card">
+                    <h3>¿Qué es un Sistema Operativo?</h3>
+                    <div class="definition-box">
+                        <p>El <strong>sistema operativo (SO)</strong> es el componente software más importante de un ordenador, ya que se ocupa principalmente de:</p>
+                        <ul>
+                            <li><strong>Gestionar el conjunto de recursos de la máquina</strong></li>
+                            <li><strong>Ejercer de interfaz entre los componentes hardware y el propio usuario</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Componentes Principales de un SO</h3>
+                    <p>Esencialmente, un sistema operativo se ocupa de cuatro áreas fundamentales:</p>
+                    
+                    <div class="list-grid">
+                        <div class="card">
+                            <h3>Gestión de Procesos</h3>
+                            <p>Asignación de recursos, sincronización, protección y control de procesos en ejecución.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Administración de Memoria</h3>
+                            <p>Control de qué partes de la memoria están ocupadas, libres y gestión del conjunto.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Sistema de E/S</h3>
+                            <p>Gestión de comunicación con dispositivos de entrada y salida.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Gestión de Archivos</h3>
+                            <p>Organización y almacenamiento de ficheros del sistema y usuario.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Tipos de Sistemas Operativos</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Tipos</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Número de usuarios</strong></td>
+                                <td>Monousuario / Multiusuario</td>
+                                <td>Un usuario vs múltiples usuarios simultáneos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Número de tareas</strong></td>
+                                <td>Monotarea / Multitarea</td>
+                                <td>Una tarea vs múltiples tareas simultáneas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Número de procesadores</strong></td>
+                                <td>Uniprocesador / Multiprocesador</td>
+                                <td>Un procesador vs múltiples procesadores</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Estructura</strong></td>
+                                <td>Monolítica / Jerárquica / Máquina virtual</td>
+                                <td>Diferentes arquitecturas de diseño</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Servicios</strong></td>
+                                <td>SO de red / Sistemas distribuidos</td>
+                                <td>Forma de ofrecer servicios en red</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Gestión de Procesos -->
+            <div class="tab-pane">
+                <h2>⚙️ Gestión de Procesos</h2>
+                
+                <div class="card">
+                    <h3>🔄 Conceptos Fundamentales</h3>
+                    <div class="definition-box">
+                        <h4>Proceso</h4>
+                        <p>Programa en ejecución que se caracteriza por un conjunto de instrucciones, un estado actual y conjunto de recursos del sistema asociados.</p>
+                    </div>
+                    
+                    <div class="definition-box">
+                        <h4>Multiprogramación</h4>
+                        <p>Técnica de multiplexación que proporciona la ilusión de la ejecución paralela de varios procesos en un único procesador.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Funciones del Sistema Operativo en Gestión de Procesos</h3>
+                    <ul>
+                        <li><strong>Asignar recursos a los procesos</strong></li>
+                        <li><strong>Permitir que compartan información</strong></li>
+                        <li><strong>Proteger los recursos asignados</strong></li>
+                        <li><strong>Permitir la sincronización entre procesos</strong></li>
+                        <li><strong>Mantener estructura de datos para procesos</strong></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Estados de un Proceso</h3>
+                    <p>Un proceso puede estar, como mínimo, en los estados:</p>
+                    <div class="list-grid">
+                        <div class="card">
+                            <h3>🟢 Activo</h3>
+                            <p>El proceso está siendo ejecutado por el procesador en este momento.</p>
+                        </div>
+                        <div class="card">
+                            <h3>🟡 Preparado</h3>
+                            <p>El proceso está listo para ser ejecutado, esperando su turno.</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔴 Bloqueado</h3>
+                            <p>El proceso está esperando por algún recurso o evento para continuar.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-diagram">
+                        <h4>🔄 Diagrama de Estados Ampliado</h4>
+                        <p><strong>En espera → Preparado → Activo → Terminado</strong></p>
+                        <p><strong>Activo ⇄ Bloqueado</strong> (por recursos)</p>
+                        <p><strong>Preparado ⇄ Descargado</strong> (gestión memoria)</p>
+                        <p><em>Estados adicionales: Terminado, Descargado</em></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗓️ Scheduler (Planificador)</h3>
+                    <p>Elemento del SO encargado de repartir el tiempo disponible de un microprocesador entre todos los procesos que están disponibles para su ejecución.</p>
+                    
+                    <h4>📋 Políticas de Planificación:</h4>
+                    <ul>
+                        <li><strong>Round-robin:</strong> Asignación cíclica de tiempo</li>
+                        <li><strong>FIFO:</strong> Primero en llegar, primero en ser servido</li>
+                        <li><strong>LIFO:</strong> Último en llegar, primero en ser servido</li>
+                        <li><strong>Shortest Job First:</strong> Trabajo más corto primero</li>
+                        <li><strong>Shortest Remaining Time:</strong> Tiempo restante más corto</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔀 Formas de Asignación/Desasignación</h3>
+                    <div class="list-grid">
+                        <div class="card">
+                            <h3>💻 Llamada al Sistema</h3>
+                            <p>Mediante una llamada al sistema o interrupción software</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔧 Interrupción Hardware</h3>
+                            <p>A través de una interrupción hardware</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Administración de Memoria -->
+            <div class="tab-pane">
+                <h2>🧠 Administración de Memoria Principal</h2>
+                
+                <div class="card">
+                    <h3>📝 Concepto y Responsabilidades</h3>
+                    <div class="definition-box">
+                        <p>La memoria constituye el recurso que utiliza el ordenador y gestiona el SO para almacenar los datos de los programas que la CPU procesa.</p>
+                        <p><strong>Es responsabilidad del SO saber:</strong></p>
+                        <ul>
+                            <li>Qué partes de la memoria están ocupadas</li>
+                            <li>Cuáles están libres</li>
+                            <li>La gestión del conjunto de las mismas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Algoritmos de Gestión de Memoria</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Algoritmo</th>
+                                <th>Descripción</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>FIFO</strong></td>
+                                <td>First In, First Out</td>
+                                <td>Primero en entrar, primero en salir</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NRU</strong></td>
+                                <td>Not Recently Used</td>
+                                <td>No usada recientemente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LRU</strong></td>
+                                <td>Least Recently Used</td>
+                                <td>La usada menos recientemente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NFU</strong></td>
+                                <td>Not Frequently Used</td>
+                                <td>La no usada frecuentemente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LFU</strong></td>
+                                <td>Least Frequently Used</td>
+                                <td>La menos frecuentemente usada</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aleatoria</strong></td>
+                                <td>Random</td>
+                                <td>Selección aleatoria</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🗂️ Segmentación</h3>
+                    <div class="definition-box">
+                        <h4>¿Qué es la Segmentación?</h4>
+                        <p>Técnica que utiliza la circunstancia de que los programas se dividen en partes para asignar segmentos de memoria a cada parte de un programa.</p>
+                        
+                        <h4>✅ Ventajas:</h4>
+                        <ul>
+                            <li><strong>Mayor eficiencia:</strong> Los segmentos pueden ser utilizados por varios programas</li>
+                            <li><strong>Librerías compartidas:</strong> Ejemplo de segmentos compartidos</li>
+                            <li><strong>Mejor aprovechamiento:</strong> Uso más eficiente del espacio de memoria</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💾 Sistema de E/S (Entrada/Salida)</h3>
+                    <p>El SO se ocupa de gestionar la comunicación con los dispositivos de E/S.</p>
+                    
+                    <h4>📊 Tipos de Dispositivos de E/S:</h4>
+                    <div class="list-grid">
+                        <div class="card">
+                            <h3>📦 Orientados a Bloque</h3>
+                            <p>Se pueden direccionar directamente</p>
+                            <p><em>Ejemplo: Discos duros, SSD</em></p>
+                        </div>
+                        <div class="card">
+                            <h3>📝 Orientados a Carácter</h3>
+                            <p>No se pueden direccionar y trabajan con secuencias de bytes</p>
+                            <p><em>Ejemplo: Teclado, ratón</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Conceptos Técnicos Importantes</h3>
+                    <div class="definition-box">
+                        <h4>Driver</h4>
+                        <p>Parte del SO que se encarga de gobernar cierto dispositivo o un conjunto de naturaleza similar. Se trata de un componente software que conoce los detalles de bajo nivel del dispositivo.</p>
+                    </div>
+                    
+                    <div class="definition-box">
+                        <h4>DMA (Direct Memory Access)</h4>
+                        <p>Gracias a esta característica, un dispositivo es capaz de transferir datos entre la memoria principal y el dispositivo de E/S.</p>
+                    </div>
+                    
+                    <div class="definition-box">
+                        <h4>PnP (Plug and Play)</h4>
+                        <p>Especificación que permite a un periférico ser conectado a un ordenador sin tener que configurar jumpers u otro elemento específico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Sistemas de Archivos -->
+            <div class="tab-pane">
+                <h2>📁 Sistemas de Archivos</h2>
+                
+                <div class="card">
+                    <h3>📝 Concepto y Funciones</h3>
+                    <div class="definition-box">
+                        <p>El sistema de archivos es la organización que permite almacenar el conjunto de ficheros integrantes del sistema y aquellos pertenecientes al usuario.</p>
+                        <h4>🎯 Principales Funciones:</h4>
+                        <ul>
+                            <li><strong>Asignación de espacio a los archivos</strong></li>
+                            <li><strong>Gestión del espacio libre</strong></li>
+                            <li><strong>Acceso a los archivos</strong></li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>Concepto clave:</strong> Los dispositivos de almacenamiento permiten el acceso a los datos como una cadena de bloques del mismo tamaño llamados <em>sectores</em>.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🪟 Sistemas de Ficheros en Windows</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Sistema</th>
+                                <th>Descripción</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>FAT</strong></td>
+                                <td>File Allocation Table</td>
+                                <td>Desarrollado para MS-DOS, usado hasta Windows Me. Formato habitual en medios extraíbles</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HPFS</strong></td>
+                                <td>High Performance File System</td>
+                                <td>Permite nombres largos, metadatos, información de seguridad, autocomprobación</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NTFS</strong></td>
+                                <td>New Technology File System</td>
+                                <td>Sistema de Windows NT. Basado en HPFS. Clúster desde 512 bytes. Versión actual: 5.1 (2020)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🐧 Sistemas de Ficheros en Linux/UNIX</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Sistema</th>
+                                <th>Características Principales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>EXT2</strong></td>
+                                <td>Fragmentación muy baja, particiones hasta 4TB, ficheros hasta 2GB, nombres hasta 255 caracteres</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EXT3</strong></td>
+                                <td>Mejora de ext2 y compatible. Con journaling para recuperación frente a fallos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EXT4</strong></td>
+                                <td>Mayor eficiencia que ext3. Particiones hasta 1024PB, ficheros hasta 16TB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ReiserFS</strong></td>
+                                <td>Con journaling, más eficiente que ext2 y ext3 para archivos menores de 4k</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SWAP</strong></td>
+                                <td>Sistema de ficheros para las particiones de intercambio</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Operaciones del Sistema de Archivos</h3>
+                    <p>Los sistemas de archivos proporcionan métodos para:</p>
+                    <div class="list-grid">
+                        <div class="card">
+                            <h3>➕ Crear</h3>
+                            <p>Archivos y directorios</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔄 Mover</h3>
+                            <p>Cambiar ubicación</p>
+                        </div>
+                        <div class="card">
+                            <h3>✏️ Renombrar</h3>
+                            <p>Cambiar nombres</p>
+                        </div>
+                        <div class="card">
+                            <h3>🗑️ Eliminar</h3>
+                            <p>Borrar archivos y directorios</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Comparación de Límites por Sistema</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Sistema</th>
+                                <th>Tamaño Máximo Partición</th>
+                                <th>Tamaño Máximo Archivo</th>
+                                <th>Longitud Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>EXT2</td>
+                                <td>4TB</td>
+                                <td>2GB</td>
+                                <td>255 caracteres</td>
+                            </tr>
+                            <tr>
+                                <td>EXT4</td>
+                                <td>1024PB</td>
+                                <td>16TB</td>
+                                <td>255 caracteres</td>
+                            </tr>
+                            <tr>
+                                <td>NTFS</td>
+                                <td>256TB</td>
+                                <td>256TB</td>
+                                <td>255 caracteres</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 5: Ejercicios Prácticos -->
+            <div class="tab-pane">
+                <h2>🎓 Ejercicios Prácticos</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress"></div>
+                </div>
+                <p id="progress-text">Progreso: 0/20 preguntas</p>
+
+                <!-- Pregunta 1 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">1. ¿Cuál es la función principal de un sistema operativo?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 0, 0)">Gestionar recursos de la máquina y ejercer de interfaz entre hardware y usuario</li>
+                        <li onclick="selectAnswer(this, 0, 1)">Únicamente ejecutar aplicaciones de usuario</li>
+                        <li onclick="selectAnswer(this, 0, 2)">Solo gestionar la red del ordenador</li>
+                        <li onclick="selectAnswer(this, 0, 3)">Exclusivamente manejar la memoria RAM</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">2. ¿Qué es un proceso en el contexto de sistemas operativos?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 1, 0)">Un archivo almacenado en el disco duro</li>
+                        <li onclick="selectAnswer(this, 1, 1)">Un programa en ejecución caracterizado por instrucciones, estado actual y recursos asociados</li>
+                        <li onclick="selectAnswer(this, 1, 2)">Una carpeta del sistema operativo</li>
+                        <li onclick="selectAnswer(this, 1, 3)">Un driver de dispositivo</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">3. ¿Cuáles son los estados mínimos en los que puede estar un proceso?</div>
+                    <ul class="options" data-answer="2">
+                        <li onclick="selectAnswer(this, 2, 0)">Iniciado, Pausado, Finalizado</li>
+                        <li onclick="selectAnswer(this, 2, 1)">Creado, Ejecutando, Eliminado</li>
+                        <li onclick="selectAnswer(this, 2, 2)">Activo, Preparado, Bloqueado</li>
+                        <li onclick="selectAnswer(this, 2, 3)">Cargado, Procesando, Descargado</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">4. ¿Qué es la multiprogramación?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 3, 0)">Técnica que proporciona la ilusión de ejecución paralela de varios procesos en un único procesador</li>
+                        <li onclick="selectAnswer(this, 3, 1)">Ejecutar varios programas simultáneamente en diferentes ordenadores</li>
+                        <li onclick="selectAnswer(this, 3, 2)">Programar en múltiples lenguajes de programación</li>
+                        <li onclick="selectAnswer(this, 3, 3)">Tener varios programadores trabajando en el mismo proyecto</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">5. ¿Qué algoritmo de gestión de memoria significa "First In, First Out"?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 4, 0)">LRU</li>
+                        <li onclick="selectAnswer(this, 4, 1)">FIFO</li>
+                        <li onclick="selectAnswer(this, 4, 2)">NRU</li>
+                        <li onclick="selectAnswer(this, 4, 3)">LFU</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge advanced">Avanzado</span>
+                    <div class="question">6. ¿Cuál es la diferencia principal entre dispositivos de E/S orientados a bloque y orientados a carácter?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 5, 0)">Los orientados a bloque se pueden direccionar, los orientados a carácter trabajan con secuencias de bytes</li>
+                        <li onclick="selectAnswer(this, 5, 1)">Los orientados a bloque son más rápidos que los orientados a carácter</li>
+                        <li onclick="selectAnswer(this, 5, 2)">Los orientados a carácter son más seguros que los orientados a bloque</li>
+                        <li onclick="selectAnswer(this, 5, 3)">No hay diferencia entre ambos tipos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">7. ¿Qué significa DMA en el contexto de sistemas operativos?</div>
+                    <ul class="options" data-answer="2">
+                        <li onclick="selectAnswer(this, 6, 0)">Data Management Application</li>
+                        <li onclick="selectAnswer(this, 6, 1)">Dynamic Memory Allocation</li>
+                        <li onclick="selectAnswer(this, 6, 2)">Direct Memory Access</li>
+                        <li onclick="selectAnswer(this, 6, 3)">Disk Management Architecture</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">8. ¿Cuál es el sistema de archivos más moderno de Windows mencionado en el documento?</div>
+                    <ul class="options" data-answer="3">
+                        <li onclick="selectAnswer(this, 7, 0)">FAT</li>
+                        <li onclick="selectAnswer(this, 7, 1)">HPFS</li>
+                        <li onclick="selectAnswer(this, 7, 2)">EXT4</li>
+                        <li onclick="selectAnswer(this, 7, 3)">NTFS</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">9. ¿Qué sistema de archivos Linux incluye capacidades de journaling para recuperación frente a fallos?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 8, 0)">EXT2</li>
+                        <li onclick="selectAnswer(this, 8, 1)">EXT3</li>
+                        <li onclick="selectAnswer(this, 8, 2)">SWAP</li>
+                        <li onclick="selectAnswer(this, 8, 3)">FAT</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge advanced">Avanzado</span>
+                    <div class="question">10. ¿En qué generación de computadoras se introdujo el microprocesador?</div>
+                    <ul class="options" data-answer="3">
+                        <li onclick="selectAnswer(this, 9, 0)">Primera generación (1945-1955)</li>
+                        <li onclick="selectAnswer(this, 9, 1)">Segunda generación (1955-1965)</li>
+                        <li onclick="selectAnswer(this, 9, 2)">Tercera generación (1965-1980)</li>
+                        <li onclick="selectAnswer(this, 9, 3)">Cuarta generación (1980-actualidad)</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">11. ¿Cuál fue el primer microprocesador de Intel mencionado?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 10, 0)">Intel 4004</li>
+                        <li onclick="selectAnswer(this, 10, 1)">Intel 8008</li>
+                        <li onclick="selectAnswer(this, 10, 2)">Intel 8080</li>
+                        <li onclick="selectAnswer(this, 10, 3)">Intel 386</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 12 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">12. ¿Qué sistema operativo móvil tiene aproximadamente el 80% de cuota de mercado?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 11, 0)">iOS</li>
+                        <li onclick="selectAnswer(this, 11, 1)">Android</li>
+                        <li onclick="selectAnswer(this, 11, 2)">Windows Phone</li>
+                        <li onclick="selectAnswer(this, 11, 3)">BlackBerry</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 13 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">13. ¿En qué está basado el núcleo de Android?</div>
+                    <ul class="options" data-answer="2">
+                        <li onclick="selectAnswer(this, 12, 0)">Windows</li>
+                        <li onclick="selectAnswer(this, 12, 1)">macOS</li>
+                        <li onclick="selectAnswer(this, 12, 2)">Linux</li>
+                        <li onclick="selectAnswer(this, 12, 3)">BSD</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 14 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">14. ¿Cuál es la extensión de las aplicaciones de Android?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 13, 0)">.apk</li>
+                        <li onclick="selectAnswer(this, 13, 1)">.ipa</li>
+                        <li onclick="selectAnswer(this, 13, 2)">.exe</li>
+                        <li onclick="selectAnswer(this, 13, 3)">.app</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 15 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge advanced">Avanzado</span>
+                    <div class="question">15. ¿Qué técnica permite que segmentos de memoria puedan ser utilizados por varios programas?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 14, 0)">Multiprogramación</li>
+                        <li onclick="selectAnswer(this, 14, 1)">Segmentación</li>
+                        <li onclick="selectAnswer(this, 14, 2)">Paginación</li>
+                        <li onclick="selectAnswer(this, 14, 3)">Fragmentación</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 16 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">16. ¿Cuál es la función del scheduler en un sistema operativo?</div>
+                    <ul class="options" data-answer="3">
+                        <li onclick="selectAnswer(this, 15, 0)">Gestionar la memoria principal</li>
+                        <li onclick="selectAnswer(this, 15, 1)">Controlar los dispositivos de E/S</li>
+                        <li onclick="selectAnswer(this, 15, 2)">Administrar el sistema de archivos</li>
+                        <li onclick="selectAnswer(this, 15, 3)">Repartir el tiempo del microprocesador entre los procesos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 17 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge advanced">Avanzado</span>
+                    <div class="question">17. ¿Cuál es el tamaño máximo de archivo que soporta EXT4?</div>
+                    <ul class="options" data-answer="2">
+                        <li onclick="selectAnswer(this, 16, 0)">2GB</li>
+                        <li onclick="selectAnswer(this, 16, 1)">4TB</li>
+                        <li onclick="selectAnswer(this, 16, 2)">16TB</li>
+                        <li onclick="selectAnswer(this, 16, 3)">256TB</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 18 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge basic">Básico</span>
+                    <div class="question">18. ¿Qué significa PnP?</div>
+                    <ul class="options" data-answer="1">
+                        <li onclick="selectAnswer(this, 17, 0)">Process and Program</li>
+                        <li onclick="selectAnswer(this, 17, 1)">Plug and Play</li>
+                        <li onclick="selectAnswer(this, 17, 2)">Print and Pause</li>
+                        <li onclick="selectAnswer(this, 17, 3)">Point and Position</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 19 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge intermediate">Intermedio</span>
+                    <div class="question">19. ¿En qué se basa iOS de Apple?</div>
+                    <ul class="options" data-answer="0">
+                        <li onclick="selectAnswer(this, 18, 0)">macOS y Darwin BSD</li>
+                        <li onclick="selectAnswer(this, 18, 1)">Linux</li>
+                        <li onclick="selectAnswer(this, 18, 2)">Windows</li>
+                        <li onclick="selectAnswer(this, 18, 3)">Android</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 20 -->
+                <div class="quiz-container">
+                    <span class="difficulty-badge advanced">Avanzado</span>
+                    <div class="question">20. ¿Cuál es la versión actual de NTFS mencionada en el documento?</div>
+                    <ul class="options" data-answer="3">
+                        <li onclick="selectAnswer(this, 19, 0)">4.0</li>
+                        <li onclick="selectAnswer(this, 19, 1)">4.1</li>
+                        <li onclick="selectAnswer(this, 19, 2)">5.0</li>
+                        <li onclick="selectAnswer(this, 19, 3)">5.1</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 6: Recursos y FAQ -->
+            <div class="tab-pane">
+                <h2>📚 Recursos y FAQ</h2>
+                
+                <div class="card">
+                    <h3>📖 Glosario de Términos Clave</h3>
+                    
+                    <div class="glossary-term">
+                        <h4>Sistema Operativo (SO)</h4>
+                        <p>Componente software más importante de un ordenador que gestiona recursos de la máquina y actúa como interfaz entre hardware y usuario.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Proceso</h4>
+                        <p>Programa en ejecución caracterizado por un conjunto de instrucciones, un estado actual y conjunto de recursos del sistema asociados.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Multiprogramación</h4>
+                        <p>Técnica de multiplexación que proporciona la ilusión de la ejecución paralela de varios procesos en un único procesador.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Scheduler (Planificador)</h4>
+                        <p>Elemento del SO encargado de repartir el tiempo disponible de un microprocesador entre todos los procesos que están disponibles para su ejecución.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Segmentación</h4>
+                        <p>Técnica que utiliza la circunstancia de que los programas se dividen en partes para asignar segmentos de memoria a cada parte de un programa.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Driver</h4>
+                        <p>Parte del SO que se encarga de gobernar cierto dispositivo o un conjunto de naturaleza similar. Componente software que conoce los detalles de bajo nivel del dispositivo.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>DMA (Direct Memory Access)</h4>
+                        <p>Característica que permite a un dispositivo transferir datos entre la memoria principal y el dispositivo de E/S.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>PnP (Plug and Play)</h4>
+                        <p>Especificación que permite a un periférico ser conectado a un ordenador sin tener que configurar jumpers u otro elemento específico.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Journaling</h4>
+                        <p>Técnica utilizada en sistemas de archivos para registrar cambios antes de que se apliquen, permitiendo la recuperación frente a fallos.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <h4>Sectores</h4>
+                        <p>Bloques del mismo tamaño en los que los dispositivos de almacenamiento permiten el acceso a los datos.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🕒 Cronología de Generaciones de Computadoras</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Primera Generación (1945-1955)</h4>
+                            <p><strong>Características:</strong> Tubos de vacío, ocupaban salas enormes, programación en lenguaje máquina, introducción de tarjetas perforadas</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Segunda Generación (1955-1965)</h4>
+                            <p><strong>Características:</strong> Uso masivo del transistor, explotación comercial, gran coste, solo accesible para grandes corporaciones</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Tercera Generación (1965-1980)</h4>
+                            <p><strong>Características:</strong> Circuitos integrados, multiprogramación, menor consumo de energía, menor espacio, más fiabilidad</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Cuarta Generación (1980-Actualidad)</h4>
+                            <p><strong>Características:</strong> Microprocesador, computadoras personales (PC), tecnologías LSI y VLSI</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏆 Microprocesadores Históricos de Intel</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Bits</th>
+                                <th>Transistores</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Intel 4004</strong></td>
+                                <td>4</td>
+                                <td>N/A</td>
+                                <td>Desarrollado para una calculadora</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Intel 8008</strong></td>
+                                <td>8</td>
+                                <td>3,300</td>
+                                <td>Evolución del 4004</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Intel 8080</strong></td>
+                                <td>8</td>
+                                <td>4,500</td>
+                                <td>Primer microprocesador para uso general, 200,000 instrucciones/segundo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📱 Sistemas Operativos Móviles Actuales</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>SO Móvil</th>
+                                <th>Desarrollador</th>
+                                <th>Cuota Mercado</th>
+                                <th>Extensión App</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Android</strong></td>
+                                <td>Google</td>
+                                <td>~80%</td>
+                                <td>.apk, .xapk</td>
+                                <td>Activo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>iOS</strong></td>
+                                <td>Apple</td>
+                                <td>~18%</td>
+                                <td>.ipa</td>
+                                <td>Activo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Windows Phone</strong></td>
+                                <td>Microsoft</td>
+                                <td>0%</td>
+                                <td>N/A</td>
+                                <td>Discontinuado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        let quizAnswers = new Array(20).fill(null);
+        let quizScore = 0;
+
+        function showTab(tabIndex) {
+            // Hide all tabs
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            tabPanes[tabIndex].classList.add('active');
+            tabs[tabIndex].classList.add('active');
+            
+            currentTab = tabIndex;
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌞 Cambiar Tema';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '🌙 Cambiar Tema';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function selectAnswer(element, questionIndex, selectedAnswer) {
+            const options = element.parentElement;
+            const correctAnswer = parseInt(options.getAttribute('data-answer'));
+            
+            // Clear previous selections
+            Array.from(options.children).forEach(li => {
+                li.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark correct and incorrect answers
+            Array.from(options.children).forEach((li, index) => {
+                if (index === correctAnswer) {
+                    li.classList.add('correct');
+                } else if (index === selectedAnswer && index !== correctAnswer) {
+                    li.classList.add('incorrect');
+                }
+            });
+            
+            // Store answer
+            if (quizAnswers[questionIndex] === null) {
+                quizAnswers[questionIndex] = selectedAnswer;
+                if (selectedAnswer === correctAnswer) {
+                    quizScore++;
+                }
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const answered = quizAnswers.filter(answer => answer !== null).length;
+            const progressPercent = (answered / 20) * 100;
+            
+            document.getElementById('quiz-progress').style.width = progressPercent + '%';
+            document.getElementById('progress-text').textContent = 
+                `Progreso: ${answered}/20 preguntas (Puntuación: ${quizScore}/${answered})`;
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const themeToggle = document.querySelector('.theme-toggle');
+            themeToggle.textContent = savedTheme === 'dark' ? '🌙 Cambiar Tema' : '🌞 Cambiar Tema';
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentTab > 0) {
+                showTab(currentTab - 1);
+            } else if (e.key === 'ArrowRight' && currentTab < 6) {
+                showTab(currentTab + 1);
+            }
+        });
+    </script>
+</body>
+</html>

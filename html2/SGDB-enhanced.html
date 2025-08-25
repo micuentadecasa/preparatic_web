@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas de Gestión de Bases de Datos (SGBD) - Tema 63</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4ade80;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .theme-toggle span {
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-color), #64b5f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .tab-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .highlight-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-list li:hover {
+            background: var(--bg-hover);
+            transform: translateX(5px);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question {
+            margin-bottom: 1rem;
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-color);
+        }
+
+        .options li.correct {
+            background: var(--success-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .options li.incorrect {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.8rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--bg-primary);
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 0.2rem;
+        }
+
+        .badge.basic { background: var(--success-color); }
+        .badge.intermediate { background: var(--warning-color); }
+        .badge.advanced { background: var(--error-color); }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #64b5f6);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .expandable {
+            cursor: pointer;
+        }
+
+        .expandable-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .expandable.expanded .expandable-content {
+            display: block;
+        }
+
+        .expandable::after {
+            content: ' ▼';
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .expandable.expanded::after {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <span id="theme-icon">🌙</span>
+            <span id="theme-text">Modo Claro</span>
+        </div>
+        <h1>Sistemas de Gestión de Bases de Datos (SGBD)</h1>
+        <p class="subtitle">Tema 63: El Modelo de Referencia ANSI - Guía de Estudio Completa</p>
+    </header>
+
+    <div class="tab-container">
+        <nav class="tabs">
+            <div class="tab active" onclick="showTab('resumen')">Resumen General</div>
+            <div class="tab" onclick="showTab('fundamentos')">Fundamentos SGBD</div>
+            <div class="tab" onclick="showTab('transacciones')">Transacciones y ACID</div>
+            <div class="tab" onclick="showTab('arquitectura')">Arquitectura SGBD</div>
+            <div class="tab" onclick="showTab('ansi')">Modelo ANSI</div>
+            <div class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</div>
+            <div class="tab" onclick="showTab('recursos')">Recursos y FAQ</div>
+        </nav>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h3>📊 Resumen Ejecutivo</h3>
+                <p>Los Sistemas de Gestión de Bases de Datos (SGBD) son conjuntos de programas, procedimientos y lenguajes que permiten almacenar, actualizar y consultar datos contenidos en una Base de Datos, manteniendo su integridad, confidencialidad y seguridad.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h3>🎯 Objetivos de Aprendizaje</h3>
+                    <ul class="feature-list">
+                        <li>Comprender los conceptos fundamentales de SGBD</li>
+                        <li>Dominar las propiedades ACID</li>
+                        <li>Conocer la arquitectura interna de los SGBD</li>
+                        <li>Entender el modelo ANSI/X3/SPARC</li>
+                        <li>Clasificar los tipos de bases de datos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Estadísticas Clave</h3>
+                    <div class="highlight-box">
+                        <p><strong>3 Niveles ANSI:</strong> Interno, Conceptual, Externo</p>
+                        <p><strong>4 Propiedades ACID:</strong> Atomicidad, Consistencia, Aislamiento, Persistencia</p>
+                        <p><strong>3 Lenguajes principales:</strong> DDL, DML, DCL (+TCL)</p>
+                        <p><strong>4 Niveles de Aislamiento:</strong> No comprometida, Comprometida, Repetible, Serializable</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔑 Conceptos Principales</h3>
+                <div class="info-grid">
+                    <div>
+                        <h4>Base de Datos (BD)</h4>
+                        <p>Conjunto de datos almacenado en soporte informático no volátil, estructurados e interrelacionados conforme a un modelo que recoge el máximo contenido semántico.</p>
+                    </div>
+                    <div>
+                        <h4>Diccionario de Datos</h4>
+                        <p>Almacena información sobre estructura y semántica de todos los objetos de la BD: definiciones, restricciones, espacios, privilegios y roles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Fundamentos SGBD -->
+        <div id="fundamentos" class="tab-content">
+            <div class="card">
+                <h3>🏗️ Características Fundamentales de un SGBD</h3>
+                <ul class="feature-list">
+                    <li><strong>Modelo de datos soportado:</strong> Estructura conceptual para organizar datos</li>
+                    <li><strong>Lenguajes de alto nivel:</strong> DDL, DML, DCL y lenguajes 4GL</li>
+                    <li><strong>Acceso concurrente:</strong> Gestión de bloqueos y consistencia</li>
+                    <li><strong>Independencia física y lógica:</strong> Separación entre estructura y almacenamiento</li>
+                    <li><strong>Redundancia controlada:</strong> Minimización de duplicación de datos</li>
+                    <li><strong>Integridad y consistencia:</strong> Mantenimiento de reglas de negocio</li>
+                    <li><strong>Seguridad y control de acceso:</strong> Roles, permisos y privilegios</li>
+                    <li><strong>Alto rendimiento funcional:</strong> Optimización de consultas</li>
+                    <li><strong>Alto volumen de datos:</strong> Escalabilidad</li>
+                </ul>
+            </div>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h3>📝 Tipos de Lenguajes SGBD</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>DDL (Data Definition Language)</h4>
+                            <p>Define la estructura de la base de datos: creación, manipulación o borrado de tablas, vistas, esquemas, atributos, índices y reglas de integridad.</p>
+                            <div class="code-block">CREATE TABLE, ALTER TABLE, DROP TABLE</div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>DML (Data Manipulation Language)</h4>
+                            <p>Permite realizar consultas, inserciones, modificaciones o borrados de datos en el SGBD.</p>
+                            <div class="code-block">SELECT, INSERT, UPDATE, DELETE</div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>DCL (Data Control Language)</h4>
+                            <p>Controla el acceso a los datos estableciendo, modificando y borrando privilegios de usuarios.</p>
+                            <div class="code-block">GRANT, REVOKE, DENY</div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>TCL (Transaction Control Language)</h4>
+                            <p>Controla las transacciones para mantener la integridad de los datos.</p>
+                            <div class="code-block">BEGIN, COMMIT, ROLLBACK</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛡️ Aspectos que Garantiza un SGBD</h3>
+                    <ul class="feature-list">
+                        <li><strong>Concurrencia:</strong> Accesos simultáneos sin conflictos</li>
+                        <li><strong>Consistencia:</strong> Datos sin contradicciones</li>
+                        <li><strong>Integridad:</strong> Conformidad con reglas semánticas</li>
+                        <li><strong>Recuperación:</strong> Vuelta a estado íntegro anterior</li>
+                        <li><strong>Privacidad:</strong> Acceso según privilegios definidos</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Teorema de CAP (Conjetura de Brewer)</h4>
+                        <p>En un SGBD distribuido no se pueden garantizar simultáneamente más que 2 aspectos de entre:</p>
+                        <ul>
+                            <li><strong>Consistencia (C):</strong> Lectura recibe escritura más reciente</li>
+                            <li><strong>Disponibilidad (A):</strong> Respuesta no errónea sin garantía de recencia</li>
+                            <li><strong>Tolerancia al Particionado (P):</strong> Funcionamiento con mensajes descartados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Transacciones y ACID -->
+        <div id="transacciones" class="tab-content">
+            <div class="card">
+                <h3>⚡ Transacciones: Conceptos Fundamentales</h3>
+                <p><strong>Transacción:</strong> Unidad elemental de trabajo delimitada por Begin-transaction y Commit/Rollback. Entre ambas se sitúan las sentencias Read, Write a ejecutar como un bloque único.</p>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3>🎯 Propiedades ACID</h3>
+                <div class="expandable-content">
+                    <div class="info-grid">
+                        <div class="highlight-box">
+                            <h4>🔒 Atomicidad (Atomicity)</h4>
+                            <p>La transacción debe tener efecto en su totalidad, no se permite ejecución parcial.</p>
+                            <ul>
+                                <li>COMMIT: todas las instrucciones se completan</li>
+                                <li>ROLLBACK: ninguna instrucción se completa</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h4>✅ Consistencia (Consistency)</h4>
+                            <p>Solo se ejecutan operaciones que respetan las reglas de integridad de la base de datos.</p>
+                            <ul>
+                                <li>Datos exactos y esperados</li>
+                                <li>Mantenimiento de restricciones</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h4>🚪 Aislamiento (Isolation)</h4>
+                            <p>Una operación no afectará a las demás. Dos transacciones son independientes.</p>
+                            <ul>
+                                <li>Cambios no visibles hasta Commit</li>
+                                <li>Prevención de interferencias</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h4>💾 Persistencia (Durability)</h4>
+                            <p>Una vez ejecutado el Commit, los cambios se hacen persistentes y sobreviven a fallos.</p>
+                            <ul>
+                                <li>Resistencia a fallos del sistema</li>
+                                <li>Permanencia garantizada</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Concurrencia y Problemas de Interferencia</h3>
+                <p><strong>Concurrencia:</strong> Intercalación de operaciones de distintas transacciones para mejorar el rendimiento, asegurando siempre integridad y consistencia.</p>
+                
+                <div class="info-grid">
+                    <div class="warning-box">
+                        <h4>📖 Lectura No Repetible</h4>
+                        <p>T1 lee dos veces un valor y no coinciden porque T2 ha modificado el valor entre ambas lecturas.</p>
+                    </div>
+                    <div class="warning-box">
+                        <h4>🚫 Lectura Sucia</h4>
+                        <p>T1 lee un dato modificado por T2 antes del Commit. Si T2 falla, el valor leído nunca fue válido.</p>
+                    </div>
+                    <div class="warning-box">
+                        <h4>👻 Lectura Fantasma</h4>
+                        <p>T1 realiza consultas iguales y T2 inserta datos entre ambas, mostrando más datos en la segunda lectura.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎚️ Niveles de Aislamiento</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nivel de Aislamiento</th>
+                                <th>Lectura Sucia</th>
+                                <th>Lectura No Repetible</th>
+                                <th>Lectura Fantasma</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Lectura No Comprometida</strong></td>
+                                <td style="color: var(--error-color);">NO</td>
+                                <td style="color: var(--error-color);">NO</td>
+                                <td style="color: var(--error-color);">NO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lectura Comprometida</strong></td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                                <td style="color: var(--error-color);">NO</td>
+                                <td style="color: var(--error-color);">NO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lectura Repetible</strong></td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                                <td style="color: var(--error-color);">NO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Serializable</strong></td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                                <td style="color: var(--success-color);">SÍ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🔐 Two-Phase-Locking (2PL)</h4>
+                    <p>Mecanismo de control de concurrencia que obliga a dos fases durante la ejecución:</p>
+                    <ul>
+                        <li><strong>Fase 1:</strong> Adquisición de recursos</li>
+                        <li><strong>Fase 2:</strong> Liberación de recursos</li>
+                    </ul>
+                    <p>Los recursos solo se liberan después de Commit o Rollback.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Arquitectura SGBD -->
+        <div id="arquitectura" class="tab-content">
+            <div class="card">
+                <h3>🏛️ Arquitectura Interna de un SGBD</h3>
+                <p>Los componentes principales que conforman la arquitectura interna de un Sistema de Gestión de Bases de Datos trabajan coordinadamente para proporcionar funcionalidad completa.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h3>🔍 Procesador de Consultas (QP)</h3>
+                    <ul class="feature-list">
+                        <li>Analiza sintaxis y semántica de consultas</li>
+                        <li>Utiliza metadatos del diccionario de datos</li>
+                        <li>Optimiza consultas</li>
+                        <li>Transforma en instrucciones de bajo nivel</li>
+                    </ul>
+                    <div class="code-block">Begin-transaction → Read → Write → Commit/Rollback</div>
+                </div>
+
+                <div class="card">
+                    <h3>⚙️ Gestor de Transacciones (TM)</h3>
+                    <ul class="feature-list">
+                        <li>Recibe múltiples transacciones concurrentes</li>
+                        <li>Ordena operaciones Read, Write, Commit, Rollback</li>
+                        <li>Proporciona aislamiento entre transacciones</li>
+                        <li>Coordina con el Planificador</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📅 Planificador (SC)</h3>
+                    <ul class="feature-list">
+                        <li>Controla la concurrencia</li>
+                        <li>Planifica ejecución de transacciones</li>
+                        <li>Restringe orden de ejecución de operaciones</li>
+                        <li>Proporciona integridad y consistencia</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p><strong>Gestor de Bloqueos (LM):</strong> Cuando el control es 2PL, el Planificador se denomina Lock Manager</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💽 Gestor de Datos (DM)</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Gestor de Recuperación (RM)</h4>
+                            <ul>
+                                <li>Ejecuta operaciones Commit y Rollback</li>
+                                <li>Asegura atomicidad y persistencia</li>
+                                <li>Recuperación frente a fallos</li>
+                                <li>Lleva BD a estado anterior consistente</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Gestor de Buffers (Cache)</h4>
+                            <ul>
+                                <li>Ejecuta operaciones Read y Write sobre BD</li>
+                                <li>Gestiona memoria caché</li>
+                                <li>Optimiza accesos a disco</li>
+                                <li>Mejora rendimiento del sistema</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Flujo de Procesamiento</h3>
+                <div class="highlight-box">
+                    <p><strong>1. Usuario/Aplicación</strong> → <strong>2. Procesador de Consultas</strong> → <strong>3. Gestor de Transacciones</strong> → <strong>4. Planificador</strong> → <strong>5. Gestor de Datos</strong> → <strong>6. Almacenamiento en Disco</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Modelo ANSI -->
+        <div id="ansi" class="tab-content">
+            <div class="card">
+                <h3>🏗️ El Modelo de Referencia ANSI/X3/SPARC</h3>
+                <p>Definido en 1975 por el Database Architecture Framework Task Group (DAFTG), presenta 3 niveles diferenciados de representación de la información gestionada.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h3>📊 Los Tres Niveles ANSI</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>🔧 Nivel Interno o Físico</h4>
+                            <p>Se encarga de aspectos internos relacionados con el servidor (SO y sistema de gestión de ficheros).</p>
+                            <ul>
+                                <li>Mejor tiempo de respuesta</li>
+                                <li>Minimizar espacio de almacenamiento</li>
+                                <li>Evitar redundancia de información</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>🏛️ Nivel Conceptual</h4>
+                            <p>Materializa la representación de datos independientemente de su estructura física.</p>
+                            <ul>
+                                <li>Esquema Conceptual conforme a modelo de datos</li>
+                                <li>Entidades, atributos, interrelaciones</li>
+                                <li>Restricciones de integridad</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>👁️ Nivel Externo o Lógico</h4>
+                            <p>"Filtra" los esquemas de BD conforme a la parte de interés para un usuario concreto.</p>
+                            <ul>
+                                <li>Esquema externo = Vista</li>
+                                <li>Personalización por usuario</li>
+                                <li>Simplificación de acceso</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Funciones de Correspondencia</h3>
+                    <div class="highlight-box">
+                        <h4>Correspondencia Externa-Conceptual</h4>
+                        <p>Permite intercambio de información entre esquema externo y esquema conceptual en ambos sentidos.</p>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>Correspondencia Conceptual-Interna</h4>
+                        <p>Permite intercambio de información entre esquema conceptual y esquema interno en ambos sentidos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>✅ Ventajas del Modelo ANSI</h3>
+                <div class="warning-box">
+                    <p><strong>Independencia Física y Lógica:</strong> Los cambios en niveles físicos o lógicos no afectan el funcionamiento de las BD.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Correspondencia con Modelo Relacional</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Niveles ANSI</th>
+                                <th>Modelo Relacional</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Nivel Lógico</strong></td>
+                                <td>Nivel Externo + Nivel Conceptual</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nivel Físico</strong></td>
+                                <td>Nivel Interno</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3>📚 Modelos de Datos ANSI</h3>
+                <div class="expandable-content">
+                    <div class="info-grid">
+                        <div class="highlight-box">
+                            <h4>🌳 Modelo Jerárquico</h4>
+                            <p>Estructura en árbol donde nodos y ramas siguen relación 1:n</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h4>🕸️ Modelo Codasyl</h4>
+                            <p>Estructura en red con relaciones n:m. Más flexible que el jerárquico</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h4>📋 Modelo Relacional</h4>
+                            <p>Estructuras de teoría matemática de conjuntos. Datos organizados en tablas con restricciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Evolución: Modelo DAFTG (1985)</h3>
+                <div class="info-grid">
+                    <div class="highlight-box">
+                        <h4>📝 Definición de Datos</h4>
+                        <p>Administrador (DBA) define diccionario de datos (metadatos) y procesos que usan los datos</p>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>🔧 Manipulación de Datos</h4>
+                        <p>Datos, procesos de transformación entre niveles y usuarios finales</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3>🛠️ Componentes DAFTG RM</h3>
+                <div class="expandable-content">
+                    <ul class="feature-list">
+                        <li><strong>Data Management Tools (DMT):</strong> Lenguajes de tratamiento, herramientas de tuning, carga/descarga</li>
+                        <li><strong>Data Mapping Control System (DMCS):</strong> Core del SGBD con operadores para definición y manipulación</li>
+                        <li><strong>Data Language Interface (DL):</strong> Lenguaje de manipulación para modelo de datos</li>
+                        <li><strong>Internal Data Language Interface (i-DL):</strong> Interfaz entre DMCS y Sistema Operativo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3>👥 User Facility Reference Model (UFRM) - 1988</h3>
+                <div class="expandable-content">
+                    <ul class="feature-list">
+                        <li><strong>User Facility (UF):</strong> Conexión entre usuario y herramientas DMT</li>
+                        <li><strong>User Data Language (UDL):</strong> Interfaz entre entorno de usuario y UF</li>
+                        <li><strong>Internal User Data Language (i-UDL):</strong> Interfaz entre UF y DMT</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h3>🎯 Ejercicios Prácticos - SGBD</h3>
+                <p>Pon a prueba tus conocimientos con estas preguntas de examen. Las respuestas correctas están marcadas en <span style="color: var(--success-color);">verde</span>.</p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="question">
+                    <h4>1. ¿Cuáles son las propiedades ACID de las transacciones?</h4>
+                    <span class="badge basic">Básico</span>
+                    <ul class="options">
+                        <li>Atomicidad, Coherencia, Isolación, Durabilidad</li>
+                        <li class="correct">Atomicidad, Consistencia, Aislamiento, Persistencia</li>
+                        <li>Acceso, Concurrencia, Integridad, Datos</li>
+                        <li>Autorización, Control, Identificación, Privilegios</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>2. ¿Qué significa DDL en el contexto de SGBD?</h4>
+                    <span class="badge basic">Básico</span>
+                    <ul class="options">
+                        <li>Data Description Language</li>
+                        <li class="correct">Data Definition Language</li>
+                        <li>Data Design Language</li>
+                        <li>Data Development Language</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>3. ¿Cuántos niveles define el modelo ANSI/X3/SPARC?</h4>
+                    <span class="badge basic">Básico</span>
+                    <ul class="options">
+                        <li>2 niveles</li>
+                        <li class="correct">3 niveles</li>
+                        <li>4 niveles</li>
+                        <li>5 niveles</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>4. ¿Qué problema de concurrencia ocurre cuando T1 lee un dato modificado por T2 antes del Commit?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Lectura no repetible</li>
+                        <li class="correct">Lectura sucia</li>
+                        <li>Lectura fantasma</li>
+                        <li>Bloqueo mutuo</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>5. Según el teorema de CAP, ¿cuántos aspectos se pueden garantizar simultáneamente en un SGBD distribuido?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Los 3 aspectos siempre</li>
+                        <li class="correct">Máximo 2 aspectos</li>
+                        <li>Solo 1 aspecto</li>
+                        <li>Depende de la implementación</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>6. ¿Cuál de estos NO es un nivel de aislamiento de transacciones?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Lectura comprometida</li>
+                        <li>Lectura repetible</li>
+                        <li class="correct">Lectura distribuida</li>
+                        <li>Serializable</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>7. ¿Qué componente del SGBD se encarga de analizar la sintaxis y semántica de las consultas?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Gestor de Transacciones</li>
+                        <li class="correct">Procesador de Consultas</li>
+                        <li>Gestor de Datos</li>
+                        <li>Planificador</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>8. En el modelo ANSI, ¿qué nivel materializa la representación de datos independientemente de su estructura física?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Nivel Interno</li>
+                        <li class="correct">Nivel Conceptual</li>
+                        <li>Nivel Externo</li>
+                        <li>Nivel Lógico</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>9. ¿Qué característica del Two-Phase-Locking es correcta?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Los recursos se liberan antes del Commit</li>
+                        <li class="correct">Existen dos fases: adquisición y liberación de recursos</li>
+                        <li>Se pueden adquirir recursos en cualquier momento</li>
+                        <li>No afecta a la concurrencia</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>10. ¿Cuál es la principal ventaja del modelo de 3 niveles de ANSI?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Mayor velocidad de procesamiento</li>
+                        <li>Menor uso de memoria</li>
+                        <li class="correct">Independencia física y lógica de los datos</li>
+                        <li>Menor complejidad de implementación</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>11. ¿Qué significa DML en el contexto de bases de datos?</h4>
+                    <span class="badge basic">Básico</span>
+                    <ul class="options">
+                        <li>Data Management Language</li>
+                        <li class="correct">Data Manipulation Language</li>
+                        <li>Data Model Language</li>
+                        <li>Data Mapping Language</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>12. ¿Cuál de estas NO es una característica fundamental de un SGBD?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Acceso concurrente</li>
+                        <li>Integridad y consistencia</li>
+                        <li class="correct">Compilación automática</li>
+                        <li>Seguridad y control de acceso</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>13. ¿Qué tipo de lectura fantasma puede ocurrir en transacciones concurrentes?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Una transacción modifica datos entre dos lecturas</li>
+                        <li class="correct">Una transacción inserta datos entre consultas iguales</li>
+                        <li>Una transacción borra datos sin confirmación</li>
+                        <li>Una transacción lee datos no confirmados</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>14. En el modelo DAFTG RM de 1985, ¿cómo se llama el componente que corresponde al "core" del SGBD?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Data Management Tools (DMT)</li>
+                        <li class="correct">Data Mapping Control System (DMCS)</li>
+                        <li>Data Language Interface (DL)</li>
+                        <li>Internal Data Language Interface (i-DL)</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>15. ¿Cuál es la función principal del Gestor de Recuperación (RM)?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Gestionar memoria caché</li>
+                        <li class="correct">Ejecutar operaciones Commit y Rollback</li>
+                        <li>Planificar transacciones</li>
+                        <li>Analizar consultas</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>16. ¿Qué aspecto del teorema de CAP se refiere a que el sistema sigue funcionando aunque se descarten mensajes?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Consistencia</li>
+                        <li>Disponibilidad</li>
+                        <li class="correct">Tolerancia al Particionado</li>
+                        <li>Atomicidad</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>17. ¿Cuál de estos modelos de datos permite relaciones n:m y es más flexible que el jerárquico?</h4>
+                    <span class="badge intermediate">Intermedio</span>
+                    <ul class="options">
+                        <li>Modelo jerárquico</li>
+                        <li class="correct">Modelo Codasyl</li>
+                        <li>Modelo relacional</li>
+                        <li>Modelo orientado a objetos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>18. ¿Qué nivel de aislamiento previene todas las interferencias entre transacciones?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Lectura comprometida</li>
+                        <li>Lectura repetible</li>
+                        <li class="correct">Serializable</li>
+                        <li>Lectura no comprometida</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>19. ¿Cuál es la principal función del Diccionario de Datos?</h4>
+                    <span class="badge basic">Básico</span>
+                    <ul class="options">
+                        <li>Almacenar los datos de la aplicación</li>
+                        <li class="correct">Almacenar información sobre estructura y semántica de objetos BD</li>
+                        <li>Gestionar usuarios y permisos</li>
+                        <li>Optimizar consultas</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <h4>20. ¿Qué componente se añadió en 1988 al modelo UFRM para conectar usuario y herramientas DMT?</h4>
+                    <span class="badge advanced">Avanzado</span>
+                    <ul class="options">
+                        <li>Data Management Tools</li>
+                        <li>Data Mapping Control System</li>
+                        <li class="correct">User Facility (UF)</li>
+                        <li>User Data Language</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h3>📚 Recursos Adicionales</h3>
+                <ul class="feature-list">
+                    <li><strong>ANSI/X3/SPARC Study Group:</strong> Documentación oficial del modelo de referencia</li>
+                    <li><strong>Teorema de CAP:</strong> Investigación sobre sistemas distribuidos</li>
+                    <li><strong>Propiedades ACID:</strong> Fundamentos de transacciones en bases de datos</li>
+                    <li><strong>Two-Phase Locking:</strong> Mecanismos de control de concurrencia</li>
+                </ul>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3>❓ Preguntas Frecuentes (FAQ)</h3>
+                <div class="expandable-content">
+                    <div class="highlight-box">
+                        <h4>¿Cuál es la diferencia entre Base de Datos y SGBD?</h4>
+                        <p>La Base de Datos son los datos estructurados almacenados, mientras que el SGBD es el conjunto de programas y herramientas que permiten gestionar esos datos.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>¿Por qué es importante la independencia física y lógica?</h4>
+                        <p>Permite que cambios en la estructura física o lógica no afecten las aplicaciones que usan la base de datos, facilitando el mantenimiento y evolución del sistema.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>¿Cuándo usar cada nivel de aislamiento?</h4>
+                        <p><strong>Serializable:</strong> Máxima consistencia. <strong>Lectura repetible:</strong> Balance consistencia/rendimiento. <strong>Lectura comprometida:</strong> Aplicaciones con alta concurrencia.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>¿Qué es el diccionario activo vs pasivo?</h4>
+                        <p><strong>Activo:</strong> El programador debe usar definiciones del diccionario. <strong>Pasivo:</strong> Permite definir datos no incluidos en el diccionario.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Herramientas y Software Relacionado</h3>
+                <div class="info-grid">
+                    <div class="highlight-box">
+                        <h4>SGBD Relacionales</h4>
+                        <ul>
+                            <li>Oracle</li>
+                            <li>SQL Server</li>
+                            <li>MySQL</li>
+                            <li>PostgreSQL</li>
+                            <li>MariaDB</li>
+                            <li>DB2</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>SGBD No Relacionales</h4>
+                        <ul>
+                            <li>MongoDB (Documentales)</li>
+                            <li>Redis (Clave-Valor)</li>
+                            <li>Cassandra (Columnas)</li>
+                            <li>Neo4j (Grafos)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💡 Buenas Prácticas</h3>
+                <ul class="feature-list">
+                    <li><strong>Diseño:</strong> Utilizar normalización adecuada para evitar redundancia</li>
+                    <li><strong>Transacciones:</strong> Mantener transacciones cortas para reducir bloqueos</li>
+                    <li><strong>Índices:</strong> Crear índices apropiados para mejorar rendimiento</li>
+                    <li><strong>Seguridad:</strong> Implementar control de acceso basado en roles</li>
+                    <li><strong>Respaldos:</strong> Establecer estrategias regulares de backup</li>
+                    <li><strong>Monitoreo:</strong> Supervisar rendimiento y uso de recursos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📖 Glosario de Términos Clave</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Término</th>
+                                <th>Definición</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ACID</strong></td>
+                                <td>Propiedades de las transacciones: Atomicidad, Consistencia, Aislamiento, Persistencia</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DDL</strong></td>
+                                <td>Data Definition Language - Define estructura de BD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DML</strong></td>
+                                <td>Data Manipulation Language - Manipula datos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DCL</strong></td>
+                                <td>Data Control Language - Controla acceso</td>
+                            </tr>
+                            <tr>
+                                <td><strong>TCL</strong></td>
+                                <td>Transaction Control Language - Controla transacciones</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2PL</strong></td>
+                                <td>Two-Phase Locking - Control de concurrencia</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ANSI</strong></td>
+                                <td>American National Standards Institute</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SPARC</strong></td>
+                                <td>Standards Planning and Requirements Committee</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Modo Oscuro';
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Expandable sections
+        function toggleExpand(element) {
+            element.classList.toggle('expanded');
+        }
+
+        // Quiz functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove previous selections in this question
+                    const siblings = this.parentElement.children;
+                    for (let sibling of siblings) {
+                        sibling.classList.remove('incorrect');
+                    }
+
+                    // Show correct answer and mark incorrect if necessary
+                    if (!this.classList.contains('correct')) {
+                        this.classList.add('incorrect');
+                    }
+                });
+            });
+        });
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close any expanded sections
+                const expanded = document.querySelectorAll('.expandable.expanded');
+                expanded.forEach(el => el.classList.remove('expanded'));
+            }
+        });
+    </script>
+</body>
+</html>

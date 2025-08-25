@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo OSI - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .header {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: var(--bg-hover);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .layer-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-hover) 100%);
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .layer-number {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .protocol-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .protocol-item {
+            background: var(--bg-hover);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .quiz-container {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .difficulty {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty.avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .options {
+            margin: 15px 0;
+        }
+
+        .option {
+            background: var(--bg-hover);
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: var(--accent-color);
+            background: var(--bg-card);
+        }
+
+        .option.selected {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .option.correct {
+            border-color: var(--success-color);
+            background: var(--success-color);
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: var(--error-color);
+            background: var(--error-color);
+            color: white;
+        }
+
+        .show-answer {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .show-answer:hover {
+            background: var(--bg-hover);
+            color: var(--accent-color);
+        }
+
+        .answer-explanation {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid var(--success-color);
+            display: none;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: var(--bg-hover);
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-hover);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .glossary-term {
+            background: var(--bg-hover);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .tabs {
+                justify-content: center;
+            }
+
+            .tab {
+                font-size: 13px;
+                padding: 10px 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .protocol-list {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 14px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <header class="header">
+            <h1>Modelo OSI - Guía de Estudio</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('arquitectura')">Arquitectura y Capas</button>
+            <button class="tab" onclick="showTab('protocolos')">Protocolos e Interfaces</button>
+            <button class="tab" onclick="showTab('comunicacion')">Comunicación</button>
+            <button class="tab" onclick="showTab('comparacion')">Comparación TCP/IP</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </nav>
+
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2>📋 Resumen Ejecutivo del Modelo OSI</h2>
+                <p>El <strong>Modelo OSI</strong> (Open System Interconnection) es un estándar de referencia para protocolos de red de arquitectura en capas, creado en 1980 por la ISO y estandarizado por ITU-T. Es fundamental para entender cómo funcionan las comunicaciones de red.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div>Capas del Modelo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1980</div>
+                        <div>Año de Creación</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1984</div>
+                        <div>Año de Publicación ISO</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div>Modelos Alternativos</div>
+                    </div>
+                </div>
+
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <ul>
+                    <li>Comprender la estructura de las 7 capas del modelo OSI</li>
+                    <li>Identificar las funciones específicas de cada capa</li>
+                    <li>Dominar los conceptos de protocolos, servicios e interfaces</li>
+                    <li>Relacionar OSI con TCP/IP y otros modelos</li>
+                    <li>Aplicar conocimientos en exámenes de oposiciones</li>
+                </ul>
+
+                <h3>🔑 Conceptos Clave</h3>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>Protocolo:</strong> Conjunto de reglas entre participantes en una comunicación
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Capa/Nivel:</strong> Reparte e independiza las funciones de comunicación
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Servicios:</strong> Prestados por capas al nivel superior
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Interfaz:</strong> Reglas e información para invocar servicios
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Modelos de Referencia Alternativos</h2>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>SNA:</strong> Systems Network Architecture (IBM)
+                    </div>
+                    <div class="protocol-item">
+                        <strong>IPX/SPX:</strong> Redes Novell Netware (SPX=TCP, IPX=IP)
+                    </div>
+                    <div class="protocol-item">
+                        <strong>TCP/IP:</strong> Modelo de Internet (4 capas)
+                    </div>
+                    <div class="protocol-item">
+                        <strong>OSI:</strong> Modelo de referencia teórico (7 capas)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="arquitectura" class="tab-content">
+            <div class="card">
+                <h2>🏗️ Arquitectura del Modelo OSI</h2>
+                <p>El modelo OSI está compuesto por <strong>7 capas jerárquicas</strong>, cada una con funciones específicas y bien definidas. Cada capa se comunica con su equivalente en el sistema destino y proporciona servicios a la capa superior.</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">7</span>Capa de Aplicación</h2>
+                <p><strong>Función:</strong> Ofrece acceso a los servicios de red para las aplicaciones. Define protocolos para intercambio de datos.</p>
+                <p><strong>Ejemplos de protocolos:</strong> HTTP, FTP, SMTP, POP3, DNS</p>
+                <p><strong>Características:</strong> Interface directa con el usuario final, gestión de aplicaciones de red, servicios de directorio.</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">6</span>Capa de Presentación</h2>
+                <p><strong>Función:</strong> Define el formato de datos, sintaxis, codificación, compresión y cifrado.</p>
+                <p><strong>Servicios:</strong> Transformación de datos, selección y modificación de sintaxis, compresión y cifrado.</p>
+                <p><strong>Características:</strong> Traducción entre formatos, gestión de la representación de datos.</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">5</span>Capa de Sesión</h2>
+                <p><strong>Función:</strong> Mantiene y controla el enlace entre dos sistemas que transmiten datos.</p>
+                <p><strong>Servicios:</strong> Control de diálogo (full-duplex/half-duplex), recuperación de sesiones, puntos de control.</p>
+                <p><strong>Características:</strong> Establece, gestiona y termina sesiones entre aplicaciones.</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">4</span>Capa de Transporte</h2>
+                <p><strong>Función:</strong> Transporte fiable de datos extremo a extremo, segmentación, confirmación y multiplexación.</p>
+                <p><strong>PDU:</strong> Segmento (TCP) o Datagrama (UDP)</p>
+                <p><strong>Protocolos OSI:</strong> TP0 a TP4 (TP4 es el más completo, similar a TCP)</p>
+                <p><strong>Características:</strong> Control de flujo, detección y corrección de errores, comunicación extremo a extremo.</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">3</span>Capa de Red</h2>
+                <p><strong>Función:</strong> Direccionamiento, enrutamiento y control de tráfico entre redes.</p>
+                <p><strong>PDU:</strong> Paquete</p>
+                <p><strong>Protocolos enrutables:</strong> IP, IPX, APPLETALK</p>
+                <p><strong>Protocolos de enrutamiento:</strong> RIP, IGRP, EIGRP, OSPF, BGP</p>
+                <p><strong>Dispositivos:</strong> Routers, Firewalls</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">2</span>Capa de Enlace de Datos</h2>
+                <p><strong>Función:</strong> Direccionamiento físico, acceso al medio, detección de errores, control de flujo.</p>
+                <p><strong>PDU:</strong> Trama</p>
+                <p><strong>Subniveles:</strong></p>
+                <ul>
+                    <li><strong>LLC (Logical Link Control):</strong> Construir tramas a partir de bits</li>
+                    <li><strong>MAC (Media Access Control):</strong> Compartir acceso al medio, direcciones físicas</li>
+                </ul>
+                <p><strong>Dispositivos:</strong> Switch (trabaja en Nivel 2)</p>
+            </div>
+
+            <div class="layer-card card">
+                <h2><span class="layer-number">1</span>Capa Física</h2>
+                <p><strong>Función:</strong> Especificaciones mecánicas, eléctricas, funcionales y de procedimientos para transmisión física.</p>
+                <p><strong>PDU:</strong> Bit</p>
+                <p><strong>Elementos:</strong> Señales eléctricas, codificación y modulación, cables, conectores, topología de red.</p>
+                <p><strong>Características:</strong> Transmisión binaria, características físicas de interfaces y medios.</p>
+            </div>
+        </div>
+
+        <div id="protocolos" class="tab-content">
+            <div class="card">
+                <h2>🔌 Protocolos e Interfaces</h2>
+                <p>Los protocolos definen las reglas de comunicación entre capas equivalentes, mientras que las interfaces especifican cómo una capa solicita servicios de la capa inferior.</p>
+
+                <h3>📦 Unidades de Datos de Protocolo (PDU)</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Capa</th>
+                            <th>Nombre PDU</th>
+                            <th>Función</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>7 - Aplicación</td>
+                            <td>APDU</td>
+                            <td>Datos de aplicación</td>
+                        </tr>
+                        <tr>
+                            <td>6 - Presentación</td>
+                            <td>PPDU</td>
+                            <td>Datos formateados</td>
+                        </tr>
+                        <tr>
+                            <td>5 - Sesión</td>
+                            <td>SPDU</td>
+                            <td>Datos de sesión</td>
+                        </tr>
+                        <tr>
+                            <td>4 - Transporte</td>
+                            <td>TPDU (Segmento/Datagrama)</td>
+                            <td>Datos segmentados</td>
+                        </tr>
+                        <tr>
+                            <td>3 - Red</td>
+                            <td>Paquete</td>
+                            <td>Datos enrutados</td>
+                        </tr>
+                        <tr>
+                            <td>2 - Enlace</td>
+                            <td>Trama</td>
+                            <td>Datos enmarcados</td>
+                        </tr>
+                        <tr>
+                            <td>1 - Físico</td>
+                            <td>Bit</td>
+                            <td>Señal eléctrica</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔄 Proceso de Encapsulación</h3>
+                <p>Cada capa añade su propia cabecera a los datos recibidos del nivel superior:</p>
+                <ul>
+                    <li><strong>PDU (n) =</strong> datos + cabecera del protocolo de nivel n</li>
+                    <li><strong>SDU (n) =</strong> datos + cabecera del nivel n+1 que recibe el servicio</li>
+                    <li><strong>ICI (n) =</strong> información adicional que la capa n+1 añade al invocar el servicio</li>
+                    <li><strong>IDU (n) =</strong> ICI (n-1) + SDU (n-1)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>🤝 Primitivas de Servicio</h2>
+                <p>Los servicios entre capas utilizan primitivas específicas para la comunicación:</p>
+
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>Request:</strong> Solicitud de servicio de una capa superior a inferior
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Indication:</strong> Notificación a la capa superior sobre un evento
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Response:</strong> Respuesta de la capa superior a una indicación
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Confirm:</strong> Confirmación del resultado de una solicitud
+                    </div>
+                </div>
+
+                <h3>🔧 Tipos de Protocolos</h3>
+                <ul>
+                    <li><strong>Protocolos no confirmados:</strong> Utilizan solo Request e Indication</li>
+                    <li><strong>Protocolos confirmados:</strong> Utilizan las cuatro primitivas (Request, Indication, Response, Confirm)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="comunicacion" class="tab-content">
+            <div class="card">
+                <h2>💬 Comunicación entre Capas</h2>
+                <p>La comunicación en el modelo OSI sigue un patrón específico donde cada capa se comunica horizontalmente con su equivalente en el sistema remoto y verticalmente con las capas adyacentes.</p>
+
+                <h3>🔄 Comunicación Horizontal</h3>
+                <p>Cada capa se comunica con <strong>la misma capa del otro extremo</strong> de la comunicación utilizando su protocolo específico. Esta comunicación es lógica y los datos realmente viajan a través de todas las capas.</p>
+
+                <h3>⬇️ Comunicación Vertical</h3>
+                <p>Cada capa se comunica con <strong>la capa inferior</strong> mediante los servicios que ésta expone, utilizando interfaces bien definidas.</p>
+
+                <h3>📋 Proceso de Transmisión</h3>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>1. Origen:</strong> Los datos bajan desde la capa de aplicación añadiendo cabeceras en cada nivel
+                    </div>
+                    <div class="protocol-item">
+                        <strong>2. Transmisión:</strong> Los datos viajan por el medio físico
+                    </div>
+                    <div class="protocol-item">
+                        <strong>3. Destino:</strong> Los datos suben eliminando cabeceras en cada nivel hasta llegar a la aplicación
+                    </div>
+                    <div class="protocol-item">
+                        <strong>4. Procesamiento:</strong> Cada capa procesa solo la información de su nivel
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏷️ Direccionamiento y Encaminamiento</h2>
+                
+                <h3>📍 Tipos de Direccionamiento</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Capa</th>
+                            <th>Tipo de Dirección</th>
+                            <th>Ámbito</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4 - Transporte</td>
+                            <td>Puerto</td>
+                            <td>Aplicación</td>
+                            <td>80 (HTTP), 443 (HTTPS)</td>
+                        </tr>
+                        <tr>
+                            <td>3 - Red</td>
+                            <td>Dirección Lógica</td>
+                            <td>Red completa</td>
+                            <td>192.168.1.1 (IPv4)</td>
+                        </tr>
+                        <tr>
+                            <td>2 - Enlace</td>
+                            <td>Dirección Física</td>
+                            <td>Segmento local</td>
+                            <td>00:1B:44:11:3A:B7 (MAC)</td>
+                        </tr>
+                        <tr>
+                            <td>1 - Físico</td>
+                            <td>Señal</td>
+                            <td>Medio físico</td>
+                            <td>Pulsos eléctricos/ópticos</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🛣️ Encaminamiento (Routing)</h3>
+                <p>El encaminamiento ocurre principalmente en la <strong>Capa 3 (Red)</strong> y determina la ruta óptima para que los paquetes lleguen a su destino.</p>
+
+                <ul>
+                    <li><strong>Protocolos de enrutamiento:</strong> RIP, OSPF, BGP, EIGRP</li>
+                    <li><strong>Criterios de selección:</strong> Número de saltos, ancho de banda, latencia, costo</li>
+                    <li><strong>Tipos de rutas:</strong> Estáticas (configuradas manualmente) y dinámicas (aprendidas automáticamente)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="comparacion" class="tab-content">
+            <div class="card">
+                <h2>⚖️ Comparación OSI vs TCP/IP</h2>
+                <p>Aunque OSI es un modelo de referencia teórico, TCP/IP es el modelo utilizado en Internet. Entender las diferencias es crucial para los exámenes de oposiciones.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Modelo OSI</th>
+                            <th>Modelo TCP/IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Número de capas</strong></td>
+                            <td>7 capas</td>
+                            <td>4 capas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desarrollo</strong></td>
+                            <td>Modelo antes de protocolos</td>
+                            <td>Protocolos antes del modelo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Uso</strong></td>
+                            <td>Modelo de referencia teórico</td>
+                            <td>Implementación práctica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexibilidad</strong></td>
+                            <td>Rígido y detallado</td>
+                            <td>Flexible y adaptable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Adopción</strong></td>
+                            <td>Limitada</td>
+                            <td>Universal (Internet)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔄 Correspondencia de Capas</h3>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>Aplicación TCP/IP ≡</strong> Aplicación + Presentación + Sesión OSI
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Transporte TCP/IP ≡</strong> Transporte OSI
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Internet TCP/IP ≡</strong> Red OSI
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Acceso a Red TCP/IP ≡</strong> Enlace + Física OSI
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔊 Modelo OSI y VoIP</h2>
+                <p>El modelo OSI también se aplica a las comunicaciones de Voz sobre IP (VoIP), mostrando cómo los protocolos de telefonía IP se mapean a las diferentes capas.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Capa OSI</th>
+                            <th>Protocolos VoIP</th>
+                            <th>Función en VoIP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>7 - Aplicación</td>
+                            <td>Softphone, Call Manager, Human Speech</td>
+                            <td>Interfaz de usuario y aplicaciones</td>
+                        </tr>
+                        <tr>
+                            <td>6 - Presentación</td>
+                            <td>Códecs (G.711, G.729, G.723)</td>
+                            <td>Codificación y compresión de voz</td>
+                        </tr>
+                        <tr>
+                            <td>5 - Sesión</td>
+                            <td>H.323/SIP/MGCP</td>
+                            <td>Establecimiento y control de llamadas</td>
+                        </tr>
+                        <tr>
+                            <td>4 - Transporte</td>
+                            <td>RTP/UDP (medios), TCP/UDP (señal)</td>
+                            <td>Transporte de voz y señalización</td>
+                        </tr>
+                        <tr>
+                            <td>3 - Red</td>
+                            <td>IP</td>
+                            <td>Enrutamiento de paquetes</td>
+                        </tr>
+                        <tr>
+                            <td>2 - Enlace</td>
+                            <td>Ethernet, PPP, Switch, Bridge</td>
+                            <td>Control de acceso al medio</td>
+                        </tr>
+                        <tr>
+                            <td>1 - Físico</td>
+                            <td>Cables, conectores, ondas</td>
+                            <td>Transmisión física</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="ejercicios" class="tab-content">
+            <div class="quiz-container">
+                <h2>🎯 Ejercicios Prácticos</h2>
+                <p>Practica con estas 20 preguntas tipo examen, enfocadas en conceptos que aparecen frecuentemente en oposiciones de administración pública.</p>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 1</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿Cuántas capas tiene el modelo OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 4 capas</div>
+                        <div class="option" onclick="selectOption(this, false)">B) 5 capas</div>
+                        <div class="option" onclick="selectOption(this, true)">C) 7 capas</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 9 capas</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) 7 capas</strong><br>
+                        El modelo OSI está compuesto por exactamente 7 capas: Física, Enlace de Datos, Red, Transporte, Sesión, Presentación y Aplicación.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 2</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿En qué año se creó el modelo OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 1977</div>
+                        <div class="option" onclick="selectOption(this, true)">B) 1980</div>
+                        <div class="option" onclick="selectOption(this, false)">C) 1983</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 1984</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) 1980</strong><br>
+                        El modelo OSI fue creado en 1980 por la ISO. Su desarrollo comenzó en 1977, se publicó desde 1983 por la UIT y desde 1984 por la ISO.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 3</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Cuál es la PDU (Protocol Data Unit) de la capa de transporte?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Paquete</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Trama</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Segmento o Datagrama</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Bit</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) Segmento o Datagrama</strong><br>
+                        La PDU de la capa 4 (Transporte) se llama Segmento cuando usa TCP o Datagrama cuando usa UDP.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 4</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Qué dispositivo trabaja en la capa de enlace de datos (capa 2)?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Router</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Switch</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Hub</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Firewall</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) Switch</strong><br>
+                        Los switches trabajan en la capa 2 (Enlace de Datos) usando direcciones MAC. Los routers trabajan en capa 3, los hubs en capa 1, y los firewalls en capa 3.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 5</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>¿Cuáles son los dos subniveles de la capa de enlace de datos?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) TCP y UDP</div>
+                        <div class="option" onclick="selectOption(this, true)">B) LLC y MAC</div>
+                        <div class="option" onclick="selectOption(this, false)">C) IP e ICMP</div>
+                        <div class="option" onclick="selectOption(this, false)">D) HTTP y HTTPS</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) LLC y MAC</strong><br>
+                        LLC (Logical Link Control) se encarga de construir tramas a partir de bits, y MAC (Media Access Control) gestiona el acceso al medio compartido.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 6</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿A partir de qué capa del modelo OSI la comunicación es extremo a extremo?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Capa 2 (Enlace)</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Capa 3 (Red)</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Capa 4 (Transporte)</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Capa 5 (Sesión)</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) Capa 4 (Transporte)</strong><br>
+                        A partir de la capa de transporte (capa 4), la comunicación es extremo a extremo, conectando directamente las aplicaciones de origen y destino.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 7</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Cuál de estos NO es un protocolo de enrutamiento?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) OSPF</div>
+                        <div class="option" onclick="selectOption(this, false)">B) BGP</div>
+                        <div class="option" onclick="selectOption(this, true)">C) TCP</div>
+                        <div class="option" onclick="selectOption(this, false)">D) RIP</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) TCP</strong><br>
+                        TCP es un protocolo de transporte (capa 4), no de enrutamiento. OSPF, BGP y RIP son protocolos de enrutamiento de la capa 3.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 8</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>En el modelo OSI, ¿qué significa PDU?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Packet Data Unit</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Protocol Data Unit</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Physical Data Unit</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Process Data Unit</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) Protocol Data Unit</strong><br>
+                        PDU significa Protocol Data Unit y es el conjunto de datos intercambiados más la cabecera del protocolo de cada capa específica.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 9</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Qué capa del modelo OSI se encarga del cifrado y compresión de datos?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Capa de Aplicación</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Capa de Presentación</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Capa de Sesión</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Capa de Transporte</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) Capa de Presentación</strong><br>
+                        La capa de presentación (capa 6) se encarga de codificar datos, realizar funciones de compresión y cifrado de datos.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 10</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿Cuál es la capa más baja del modelo OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">A) Capa Física</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Capa de Enlace de Datos</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Capa de Red</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Capa de Aplicación</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: A) Capa Física</strong><br>
+                        La capa física (capa 1) es la más baja del modelo OSI y se encarga de la transmisión binaria y las características físicas.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 11</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>¿Cuál es el tipo más completo de protocolo de transporte en OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) TP0</div>
+                        <div class="option" onclick="selectOption(this, false)">B) TP1</div>
+                        <div class="option" onclick="selectOption(this, false)">C) TP2</div>
+                        <div class="option" onclick="selectOption(this, true)">D) TP4</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: D) TP4</strong><br>
+                        TP4 es el tipo más completo de protocolo de transporte OSI, soportando detección y corrección de errores y control de flujo. Es el más cercano a TCP.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 12</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Cuántas capas tiene el modelo TCP/IP?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 3 capas</div>
+                        <div class="option" onclick="selectOption(this, true)">B) 4 capas</div>
+                        <div class="option" onclick="selectOption(this, false)">C) 5 capas</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 7 capas</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) 4 capas</strong><br>
+                        El modelo TCP/IP tiene 4 capas: Acceso a Red, Internet, Transporte y Aplicación.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 13</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>¿Qué significa ICI en el contexto del modelo OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Internet Control Information</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Interface Control Information</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Internal Communication Interface</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Integrated Control Interface</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) Interface Control Information</strong><br>
+                        ICI es la información adicional que la capa n+1 añade al invocar un servicio de la capa n.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 14</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿Qué organización creó el modelo OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) IEEE</div>
+                        <div class="option" onclick="selectOption(this, true)">B) ISO</div>
+                        <div class="option" onclick="selectOption(this, false)">C) ITU</div>
+                        <div class="option" onclick="selectOption(this, false)">D) ANSI</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) ISO</strong><br>
+                        El modelo OSI fue creado por la ISO (International Organization for Standardization) en 1980.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 15</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿En qué capa del modelo OSI trabajan los routers?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Capa 2 (Enlace de Datos)</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Capa 3 (Red)</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Capa 4 (Transporte)</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Capa 7 (Aplicación)</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: B) Capa 3 (Red)</strong><br>
+                        Los routers trabajan en la capa 3 (Red) y se encargan del enrutamiento de paquetes entre diferentes redes.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 16</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>¿Cuál de estas primitivas NO existe en protocolos confirmados?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Request</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Indication</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Response</div>
+                        <div class="option" onclick="selectOption(this, true)">D) Todas existen en protocolos confirmados</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: D) Todas existen en protocolos confirmados</strong><br>
+                        Los protocolos confirmados utilizan las cuatro primitivas: Request, Indication, Response y Confirm.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 17</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Qué tipo de comunicación proporciona la capa de sesión?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Solo half-duplex</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Solo full-duplex</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Tanto half-duplex como full-duplex</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Simplex únicamente</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) Tanto half-duplex como full-duplex</strong><br>
+                        La capa de sesión proporciona control del diálogo tanto en modo half-duplex como full-duplex.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 18</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <h3>¿Cuál es la PDU de la capa física?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">A) Bit</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Trama</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Paquete</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Segmento</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: A) Bit</strong><br>
+                        La PDU de la capa física (capa 1) es el bit, que representa la unidad mínima de información digital.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 19</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <h3>¿Cuál de estos NO es un modelo de referencia alternativo al OSI?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) SNA (IBM)</div>
+                        <div class="option" onclick="selectOption(this, false)">B) IPX/SPX (Novell)</div>
+                        <div class="option" onclick="selectOption(this, false)">C) TCP/IP</div>
+                        <div class="option" onclick="selectOption(this, true)">D) HTTP/HTTPS</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: D) HTTP/HTTPS</strong><br>
+                        HTTP/HTTPS son protocolos de aplicación, no modelos de referencia. Los otros (SNA, IPX/SPX, TCP/IP) sí son modelos alternativos.
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Pregunta 20</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <h3>¿Qué capas del modelo OSI corresponden a la capa de aplicación del modelo TCP/IP?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Solo la capa 7 (Aplicación)</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Capas 6 y 7 (Presentación y Aplicación)</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Capas 5, 6 y 7 (Sesión, Presentación y Aplicación)</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Capas 4, 5, 6 y 7</div>
+                    </div>
+                    <button class="show-answer" onclick="showAnswer(this)">Mostrar Respuesta</button>
+                    <div class="answer-explanation">
+                        <strong>Respuesta correcta: C) Capas 5, 6 y 7 (Sesión, Presentación y Aplicación)</strong><br>
+                        La capa de aplicación del modelo TCP/IP engloba las tres capas superiores del modelo OSI: Sesión, Presentación y Aplicación.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2>📚 Recursos Adicionales</h2>
+                
+                <h3>🔗 Referencias Oficiales</h3>
+                <ul>
+                    <li><strong>ISO/IEC 7498-1:</strong> Estándar oficial del modelo OSI por ISO</li>
+                    <li><strong>ITU-T X.200:</strong> Estándar ITU-T del modelo OSI</li>
+                    <li><strong>RFC 1122:</strong> Requirements for Internet Hosts (TCP/IP)</li>
+                    <li><strong>RFC 1123:</strong> Requirements for Internet Hosts (Application layer)</li>
+                </ul>
+
+                <h3>🛠️ Herramientas y Software Relacionado</h3>
+                <div class="protocol-list">
+                    <div class="protocol-item">
+                        <strong>Wireshark:</strong> Analizador de protocolos de red para estudiar el tráfico por capas
+                    </div>
+                    <div class="protocol-item">
+                        <strong>Packet Tracer (Cisco):</strong> Simulador de redes para practicar conceptos OSI
+                    </div>
+                    <div class="protocol-item">
+                        <strong>GNS3:</strong> Emulador de redes para laboratorios avanzados
+                    </div>
+                    <div class="protocol-item">
+                        <strong>tcpdump:</strong> Herramienta de línea de comandos para captura de paquetes
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❓ Preguntas Frecuentes (FAQ)</h2>
+
+                <h3>¿Por qué es importante el modelo OSI si se usa TCP/IP?</h3>
+                <p>Aunque TCP/IP es el modelo práctico usado en Internet, OSI sigue siendo crucial como referencia teórica para entender cómo funcionan las redes, especialmente en exámenes de oposiciones y certificaciones profesionales.</p>
+
+                <h3>¿Cuál es la principal diferencia entre OSI y TCP/IP?</h3>
+                <p>OSI es un modelo de referencia teórico con 7 capas bien definidas, mientras que TCP/IP es un modelo práctico con 4 capas que se desarrolló junto con los protocolos de Internet.</p>
+
+                <h3>¿Qué capa es más importante estudiar para oposiciones?</h3>
+                <p>Todas las capas son importantes, pero especial atención a las capas 2 (Enlace), 3 (Red) y 4 (Transporte) ya que aparecen frecuentemente en preguntas sobre dispositivos de red y protocolos.</p>
+
+                <h3>¿Cómo memorizar las 7 capas del modelo OSI?</h3>
+                <p>Mnemotecnia de abajo hacia arriba: "<strong>F</strong>ísica, <strong>E</strong>nlace, <strong>R</strong>ed, <strong>T</strong>ransporte, <strong>S</strong>esión, <strong>P</strong>resentación, <strong>A</strong>plicación" → "<strong>F</strong>abián <strong>E</strong>stá <strong>R</strong>ealmente <strong>T</strong>rabajando <strong>S</strong>in <strong>P</strong>arar <strong>A</strong>hora"</p>
+            </div>
+
+            <div class="card">
+                <h2>📖 Glosario de Términos</h2>
+
+                <div class="glossary-term">
+                    <strong>Encapsulación:</strong> Proceso por el cual cada capa añade su cabecera a los datos recibidos del nivel superior.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>PDU (Protocol Data Unit):</strong> Unidad de datos específica de cada capa que incluye los datos y la cabecera del protocolo.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>SDU (Service Data Unit):</strong> Datos que una capa recibe del nivel superior para procesar.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>ICI (Interface Control Information):</strong> Información de control que una capa añade al solicitar servicios.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Peer-to-Peer:</strong> Comunicación lógica entre capas del mismo nivel en diferentes sistemas.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Primitivas de Servicio:</strong> Request, Indication, Response, Confirm - mecanismos de comunicación entre capas.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Protocolo Confirmado:</strong> Utiliza las cuatro primitivas de servicio para garantizar la entrega.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Protocolo No Confirmado:</strong> Utiliza solo Request e Indication, sin garantía de entrega.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Enrutamiento:</strong> Proceso de determinar la mejor ruta para enviar datos entre redes (Capa 3).
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Multiplexación:</strong> Técnica para compartir un canal de comunicación entre múltiples conexiones.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💡 Consejos para Exámenes</h2>
+                
+                <h3>🎯 Estrategias de Estudio</h3>
+                <ul>
+                    <li><strong>Memoriza las capas en orden:</strong> Practica tanto de abajo hacia arriba como de arriba hacia abajo</li>
+                    <li><strong>Asocia dispositivos con capas:</strong> Hub (1), Switch (2), Router (3), Firewall (3-4)</li>
+                    <li><strong>Conoce las PDU:</strong> Bit, Trama, Paquete, Segmento/Datagrama</li>
+                    <li><strong>Practica comparaciones:</strong> OSI vs TCP/IP es tema recurrente</li>
+                    <li><strong>Entiende los protocolos:</strong> No solo memorices, comprende su función</li>
+                </ul>
+
+                <h3>⚠️ Errores Comunes a Evitar</h3>
+                <ul>
+                    <li>Confundir el orden de las capas</li>
+                    <li>Mezclar protocolos de diferentes capas</li>
+                    <li>No distinguir entre modelo OSI teórico y TCP/IP práctico</li>
+                    <li>Olvidar que la comunicación de transporte es extremo a extremo</li>
+                    <li>Confundir PDU con nombres de protocolos específicos</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '☀️ Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '🌙 Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function selectOption(optionElement, isCorrect) {
+            const options = optionElement.parentNode.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            optionElement.classList.add('selected');
+            optionElement.dataset.correct = isCorrect;
+        }
+
+        function showAnswer(buttonElement) {
+            const questionCard = buttonElement.parentNode;
+            const options = questionCard.querySelectorAll('.option');
+            const explanation = questionCard.querySelector('.answer-explanation');
+            
+            options.forEach(option => {
+                if (option.dataset.correct === 'true') {
+                    option.classList.add('correct');
+                } else if (option.classList.contains('selected')) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            explanation.style.display = 'block';
+            buttonElement.style.display = 'none';
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'light') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '☀️ Modo Oscuro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '🌙 Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

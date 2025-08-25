@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologías Ágiles - Guía de Estudio Completa</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2c2c2c;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --error-color: #ef4444;
+            --border-color: #404040;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .tabs-container {
+            margin: 2rem 0;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 120px;
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-container {
+            margin-top: 2rem;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .difficulty {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty.basico { background: var(--success-color); color: white; }
+        .difficulty.intermedio { background: var(--warning-color); color: white; }
+        .difficulty.avanzado { background: var(--error-color); color: white; }
+
+        .options {
+            margin: 1rem 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: var(--success-color);
+        }
+
+        .option.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error-color);
+        }
+
+        .option input {
+            margin-right: 0.8rem;
+        }
+
+        .explanation {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .methodology-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .methodology-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .methodology-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-left: 4rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 1rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                min-width: auto;
+            }
+
+            .list-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            h1 {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>📊 Metodologías Ágiles - Guía Completa</h1>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+                    🌓 Cambiar Tema
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs-container">
+            <nav class="tabs-nav" role="tablist">
+                <button class="tab-button active" data-tab="resumen" role="tab" aria-selected="true">Resumen General</button>
+                <button class="tab-button" data-tab="analisis" role="tab">Análisis Funcional</button>
+                <button class="tab-button" data-tab="casos-historias" role="tab">Casos de Uso e Historias</button>
+                <button class="tab-button" data-tab="metodologias" role="tab">Metodologías de Desarrollo</button>
+                <button class="tab-button" data-tab="agiles" role="tab">Metodologías Ágiles</button>
+                <button class="tab-button" data-tab="ejercicios" role="tab">Ejercicios Prácticos</button>
+                <button class="tab-button" data-tab="recursos" role="tab">Recursos y FAQ</button>
+            </nav>
+
+            <div id="resumen" class="tab-content active" role="tabpanel">
+                <div class="card">
+                    <h3>🎯 Resumen Ejecutivo</h3>
+                    <p>Este tema abarca los fundamentos del <strong>análisis funcional de sistemas</strong>, las técnicas de <strong>casos de uso e historias de usuario</strong>, y las <strong>metodologías ágiles</strong> utilizadas en el desarrollo de software, especialmente relevantes para la administración pública.</p>
+                </div>
+
+                <div class="list-grid">
+                    <div class="card">
+                        <h4>📈 Estadísticas Clave</h4>
+                        <div class="highlight-box">
+                            <ul>
+                                <li><strong>12 principios</strong> del Manifiesto Ágil</li>
+                                <li><strong>4 postulados</strong> fundamentales</li>
+                                <li>Equipos Scrum: <strong>5-9 personas</strong></li>
+                                <li>Sprints: <strong>15-30 días</strong> de duración</li>
+                                <li>Daily Scrum: máximo <strong>15 minutos</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>🎯 Conceptos Principales</h4>
+                        <ul>
+                            <li><strong>Análisis Funcional:</strong> Identificar QUÉ desarrollar</li>
+                            <li><strong>Casos de Uso:</strong> Requisitos desde perspectiva del usuario</li>
+                            <li><strong>Historias de Usuario:</strong> Formato COMO-QUIERO-PARA PODER</li>
+                            <li><strong>Scrum:</strong> Proceso iterativo e incremental</li>
+                            <li><strong>Kanban:</strong> Sistema pull de producción</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🎓 Objetivos de Aprendizaje</h4>
+                    <div class="list-grid">
+                        <div>
+                            <h5>Conocimientos Teóricos:</h5>
+                            <ul>
+                                <li>Dominar técnicas de análisis funcional</li>
+                                <li>Comprender metodologías de desarrollo</li>
+                                <li>Identificar roles en metodologías ágiles</li>
+                                <li>Conocer artefactos y ceremonias</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>Competencias Prácticas:</h5>
+                            <ul>
+                                <li>Crear casos de uso efectivos</li>
+                                <li>Redactar historias de usuario</li>
+                                <li>Aplicar principios ágiles</li>
+                                <li>Gestionar proyectos con Scrum/Kanban</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analisis" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>🔍 Análisis Funcional de Sistemas</h3>
+                    <p>El análisis funcional consiste en identificar los requisitos del sistema, describiendo <strong>QUÉ</strong> se va a desarrollar (sin indicar CÓMO).</p>
+                </div>
+
+                <div class="card">
+                    <h4>📋 Objetivos del Análisis (según Pressman)</h4>
+                    <div class="list-grid">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Describir lo que el cliente quiere</strong>
+                                <p>Capturar las necesidades y expectativas del usuario final</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Establecer una base para el diseño</strong>
+                                <p>Proporcionar fundamentos sólidos para la fase de diseño</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Definir un conjunto de requisitos</strong>
+                                <p>Especificar requisitos funcionales y no funcionales</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>⚙️ Pasos de la Ingeniería de Requisitos</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h5>Educción de Requisitos</h5>
+                            <p>Identificación y extracción de requisitos mediante técnicas como entrevistas, brainstorming, y análisis de documentos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>Análisis de Requisitos</h5>
+                            <p>Evaluación y priorización de los requisitos identificados, resolviendo conflictos y ambigüedades.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>Representación de Requisitos</h5>
+                            <p>Documentación formal de los requisitos usando técnicas como casos de uso, historias de usuario, o diagramas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>Validación de Requisitos</h5>
+                            <p>Verificación de que los requisitos capturados son correctos, completos y factibles.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🛠️ Técnicas de Reducción de Complejidad</h4>
+                    <div class="list-grid">
+                        <div class="highlight-box">
+                            <h5>Abstracción</h5>
+                            <p>Controlar la complejidad definiendo relaciones "general/específico" o "ejemplo de"</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Partición</h5>
+                            <p>Técnica de descomposición que divide el problema estructural o funcionalmente</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Proyección</h5>
+                            <p>Ver el problema desde distintas perspectivas o puntos de vista</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📄 Documentos Resultantes</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Documento</th>
+                                <th>Descripción</th>
+                                <th>Propósito</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DRS</strong></td>
+                                <td>Documento de Requisitos del Sistema</td>
+                                <td>Especifica requisitos del software</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DDF</strong></td>
+                                <td>Documento de Diseño Funcional</td>
+                                <td>Descripción funcional del producto</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ERS</strong></td>
+                                <td>Especificación de Requisitos Software</td>
+                                <td>Combina DRS y DDF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="casos-historias" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>🎭 Casos de Uso</h3>
+                    <p>Técnica de obtención de requisitos adecuada para sistemas dominados por requisitos funcionales del usuario.</p>
+                </div>
+
+                <div class="card">
+                    <h4>🔄 Proceso de Modelado de Casos de Uso</h4>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Determinar el límite del sistema</strong>
+                            <p>Decidir qué es parte del sistema y qué es externo</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Encontrar actores</strong>
+                            <p>Representan roles de usuario o roles de otros sistemas</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Encontrar casos de uso</strong>
+                            <p>Secuencias de acciones que el sistema realiza al interactuar con actores</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Refinar límites</strong>
+                            <p>Obtener un límite claro para el sistema</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🎯 Elementos del Diagrama</h4>
+                    <div class="list-grid">
+                        <div class="highlight-box">
+                            <h5>Actores</h5>
+                            <p>Entidad externa que realiza algún tipo de interacción con el sistema</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Casos de Uso</h5>
+                            <p>Secuencia de acciones que produce un resultado. Representa un requisito funcional</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Relaciones</h5>
+                            <ul>
+                                <li><strong>&lt;&lt;include&gt;&gt;:</strong> Un caso usa a otro (siempre)</li>
+                                <li><strong>&lt;&lt;extend&gt;&gt;:</strong> Un caso extiende a otro (opcional)</li>
+                                <li><strong>Generalización:</strong> Herencia entre casos o actores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Historias de Usuario</h3>
+                    <p>Se utilizan en metodologías ágiles para obtener requisitos mediante frases simples que utilizan el lenguaje común del usuario.</p>
+                </div>
+
+                <div class="card">
+                    <h4>📋 Formato y Estructura</h4>
+                    <div class="highlight-box">
+                        <h5>Plantilla según Mike Cohn:</h5>
+                        <p><strong>COMO</strong> &lt;rol&gt; <strong>QUIERO</strong> &lt;algo&gt; <strong>PARA PODER</strong> &lt;beneficio&gt;</p>
+                        <br>
+                        <p><em>Ejemplo:</em> "Como administrador del sistema quiero generar informes automáticos para poder supervisar el rendimiento diario"</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔤 Las 3 C de las Historias (CCC)</h4>
+                    <div class="list-grid">
+                        <div class="process-step">
+                            <div class="step-number">C</div>
+                            <div>
+                                <strong>CARD (Descripción)</strong>
+                                <p>Recordatorio escrito de funcionalidad pendiente</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">C</div>
+                            <div>
+                                <strong>CONVERSATION (Conversaciones)</strong>
+                                <p>Permiten refinar detalles de la historia</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">C</div>
+                            <div>
+                                <strong>CONFIRMATION (Criterios)</strong>
+                                <p>Determinan cuándo la historia está completa</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>💎 Características INVEST</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Significado</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>I</strong></td>
+                                <td>Independent</td>
+                                <td>Independientes entre sí</td>
+                            </tr>
+                            <tr>
+                                <td><strong>N</strong></td>
+                                <td>Negotiable</td>
+                                <td>Pueden ser discutidas y modificadas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>V</strong></td>
+                                <td>Valuable</td>
+                                <td>Aportan valor al usuario</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E</strong></td>
+                                <td>Estimable</td>
+                                <td>Se puede estimar su complejidad</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S</strong></td>
+                                <td>Small</td>
+                                <td>Pequeñas y manejables</td>
+                            </tr>
+                            <tr>
+                                <td><strong>T</strong></td>
+                                <td>Testable</td>
+                                <td>Se pueden probar y verificar</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h4>⚖️ Comparación: Historias vs Casos de Uso</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Historias de Usuario</th>
+                                <th>Casos de Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Duración</strong></td>
+                                <td>10h - 2 semanas</td>
+                                <td>Más largos, difícil estimación</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Evolución</strong></td>
+                                <td>Se refinan y completan</td>
+                                <td>Completos desde el principio</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Persistencia</strong></td>
+                                <td>Se descartan tras iteración</td>
+                                <td>Perviven durante desarrollo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Requisitos</strong></td>
+                                <td>Funcionales y no funcionales</td>
+                                <td>Solo funcionales</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="metodologias" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>⚙️ Metodologías de Desarrollo de Sistemas</h3>
+                    <p>Conjunto de <strong>procedimientos</strong>, <strong>métodos o técnicas</strong> y <strong>herramientas</strong> con soporte documental que ayuda a desarrollar software.</p>
+                </div>
+
+                <div class="card">
+                    <h4>✅ Requisitos de una Metodología</h4>
+                    <div class="list-grid">
+                        <div class="highlight-box">
+                            <ul>
+                                <li><strong>Documentada:</strong> Procedimientos claros y escritos</li>
+                                <li><strong>Repetible:</strong> Resultados consistentes</li>
+                                <li><strong>Enseñable:</strong> Transferible a otros equipos</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <ul>
+                                <li><strong>Basada en Técnicas Probadas:</strong> Métodos validados</li>
+                                <li><strong>Validada:</strong> Probada en entornos reales</li>
+                                <li><strong>Apropiada:</strong> Adecuada al contexto</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🏷️ Tipos de Metodologías</h4>
+                    
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">⏱️</div>
+                            <div>
+                                <h5>Para Sistemas de Tiempo Real</h5>
+                                <p>Ampliaciones y modificaciones de otras metodologías</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">🏗️</div>
+                            <div>
+                                <h5>Estructuradas</h5>
+                                <p>Orientadas a datos o procesos: SSADM, Merise, Métrica 3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">🎯</div>
+                            <div>
+                                <h5>Orientadas a Objetos</h5>
+                                <p>OOAD-BOOCH, OMT-Rumbaugh, OOSE-Jacobson → RUP/PUDS</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">🎨</div>
+                            <div>
+                                <h5>Dominio Específico</h5>
+                                <p>Herramientas CASE y BPM especializadas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">⚡</div>
+                            <div>
+                                <h5>Metodologías Ágiles</h5>
+                                <p>Scrum, XP, Kanban, FDD, TDD, BDD...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔄 Metodología vs Ciclo de Vida</h4>
+                    <div class="highlight-box">
+                        <p><strong>Una metodología puede seguir uno o más ciclos de vida.</strong></p>
+                        <ul>
+                            <li><strong>Metodología:</strong> Define pasos, productos, técnicas y métodos</li>
+                            <li><strong>Ciclo de Vida:</strong> Define etapas y actividades del desarrollo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="agiles" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>🚀 Metodologías Ágiles</h3>
+                    <p>En 2001, 17 desarrolladores reunidos en <strong>Snowbird (Utah, USA)</strong> publicaron el <strong>"Manifiesto Ágil"</strong>.</p>
+                </div>
+
+                <div class="card">
+                    <h4>📜 Los 4 Postulados del Manifiesto Ágil</h4>
+                    <div class="list-grid">
+                        <div class="highlight-box">
+                            <strong>1. Individuos e interacciones</strong>
+                            <p>por encima de los procesos y herramientas</p>
+                        </div>
+                        <div class="highlight-box">
+                            <strong>2. Software que funciona</strong>
+                            <p>por encima de la documentación exhaustiva</p>
+                        </div>
+                        <div class="highlight-box">
+                            <strong>3. Colaboración con el cliente</strong>
+                            <p>por encima de la negociación contractual</p>
+                        </div>
+                        <div class="highlight-box">
+                            <strong>4. Respuesta al cambio</strong>
+                            <p>por encima del seguimiento de un plan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📋 Los 12 Principios del Manifiesto Ágil</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <strong>1.</strong> Principal prioridad: satisfacer al cliente mediante entrega temprana y continua
+                        </div>
+                        <div class="timeline-item">
+                            <strong>2.</strong> Bienvenidos los requisitos cambiantes, incluso tarde en el desarrollo
+                        </div>
+                        <div class="timeline-item">
+                            <strong>3.</strong> Entrega frecuente (2 semanas a 2 meses) de software que funcione
+                        </div>
+                        <div class="timeline-item">
+                            <strong>4.</strong> Personas del negocio y desarrolladores trabajando juntos cotidianamente
+                        </div>
+                        <div class="timeline-item">
+                            <strong>5.</strong> Construcción de proyectos en torno a individuos motivados
+                        </div>
+                        <div class="timeline-item">
+                            <strong>6.</strong> Comunicación cara a cara como forma más eficiente
+                        </div>
+                        <div class="timeline-item">
+                            <strong>7.</strong> Software que funciona como principal medida del progreso
+                        </div>
+                        <div class="timeline-item">
+                            <strong>8.</strong> Mantener ritmo constante de forma indefinida
+                        </div>
+                        <div class="timeline-item">
+                            <strong>9.</strong> Atención continua a la excelencia técnica
+                        </div>
+                        <div class="timeline-item">
+                            <strong>10.</strong> Simplicidad como arte de maximizar el trabajo que no se hace
+                        </div>
+                        <div class="timeline-item">
+                            <strong>11.</strong> Mejores arquitecturas emergen de equipos auto-organizados
+                        </div>
+                        <div class="timeline-item">
+                            <strong>12.</strong> Reflexión regular del equipo para ser más efectivo
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏉 SCRUM</h3>
+                    <p>Conjunto de prácticas basado en un proceso <strong>iterativo e incremental</strong> que promueve comunicación, trabajo en equipo y feedback rápido.</p>
+                </div>
+
+                <div class="card">
+                    <h4>👥 Roles en SCRUM</h4>
+                    
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">👤</div>
+                            <div>
+                                <h5>Product Owner (Propietario del Producto)</h5>
+                                <p>Representa la voz del cliente, define funcionalidades y prioriza el backlog</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Representar a todos los interesados</li>
+                            <li>Definir visión y objetivos del proyecto</li>
+                            <li>Colaborar en desarrollo y aceptación</li>
+                            <li>Dirigir resultados y maximizar ROI</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">🎯</div>
+                            <div>
+                                <h5>Scrum Master (Facilitador)</h5>
+                                <p>Protector del equipo, responsable de la correcta implementación de Scrum</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Asegurar seguimiento del proceso</li>
+                            <li>Difundir valores de Scrum</li>
+                            <li>Gestionar riesgos y problemas</li>
+                            <li>Proteger al equipo de interrupciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <div class="methodology-header">
+                            <div class="methodology-icon">👥</div>
+                            <div>
+                                <h5>Scrum Team (Equipo de Desarrollo)</h5>
+                                <p>5-9 personas multi-funcionales y auto-organizadas</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Convertir Product Backlog en producto entregable</li>
+                            <li>Asegurar calidad del producto</li>
+                            <li>Realizar demostraciones</li>
+                            <li>Mejora continua</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📊 Artefactos de SCRUM</h4>
+                    <div class="list-grid">
+                        <div class="highlight-box">
+                            <h5>Product Backlog</h5>
+                            <p>Lista priorizada de requerimientos funcionales (historias de usuario)</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Sprint Backlog</h5>
+                            <p>Conjunto de historias seleccionadas para un sprint específico</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h5>Burn Down Chart</h5>
+                            <p>Gráfica que mide requisitos pendientes al inicio de cada sprint</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔄 Ceremonias de SCRUM</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Ceremonia</th>
+                                <th>Duración</th>
+                                <th>Participantes</th>
+                                <th>Objetivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sprint Planning</strong></td>
+                                <td>2h por semana de sprint</td>
+                                <td>PO, SM, Team</td>
+                                <td>Consensuar Sprint Backlog</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Daily Scrum</strong></td>
+                                <td>15 minutos</td>
+                                <td>SM, Team, PO</td>
+                                <td>Sincronización diaria</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sprint Review</strong></td>
+                                <td>1h por semana de sprint</td>
+                                <td>PO, SM, Team</td>
+                                <td>Demostrar producto</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sprint Retrospective</strong></td>
+                                <td>1h por semana de sprint</td>
+                                <td>SM, PO, Team</td>
+                                <td>Mejora continua</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📋 KANBAN</h3>
+                    <p>Sistema de producción que dispara trabajo solo cuando existe <strong>capacidad para procesarlo</strong>. Principios fundamentales:</p>
+                    <div class="list-grid">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>Comience con lo que hace ahora</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <div>Persigue cambio incremental y evolutivo</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <div>Respetar proceso actual, roles y responsabilidades</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <div>Liderazgo en todos los niveles</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔧 Otras Metodologías Ágiles</h4>
+                    <div class="list-grid">
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <div class="methodology-icon">⚡</div>
+                                <div>
+                                    <h5>XP (Extreme Programming)</h5>
+                                    <p>Lleva al extremo prácticas consideradas buenas: programación en parejas, tests, refactoring</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <div class="methodology-icon">🎯</div>
+                                <div>
+                                    <h5>FDD (Feature Driven Development)</h5>
+                                    <p>Se centra en iteraciones cortas que entregan funcionalidad tangible</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="methodology-card">
+                            <div class="methodology-header">
+                                <div class="methodology-icon">🧪</div>
+                                <div>
+                                    <h5>TDD (Test Driven Development)</h5>
+                                    <p>Promueve test unitarios de cada nueva funcionalidad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ejercicios" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>🎯 Ejercicios Prácticos</h3>
+                    <p>Preguntas de examen estilo oposición con feedback inmediato. <strong>Respuestas correctas marcadas para facilitar el estudio.</strong></p>
+                </div>
+
+                <div class="quiz-container">
+                    <!-- Pregunta 1 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 1</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Cuáles son los 4 postulados principales del Manifiesto Ágil?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q1" value="a"> Documentación, procesos, contratos y planes
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q1" value="b"> ✓ Individuos, software funcionando, colaboración con cliente, respuesta al cambio
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="c"> Desarrollo, testing, deployment y mantenimiento
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="d"> Scrum, Kanban, XP y FDD
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Los 4 postulados valoran más: individuos e interacciones, software que funciona, colaboración con el cliente, y respuesta al cambio.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 2</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>En SCRUM, ¿cuál es el tamaño recomendado para el equipo de desarrollo?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q2" value="a"> 3-5 personas
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q2" value="b"> ✓ 5-9 personas
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="c"> 10-15 personas
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="d"> No hay límite establecido
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - El Scrum Team debe ser un pequeño equipo de 5 a 9 personas con habilidades transversales necesarias para realizar el trabajo.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 3</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Qué significa la plantilla de Historia de Usuario "COMO <rol> QUIERO <algo> PARA PODER <beneficio>"?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q3" value="a"> Es una técnica de casos de uso
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q3" value="b"> ✓ Formato estándar según Mike Cohn para redactar historias de usuario
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="c"> Es parte de la documentación de requisitos
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="d"> Es una ceremonia de SCRUM
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Esta plantilla, propuesta por Mike Cohn, estructura las historias de usuario identificando rol, funcionalidad deseada y beneficio esperado.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 4</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>¿Cuál es la diferencia principal entre las relaciones <<include>> y <<extend>> en casos de uso?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q4" value="a"> No hay diferencia, son sinónimos
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q4" value="b"> ✓ Include: inclusión obligatoria; Extend: extensión opcional
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="c"> Include es para actores, Extend para casos de uso
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="d"> Include es temporal, Extend es permanente
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Include permite incluir comportamiento que siempre se ejecuta, mientras que Extend proporciona puntos opcionales donde se puede añadir nuevo comportamiento.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 5</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Cuál es la duración recomendada para un Sprint en SCRUM?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q5" value="a"> 1-2 semanas
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q5" value="b"> ✓ 15-30 días
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="c"> 1-3 meses
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="d"> Depende del proyecto
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Un Sprint dura entre 15 y 30 días, con duración fija que no debería modificarse durante la vida del proyecto.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 6</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Qué característica NO forma parte del acrónimo INVEST para historias de usuario?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q6" value="a"> Independent (Independiente)
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="b"> Valuable (Valiosa)
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q6" value="c"> ✓ Detailed (Detallada)
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="d"> Testable (Verificable)
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: C</strong> - INVEST significa: Independent, Negotiable, Valuable, Estimable, Small, Testable. "Detailed" no forma parte del acrónimo.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 7</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>En el análisis funcional según SWEBOK, ¿cuál es el orden correcto de los pasos en la ingeniería de requisitos?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q7" value="a"> Análisis, Educción, Representación, Validación
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q7" value="b"> ✓ Educción, Análisis, Representación, Validación
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="c"> Representación, Análisis, Educción, Validación
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="d"> Validación, Educción, Análisis, Representación
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - La secuencia es: Educción (identificación), Análisis, Representación y finalmente Validación de requisitos.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 8</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Cuál es la función principal del Scrum Master?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q8" value="a"> Liderar técnicamente el equipo de desarrollo
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="b"> Definir las funcionalidades del producto
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q8" value="c"> ✓ Facilitar el proceso y proteger al equipo de interrupciones
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="d"> Desarrollar el software directamente
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: C</strong> - El Scrum Master facilita el proceso Scrum y actúa como protección entre el equipo y cualquier influencia que le distraiga.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 9</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Qué representa un "actor" en un diagrama de casos de uso?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q9" value="a"> Una funcionalidad del sistema
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q9" value="b"> ✓ Una entidad externa que interactúa con el sistema
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="c"> Un proceso interno del sistema
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="d"> Una base de datos
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Un actor es una entidad externa al sistema que realiza algún tipo de interacción con el mismo, representando roles de usuario o de otros sistemas.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 10</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>¿Cuál es el principio fundamental del sistema Kanban?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q10" value="a"> Sistema push que empuja trabajo al siguiente proceso
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q10" value="b"> ✓ Sistema pull que dispara trabajo solo cuando hay capacidad
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q10" value="c"> Sistema híbrido push-pull
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q10" value="d"> Sistema basado en sprints fijos
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Kanban se basa en un sistema pull que dispara trabajo solo cuando existe capacidad para procesarlo, en contrapartida al mecanismo push.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 11</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Cuántos principios tiene el Manifiesto Ágil?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q11" value="a"> 4 principios
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q11" value="b"> 8 principios
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q11" value="c"> ✓ 12 principios
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q11" value="d"> 16 principios
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: C</strong> - Partiendo de los 4 postulados del Manifiesto Ágil, se desarrollaron 12 principios específicos que guían las metodologías ágiles.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 12</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Qué significa "épica" en el contexto de historias de usuario?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q12" value="a"> Una historia muy importante
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q12" value="b"> ✓ Una historia de usuario demasiado grande para una iteración
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q12" value="c"> Una historia con muchos criterios de aceptación
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q12" value="d"> Una historia que requiere mucha documentación
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Una épica es una historia de usuario grande que debe dividirse en historias más pequeñas para poder completarse en una iteración.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 13</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>¿Qué documentos conforman la Especificación de Requisitos Software (ERS)?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q13" value="a"> Solo el DRS (Documento de Requisitos del Sistema)
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q13" value="b"> ✓ DRS (Documento de Requisitos del Sistema) y DDF (Documento de Diseño Funcional)
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="c"> Solo el DDF (Documento de Diseño Funcional)
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="d"> DRS, DDF y Plan de Pruebas
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - La ERS se compone del DRS (análisis de requisitos del software) y el DDF (especificación funcional o descripción del producto).
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 14</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Cuál es la duración máxima recomendada para el Daily Scrum?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q14" value="a"> 5 minutos
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q14" value="b"> ✓ 15 minutos
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="c"> 30 minutos
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="d"> 1 hora
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - El Daily Scrum es una reunión diaria de máximo 15 minutos donde cada miembro explica qué hizo, qué hará y qué impedimentos tiene.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 15</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿Qué técnica de reducción de complejidad permite "ver" un problema desde distintas perspectivas?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q15" value="a"> Abstracción
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="b"> Partición
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q15" value="c"> ✓ Proyección
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="d"> Descomposición
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: C</strong> - La proyección permite "ver" un problema desde distintas perspectivas o puntos de vista para reducir la complejidad.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 16</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>¿Cuáles son las 5+2 reglas de Kanban según Anderson?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q16" value="a"> Solo las 5 reglas básicas
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q16" value="b"> ✓ Mostrar proceso, Limitar WIP, Optimizar flujo, Políticas explícitas, Modelos de mejora + Sistemas Adaptativos + Papel del diseñador
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="c"> Solo las 7 reglas avanzadas
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="d"> 5 reglas para desarrollo + 2 para testing
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Las 5 reglas básicas más 2 adicionales: Regla #6 (Sistemas Adaptativos Complejos) y Regla #7 (El papel del diseñador de sistemas).
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 17</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Qué significan las 3 C (CCC) en las historias de usuario?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q17" value="a"> Create, Code, Check
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q17" value="b"> ✓ Card, Conversation, Confirmation
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="c"> Customer, Criteria, Conclusion
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="d"> Context, Content, Closure
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - Card (descripción escrita), Conversation (conversaciones sobre la historia), Confirmation (criterios de aceptación).
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 18</span>
+                            <span class="difficulty basico">Básico</span>
+                        </div>
+                        <h4>¿En qué año se publicó el Manifiesto Ágil?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q18" value="a"> 1999
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q18" value="b"> ✓ 2001
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="c"> 2003
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="d"> 2005
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - En 2001, 17 desarrolladores reunidos en Snowbird (Utah, USA) publicaron el Manifiesto Ágil.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 19</span>
+                            <span class="difficulty avanzado">Avanzado</span>
+                        </div>
+                        <h4>¿Qué metodología lleva "al extremo diversas prácticas consideradas buenas"?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q19" value="a"> Scrum
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q19" value="b"> Kanban
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q19" value="c"> ✓ XP (Extreme Programming)
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q19" value="d"> FDD
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: C</strong> - XP (Extreme Programming) lleva al extremo prácticas como programación por parejas, tests unitarios constantes, e integración continua.
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pregunta 20</span>
+                            <span class="difficulty intermedio">Intermedio</span>
+                        </div>
+                        <h4>¿Cuál es el objetivo principal de la técnica SMART para criterios de aceptación?</h4>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q20" value="a"> Hacer las historias más complejas
+                            </div>
+                            <div class="option correct">
+                                <input type="radio" name="q20" value="b"> ✓ Crear criterios Específicos, Medibles, Alcanzables, Relevantes y Temporalmente limitados
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q20" value="c"> Automatizar las pruebas
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q20" value="d"> Reducir la documentación
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <strong>Respuesta correcta: B</strong> - SMART significa Specific, Measurable, Achievable, Relevant, Time-bound para definir criterios de aceptación eficaces.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="recursos" class="tab-content" role="tabpanel">
+                <div class="card">
+                    <h3>📚 Recursos Adicionales</h3>
+                    <p>Materiales complementarios y herramientas para profundizar en metodologías ágiles.</p>
+                </div>
+
+                <div class="list-grid">
+                    <div class="card">
+                        <h4>📖 Referencias Bibliográficas</h4>
+                        <ul>
+                            <li><strong>SWEBOK</strong> - Software Engineering Body of Knowledge</li>
+                            <li><strong>Pressman</strong> - Ingeniería del Software</li>
+                            <li><strong>Sommerville</strong> - Ingeniería de Software</li>
+                            <li><strong>Mike Cohn</strong> - User Stories Applied</li>
+                            <li><strong>Kent Beck</strong> - Extreme Programming Explained</li>
+                            <li><strong>Manifiesto Ágil</strong> - agilemanifesto.org</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🛠️ Herramientas Recomendadas</h4>
+                        <ul>
+                            <li><strong>Scrum/Kanban:</strong> Jira, Trello, Azure DevOps</li>
+                            <li><strong>Kanban:</strong> Kanban Tool, Cardmapping, Greenhopper</li>
+                            <li><strong>Casos de Uso:</strong> Visual Paradigm, Lucidchart</li>
+                            <li><strong>Historias de Usuario:</strong> Confluence, Notion</li>
+                            <li><strong>Burn Down Charts:</strong> Excel, Google Sheets</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>❓ Preguntas Frecuentes (FAQ)</h4>
+                    
+                    <div class="highlight-box">
+                        <h5>¿Cuándo usar Casos de Uso vs Historias de Usuario?</h5>
+                        <p><strong>Casos de Uso:</strong> Proyectos tradicionales con requisitos bien definidos y documentación extensa.</p>
+                        <p><strong>Historias de Usuario:</strong> Proyectos ágiles con requisitos cambiantes y entregas incrementales.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h5>¿Scrum vs Kanban: cuál elegir?</h5>
+                        <p><strong>Scrum:</strong> Equipos que pueden trabajar en sprints fijos con ceremonias estructuradas.</p>
+                        <p><strong>Kanban:</strong> Flujo continuo de trabajo, requisitos muy variables, equipos de soporte.</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h5>¿Cómo medir el progreso en metodologías ágiles?</h5>
+                        <p><strong>Velocity:</strong> Cantidad de story points completados por sprint.</p>
+                        <p><strong>Burn Down Chart:</strong> Progreso visual del trabajo restante.</p>
+                        <p><strong>Lead Time:</strong> Tiempo desde petición hasta entrega.</p>
+                        <p><strong>Cycle Time:</strong> Tiempo de trabajo activo en una tarea.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>✅ Mejores Prácticas</h4>
+                    
+                    <div class="list-grid">
+                        <div>
+                            <h5>Para Análisis de Requisitos:</h5>
+                            <ul>
+                                <li>Involucrar activamente a los stakeholders</li>
+                                <li>Usar múltiples técnicas de educción</li>
+                                <li>Validar requisitos tempranamente</li>
+                                <li>Documentar decisiones y cambios</li>
+                                <li>Priorizar requisitos por valor de negocio</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h5>Para Metodologías Ágiles:</h5>
+                            <ul>
+                                <li>Comenzar con equipos pequeños y experimentados</li>
+                                <li>Establecer Definition of Done claro</li>
+                                <li>Mantener comunicación constante con el cliente</li>
+                                <li>Adaptar la metodología al contexto</li>
+                                <li>Medir y mejorar continuamente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🏛️ Aplicación en Administración Pública</h4>
+                    <div class="highlight-box">
+                        <h5>Consideraciones Especiales:</h5>
+                        <ul>
+                            <li><strong>Transparencia:</strong> Documentación adecuada para auditorías</li>
+                            <li><strong>Normativa:</strong> Cumplimiento de ENS y normativa de contratación</li>
+                            <li><strong>Interoperabilidad:</strong> Estándares y protocolos establecidos</li>
+                            <li><strong>Accesibilidad:</strong> Cumplimiento de normas AA</li>
+                            <li><strong>Continuidad:</strong> Servicios 24/7 para ciudadanos</li>
+                            <li><strong>Seguridad:</strong> Protección de datos personales y RGPD</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📊 Glosario de Términos</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Término</th>
+                                <th>Definición</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sprint</strong></td>
+                                <td>Iteración de duración fija (15-30 días) en Scrum</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Backlog</strong></td>
+                                <td>Lista priorizada de funcionalidades pendientes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Epic</strong></td>
+                                <td>Historia de usuario grande que debe dividirse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WIP</strong></td>
+                                <td>Work In Progress - trabajo en curso</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DoD</strong></td>
+                                <td>Definition of Done - definición de terminado</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Velocity</strong></td>
+                                <td>Cantidad de trabajo completado por iteración</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stakeholder</strong></td>
+                                <td>Persona interesada o afectada por el proyecto</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Retrospectiva</strong></td>
+                                <td>Reunión para reflexionar sobre el proceso y mejorar</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>📚 Guía de estudio para oposiciones - Metodologías Ágiles | Tema 088</p>
+            <p>Actualizado: <time datetime="2023-04-20">20 de abril de 2023</time></p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button text
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '🌙 Modo Claro' : '☀️ Modo Oscuro';
+        }
+
+        // Tab functionality
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab;
+
+                    // Remove active class from all tabs and contents
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    // Add active class to clicked tab and corresponding content
+                    button.classList.add('active');
+                    button.setAttribute('aria-selected', 'true');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = savedTheme === 'dark' ? '🌙 Modo Claro' : '☀️ Modo Oscuro';
+        }
+
+        // Quiz functionality
+        function initQuiz() {
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    const questionCard = option.closest('.question-card');
+                    const allOptions = questionCard.querySelectorAll('.option');
+                    
+                    // Remove previous selections
+                    allOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Mark selected option
+                    option.classList.add('selected');
+                    
+                    // Check the radio button
+                    const radio = option.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                });
+            });
+        }
+
+        // Keyboard navigation
+        function initKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab' && e.ctrlKey) {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab-button.active');
+                    const tabButtons = [...document.querySelectorAll('.tab-button')];
+                    const currentIndex = tabButtons.indexOf(activeTab);
+                    const nextIndex = e.shiftKey 
+                        ? (currentIndex - 1 + tabButtons.length) % tabButtons.length
+                        : (currentIndex + 1) % tabButtons.length;
+                    
+                    tabButtons[nextIndex].click();
+                }
+            });
+        }
+
+        // Smooth scrolling for internal links
+        function initSmoothScroll() {
+            document.addEventListener('click', (e) => {
+                if (e.target.matches('a[href^="#"]')) {
+                    e.preventDefault();
+                    const targetId = e.target.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            initTabs();
+            initQuiz();
+            initKeyboardNavigation();
+            initSmoothScroll();
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

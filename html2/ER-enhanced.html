@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo Entidad-Relación - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #2e7d32;
+            --warning-color: #f57c00;
+            --error-color: #d32f2f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .main-title {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tab-container {
+            background: var(--bg-card);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin: 2rem 0;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background: var(--bg-card);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)05);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-container {
+            margin: 1rem 0;
+        }
+
+        .question {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .option {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .option.incorrect {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty.avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .methodology-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .methodology-table th,
+        .methodology-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .methodology-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .diagram-container {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .expandable {
+            cursor: pointer;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .expandable:hover {
+            background: var(--bg-hover);
+        }
+
+        .expandable-content {
+            display: none;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .expandable.expanded .expandable-content {
+            display: block;
+        }
+
+        .relationship-types {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .relationship-card {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid var(--border-color);
+        }
+
+        .scrollable {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .tab-nav {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                text-align: center;
+                border-bottom: none;
+                border-right: 3px solid transparent;
+            }
+
+            .tab-btn.active {
+                border-right-color: var(--accent-color);
+                border-bottom: none;
+            }
+
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .relationship-types {
+                flex-direction: column;
+            }
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1rem 0 1rem 3rem;
+            border-left: 2px solid var(--accent-color);
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 1.5rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .glossary-term {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">📊 Modelo E/R</div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </header>
+
+    <div class="container">
+        <h1 class="main-title">Modelo Entidad-Relación y Análisis de Dominio</h1>
+        
+        <div class="tab-container">
+            <nav class="tab-nav">
+                <button class="tab-btn active" onclick="showTab('resumen')">Resumen General</button>
+                <button class="tab-btn" onclick="showTab('analisis')">Análisis y Modelado</button>
+                <button class="tab-btn" onclick="showTab('orientacion')">Orientación a Objetos</button>
+                <button class="tab-btn" onclick="showTab('diagramas')">Diagramas de Clases</button>
+                <button class="tab-btn" onclick="showTab('modelo-er')">Modelo E/R</button>
+                <button class="tab-btn" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+                <button class="tab-btn" onclick="showTab('recursos')">Recursos y FAQ</button>
+            </nav>
+
+            <!-- Tab 1: Resumen General -->
+            <div id="resumen" class="tab-content active">
+                <div class="card">
+                    <h2 class="card-title">🎯 Resumen Ejecutivo</h2>
+                    <div class="highlight-box">
+                        <p><strong>Tema 089:</strong> Análisis del Dominio de los Sistemas: Modelado de Dominio, Modelo Entidad Relación y Modelos de Clases</p>
+                    </div>
+                    
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">📈 Conceptos Clave</h3>
+                            <ul class="feature-list">
+                                <li><strong>Análisis:</strong> El "qué" del sistema</li>
+                                <li><strong>Diseño:</strong> El "cómo" del sistema</li>
+                                <li><strong>Modelo E/R:</strong> Representación conceptual de datos</li>
+                                <li><strong>UML:</strong> Lenguaje de modelado unificado</li>
+                                <li><strong>Orientación a Objetos:</strong> Paradigma de desarrollo</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card">
+                            <h3 class="card-title">📊 Estadísticas Importantes</h3>
+                            <ul class="feature-list">
+                                <li><strong>UML 2.5.1:</strong> Versión actual (dic. 2017)</li>
+                                <li><strong>3 Niveles de Análisis:</strong> Estático, Funcional, Dinámico</li>
+                                <li><strong>Arquitectura ANSI:</strong> 3 niveles de abstracción</li>
+                                <li><strong>Metodologías OO:</strong> OOD, OMT, OOA, HOOD</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🎯 Objetivos de Aprendizaje</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h4>Comprender el Análisis de Sistemas</h4>
+                                <p>Dominar los enfoques estructurado y orientado a objetos</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Aplicar Técnicas de Modelado</h4>
+                                <p>Utilizar diagramas E/R y UML efectivamente</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Diseñar Bases de Datos</h4>
+                                <p>Transformar modelos conceptuales a lógicos</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>Implementar Soluciones OO</h4>
+                                <p>Aplicar principios SOLID y patrones de diseño</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Análisis y Modelado -->
+            <div id="analisis" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🔍 Análisis y Modelado de Sistemas</h2>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Definición:</strong> El análisis representa el "qué" y el diseño el "cómo" del sistema de información.</p>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">📋 Enfoques de Análisis</h3>
+                            <div class="comparison-table">
+                                <table>
+                                    <tr>
+                                        <th>Enfoque</th>
+                                        <th>Características</th>
+                                        <th>Técnicas</th>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Estructurado</strong></td>
+                                        <td>Separación datos/procesos</td>
+                                        <td>DFD, DED, Modelo E/R</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Orientado a Objetos</strong></td>
+                                        <td>Integración datos/procesos</td>
+                                        <td>UML, Casos de Uso, Clases</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">📊 Niveles de Análisis</h3>
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🏗️ Estático: Modelo de Datos</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Estructurado:</strong> Modelo E/R</p>
+                                    <p><strong>OO:</strong> Diagrama de objetos/clases</p>
+                                    <p>Representa la estructura de datos del sistema</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>⚙️ Funcional: Modelo de Procesos</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Estructurado:</strong> DFD y DFC</p>
+                                    <p><strong>OO:</strong> Diagrama de casos de uso</p>
+                                    <p>Define qué hace el sistema y sus funciones</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🔄 Dinámico: Comportamiento</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Estructurado:</strong> DTE y HVE</p>
+                                    <p><strong>OO:</strong> Diagramas de secuencia e interacción</p>
+                                    <p>Modela cómo evoluciona el sistema en el tiempo</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🎨 UML - Lenguaje de Modelado Unificado</h3>
+                        <p><strong>Versión actual:</strong> UML 2.5.1 (diciembre 2017)</p>
+                        
+                        <div class="diagram-container">
+                            <h4>Clasificación de Diagramas UML</h4>
+                            <div class="relationship-types">
+                                <div class="relationship-card">
+                                    <h5>📊 Estructura</h5>
+                                    <ul style="text-align: left;">
+                                        <li>Diagrama de Clases</li>
+                                        <li>Diagrama de Objetos</li>
+                                        <li>Diagrama de Componentes</li>
+                                        <li>Diagrama de Despliegue</li>
+                                    </ul>
+                                </div>
+                                <div class="relationship-card">
+                                    <h5>🔄 Comportamiento</h5>
+                                    <ul style="text-align: left;">
+                                        <li>Casos de Uso</li>
+                                        <li>Actividad</li>
+                                        <li>Máquina de Estados</li>
+                                        <li>Secuencia</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🌐 Modelo de Dominio</h3>
+                        <div class="highlight-box">
+                            <p><strong>Definición:</strong> Modelo conceptual que describe un problema específico representando el vocabulario y los conceptos clave a través de entidades, atributos, papeles y relaciones.</p>
+                        </div>
+                        
+                        <ul class="feature-list">
+                            <li>Utiliza <strong>clases conceptuales</strong> sin métodos</li>
+                            <li>Se enfoca en <strong>comprender el problema</strong></li>
+                            <li>No contempla detalles de <strong>implementación</strong></li>
+                            <li>Representa el <strong>vocabulario del dominio</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Orientación a Objetos -->
+            <div id="orientacion" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🎯 Orientación a Objetos</h2>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Definición AOO:</strong> "Método de análisis que examina los requisitos desde la perspectiva de las clases y objetos encontrados en el vocabulario del dominio del problema"</p>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">✅ Ventajas de la OO</h3>
+                            <ul class="feature-list">
+                                <li>Modelos similares al mundo real</li>
+                                <li>Facilita el desarrollo de sistemas complejos</li>
+                                <li>Aumenta la reutilización de software</li>
+                                <li>Desarrollo iterativo de aplicaciones</li>
+                                <li>Interoperabilidad entre aplicaciones</li>
+                                <li>Sistemas más pequeños y eficientes</li>
+                                <li>Escalable para aplicaciones de cualquier tamaño</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">🏗️ Características del Diseño OO</h3>
+                            <ul class="feature-list">
+                                <li><strong>Modularidad:</strong> Separación en componentes</li>
+                                <li><strong>Extensibilidad:</strong> Fácil modificación</li>
+                                <li><strong>Ocultación:</strong> Information hiding</li>
+                                <li><strong>Integrable:</strong> Componentes reutilizables</li>
+                                <li><strong>Acoplamiento débil:</strong> Mínima dependencia</li>
+                                <li><strong>Cohesión fuerte:</strong> Elementos relacionados</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">📚 Metodologías de Diseño OO</h3>
+                        <table class="methodology-table">
+                            <tr>
+                                <th>Metodología</th>
+                                <th>Autor</th>
+                                <th>Enfoque</th>
+                                <th>Descripción</th>
+                            </tr>
+                            <tr>
+                                <td>OOD</td>
+                                <td>Booch</td>
+                                <td>Diseño</td>
+                                <td>Object-Oriented Design fundamentalmente para entornos en tiempo real</td>
+                            </tr>
+                            <tr>
+                                <td>OMT</td>
+                                <td>Rumbaugh</td>
+                                <td>Modelado</td>
+                                <td>Object Modeling Technique. Utiliza los mismos conceptos y notación a lo largo de todo el ciclo</td>
+                            </tr>
+                            <tr>
+                                <td>OOA</td>
+                                <td>Coad/Yourdon</td>
+                                <td>Análisis</td>
+                                <td>Object Oriented Analysis. Versión reducida de Objectory, gestores de tareas y objetos</td>
+                            </tr>
+                            <tr>
+                                <td>HOOD</td>
+                                <td>ESA</td>
+                                <td>Jerárquico</td>
+                                <td>Hierarchical Object Oriented Design</td>
+                            </tr>
+                            <tr>
+                                <td>UML</td>
+                                <td>OMG</td>
+                                <td>Lenguaje</td>
+                                <td>Unified Modelling Language - No es metodología</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🏛️ Principios SOLID</h3>
+                        <div class="concept-grid">
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4><strong>S</strong>ingle Responsibility</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Responsabilidad única:</strong> Una clase debe tener una sola razón para cambiar, es decir, una única responsabilidad contenida en la clase.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4><strong>O</strong>pen/Closed</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Abierto/Cerrado:</strong> Las clases deben estar abiertas para extensión, pero cerradas para modificación.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4><strong>L</strong>iskov Substitution</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Sustitución de Liskov:</strong> Los objetos deben ser reemplazables por instancias de sus subtipos sin alterar el funcionamiento.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4><strong>I</strong>nterface Segregation</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Segregación de interfaces:</strong> Muchas interfaces cliente específicas son mejores que una interfaz general.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4><strong>D</strong>ependency Inversion</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Inversión de dependencias:</strong> Depender de abstracciones, no de implementaciones. IoC e Inyección de Dependencias.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔑 Principios Fundamentales OO</h3>
+                        <div class="relationship-types">
+                            <div class="relationship-card">
+                                <h5>🆔 Identidad</h5>
+                                <p>Cada objeto tiene su propia identidad inherente única</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>🎭 Abstracción</h5>
+                                <p>Generalización conceptual del comportamiento</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>📦 Encapsulación</h5>
+                                <p>Ocultar detalles internos del objeto</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>🏗️ Herencia</h5>
+                                <p>Extensión y reutilización de código</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>🔄 Polimorfismo</h5>
+                                <p>Diferentes comportamientos con la misma interfaz</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Diagramas de Clases -->
+            <div id="diagramas" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📋 Diagramas de Clases</h2>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Definición:</strong> Tipo de diagrama de estructura estática en UML que describe la estructura de un sistema mostrando las clases, sus atributos, operaciones y las relaciones entre los objetos.</p>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">🏗️ Elementos Principales</h3>
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📦 Clases</h4>
+                                <div class="expandable-content">
+                                    <p>Elemento principal del diagrama para representar conceptos o entidades.</p>
+                                    <div class="code-block">
++--------------------------------+
+|        NombreClase             |
++--------------------------------+
+| - atributo1: Tipo              |
+| - atributo2: Tipo              |
++--------------------------------+
+| + método1(): TipoRetorno       |
+| + método2(param): void         |
++--------------------------------+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🔗 Relaciones</h4>
+                                <div class="expandable-content">
+                                    <p>Identifican dependencias entre clases con nombre y multiplicidad.</p>
+                                    <ul class="feature-list">
+                                        <li><strong>Asociación:</strong> Línea simple</li>
+                                        <li><strong>Agregación:</strong> Diamante vacío</li>
+                                        <li><strong>Composición:</strong> Diamante relleno</li>
+                                        <li><strong>Herencia:</strong> Flecha vacía</li>
+                                        <li><strong>Dependencia:</strong> Flecha discontinua</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">🔐 Tipos de Acceso</h3>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>Símbolo</th>
+                                    <th>Tipo</th>
+                                    <th>Acceso</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>+</strong></td>
+                                    <td>Público</td>
+                                    <td>Desde cualquier clase</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>-</strong></td>
+                                    <td>Privado</td>
+                                    <td>Solo desde la propia clase</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#</strong></td>
+                                    <td>Protegido</td>
+                                    <td>Clase y clases derivadas</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔄 Tipos de Relaciones</h3>
+                        <div class="relationship-types">
+                            <div class="relationship-card">
+                                <h5>🔗 Asociación</h5>
+                                <p><strong>Representación:</strong> Línea simple</p>
+                                <p>Tipo de relación más común, representa dependencia semántica</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>◇ Agregación</h5>
+                                <p><strong>Representación:</strong> Diamante vacío</p>
+                                <p>Relación dinámica "parte-todo". El objeto base puede tener multiplicidad > 1</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>◆ Composición</h5>
+                                <p><strong>Representación:</strong> Diamante relleno</p>
+                                <p>Relación estática "parte-todo". Objeto base con multiplicidad 1</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>△ Herencia</h5>
+                                <p><strong>Representación:</strong> Flecha vacía</p>
+                                <p>Apunta hacia la clase padre. Relación "es-un"</p>
+                            </div>
+                            <div class="relationship-card">
+                                <h5>⟶ Dependencia</h5>
+                                <p><strong>Representación:</strong> Flecha discontinua</p>
+                                <p>Una clase requiere otra para ofrecer sus funcionalidades</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🎯 Diagrama de Objetos</h3>
+                        <div class="highlight-box">
+                            <p><strong>Caso especial:</strong> Muestra las instancias específicas de las clases involucradas en un instante determinado previamente decidido.</p>
+                        </div>
+                        
+                        <div class="code-block">
++--------------------------------+
+|    nombreObjeto: NombreClase   |
++--------------------------------+
+|    atributo1 = valor1          |
+|    atributo2 = valor2          |
++--------------------------------+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">📊 Multiplicidad y Cardinalidad</h3>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Notación</th>
+                                <th>Significado</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Exactamente uno</td>
+                                <td>Una persona tiene un DNI</td>
+                            </tr>
+                            <tr>
+                                <td>0..1</td>
+                                <td>Cero o uno</td>
+                                <td>Una persona puede tener un cónyuge</td>
+                            </tr>
+                            <tr>
+                                <td>*</td>
+                                <td>Cero o muchos</td>
+                                <td>Una persona puede tener varios hijos</td>
+                            </tr>
+                            <tr>
+                                <td>1..*</td>
+                                <td>Uno o muchos</td>
+                                <td>Una empresa tiene al menos un empleado</td>
+                            </tr>
+                            <tr>
+                                <td>2..5</td>
+                                <td>Entre dos y cinco</td>
+                                <td>Un equipo tiene entre 2 y 5 jugadores</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Modelo E/R -->
+            <div id="modelo-er" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🗂️ Modelo Entidad-Relación</h2>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Definición:</strong> Representa el Modelo conceptual de datos. Es único para cada sistema de información y se corresponde con el nivel conceptual de la Arquitectura ANSI a tres niveles.</p>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">🏢 Entidades</h3>
+                            <p>Objeto real o abstracto de interés en una organización.</p>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📋 Características</h4>
+                                <div class="expandable-content">
+                                    <ul class="feature-list">
+                                        <li>Debe tener <strong>existencia propia</strong></li>
+                                        <li>Cada ocurrencia debe poder <strong>distinguirse</strong></li>
+                                        <li>Mismos tipos de <strong>características</strong> (atributos)</li>
+                                        <li>Proceso <strong>iterativo</strong> de definición</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="diagram-container">
+                                <div class="code-block">
+┌─────────────────┐
+│     CLIENTE     │
+└─────────────────┘
+                                </div>
+                                <p><em>Representación de una entidad</em></p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">🏷️ Atributos</h3>
+                            <p>Propiedades o características de un tipo de entidad.</p>
+                            
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📝 Tipos de Atributos</h4>
+                                <div class="expandable-content">
+                                    <ul class="feature-list">
+                                        <li><strong>Simple:</strong> No divisible</li>
+                                        <li><strong>Compuesto:</strong> Subdividido en partes</li>
+                                        <li><strong>Univaluado:</strong> Un solo valor</li>
+                                        <li><strong>Multivaluado:</strong> Múltiples valores</li>
+                                        <li><strong>Obligatorio:</strong> Debe tener valor</li>
+                                        <li><strong>Derivado:</strong> Calculado de otros</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🔑 Tipos de Claves</h4>
+                                <div class="expandable-content">
+                                    <ul class="feature-list">
+                                        <li><strong>Superclave:</strong> Conjunto de atributos que distingue entidades</li>
+                                        <li><strong>Clave candidata:</strong> Superclave mínima</li>
+                                        <li><strong>Clave primaria:</strong> Clave candidata seleccionada</li>
+                                        <li><strong>Principio de unicidad:</strong> Mínimos atributos posibles</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔗 Relaciones o Interrelaciones</h3>
+                        <p>Asociación entre entidades caracterizada por restricciones específicas.</p>
+                        
+                        <div class="concept-grid">
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🎯 Grado de Relaciones</h4>
+                                <div class="expandable-content">
+                                    <ul class="feature-list">
+                                        <li><strong>Unitarias/Unarias:</strong> Una entidad se relaciona consigo misma</li>
+                                        <li><strong>Binarias:</strong> Entre dos entidades</li>
+                                        <li><strong>Ternarias:</strong> Entre tres entidades</li>
+                                        <li><strong>N-arias:</strong> Entre N entidades</li>
+                                        <li><strong>Reflexivas:</strong> Caso especial de unarias</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📊 Tipos de Correspondencia</h4>
+                                <div class="expandable-content">
+                                    <div class="relationship-types">
+                                        <div class="relationship-card">
+                                            <h5>1:1</h5>
+                                            <p>Una ocurrencia se asocia con máximo una de la otra entidad</p>
+                                        </div>
+                                        <div class="relationship-card">
+                                            <h5>1:N</h5>
+                                            <p>Una ocurrencia se asocia con muchas de la otra, pero no viceversa</p>
+                                        </div>
+                                        <div class="relationship-card">
+                                            <h5>N:M</h5>
+                                            <p>Múltiples ocurrencias se asocian en ambas direcciones</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="diagram-container">
+                            <h4>Ejemplo de Relación N:M</h4>
+                            <div class="code-block">
+┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+│  PROFESOR   │────N────│   IMPARTE   │────M────│ ASIGNATURA  │
+└─────────────┘         └─────────────┘         └─────────────┘
+            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🔒 Entidades Débiles</h3>
+                        <p>Entidades que dependen de otra para su existencia o identificación.</p>
+                        
+                        <div class="concept-grid">
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🆔 Dependencia por Identificador</h4>
+                                <div class="expandable-content">
+                                    <p>La entidad débil no tiene suficientes atributos para formar su clave primaria.</p>
+                                    <ul class="feature-list">
+                                        <li>Necesita la PK de la entidad fuerte</li>
+                                        <li>No garantiza principio de unicidad</li>
+                                        <li>Siempre corresponde a relación 1:N</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🔄 Dependencia por Existencia</h4>
+                                <div class="expandable-content">
+                                    <p>La entidad débil tiene PK suficiente pero depende de otra para existir.</p>
+                                    <ul class="feature-list">
+                                        <li>Mejor solución que d.p.i.</li>
+                                        <li>Asegura PK siempre válido</li>
+                                        <li>Entidad débil puede ser eliminada sin afectar fuerte</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">🚀 Modelo E/R Extendido</h3>
+                        
+                        <div class="concept-grid">
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📏 Cardinalidad</h4>
+                                <div class="expandable-content">
+                                    <p>Número mínimo y máximo de ocurrencias que pueden participar en una relación.</p>
+                                    <ul class="feature-list">
+                                        <li><strong>Obligatoria:</strong> Mínimo 1</li>
+                                        <li><strong>Opcional:</strong> Mínimo 0</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>🏗️ Jerarquías</h4>
+                                <div class="expandable-content">
+                                    <p><strong>Generalización:</strong> De lo concreto a lo abstracto</p>
+                                    <p><strong>Especialización:</strong> De lo general a lo particular</p>
+                                    <ul class="feature-list">
+                                        <li><strong>Cobertura Total:</strong> Todos los elementos están en subentidades</li>
+                                        <li><strong>Cobertura Parcial:</strong> Algunos elementos no están en subentidades</li>
+                                        <li><strong>Disjunta:</strong> Un elemento en máximo una subentidad</li>
+                                        <li><strong>Con Solapamiento:</strong> Un elemento puede estar en varias subentidades</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="expandable" onclick="toggleExpand(this)">
+                                <h4>📊 Transformación a Tablas</h4>
+                                <div class="expandable-content">
+                                    <ul class="feature-list">
+                                        <li><strong>1:N:</strong> Se propaga clave de cardinalidad 1 a N</li>
+                                        <li><strong>1:1:</strong> Caso particular de 1:N, propagación bidireccional</li>
+                                        <li><strong>N:M:</strong> Requiere tabla intermedia con claves de ambas entidades</li>
+                                        <li><strong>Entidades débiles:</strong> PK formada por concatenación de claves</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="ejercicios" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📝 Ejercicios Prácticos</h2>
+                    <p>Practica tus conocimientos con estas preguntas de examen.</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress"></div>
+                    </div>
+                    <p id="progress-text">Progreso: 0/20 preguntas</p>
+                    
+                    <div class="quiz-container" id="quiz-container">
+                        <!-- Pregunta 1 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">1. ¿Qué representa el análisis en un sistema de información?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) El "cómo" del sistema</li>
+                                <li class="option" onclick="selectOption(this, true)">b) El "qué" del sistema</li>
+                                <li class="option" onclick="selectOption(this, false)">c) La implementación del sistema</li>
+                                <li class="option" onclick="selectOption(this, false)">d) La arquitectura física del sistema</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 2 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">2. ¿Cuál es la versión actual de UML mencionada en el documento?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) UML 2.0</li>
+                                <li class="option" onclick="selectOption(this, true)">b) UML 2.5.1</li>
+                                <li class="option" onclick="selectOption(this, false)">c) UML 3.0</li>
+                                <li class="option" onclick="selectOption(this, false)">d) UML 2.4</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 3 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">3. En el enfoque orientado a objetos, ¿cuál es la técnica utilizada para el análisis estático?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) DFD (Diagrama de Flujo de Datos)</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Diagrama de objetos/clases</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Diagrama de casos de uso</li>
+                                <li class="option" onclick="selectOption(this, false)">d) DTE (Diagrama de Transición de Estados)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 4 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">4. ¿Qué significa AOO?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) Análisis Orientado a Objetos</li>
+                                <li class="option" onclick="selectOption(this, false)">b) Arquitectura Orientada a Objetos</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Aplicación Orientada a Objetos</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Algoritmo Orientado a Objetos</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 5 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">5. ¿Cuál de los siguientes NO es un principio SOLID?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Single Responsibility</li>
+                                <li class="option" onclick="selectOption(this, false)">b) Open/Closed</li>
+                                <li class="option" onclick="selectOption(this, true)">c) Multiple Inheritance</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Dependency Inversion</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 6 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">6. En un diagrama de clases UML, ¿qué símbolo representa un atributo privado?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) +</li>
+                                <li class="option" onclick="selectOption(this, true)">b) -</li>
+                                <li class="option" onclick="selectOption(this, false)">c) #</li>
+                                <li class="option" onclick="selectOption(this, false)">d) ~</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 7 -->
+                        <div class="question">
+                            <div class="difficulty avanzado">Avanzado</div>
+                            <div class="question-text">7. ¿Cuál es la diferencia principal entre agregación y composición en UML?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) No hay diferencia</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Composición es más fuerte, con dependencia de ciclo de vida</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Agregación usa línea continua, composición discontinua</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Solo varía la multiplicidad</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 8 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">8. ¿Qué representa una entidad en el modelo E/R?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) Objeto real o abstracto de interés</li>
+                                <li class="option" onclick="selectOption(this, false)">b) Una relación entre tablas</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Un atributo de una tabla</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Una clave primaria</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 9 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">9. ¿Qué tipo de relación E/R requiere una tabla intermedia al transformar a modelo lógico?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) 1:1</li>
+                                <li class="option" onclick="selectOption(this, false)">b) 1:N</li>
+                                <li class="option" onclick="selectOption(this, true)">c) N:M</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Unaria</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 10 -->
+                        <div class="question">
+                            <div class="difficulty avanzado">Avanzado</div>
+                            <div class="question-text">10. En entidades débiles, ¿cuál es la diferencia entre dependencia por identificador y por existencia?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) D.p.i. no tiene PK suficiente, d.p.e. sí pero depende para existir</li>
+                                <li class="option" onclick="selectOption(this, false)">b) No hay diferencia práctica</li>
+                                <li class="option" onclick="selectOption(this, false)">c) D.p.e. es más restrictiva que d.p.i.</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Solo cambia la notación gráfica</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 11 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">11. ¿Cuál de estas metodologías OO fue desarrollada por Rumbaugh?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) OOD</li>
+                                <li class="option" onclick="selectOption(this, true)">b) OMT</li>
+                                <li class="option" onclick="selectOption(this, false)">c) OOA</li>
+                                <li class="option" onclick="selectOption(this, false)">d) HOOD</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 12 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">12. ¿Qué representa el polimorfismo en programación orientada a objetos?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Herencia múltiple</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Mismo mensaje, diferentes comportamientos</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Encapsulación de datos</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Abstracción de clases</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 13 -->
+                        <div class="question">
+                            <div class="difficulty avanzado">Avanzado</div>
+                            <div class="question-text">13. En el modelo E/R extendido, ¿qué significa una jerarquía con cobertura parcial y solapamiento?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Todos los elementos están en subentidades, uno por subentidad</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Algunos elementos no están en subentidades, pueden estar en varias</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Todos están en subentidades, pueden estar en varias</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Algunos no están en subentidades, máximo uno por subentidad</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 14 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">14. ¿Cuál es el principio de unicidad en claves primarias?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) Mínimos atributos posibles para la PK</li>
+                                <li class="option" onclick="selectOption(this, false)">b) Máximo rendimiento en consultas</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Un solo tipo de dato por clave</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Valores únicos en toda la base de datos</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 15 -->
+                        <div class="question">
+                            <div class="difficulty basico">Básico</div>
+                            <div class="question-text">15. ¿Qué es un atributo multivaluado?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Un atributo que no puede tener valores nulos</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Un atributo que puede tomar más de un valor</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Un atributo calculado de otros</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Un atributo compuesto</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 16 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">16. ¿Cuál es la diferencia entre ligadura estática y dinámica?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) Estática en compilación, dinámica en ejecución</li>
+                                <li class="option" onclick="selectOption(this, false)">b) Estática para clases, dinámica para objetos</li>
+                                <li class="option" onclick="selectOption(this, false)">c) No hay diferencia práctica</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Estática es más lenta que dinámica</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 17 -->
+                        <div class="question">
+                            <div class="difficulty avanzado">Avanzado</div>
+                            <div class="question-text">17. ¿Qué técnica se utiliza para hallar el tipo de correspondencia en relaciones ternarias?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Analizar todas las combinaciones posibles</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Fijar 2 ocurrencias y preguntar por la 3ª</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Usar cardinalidad mínima y máxima</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Transformar a relaciones binarias</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 18 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">18. En UML, ¿qué representa un diagrama de objetos?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) La estructura estática de las clases</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Instancias específicas en un momento determinado</li>
+                                <li class="option" onclick="selectOption(this, false)">c) El comportamiento dinámico del sistema</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Las relaciones entre componentes</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 19 -->
+                        <div class="question">
+                            <div class="difficulty avanzado">Avanzado</div>
+                            <div class="question-text">19. ¿Cuál es la ventaja principal de la dependencia por existencia sobre la dependencia por identificador?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, false)">a) Ocupa menos espacio en base de datos</li>
+                                <li class="option" onclick="selectOption(this, true)">b) Asegura que la entidad débil tenga siempre PK válido</li>
+                                <li class="option" onclick="selectOption(this, false)">c) Permite relaciones N:M</li>
+                                <li class="option" onclick="selectOption(this, false)">d) Es más fácil de implementar</li>
+                            </ul>
+                        </div>
+
+                        <!-- Pregunta 20 -->
+                        <div class="question">
+                            <div class="difficulty intermedio">Intermedio</div>
+                            <div class="question-text">20. ¿Cuál de estos estándares está relacionado con el análisis de sistemas mencionado en el documento?</div>
+                            <ul class="options">
+                                <li class="option" onclick="selectOption(this, true)">a) ISO/IEC/IEEE 29148</li>
+                                <li class="option" onclick="selectOption(this, false)">b) ISO 27001</li>
+                                <li class="option" onclick="selectOption(this, false)">c) IEEE 802.11</li>
+                                <li class="option" onclick="selectOption(this, false)">d) ISO 9001</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">📈 Resultados del Quiz</h3>
+                        <div id="results" style="display: none;">
+                            <p id="score"></p>
+                            <p id="feedback"></p>
+                        </div>
+                        <button onclick="resetQuiz()" style="background: var(--accent-color); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; cursor: pointer; margin-top: 1rem;">Reiniciar Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="recursos" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📚 Recursos y FAQ</h2>
+                    
+                    <div class="concept-grid">
+                        <div class="card">
+                            <h3 class="card-title">📖 Recursos Adicionales</h3>
+                            <ul class="feature-list">
+                                <li><strong>UML 2.5.1 Specification</strong> - OMG Official Documentation</li>
+                                <li><strong>Métrica v3</strong> - Metodología de desarrollo española</li>
+                                <li><strong>Arquitectura ANSI/SPARC</strong> - Modelo de tres niveles</li>
+                                <li><strong>Object-Oriented Analysis and Design</strong> - Grady Booch</li>
+                                <li><strong>Design Patterns</strong> - Gang of Four</li>
+                                <li><strong>Clean Code</strong> - Robert C. Martin</li>
+                                <li><strong>Software Architecture</strong> - Len Bass</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">🔧 Herramientas Recomendadas</h3>
+                            <ul class="feature-list">
+                                <li><strong>Visual Paradigm</strong> - Modelado UML completo</li>
+                                <li><strong>Enterprise Architect</strong> - CASE tool profesional</li>
+                                <li><strong>Draw.io</strong> - Diagramas online gratuito</li>
+                                <li><strong>MySQL Workbench</strong> - Diseño de bases de datos</li>
+                                <li><strong>Lucidchart</strong> - Diagramas colaborativos</li>
+                                <li><strong>PlantUML</strong> - Diagramas como código</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">❓ Preguntas Frecuentes</h3>
+                        
+                        <div class="expandable" onclick="toggleExpand(this)">
+                            <h4>¿Cuál es la diferencia entre modelo conceptual y lógico?</h4>
+                            <div class="expandable-content">
+                                <p><strong>Modelo Conceptual (E/R):</strong> Representa la realidad del problema independientemente de la tecnología. Es único para cada sistema.</p>
+                                <p><strong>Modelo Lógico (DED):</strong> Depende del SGBD a utilizar. Se deriva del conceptual pero considera limitaciones tecnológicas.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable" onclick="toggleExpand(this)">
+                            <h4>¿Cuándo usar enfoque estructurado vs orientado a objetos?</h4>
+                            <div class="expandable-content">
+                                <p><strong>Estructurado:</strong> Sistemas donde datos y procesos están claramente separados, aplicaciones de procesamiento batch, sistemas legacy.</p>
+                                <p><strong>Orientado a Objetos:</strong> Sistemas complejos, aplicaciones interactivas, cuando se requiere reutilización, desarrollo iterativo.</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable" onclick="toggleExpand(this)">
+                            <h4>¿Cómo decidir entre agregación y composición?</h4>
+                            <div class="expandable-content">
+                                <p><strong>Agregación:</strong> Cuando las partes pueden existir independientemente del todo (ej: Profesor-Departamento).</p>
+                                <p><strong>Composición:</strong> Cuando las partes no tienen sentido sin el todo (ej: Casa-Habitación).</p>
+                            </div>
+                        </div>
+
+                        <div class="expandable" onclick="toggleExpand(this)">
+                            <h4>¿Qué es mejor: dependencia por identificador o por existencia?</h4>
+                            <div class="expandable-content">
+                                <p><strong>Dependencia por existencia</strong> es generalmente mejor porque:</p>
+                                <ul class="feature-list">
+                                    <li>La entidad débil tiene su propia PK completa</li>
+                                    <li>Mejor rendimiento en consultas</li>
+                                    <li>Mayor flexibilidad para cambios futuros</li>
+                                    <li>Cumple principio de unicidad</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="expandable" onclick="toggleExpand(this)">
+                            <h4>¿Cómo transformar relaciones N:M a tablas?</h4>
+                            <div class="expandable-content">
+                                <p>Las relaciones N:M siempre requieren una <strong>tabla intermedia</strong>:</p>
+                                <ul class="feature-list">
+                                    <li>La tabla intermedia contiene las PK de ambas entidades</li>
+                                    <li>Estas PK forman la PK compuesta de la tabla intermedia</li>
+                                    <li>Los atributos de la relación van en la tabla intermedia</li>
+                                    <li>Se establecen FK hacia las tablas originales</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">💡 Mejores Prácticas</h3>
+                        
+                        <div class="concept-grid">
+                            <div class="card">
+                                <h4>🎯 Diseño de E/R</h4>
+                                <ul class="feature-list">
+                                    <li>Identifica entidades principales primero</li>
+                                    <li>Define atributos mínimos necesarios</li>
+                                    <li>Establece relaciones claras y precisas</li>
+                                    <li>Normaliza para evitar redundancia</li>
+                                    <li>Documenta restricciones de integridad</li>
+                                </ul>
+                            </div>
+
+                            <div class="card">
+                                <h4>🔧 Modelado OO</h4>
+                                <ul class="feature-list">
+                                    <li>Aplica principios SOLID consistentemente</li>
+                                    <li>Favorece composición sobre herencia</li>
+                                    <li>Define interfaces claras y estables</li>
+                                    <li>Implementa patrones de diseño apropiados</li>
+                                    <li>Mantén bajo acoplamiento, alta cohesión</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">📝 Glosario de Términos</h3>
+                        <div class="scrollable">
+                            <div class="glossary-term">
+                                <strong>Abstracción:</strong> Proceso de ocultar detalles innecesarios y mostrar solo las características esenciales de un objeto.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Agregación:</strong> Relación "parte-todo" donde las partes pueden existir independientemente del todo.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Cardinalidad:</strong> Número mínimo y máximo de instancias que pueden participar en una relación.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Composición:</strong> Relación "parte-todo" fuerte donde las partes no pueden existir sin el todo.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Encapsulación:</strong> Principio de ocultar la implementación interna y exponer solo la interfaz necesaria.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Entidad débil:</strong> Entidad que depende de otra para su existencia o identificación completa.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Herencia:</strong> Mecanismo que permite que una clase derive propiedades y comportamientos de otra.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Multiplicidad:</strong> Notación que especifica cuántas instancias de una clase pueden estar relacionadas.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>Polimorfismo:</strong> Capacidad de un mismo mensaje de producir diferentes comportamientos según el objeto receptor.
+                            </div>
+                            <div class="glossary-term">
+                                <strong>UML:</strong> Lenguaje de Modelado Unificado para especificar, visualizar y documentar sistemas software.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let answeredQuestions = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 20;
+
+        function setTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            setTheme(currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Ocultar todos los contenidos de pestañas
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remover clase active de todos los botones
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar contenido seleccionado
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        function toggleExpand(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function selectOption(option, isCorrect) {
+            // Verificar si ya se respondió esta pregunta
+            const question = option.closest('.question');
+            if (question.classList.contains('answered')) return;
+
+            // Marcar pregunta como respondida
+            question.classList.add('answered');
+            answeredQuestions++;
+
+            // Mostrar respuesta correcta
+            const options = question.querySelectorAll('.option');
+            options.forEach(opt => {
+                const isThisCorrect = opt.onclick.toString().includes('true');
+                if (isThisCorrect) {
+                    opt.classList.add('correct');
+                } else if (opt === option && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+                // Deshabilitar todas las opciones
+                opt.style.pointerEvents = 'none';
+            });
+
+            if (isCorrect) {
+                correctAnswers++;
+            }
+
+            updateProgress();
+
+            if (answeredQuestions === totalQuestions) {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progressPercent = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progress').style.width = progressPercent + '%';
+            document.getElementById('progress-text').textContent = 
+                `Progreso: ${answeredQuestions}/${totalQuestions} preguntas`;
+        }
+
+        function showResults() {
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            const resultsDiv = document.getElementById('results');
+            const scoreElement = document.getElementById('score');
+            const feedbackElement = document.getElementById('feedback');
+
+            scoreElement.textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${percentage}%)`;
+            
+            let feedback;
+            if (percentage >= 90) {
+                feedback = "¡Excelente! Dominas perfectamente el modelo E/R y análisis de dominio.";
+            } else if (percentage >= 70) {
+                feedback = "¡Muy bien! Tienes un buen conocimiento del tema. Repasa los conceptos avanzados.";
+            } else if (percentage >= 50) {
+                feedback = "Bien. Necesitas repasar algunos conceptos fundamentales del modelo E/R.";
+            } else {
+                feedback = "Necesitas estudiar más el tema. Te recomendamos repasar todo el material.";
+            }
+
+            feedbackElement.textContent = feedback;
+            resultsDiv.style.display = 'block';
+        }
+
+        function resetQuiz() {
+            answeredQuestions = 0;
+            correctAnswers = 0;
+            
+            const questions = document.querySelectorAll('.question');
+            questions.forEach(question => {
+                question.classList.remove('answered');
+                const options = question.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect');
+                    option.style.pointerEvents = 'auto';
+                });
+            });
+
+            document.getElementById('results').style.display = 'none';
+            updateProgress();
+        }
+
+        // Inicializar tema al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTheme(currentTheme);
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
