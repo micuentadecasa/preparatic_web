@@ -135,19 +135,19 @@ pdfs = [
         "filename": "ia.pdf",
         "title": "Inteligencia Artificial",
         "category": "IA",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "inteligenciaNegocios.pdf",
         "title": "Inteligencia de Negocios",
         "category": "Datos",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "itil 2.pdf",
         "title": "ITIL v2",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "itil.pdf",

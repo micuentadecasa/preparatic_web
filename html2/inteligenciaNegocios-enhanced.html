@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologías y Sistemas de Explotación de Datos - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4ade80;
+            --error-color: #f87171;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .update-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .tabs-container {
+            margin-top: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-button {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .tab-button:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            space-y: 0.5rem;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .options li {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .options li:hover {
+            border-color: var(--accent-color);
+        }
+
+        .options li.correct {
+            background: var(--success-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .options li.correct::after {
+            content: " ✓ CORRECTA";
+            float: right;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty-basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermedio {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .difficulty-avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .glossary-term {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .glossary-term dt {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .glossary-term dd {
+            color: var(--text-secondary);
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .process-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tabs-nav {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: unset;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .process-step:not(:last-child)::after {
+                content: "↓";
+                position: static;
+                margin: 0.5rem 0;
+            }
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] .tabs-nav {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .quiz-container {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">📊 PreparaTIC</div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    🌙 Cambiar Tema
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="title-section">
+                <h1 class="main-title">Tecnologías y Sistemas de Explotación de Datos</h1>
+                <p class="subtitle">DATA LAKE, DATA WAREHOUSE, LAKEHOUSE, DATA FABRIC, DATA MESH, PET y ESPACIOS DE DATOS</p>
+                <p class="update-date">Actualizado a 16/05/2023</p>
+            </div>
+
+            <div class="tabs-container">
+                <nav class="tabs-nav">
+                    <button class="tab-button active" onclick="showTab(0)">📋 Resumen General</button>
+                    <button class="tab-button" onclick="showTab(1)">🏗️ Arquitecturas de Datos</button>
+                    <button class="tab-button" onclick="showTab(2)">🔄 Procesamiento y ETL</button>
+                    <button class="tab-button" onclick="showTab(3)">🔐 Seguridad y PET</button>
+                    <button class="tab-button" onclick="showTab(4)">🌐 Espacios de Datos</button>
+                    <button class="tab-button" onclick="showTab(5)">📝 Ejercicios Prácticos</button>
+                    <button class="tab-button" onclick="showTab(6)">📚 Recursos y FAQ</button>
+                </nav>
+
+                <!-- Tab 1: Resumen General -->
+                <div class="tab-content active" id="tab-0">
+                    <div class="card">
+                        <h3>🎯 Objetivos de Aprendizaje</h3>
+                        <ul class="feature-list">
+                            <li>Comprender las diferentes tecnologías de explotación de datos</li>
+                            <li>Diferenciar entre Data Lake, Data Warehouse y Data Lakehouse</li>
+                            <li>Conocer los conceptos de Data Fabric y Data Mesh</li>
+                            <li>Entender las tecnologías de protección de confidencialidad (PET)</li>
+                            <li>Dominar los aspectos organizativos de los espacios de datos</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>📊 Estadísticas Clave</h3>
+                            <ul class="feature-list">
+                                <li>133 empresas forman parte de IDSA (International Data Spaces Association)</li>
+                                <li>5 principios fundamentales de la UE para espacios de datos</li>
+                                <li>4 categorías principales de tecnologías PET</li>
+                                <li>8 tipos diferentes de sistemas OLAP</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>🔑 Conceptos Fundamentales</h3>
+                            <p><strong>Cadena de Valor de Datos:</strong></p>
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <div class="step-number">1</div>
+                                    <strong>Datos</strong>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-number">2</div>
+                                    <strong>Información</strong>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-number">3</div>
+                                    <strong>Conocimiento</strong>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-number">4</div>
+                                    <strong>Sabiduría</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏛️ Evolución de las Arquitecturas de Datos</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Tecnología Principal</th>
+                                    <th>Características</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1980s-2010</td>
+                                    <td>Data Warehouse</td>
+                                    <td>Datos estructurados, esquema predefinido</td>
+                                </tr>
+                                <tr>
+                                    <td>2010-2020</td>
+                                    <td>Data Lake</td>
+                                    <td>Datos estructurados y no estructurados, esquema flexible</td>
+                                </tr>
+                                <tr>
+                                    <td>2020+</td>
+                                    <td>Data Lakehouse</td>
+                                    <td>Híbrido que combina lo mejor de ambos mundos</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Arquitecturas de Datos -->
+                <div class="tab-content" id="tab-1">
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>🏗️ Data Warehouse</h3>
+                            <h4>Características OVNI (Inmon):</h4>
+                            <ul class="feature-list">
+                                <li><strong>O</strong>rientado a temas</li>
+                                <li><strong>V</strong>ariable en el tiempo</li>
+                                <li><strong>N</strong>o volátil</li>
+                                <li><strong>I</strong>ntegrado</li>
+                            </ul>
+                            <h4>Sistemas Relacionados:</h4>
+                            <ul class="feature-list">
+                                <li>DSS (Decision Support System)</li>
+                                <li>EIS (Executive Information System)</li>
+                                <li>MIS (Management Information Systems)</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>🌊 Data Lake</h3>
+                            <h4>Componentes Principales:</h4>
+                            <ul class="feature-list">
+                                <li>Ingesta de datos (batch, streaming, real-time)</li>
+                                <li>Almacenamiento escalable</li>
+                                <li>Seguridad y autorización</li>
+                                <li>Análisis y machine learning</li>
+                                <li>Gobierno de datos</li>
+                            </ul>
+                            <h4>Estructura por Capas:</h4>
+                            <ul class="feature-list">
+                                <li><strong>Raw/Bronze:</strong> Datos en bruto</li>
+                                <li><strong>Cleansed/Silver:</strong> Datos filtrados</li>
+                                <li><strong>Curated/Gold:</strong> Datos optimizados</li>
+                                <li><strong>Laboratory:</strong> Experimentación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔄 Data Lakehouse</h3>
+                        <p>Combina la flexibilidad de un Data Lake con las capacidades de gestión de un Data Warehouse.</p>
+                        
+                        <h4>Características Clave:</h4>
+                        <div class="grid-3">
+                            <ul class="feature-list">
+                                <li>Tipos de datos extendidos</li>
+                                <li>Transmisión de datos en tiempo real</li>
+                                <li>Aplicación de esquemas</li>
+                            </ul>
+                            <ul class="feature-list">
+                                <li>Soporte de BI y Data Science</li>
+                                <li>Compatibilidad con transacciones</li>
+                                <li>Formatos abiertos (Parquet)</li>
+                            </ul>
+                            <ul class="feature-list">
+                                <li>Desacoplamiento procesamiento/almacenamiento</li>
+                                <li>Soporte para R y Python</li>
+                                <li>Hardware económico</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>🕸️ Data Fabric</h3>
+                            <p>Arquitectura que centraliza, conecta, gestiona y gobierna datos entre diferentes sistemas.</p>
+                            <h4>Componentes:</h4>
+                            <ul class="feature-list">
+                                <li>Conectores de datos</li>
+                                <li>Gestión de datos</li>
+                                <li>Modelado y capa semántica</li>
+                                <li>Procesamiento y analíticas</li>
+                                <li>Automatización</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>🌐 Data Mesh</h3>
+                            <p>Enfoque sociotécnico descentralizado para gestión de datos analíticos.</p>
+                            <h4>4 Principios Fundamentales:</h4>
+                            <ul class="feature-list">
+                                <li>Propiedad orientada por dominio</li>
+                                <li>Datos como producto</li>
+                                <li>Infraestructura de autoservicio</li>
+                                <li>Gobernanza federada</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Procesamiento y ETL -->
+                <div class="tab-content" id="tab-2">
+                    <div class="card">
+                        <h3>🔄 Proceso ETL (Extract-Transform-Load)</h3>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <strong>Extract</strong>
+                                <p>Recuperación de datos de fuentes diversas</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <strong>Transform</strong>
+                                <p>Depuración, filtrado, homogeneización</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <strong>Load</strong>
+                                <p>Organización y actualización en el DW</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>📊 Sistemas OLAP</h3>
+                            <p>Procesamiento analítico en línea para consultas complejas e iterativas.</p>
+                            <h4>Tipos de OLAP:</h4>
+                            <ul class="feature-list">
+                                <li><strong>MOLAP:</strong> Multidimensional OLAP</li>
+                                <li><strong>ROLAP:</strong> Relational OLAP</li>
+                                <li><strong>HOLAP:</strong> Hybrid OLAP</li>
+                                <li><strong>DOLAP:</strong> Desktop OLAP</li>
+                                <li><strong>SOLAP:</strong> Spatial OLAP</li>
+                                <li><strong>RTOLAP:</strong> Real Time OLAP</li>
+                                <li><strong>WOLAP:</strong> Web OLAP</li>
+                                <li><strong>In-memory OLAP:</strong> En memoria</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>🎯 Operaciones en Cubos OLAP</h3>
+                            <h4>Operaciones de Navegación:</h4>
+                            <ul class="feature-list">
+                                <li><strong>DRILL-DOWN:</strong> Añadir nivel de detalle</li>
+                                <li><strong>DRILL-UP:</strong> Reducir nivel de detalle</li>
+                                <li><strong>DRILL-ACROSS:</strong> Nueva dimensión</li>
+                                <li><strong>ROLL-ACROSS:</strong> Quitar dimensión</li>
+                            </ul>
+                            <h4>Operaciones de Visualización:</h4>
+                            <ul class="feature-list">
+                                <li><strong>PIVOT-ROTATE:</strong> Cambiar perspectiva</li>
+                                <li><strong>SLICE:</strong> Seleccionar elemento</li>
+                                <li><strong>DICE:</strong> Seleccionar múltiples dimensiones</li>
+                                <li><strong>PAGE:</strong> Dividir en secciones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏗️ Esquemas Multidimensionales</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>⭐ Esquema en Estrella</h4>
+                                <p>Una tabla de hechos central conectada a tablas de dimensiones.</p>
+                                <ul class="feature-list">
+                                    <li>Estructura simple</li>
+                                    <li>Consultas rápidas</li>
+                                    <li>Fácil de entender</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>❄️ Esquema Copo de Nieve</h4>
+                                <p>Esquema estrella con dimensiones normalizadas.</p>
+                                <ul class="feature-list">
+                                    <li>Menos redundancia</li>
+                                    <li>Más complejo</li>
+                                    <li>Consultas más lentas</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>🌌 Esquema Constelación</h4>
+                                <p>Múltiples esquemas estrella interconectados.</p>
+                                <ul class="feature-list">
+                                    <li>Múltiples hechos</li>
+                                    <li>Dimensiones compartidas</li>
+                                    <li>Muy flexible</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Seguridad y PET -->
+                <div class="tab-content" id="tab-3">
+                    <div class="card">
+                        <h3>🔐 Protección de la Confidencialidad</h3>
+                        <p>La confidencialidad garantiza que la información esté accesible únicamente a personal autorizado.</p>
+                        
+                        <h4>Marco Normativo:</h4>
+                        <ul class="feature-list">
+                            <li><strong>ISO/IEC 27002:</strong> Garantizar acceso solo a autorizados</li>
+                            <li><strong>RGPD (UE) 2016/679:</strong> Seguridad adecuada de datos personales</li>
+                            <li><strong>LOPDGDD:</strong> Deber de confidencialidad en el tratamiento</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🛡️ Privacy Enhancing Technologies (PET)</h3>
+                        <p>Sistemas que engloban procesos y métodos para protección de la intimidad y datos personales.</p>
+                        
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>🎭 Herramientas de Ofuscación</h4>
+                                <ul class="feature-list">
+                                    <li>Pruebas de conocimiento cero (ZKP)</li>
+                                    <li>Privacidad diferencial</li>
+                                    <li>Datos sintéticos</li>
+                                    <li>Anonimización y seudonimización</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card">
+                                <h4>🔒 Procesamiento Encriptado</h4>
+                                <ul class="feature-list">
+                                    <li>Encriptación homomórfica</li>
+                                    <li>Computación de múltiples partes</li>
+                                    <li>Intersección de conjuntos privados</li>
+                                    <li>Entornos de ejecución confiables</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>📊 Análisis Federado</h4>
+                                <p>Permite ejecutar tareas analíticas sobre datos no visibles para quien ejecuta las tareas.</p>
+                                <ul class="feature-list">
+                                    <li>Análisis distribuido</li>
+                                    <li>Preservación de privacidad</li>
+                                    <li>Colaboración segura</li>
+                                </ul>
+                            </div>
+
+                            <div class="card">
+                                <h4>📋 Rendición de Cuentas</h4>
+                                <p>Sistemas para el control y auditoría del uso de datos.</p>
+                                <ul class="feature-list">
+                                    <li>Sistemas de rendición de cuentas</li>
+                                    <li>Umbrales de secretos compartidos</li>
+                                    <li>Almacenamiento de datos personales</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Espacios de Datos -->
+                <div class="tab-content" id="tab-4">
+                    <div class="card">
+                        <h3>🌐 Espacios de Datos</h3>
+                        <p>Ecosistema para materializar la compartición voluntaria de datos dentro de un entorno de soberanía, confianza y seguridad.</p>
+                        
+                        <h4>5 Fundamentos de la Unión Europea:</h4>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <strong>Descentralización</strong>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <strong>Apertura</strong>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <strong>Transparencia</strong>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <strong>Soberanía</strong>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">5</div>
+                                <strong>Interoperabilidad</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📋 4 Principios Básicos</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>👑 Soberanía de Datos</h4>
+                                <p>Capacidad de libre determinación sobre los propios datos.</p>
+                            </div>
+                            <div class="card">
+                                <h4>⚖️ Igualdad de Condiciones</h4>
+                                <p>Eliminación de barreras de entrada por situaciones de monopolio.</p>
+                            </div>
+                            <div class="card">
+                                <h4>🏗️ Infraestructura Descentralizada</h4>
+                                <p>Datos en infraestructuras descentralizadas interoperables.</p>
+                            </div>
+                            <div class="card">
+                                <h4>🤝 Gobernanza Público-Privada</h4>
+                                <p>Acuerdos entre personas, empresas públicas y privadas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>👥 Roles en Espacios de Datos</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>🏢 Proveedores y Consumidores</h4>
+                                <ul class="feature-list">
+                                    <li>Dueño de los datos</li>
+                                    <li>Generador de datos</li>
+                                    <li>Proveedor de datos</li>
+                                    <li>Proveedor de aplicaciones</li>
+                                    <li>Consumidor de recursos</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>🔧 Proveedor Tecnológico e Intermediarios</h4>
+                                <ul class="feature-list">
+                                    <li>Proveedor tecnológico</li>
+                                    <li>Proveedor de vocabulario</li>
+                                    <li>Proveedor de APP Store</li>
+                                    <li>Clearing house (transacciones)</li>
+                                    <li>Broker de metadatos (catálogo)</li>
+                                    <li>Operador del espacio de datos</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔧 Componentes Técnicos</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>🔌 Conectores</h4>
+                                <p>Elementos principales para acceso al espacio de datos y a los datos.</p>
+                            </div>
+                            <div class="card">
+                                <h4>🏪 Intermediación</h4>
+                                <p>Servicios de bróker de metadatos, tienda de aplicaciones, catálogo de recursos.</p>
+                            </div>
+                            <div class="card">
+                                <h4>🆔 Gestión de Identidad</h4>
+                                <p>Garantizan identidad de participantes y seguridad de transacciones.</p>
+                            </div>
+                            <div class="card">
+                                <h4>⚙️ Gestión del Espacio</h4>
+                                <p>Herramientas para operación diaria, gestión de participantes, supervisión.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 6: Ejercicios Prácticos -->
+                <div class="tab-content" id="tab-5">
+                    <div class="card">
+                        <h3>📝 Ejercicios de Preparación para Oposiciones</h3>
+                        <p>20 preguntas tipo examen basadas en el contenido del tema, con respuestas marcadas para estudio.</p>
+                    </div>
+
+                    <!-- Pregunta 1 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>1. ¿Cuál de las siguientes NO es una característica del modelo OVNI de Bill Inmon para Data Warehouse?</h4>
+                            <ul class="options">
+                                <li>Orientado a temas</li>
+                                <li>Variable en el tiempo</li>
+                                <li class="correct">Orientado a transacciones</li>
+                                <li>No volátil</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>2. En un Data Lake, ¿qué capa se caracteriza por almacenar datos optimizados para análisis?</h4>
+                            <ul class="options">
+                                <li>Raw/Bronze</li>
+                                <li>Cleansed/Silver</li>
+                                <li class="correct">Curated/Gold</li>
+                                <li>Laboratory</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>3. ¿Qué significa ETL en el contexto de Data Warehousing?</h4>
+                            <ul class="options">
+                                <li>Execute-Transform-Load</li>
+                                <li class="correct">Extract-Transform-Load</li>
+                                <li>Export-Transfer-Link</li>
+                                <li>Establish-Test-Launch</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>4. ¿Cuántos principios fundamentales define Data Mesh para la gestión descentralizada de datos?</h4>
+                            <ul class="options">
+                                <li>3</li>
+                                <li class="correct">4</li>
+                                <li>5</li>
+                                <li>6</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>5. ¿Cuál es la diferencia principal entre MOLAP y ROLAP?</h4>
+                            <ul class="options">
+                                <li class="correct">MOLAP almacena en cubos, ROLAP en estructuras relacionales</li>
+                                <li>MOLAP es más lento que ROLAP</li>
+                                <li>MOLAP solo funciona en escritorio</li>
+                                <li>ROLAP no soporta múltiples dimensiones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>6. ¿Qué operación OLAP permite añadir un nivel de detalle a la consulta?</h4>
+                            <ul class="options">
+                                <li class="correct">DRILL-DOWN</li>
+                                <li>DRILL-UP</li>
+                                <li>SLICE</li>
+                                <li>PIVOT</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>7. En el contexto de PET, ¿qué tecnología permite realizar cálculos sobre datos cifrados?</h4>
+                            <ul class="options">
+                                <li>Privacidad diferencial</li>
+                                <li class="correct">Encriptación homomórfica</li>
+                                <li>Anonimización</li>
+                                <li>Seudonimización</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>8. ¿Cuántas empresas integran actualmente IDSA (International Data Spaces Association)?</h4>
+                            <ul class="options">
+                                <li>100</li>
+                                <li>125</li>
+                                <li class="correct">133</li>
+                                <li>150</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>9. ¿Qué estructura utiliza un Data Lake para almacenar datos?</h4>
+                            <ul class="options">
+                                <li>Estructura jerárquica</li>
+                                <li class="correct">Arquitectura plana</li>
+                                <li>Estructura en árbol</li>
+                                <li>Estructura en red</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>10. ¿Cuál de los siguientes NO es un principio fundamental de los espacios de datos según la UE?</h4>
+                            <ul class="options">
+                                <li>Descentralización</li>
+                                <li>Apertura</li>
+                                <li class="correct">Centralización</li>
+                                <li>Soberanía</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>11. En un esquema multidimensional, ¿qué contienen las tablas de hechos?</h4>
+                            <ul class="options">
+                                <li>Las dimensiones de análisis</li>
+                                <li class="correct">La información propiamente dicha del proceso de negocio</li>
+                                <li>Los metadatos del sistema</li>
+                                <li>Las reglas de transformación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>12. ¿Qué significa el acrónimo BI en el contexto de inteligencia de negocios?</h4>
+                            <ul class="options">
+                                <li>Basic Intelligence</li>
+                                <li class="correct">Business Intelligence</li>
+                                <li>Binary Integration</li>
+                                <li>Backup Integration</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>13. ¿Cuál es la principal ventaja de un Data Lakehouse sobre un Data Warehouse tradicional?</h4>
+                            <ul class="options">
+                                <li>Menor costo de almacenamiento</li>
+                                <li>Mayor velocidad de consulta</li>
+                                <li class="correct">Capacidad de manejar datos estructurados y no estructurados</li>
+                                <li>Mejor seguridad de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>14. ¿Qué es un Data Mart?</h4>
+                            <ul class="options">
+                                <li>Un tipo de base de datos NoSQL</li>
+                                <li class="correct">Un almacén de datos especializado por áreas o temas</li>
+                                <li>Una herramienta de visualización</li>
+                                <li>Un protocolo de comunicación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>15. ¿Cuál es el enfoque principal de Kimball para Data Warehousing?</h4>
+                            <ul class="options">
+                                <li>Top Down</li>
+                                <li class="correct">Bottom Up</li>
+                                <li>Inside Out</li>
+                                <li>Outside In</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>16. ¿Qué tecnología permite la compartición segura de datos sin revelar la información subyacente?</h4>
+                            <ul class="options">
+                                <li>Encriptación simétrica</li>
+                                <li class="correct">Pruebas de conocimiento cero (ZKP)</li>
+                                <li>Compresión de datos</li>
+                                <li>Indexación</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>17. ¿Qué problema se conoce como "Data Swamp"?</h4>
+                            <ul class="options">
+                                <li>Datos duplicados en el sistema</li>
+                                <li class="correct">Almacenamiento masivo sin gestión ni clasificación efectiva</li>
+                                <li>Datos corruptos en la base</li>
+                                <li>Acceso no autorizado a los datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-basico">BÁSICO</span>
+                            <h4>18. ¿Qué estructura de datos adopta un Data Lake?</h4>
+                            <ul class="options">
+                                <li>Schema on Write</li>
+                                <li class="correct">Schema on Read</li>
+                                <li>Schema on Update</li>
+                                <li>Schema on Delete</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-avanzado">AVANZADO</span>
+                            <h4>19. ¿Cuál de las siguientes NO es una categoría de Privacy Enhancing Technologies (PET)?</h4>
+                            <ul class="options">
+                                <li>Herramientas de ofuscación de datos</li>
+                                <li>Herramientas de procesamiento encriptado</li>
+                                <li>Análisis federado y distribuido</li>
+                                <li class="correct">Herramientas de compresión de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="quiz-container">
+                        <div class="question">
+                            <span class="difficulty-badge difficulty-intermedio">INTERMEDIO</span>
+                            <h4>20. ¿Qué normativa europea se refiere específicamente a la protección de datos personales?</h4>
+                            <ul class="options">
+                                <li>ISO 27001</li>
+                                <li class="correct">RGPD (UE) 2016/679</li>
+                                <li>NIST Framework</li>
+                                <li>SOX</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 7: Recursos y FAQ -->
+                <div class="tab-content" id="tab-6">
+                    <div class="card">
+                        <h3>📚 Glosario de Términos Clave</h3>
+                        
+                        <div class="glossary-term">
+                            <dt>Business Intelligence (BI)</dt>
+                            <dd>Conjunto de metodologías, aplicaciones, prácticas y capacidades enfocadas a la creación y administración de información para la toma de decisiones.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Lake</dt>
+                            <dd>Repositorio de almacenamiento centralizado que contiene gran cantidad de datos en bruto, utilizando una arquitectura plana.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Warehouse</dt>
+                            <dd>Base de datos corporativa caracterizada por la integración y depuración de información procedente de múltiples fuentes de datos.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Lakehouse</dt>
+                            <dd>Arquitectura híbrida que combina las ventajas de flexibilidad de un Data Lake con las características de gestión de un Data Warehouse.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Fabric</dt>
+                            <dd>Arquitectura de servicios y funcionalidades que contribuye a procesar mejor los volúmenes de datos de múltiples fuentes bajo una misma administración.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Mesh</dt>
+                            <dd>Enfoque sociotécnico descentralizado para compartir, acceder y gestionar datos analíticos en entornos complejos y a gran escala.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>ETL</dt>
+                            <dd>Extract, Transform, Load - Proceso de extracción, transformación y carga de datos en un sistema de almacenamiento.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>OLAP</dt>
+                            <dd>Online Analytical Processing - Sistema para agilizar consultas de grandes cantidades de datos mediante análisis multidimensional.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>PET</dt>
+                            <dd>Privacy Enhancing Technologies - Tecnologías que protegen la intimidad y privacidad de los datos de las personas físicas.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Schema on Read</dt>
+                            <dd>Estructura de datos donde el esquema no está predeterminado antes del almacenamiento, sino que se define al leer los datos.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Silos</dt>
+                            <dd>Situación donde no existe un lugar centralizado para almacenar todos los datos de la organización, dificultando el descubrimiento de datos.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>IDSA</dt>
+                            <dd>International Data Spaces Association - Coalición de 133 empresas internacionales que trabaja en el concepto de espacio de datos.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Staging Area</dt>
+                            <dd>Área temporal donde se almacenan los datos de origen para las cargas antes de ser transferidos al Data Warehouse.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Data Mart</dt>
+                            <dd>Almacén de datos especializado por áreas o temas, subconjunto de los datos guardados en un Data Warehouse.</dd>
+                        </div>
+
+                        <div class="glossary-term">
+                            <dt>Cubo OLAP</dt>
+                            <dd>Estructura multidimensional que convierte datos planos en una estructura de N dimensiones para análisis eficiente.</dd>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>❓ Preguntas Frecuentes</h3>
+                        
+                        <div class="card">
+                            <h4>¿Cuál es la diferencia principal entre Data Lake y Data Warehouse?</h4>
+                            <p>El Data Warehouse almacena datos estructurados con esquemas predefinidos (Schema on Write), mientras que el Data Lake puede almacenar cualquier tipo de datos con esquemas flexibles (Schema on Read).</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>¿Cuándo debería usar cada tipo de arquitectura?</h4>
+                            <p><strong>Data Warehouse:</strong> Para análisis de BI tradicional con datos estructurados.<br>
+                            <strong>Data Lake:</strong> Para big data, IoT, y análisis de datos no estructurados.<br>
+                            <strong>Data Lakehouse:</strong> Cuando necesitas lo mejor de ambos mundos.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>¿Qué es más importante: Data Fabric o Data Mesh?</h4>
+                            <p>Depende de la organización. Data Fabric es más técnico y centralizado, ideal para integración rápida. Data Mesh es organizativo y descentralizado, mejor para empresas grandes con dominios independientes.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>¿Son obligatorias las tecnologías PET?</h4>
+                            <p>Con el RGPD y LOPDGDD, implementar medidas de protección de datos es obligatorio. Las PET son herramientas recomendadas para cumplir estos requisitos legales.</p>
+                        </div>
+
+                        <div class="card">
+                            <h4>¿Cómo se relacionan los espacios de datos con la soberanía digital?</h4>
+                            <p>Los espacios de datos promueven la soberanía digital permitiendo a las organizaciones mantener el control sobre sus datos mientras participan en ecosistemas colaborativos seguros.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔗 Referencias Adicionales</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>📋 Europa</h4>
+                                <ul class="feature-list">
+                                    <li>Estrategia Europea de datos</li>
+                                    <li>Ley Europea de datos</li>
+                                    <li>Ley de Gobernanza Europea de datos</li>
+                                    <li>Espacio Europeo de Datos Sanitarios</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>🇪🇸 España</h4>
+                                <ul class="feature-list">
+                                    <li>España Digital 2026</li>
+                                    <li>Estrategia Nacional de IA ENIA</li>
+                                    <li>Hub español Gaia-X</li>
+                                    <li>Datos.gob.es</li>
+                                    <li>Oficina del Dato</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Cambiar Tema';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️ Cambiar Tema';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️ Cambiar Tema';
+            }
+        });
+
+        // Tab management
+        function showTab(tabIndex) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`tab-${tabIndex}`).classList.add('active');
+
+            // Add active class to selected tab button
+            tabButtons[tabIndex].classList.add('active');
+        }
+
+        // Quiz interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.closest('.question');
+                    const questionOptions = question.querySelectorAll('.options li');
+                    
+                    // Remove selection from all options in this question
+                    questionOptions.forEach(opt => {
+                        opt.style.backgroundColor = '';
+                        opt.style.color = '';
+                    });
+                    
+                    // Highlight selected option
+                    if (!this.classList.contains('correct')) {
+                        this.style.backgroundColor = 'var(--error-color)';
+                        this.style.color = 'white';
+                    }
+                    
+                    // Always show the correct answer
+                    const correctOption = question.querySelector('.options li.correct');
+                    correctOption.style.backgroundColor = 'var(--success-color)';
+                    correctOption.style.color = 'white';
+                });
+            });
+        });
+
+        // Smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && e.ctrlKey) {
+                e.preventDefault();
+                const activeTab = document.querySelector('.tab-button.active');
+                const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+                const currentIndex = tabButtons.indexOf(activeTab);
+                
+                let nextIndex;
+                if (e.shiftKey) {
+                    nextIndex = currentIndex > 0 ? currentIndex - 1 : tabButtons.length - 1;
+                } else {
+                    nextIndex = currentIndex < tabButtons.length - 1 ? currentIndex + 1 : 0;
+                }
+                
+                showTab(nextIndex);
+            }
+        });
+    </script>
+</body>
+</html>

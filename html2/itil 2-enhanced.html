@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITIL v2 - Gestión de Servicios TI</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, var(--accent-color), #6b73ff);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-option.correct {
+            background: #28a745;
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background: #dc3545;
+            color: white;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty.basico {
+            background: #28a745;
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .difficulty.avanzado {
+            background: #dc3545;
+            color: white;
+        }
+
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .process-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateX(5px);
+            background: var(--bg-hover);
+        }
+
+        .glossary-term {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+        }
+
+        .timeline-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 ITIL v2 - Gestión de Servicios TI</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('resumen')">📋 Resumen General</button>
+            <button class="tab-button" onclick="showTab('fundamentos')">🏗️ Fundamentos ITIL</button>
+            <button class="tab-button" onclick="showTab('evolución')">⏳ Evolución y Versiones</button>
+            <button class="tab-button" onclick="showTab('procesos')">⚙️ Procesos y Funciones</button>
+            <button class="tab-button" onclick="showTab('cobit')">🎯 COBIT Framework</button>
+            <button class="tab-button" onclick="showTab('ejercicios')">💪 Ejercicios Prácticos</button>
+            <button class="tab-button" onclick="showTab('recursos')">📚 Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="highlight">
+                <h2>🎯 Resumen Ejecutivo - ITIL y Gestión de Servicios TI</h2>
+                <p>ITIL (Information Technology Infrastructure Library) es el marco de mejores prácticas más reconocido mundialmente para la gestión de servicios TI, diseñado para alinear los servicios tecnológicos con las necesidades empresariales.</p>
+            </div>
+
+            <div class="card">
+                <h3>📊 Estadísticas Clave</h3>
+                <ul>
+                    <li><strong>Más del 80%</strong> de las organizaciones Fortune 500 utilizan ITIL</li>
+                    <li><strong>Origen:</strong> Años 80 por la CCTA británica</li>
+                    <li><strong>Propietario actual:</strong> AXELOS (desde 2014)</li>
+                    <li><strong>Versión actual:</strong> ITIL 4 (2019)</li>
+                    <li><strong>COBIT:</strong> Marco complementario desarrollado por ISACA</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Conceptos Principales</h3>
+                <div class="process-flow">
+                    <div class="process-card">
+                        <h4>🏢 Gestión de Servicios TI</h4>
+                        <p>Disciplina basada en procesos para alinear los servicios TI con las necesidades empresariales</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>⚡ Factor Crítico de Éxito</h4>
+                        <p>La gestión efectiva de TIC es fundamental para el éxito organizacional</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🎪 Gobierno vs Gestión</h4>
+                        <p>Gobierno define estrategias, Gestión implementa las soluciones</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎓 Objetivos de Aprendizaje</h3>
+                <ol>
+                    <li>Comprender los fundamentos de ITIL y COBIT</li>
+                    <li>Dominar la evolución histórica y versiones</li>
+                    <li>Analizar procesos y mejores prácticas</li>
+                    <li>Aplicar conocimientos en gestión de servicios TI</li>
+                    <li>Prepararse para certificaciones profesionales</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Tab 2: Fundamentos ITIL -->
+        <div id="fundamentos" class="tab-content">
+            <div class="card">
+                <h3>🏗️ ¿Qué es ITIL?</h3>
+                <p><strong>ITIL</strong> es un conjunto de conceptos y buenas prácticas para la gestión de servicios de TI, el desarrollo de TI y sus operaciones. Se centra en el método (cómo hacer las cosas) y es muy detallado para ayudar a la calidad y eficiencia.</p>
+                
+                <div class="highlight">
+                    <h4>Características Fundamentales</h4>
+                    <ul>
+                        <li>✅ <strong>Estándar de facto</strong> mundialmente reconocido</li>
+                        <li>✅ <strong>Independiente</strong> de tecnología y organización</li>
+                        <li>✅ <strong>Enfocado en procesos</strong> para resultados consistentes</li>
+                        <li>✅ <strong>Adoptar y adaptar</strong> según necesidades específicas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Conceptos Clave ITIL</h3>
+                <div class="glossary-term">
+                    <strong>Cliente:</strong> Persona que define los requisitos del servicio y asume la responsabilidad de los resultados
+                </div>
+                <div class="glossary-term">
+                    <strong>Usuario:</strong> Persona que usa los servicios día a día
+                </div>
+                <div class="glossary-term">
+                    <strong>Servicio:</strong> Medio para permitir la creación conjunta de valor con los clientes
+                </div>
+                <div class="glossary-term">
+                    <strong>Valor:</strong> Utilidad (qué hace el servicio) + Garantía (cómo se entrega)
+                </div>
+                <div class="glossary-term">
+                    <strong>Proceso:</strong> Conjunto de actividades interrelacionadas que transforman entradas en productos
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏢 Tipos de Proveedores de Servicios</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Ventajas</th>
+                            <th>Desventajas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tipo I - Interno</td>
+                            <td>Proveedor interno a la organización</td>
+                            <td>Mayor control, comunicación directa</td>
+                            <td>Menor flexibilidad, concentración de costes</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo II - Compartido</td>
+                            <td>Servicios compartidos entre unidades</td>
+                            <td>Compartir riesgos/costes, estandarización</td>
+                            <td>Posibles conflictos de intereses</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo III - Externo</td>
+                            <td>Proveedor externo tercerizado</td>
+                            <td>Flexibilidad, procedimientos estándar</td>
+                            <td>Peligro de cautividad, menor control</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Evolución y Versiones -->
+        <div id="evolución" class="tab-content">
+            <div class="card">
+                <h3>⏳ Evolución Histórica de ITIL</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📅 Años 80 - ITIL v1</h4>
+                        <p><strong>31 libros</strong> orientados principalmente a la tecnología. Desarrollo por la CCTA británica para garantizar entrega eficaz de servicios TI.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📅 2000-2001 - ITIL v2</h4>
+                        <p><strong>7 libros</strong> con 10 procesos + función Help Desk. Se subdivide en Soporte del Servicio y Entrega del Servicio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📅 2007 - ITIL v3</h4>
+                        <p><strong>5 fases del ciclo de vida:</strong> Estrategia, Diseño, Transición, Operación y Mejora Continua. 26 procesos con gestión extremo a extremo.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📅 2011 - Revisión ITIL v3</h4>
+                        <p>Se añaden <strong>4 nuevos procesos</strong> distribuidos en cada fase del ciclo de vida.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📅 2014 - AXELOS</h4>
+                        <p><strong>AXELOS</strong> se convierte en el nuevo propietario de ITIL (joint venture entre empresa Capital y gobierno UK).</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📅 2019 - ITIL v4</h4>
+                        <p><strong>34 prácticas</strong> enfocadas en el Sistema de Valor del Servicio (SVS). Incluye metodologías Agile y DevOps.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 ITIL v4: Sistema de Valor del Servicio</h3>
+                <div class="highlight">
+                    <h4>7 Principios Guía</h4>
+                    <ol>
+                        <li><strong>Focalizarse en el Valor</strong> - Análisis de la experiencia del usuario</li>
+                        <li><strong>Comenzar donde estés</strong> - Observación directa, reutilizar</li>
+                        <li><strong>Progresar iterativamente</strong> - Con retroalimentación</li>
+                        <li><strong>Colaborar y promover visibilidad</strong> - Eliminar silos</li>
+                        <li><strong>Pensar holísticamente</strong> - Visión integral</li>
+                        <li><strong>Mantenerlo sencillo y práctico</strong> - Eliminar desperdicios</li>
+                        <li><strong>Optimizar y automatizar</strong> - Ganar en eficacia</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 4 Dimensiones de la Gestión del Servicio</h3>
+                <div class="process-flow">
+                    <div class="process-card">
+                        <h4>👥 Organizaciones y Personas</h4>
+                        <p>Cultura organizacional, roles, responsabilidades, sistemas de autoridad y comunicación</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>💻 Información y Tecnología</h4>
+                        <p>Tecnología necesaria para la gestión de servicios</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🤝 Proveedores y Suministradores</h4>
+                        <p>Relaciones con organizaciones que participan en la cadena de valor</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>⚡ Flujos de Valor y Procesos</h4>
+                        <p>Trabajo entre partes de la organización y coordinación</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Procesos y Funciones -->
+        <div id="procesos" class="tab-content">
+            <div class="card">
+                <h3>⚙️ ITIL v3: Ciclo de Vida del Servicio</h3>
+                <div class="process-flow">
+                    <div class="process-card">
+                        <h4>🎯 Estrategia del Servicio</h4>
+                        <p><strong>5 procesos:</strong> Gestión Financiera, Gestión de Cartera, Gestión de Demanda, Gestión de Relaciones de Negocio, Gestión Estratégica de Servicios TI</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🎨 Diseño del Servicio</h4>
+                        <p><strong>8 procesos:</strong> Catálogo, Niveles de Servicio, Capacidad, Disponibilidad, Continuidad, Seguridad TI, Suministradores, Coordinación de Diseño</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🔄 Transición del Servicio</h4>
+                        <p><strong>7 procesos:</strong> Planificación, Gestión de Cambios, Configuración, Entregas, Validación y Pruebas, Evaluación, Gestión del Conocimiento</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🛠️ Operación del Servicio</h4>
+                        <p><strong>5 procesos:</strong> Gestión de Eventos, Incidencias, Peticiones, Problemas, Accesos</p>
+                        <p><strong>4 funciones:</strong> Service Desk, Gestión Técnica, Gestión de Operaciones TI, Gestión de Aplicaciones</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>📈 Mejora Continua del Servicio</h4>
+                        <p><strong>2 procesos:</strong> Mejora en 7 pasos, Informes de servicio</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🆘 Gestión de Incidencias vs Problemas</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Gestión de Incidencias</th>
+                            <th>Gestión de Problemas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Objetivo</td>
+                            <td>Restaurar el servicio lo más rápido posible</td>
+                            <td>Identificar y eliminar causas raíz</td>
+                        </tr>
+                        <tr>
+                            <td>Enfoque</td>
+                            <td>Reactivo - respuesta rápida</td>
+                            <td>Proactivo - análisis y prevención</td>
+                        </tr>
+                        <tr>
+                            <td>Plazo</td>
+                            <td>Corto plazo - resolución inmediata</td>
+                            <td>Largo plazo - solución definitiva</td>
+                        </tr>
+                        <tr>
+                            <td>Métricas</td>
+                            <td>Tiempo de resolución, disponibilidad</td>
+                            <td>Reducción de incidencias recurrentes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>📋 Service Desk - Centro de Atención al Usuario</h3>
+                <p>Único punto de contacto (SPOC) entre usuarios y proveedor de servicios TI.</p>
+                
+                <h4>Tipos de Service Desk:</h4>
+                <div class="process-flow">
+                    <div class="process-card">
+                        <h4>🏢 Central</h4>
+                        <p>Único punto físico centralizado</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>☁️ Virtual</h4>
+                        <p>Único punto sin presencia física específica</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>🌍 Persiguiendo al Sol</h4>
+                        <p>Múltiples ubicaciones geográficas, cobertura 24x7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: COBIT Framework -->
+        <div id="cobit" class="tab-content">
+            <div class="card">
+                <h3>🎯 ¿Qué es COBIT?</h3>
+                <p><strong>COBIT</strong> (Control Objectives for Information and Related Technology) es un marco de referencia desarrollado por ISACA para el gobierno, gestión y control de las TI corporativas.</p>
+                
+                <div class="highlight">
+                    <h4>Características Distintivas de COBIT</h4>
+                    <ul>
+                        <li>🎯 <strong>Más estratégico</strong> - Mayor nivel de abstracción</li>
+                        <li>🔍 <strong>Se centra en el QUÉ</strong> - No en el cómo</li>
+                        <li>🏢 <strong>Orientado a procesos</strong> de TI</li>
+                        <li>🌐 <strong>Independiente</strong> de plataforma tecnológica</li>
+                        <li>⚖️ <strong>Equilibrio</strong> entre beneficios, riesgos y recursos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏗️ COBIT 5: Principios Fundamentales</h3>
+                <div class="process-flow">
+                    <div class="process-card">
+                        <h4>1️⃣ Satisfacer Necesidades</h4>
+                        <p>Las organizaciones existen para crear valor a sus stakeholders</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>2️⃣ Cobertura Integral</h4>
+                        <p>Integrar gobierno y gestión de TI en el gobierno corporativo</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>3️⃣ Marco Único Integrado</h4>
+                        <p>COBIT como marco principal alineado con otros estándares</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>4️⃣ Enfoque Holístico</h4>
+                        <p>Considerar conjunto de componentes catalizadores</p>
+                    </div>
+                    <div class="process-card">
+                        <h4>5️⃣ Separar Gobierno de Gestión</h4>
+                        <p>Diferentes actividades, estructura y propósitos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎪 Gobierno vs Gestión en COBIT</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Gobierno (EDM)</th>
+                            <th>Gestión (PBRM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Responsabilidad</td>
+                            <td>Junta Directiva (Presidente)</td>
+                            <td>Alta Administración (CEO)</td>
+                        </tr>
+                        <tr>
+                            <td>Actividades</td>
+                            <td>Evaluar, Dirigir, Monitorizar</td>
+                            <td>Planificar, Construir, Ejecutar, Supervisar</td>
+                        </tr>
+                        <tr>
+                            <td>Enfoque</td>
+                            <td>Estratégico - establecer dirección</td>
+                            <td>Operacional - implementar dirección</td>
+                        </tr>
+                        <tr>
+                            <td>Procesos</td>
+                            <td>5 procesos EDM</td>
+                            <td>32 procesos (APO, BAI, DSS, MEA)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🔧 7 Catalizadores de COBIT 5</h3>
+                <ol>
+                    <li><strong>Principios, Políticas y Marcos</strong> - Guías de alto nivel</li>
+                    <li><strong>Procesos</strong> - Conjunto de prácticas organizacionales</li>
+                    <li><strong>Estructuras Organizativas</strong> - Roles y responsabilidades</li>
+                    <li><strong>Cultura, Ética y Comportamiento</strong> - Valores organizacionales</li>
+                    <li><strong>Información</strong> - Activo clave para decisiones</li>
+                    <li><strong>Servicios, Infraestructura y Aplicaciones</strong> - Recursos tecnológicos</li>
+                    <li><strong>Personas, Habilidades y Competencias</strong> - Capital humano</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>🆕 COBIT 2019: Principales Novedades</h3>
+                <ul>
+                    <li>🔢 <strong>40 objetivos</strong> de gobernanza y gestión (vs 37 en COBIT 5)</li>
+                    <li>🎯 <strong>11 factores de diseño</strong> para personalización</li>
+                    <li>📍 <strong>Áreas de enfoque</strong> específicas (DevOps, PYMES, Seguridad, Riesgos)</li>
+                    <li>🏗️ <strong>Sistema abierto</strong> - permite añadir nuevas áreas</li>
+                    <li>📊 <strong>Flexibilidad</strong> en mediciones de madurez y capacidad</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h3>💪 Ejercicios Prácticos - Examen ITIL y COBIT</h3>
+                <p>Practica con estas preguntas basadas en el contenido del documento. Las respuestas correctas están marcadas en <span style="color: #28a745;">verde</span>.</p>
+            </div>
+
+            <!-- Pregunta 1 -->
+            <div class="quiz-container">
+                <div class="difficulty basico">BÁSICO</div>
+                <div class="quiz-question">
+                    <strong>1.</strong> ¿Cuál es la principal diferencia entre Gobierno de TI y Gestión del Servicio de TI según ITIL?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) No hay diferencia, son términos sinónimos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) El Gobierno define estrategias, la Gestión implementa esas estrategias
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) El Gobierno es técnico, la Gestión es administrativa
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) El Gobierno es interno, la Gestión es externa
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="quiz-container">
+                <div class="difficulty basico">BÁSICO</div>
+                <div class="quiz-question">
+                    <strong>2.</strong> ¿Cuántos libros componían ITIL v1 en los años 80?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 7 libros
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        B) 5 libros
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        C) 31 libros
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 26 libros
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>3.</strong> En ITIL v4, ¿cuántos principios guía existen en el Sistema de Valor del Servicio?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 5 principios
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        B) 9 principios
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        C) 7 principios
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 4 principios
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>4.</strong> ¿Cuál es el objetivo principal de la Gestión de Incidencias en ITIL?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Identificar las causas raíz de los problemas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Minimizar el impacto negativo restableciendo el funcionamiento normal del servicio lo más rápido posible
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Gestionar todos los cambios en la infraestructura TI
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Mantener la base de datos de configuración actualizada
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 5 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>5.</strong> ¿Cuáles son los dos componentes básicos del Valor según ITIL?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Coste y Beneficio
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Utilidad (apto para un propósito) y Garantía (apto para su uso)
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Calidad y Precio
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Funcionalidad y Disponibilidad
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 6 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>6.</strong> En COBIT 5, ¿cuáles son los dos dominios principales que agrupan todos los procesos?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Estratégico y Operacional
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Gobierno (EDM) y Gestión (PBRM)
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Interno y Externo
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Técnico y Funcional
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 7 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>7.</strong> ¿Cuántos catalizadores (enablers) define COBIT 5 para el gobierno y gestión de TI?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 5 catalizadores
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) 7 catalizadores
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) 9 catalizadores
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 11 catalizadores
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 8 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>8.</strong> ¿Qué significa SPOC en el contexto del Service Desk?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Service Process Organization Center
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Single Point Of Contact
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Support and Problem Operations Center
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) System Performance Optimization Control
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 9 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>9.</strong> ¿Cuántos procesos tiene ITIL v3 después de la revisión de 2011?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 26 procesos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) 30 procesos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) 34 procesos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 37 procesos
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 10 -->
+            <div class="quiz-container">
+                <div class="difficulty basico">BÁSICO</div>
+                <div class="quiz-question">
+                    <strong>10.</strong> ¿Quién es el propietario actual de ITIL desde 2014?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) ISACA
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        B) OGC
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        C) AXELOS
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) ITSMF
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 11 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>11.</strong> En ITIL v3, ¿cuáles son las 5 fases del Ciclo de Vida del Servicio?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Planificación, Desarrollo, Implementación, Operación, Cierre
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Estrategia, Diseño, Transición, Operación, Mejora Continua
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Análisis, Diseño, Construcción, Pruebas, Despliegue
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Inicio, Planificación, Ejecución, Control, Cierre
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 12 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>12.</strong> ¿Cuántos objetivos de gobierno y gestión tiene COBIT 2019?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 37 objetivos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) 40 objetivos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) 34 objetivos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 42 objetivos
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 13 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>13.</strong> ¿Cuál es la principal diferencia entre un Incidente y un Problema en ITIL?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) No hay diferencia, son términos equivalentes
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        B) Los incidentes son más graves que los problemas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        C) Un incidente es una interrupción del servicio, un problema es la causa de uno o más incidentes
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Los problemas requieren autorización, los incidentes no
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 14 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>14.</strong> ¿Cuáles son las "7 R's" de la gestión del cambio en ITIL?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Revisar, Registrar, Reportar, Resolver, Restaurar, Reiniciar, Retomar
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Razones, Retorno, Riesgos, Recursos, Responsable, Relaciones, Requerimiento
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Requisitos, Recursos, Riesgos, Resultados, Reportes, Revisión, Recomendaciones
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Recibir, Registrar, Revisar, Resolver, Responder, Reportar, Retroalimentar
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 15 -->
+            <div class="quiz-container">
+                <div class="difficulty basico">BÁSICO</div>
+                <div class="quiz-question">
+                    <strong>15.</strong> ¿Cuál es el objetivo principal de COBIT?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Desarrollar software de manera ágil
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) Crear valor manteniendo equilibrio entre beneficios, riesgos y recursos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Implementar metodologías de gestión de proyectos
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Certificar profesionales en tecnología
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 16 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>16.</strong> En ITIL v4, ¿cuántas prácticas reemplazan a los 26 procesos de ITIL v3?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) 30 prácticas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) 34 prácticas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) 37 prácticas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) 40 prácticas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 17 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>17.</strong> ¿Qué organización británica fue responsable del desarrollo inicial de ITIL en los años 80?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) OGC (Office of Government Commerce)
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) CCTA (Central Computer and Telecommunications Agency)
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) ITSMF (IT Service Management Forum)
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) BSI (British Standards Institution)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 18 -->
+            <div class="quiz-container">
+                <div class="difficulty basico">BÁSICO</div>
+                <div class="quiz-question">
+                    <strong>18.</strong> ¿Cuál es la sigla de ITSM en inglés?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Information Technology Systems Management
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) IT Service Management
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Information Technology Support Management
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) IT Strategy Management
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 19 -->
+            <div class="quiz-container">
+                <div class="difficulty avanzado">AVANZADO</div>
+                <div class="quiz-question">
+                    <strong>19.</strong> ¿Cuáles son los 3 nuevos objetivos añadidos en COBIT 2019?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Gestión de Riesgos, Gestión de Calidad, Gestión de Seguridad
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        B) APO 14 - Datos Gestionados, BAI 11 - Proyectos Gestionados, MEA 04 - Aseguramiento Gestionado
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        C) Gestión de Cambios, Gestión de Configuración, Gestión de Entregas
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) DevOps, Agile, Cloud Computing
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 20 -->
+            <div class="quiz-container">
+                <div class="difficulty intermedio">INTERMEDIO</div>
+                <div class="quiz-question">
+                    <strong>20.</strong> ¿Qué modelo utiliza COBIT para la mejora de procesos?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        A) Modelo de Madurez de 5 niveles
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        B) Modelo Waterfall
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">
+                        C) Modelo de Capacidad de 6 niveles (0-5) basado en ISO/IEC 15504
+                    </div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">
+                        D) Modelo Espiral
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h3>📚 Glosario de Términos Clave</h3>
+                
+                <div class="glossary-term">
+                    <strong>ANS (Acuerdo Nivel Servicio):</strong> Acuerdo documentado entre proveedor y cliente que identifica el servicio requerido y nivel esperado.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>CAB (Comité Asesor de Cambios):</strong> Grupo que asesora en los cambios durante todo el proceso de gestión de cambios.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>CI (Configuration Item):</strong> Cualquier componente que necesita ser gestionado para entregar un servicio de TI.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>CMDB (Configuration Management Database):</strong> Base de datos que guarda registros de configuración durante el ciclo de vida.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>CVS (Cadena de Valor de Servicio):</strong> 6 actividades interconectadas para la entrega de productos y servicios.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>EDM (Evaluate, Direct, Monitor):</strong> Dominio de Gobierno en COBIT que evalúa, dirige y monitoriza.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>FCE (Factor Crítico de Éxito):</strong> Elemento básico imprescindible para cumplir la misión organizacional.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>KPI (Key Performance Indicator):</strong> Indicadores clave que miden el rendimiento de procesos.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>PBRM (Plan, Build, Run, Monitor):</strong> Dominio de Gestión en COBIT que planifica, construye, ejecuta y supervisa.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>RFC (Request for Change):</strong> Petición formal para cambiar un servicio o componente.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>SKMS (Service Knowledge Management System):</strong> Sistema de gestión del conocimiento del servicio.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>SPOC (Single Point of Contact):</strong> Único punto de contacto entre usuarios y proveedor de servicios.
+                </div>
+                
+                <div class="glossary-term">
+                    <strong>SVS (Service Value System):</strong> Sistema de Valor del Servicio que representa cómo los componentes trabajan juntos.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❓ Preguntas Frecuentes</h3>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Cuál es la principal diferencia entre ITIL e ISO 20000?</h4>
+                    <p>ITIL es un marco de mejores prácticas (guía), mientras que ISO 20000 es un estándar certificable. ITIL proporciona el "cómo", ISO 20000 establece los requisitos mínimos.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Es mejor implementar ITIL v3 o ITIL v4?</h4>
+                    <p>ITIL v4 evoluciona desde v3 sin reemplazarlo completamente. Las implementaciones de v3 siguen siendo válidas. V4 añade enfoques modernos como Agile y DevOps.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Se puede usar ITIL en organizaciones pequeñas?</h4>
+                    <p>Sí, ITIL es escalable. El principio "adoptar y adaptar" permite implementar solo los procesos y prácticas necesarios según el tamaño y madurez organizacional.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿COBIT reemplaza a ITIL?</h4>
+                    <p>No, son complementarios. COBIT se enfoca en el gobierno estratégico (QUÉ), mientras ITIL se centra en la gestión operacional (CÓMO). Se pueden usar juntos.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Cuánto tiempo toma implementar ITIL?</h4>
+                    <p>Depende del alcance y madurez organizacional. Implementaciones básicas pueden tomar 6-12 meses, mientras que transformaciones completas requieren 2-3 años.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Qué certificaciones ITIL son más valoradas?</h4>
+                    <p>ITIL Foundation es la base, pero ITIL Expert/Master tienen mayor reconocimiento. Para COBIT, Foundation e Implementation son las más demandadas.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿ITIL funciona con metodologías ágiles?</h4>
+                    <p>Sí, especialmente ITIL v4 que incorpora principios ágiles. Se pueden combinar prácticas ITIL con DevOps, Scrum y otras metodologías modernas.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>🤔 ¿Cuál es el ROI típico de implementar ITIL?</h4>
+                    <p>Estudios muestran ROI del 200-500% en 2-3 años, principalmente por reducción de incidentes, mejora en disponibilidad y optimización de recursos.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Recursos Adicionales</h3>
+                <ul>
+                    <li><strong>AXELOS:</strong> Propietario oficial de ITIL - Documentación y certificaciones</li>
+                    <li><strong>ISACA:</strong> Organización responsable de COBIT - Recursos y certificaciones</li>
+                    <li><strong>ISO/IEC 20000:</strong> Estándar internacional para gestión de servicios TI</li>
+                    <li><strong>ITSMF:</strong> Foro global de profesionales en gestión de servicios TI</li>
+                    <li><strong>PeopleCert:</strong> Organismo certificador oficial para exámenes ITIL</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📈 Próximos Pasos para Certificación</h3>
+                <ol>
+                    <li><strong>ITIL Foundation:</strong> Comprensión básica de conceptos y terminología</li>
+                    <li><strong>ITIL Practitioner:</strong> Aplicación práctica de principios ITIL (opcional)</li>
+                    <li><strong>ITIL Intermediate:</strong> Especialización en módulos específicos</li>
+                    <li><strong>ITIL Expert:</strong> Demostrar competencia avanzada</li>
+                    <li><strong>ITIL Master:</strong> Liderazgo en transformación de servicios</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Quiz functionality
+        function selectAnswer(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            
+            // Remove previous selections
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+
+            // Mark selected answer
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                // Show correct answer
+                options.forEach(option => {
+                    if (option.onclick.toString().includes('true')) {
+                        option.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

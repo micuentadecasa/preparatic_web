@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA: Finalidad y Clasificación - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #198754;
+            --error-color: #dc3545;
+            --warning-color: #fd7e14;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin: 20px 0;
+            padding: 8px;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tabs {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+        }
+
+        .content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .content {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            margin: 20px 0 12px 0;
+        }
+
+        h4 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 16px 0 8px 0;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), #6c63ff);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .list-styled {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding: 8px 0 8px 25px;
+            margin-bottom: 8px;
+        }
+
+        .list-styled li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-container {
+            margin-top: 20px;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option {
+            padding: 10px 15px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option.incorrect {
+            background: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-basic {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermediate {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty-advanced {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .glossary-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .glossary-term {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .glossary-definition {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #6c63ff);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: auto;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, rgba(74, 158, 255, 0.2) 50%, transparent 100%);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .algorithm-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .algorithm-title {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">IA: Finalidad y Clasificación</div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('ml-dl')">ML & Deep Learning</button>
+            <button class="tab" onclick="showTab('nlp-vision')">NLP & Visión</button>
+            <button class="tab" onclick="showTab('sistemas-robotica')">Sistemas & Robótica</button>
+            <button class="tab" onclick="showTab('agentes')">Agentes Inteligentes</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+
+        <div class="content">
+            <!-- Tab 1: Resumen General -->
+            <div id="resumen" class="tab-content active">
+                <h1>🤖 Inteligencia Artificial: Finalidad y Clasificación</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">Áreas Principales de IA</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Páginas de Contenido</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div class="stat-label">Última Actualización</div>
+                    </div>
+                </div>
+
+                <h2>📋 Resumen Ejecutivo</h2>
+                <p>La <span class="highlight">Inteligencia Artificial (IA)</span> es una disciplina informática que busca crear sistemas que imiten la inteligencia humana para realizar tareas, mejorando significativamente el rendimiento y las capacidades humanas mediante el aprendizaje continuo de datos.</p>
+
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <ul class="list-styled">
+                    <li>Comprender los fundamentos y clasificaciones de la IA</li>
+                    <li>Dominar las técnicas de Machine Learning y Deep Learning</li>
+                    <li>Conocer las aplicaciones de NLP y Visión Artificial</li>
+                    <li>Entender los Sistemas Expertos y Robótica</li>
+                    <li>Analizar los Agentes Inteligentes Distribuidos</li>
+                    <li>Evaluar los aspectos éticos de la IA</li>
+                </ul>
+
+                <h3>📊 Conceptos Clave</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Problemas de Búsqueda:</strong> Representación mediante espacio de estados con estrategias ciegas e informadas
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Machine Learning:</strong> Desarrollo de técnicas para que las computadoras aprendan de datos sin programación explícita
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Deep Learning:</strong> Redes neuronales con múltiples capas para representaciones abstractas y complejas
+                    </div>
+                    <div class="timeline-item">
+                        <strong>IA Generativa:</strong> Creación de contenido nuevo mediante LLMs y modelos de difusión
+                    </div>
+                </div>
+
+                <h3>🏛️ Clasificación de Sistemas IA (Norvig & Russell)</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Sistema</th>
+                            <th>Características</th>
+                            <th>Capacidades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sistemas Reactivos</strong></td>
+                            <td>Respuesta directa a estímulos</td>
+                            <td>Sin memoria del pasado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Basados en Memoria</strong></td>
+                            <td>Conservan representación parcial</td>
+                            <td>Evalúan situaciones actuales y pasadas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Basados en Metas</strong></td>
+                            <td>Establecen objetivos</td>
+                            <td>Formulan planes estratégicos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Basados en Modelos</strong></td>
+                            <td>Representación detallada del mundo</td>
+                            <td>Simulación y predicción</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab 2: ML & Deep Learning -->
+            <div id="ml-dl" class="tab-content">
+                <h1>🧠 Machine Learning & Deep Learning</h1>
+
+                <h2>🔬 Fundamentos del Aprendizaje Automático</h2>
+                <p>El <span class="highlight">Machine Learning</span> desarrolla técnicas para que las computadoras aprendan de datos sin programación explícita, utilizando algoritmos y modelos estadísticos para extraer patrones y hacer predicciones.</p>
+
+                <h3>📐 Tipos de Modelos</h3>
+                <div class="card">
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">🔢 Modelos Geométricos</div>
+                        Representan datos como vectores en espacios n-dimensionales. Si existe borde de decisión lineal, los datos son linealmente separables.
+                    </div>
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">📊 Modelos Probabilísticos</div>
+                        Determinan distribuciones de probabilidad usando estadística bayesiana para enlazar características con valores.
+                    </div>
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">🌳 Modelos Lógicos</div>
+                        Representan conocimiento mediante reglas lógicas, como árboles de decisión para relaciones complejas.
+                    </div>
+                </div>
+
+                <h3>📚 Tipos de Aprendizaje</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Datos</th>
+                            <th>Objetivo</th>
+                            <th>Aplicaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Supervisado</strong></td>
+                            <td>Etiquetados</td>
+                            <td>Predicciones precisas</td>
+                            <td>Spam, clasificación de imágenes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No Supervisado</strong></td>
+                            <td>Sin etiquetas</td>
+                            <td>Encontrar patrones ocultos</td>
+                            <td>Clustering, reducción dimensional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Por Refuerzo</strong></td>
+                            <td>Recompensas</td>
+                            <td>Maximizar recompensa</td>
+                            <td>Juegos, conducción autónoma</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Semisupervisado</strong></td>
+                            <td>Mixtos</td>
+                            <td>Aprovechar datos limitados</td>
+                            <td>Cuando etiquetado es costoso</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🔧 Principales Técnicas de Clasificación</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Naive Bayes:</strong> Usa teorema de Bayes asumiendo independencia entre características
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Árboles de Decisión:</strong> Serie de decisiones binarias que dividen datos en subconjuntos
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Random Forest:</strong> Múltiples árboles con voto por mayoría para decisión final
+                    </div>
+                    <div class="timeline-item">
+                        <strong>SVM:</strong> Busca hiperplano que maximice separación entre clases
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Redes Neuronales:</strong> Múltiples capas de nodos interconectados inspiradas en neuronas
+                    </div>
+                </div>
+
+                <h3>📈 Técnicas de Regresión y Agrupamiento</h3>
+                <div class="card">
+                    <h4>Regresión (Predicción de valores continuos):</h4>
+                    <ul class="list-styled">
+                        <li><strong>Regresión Lineal:</strong> Modela relación mediante ecuación y = mx + b</li>
+                        <li><strong>Árboles de Regresión:</strong> Cada hoja representa estimación numérica</li>
+                        <li><strong>Gradient Boosting:</strong> Secuencia de modelos ajustados a residuos</li>
+                    </ul>
+                    
+                    <h4>Agrupamiento (Clustering no supervisado):</h4>
+                    <ul class="list-styled">
+                        <li><strong>K-means:</strong> Agrupa datos en K clusters minimizando distancias</li>
+                        <li><strong>DBSCAN:</strong> Agrupa por densidad, separando áreas de alta/baja densidad</li>
+                        <li><strong>Clustering Jerárquico:</strong> Estructura de árbol (dendrograma)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 3: NLP & Visión -->
+            <div id="nlp-vision" class="tab-content">
+                <h1>💬 NLP & Visión Artificial</h1>
+
+                <h2>🗣️ Procesamiento de Lenguaje Natural (NLP)</h2>
+                <p>El <span class="highlight">NLP</span> estudia las interacciones entre computadoras y lenguaje humano, desarrollando tecnologías para comprensión, interpretación y generación efectiva de lenguaje natural.</p>
+
+                <div class="card">
+                    <h3>🧪 Test de Turing</h3>
+                    <p>Propuesto en 1950, evalúa la inteligencia de una máquina según su capacidad para generar respuestas indistinguibles de las humanas. Se emplea en NLP para medir el éxito en generación de lenguaje natural.</p>
+                </div>
+
+                <h3>🔧 Componentes del NLP</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Análisis Léxico:</strong> Identificación de palabras, lematización, sinónimos y antónimos
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Análisis Sintáctico:</strong> Identificación de estructura gramatical a nivel de oración
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Análisis Semántico:</strong> Extracción del significado y resolución de ambigüedades
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Análisis Pragmático:</strong> Significado implícito, ironía, sarcasmo, humor
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Planificación de Frase:</strong> Estructurar cada frase para expresar significado adecuado
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Generación:</strong> Cadena lineal de palabras con flexiones y concordancias
+                    </div>
+                </div>
+
+                <h2>👁️ Visión Artificial</h2>
+                <p>Rama de la IA que desarrolla métodos para <span class="highlight">adquirir, procesar, analizar y comprender imágenes</span> del mundo real, produciendo información numérica o simbólica.</p>
+
+                <h3>🔍 Técnicas y Aplicaciones</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Técnica</th>
+                            <th>Descripción</th>
+                            <th>Aplicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Extracción de Características</strong></td>
+                            <td>Identificar bordes, contornos, texturas</td>
+                            <td>Análisis de patrones visuales</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Segmentación</strong></td>
+                            <td>Dividir imagen en regiones</td>
+                            <td>Simplificar análisis</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reconocimiento de Objetos</strong></td>
+                            <td>Identificar y clasificar objetos</td>
+                            <td>Detección automática</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Seguimiento</strong></td>
+                            <td>Rastrear objetos en tiempo real</td>
+                            <td>Videovigilancia, deportes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reconocimiento Facial</strong></td>
+                            <td>Identificar personas y emociones</td>
+                            <td>Seguridad, análisis de sentimientos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Realidad Aumentada</strong></td>
+                            <td>Combinar mundo real con virtual</td>
+                            <td>Experiencias interactivas</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="card">
+                    <h3>📱 Aplicaciones Modernas</h3>
+                    <ul class="list-styled">
+                        <li><strong>Asistentes Virtuales:</strong> Siri, Alexa - procesamiento de voz en tiempo real</li>
+                        <li><strong>Traducción Automática:</strong> Google Translate, DeepL</li>
+                        <li><strong>Análisis de Sentimientos:</strong> Redes sociales, reviews de productos</li>
+                        <li><strong>Generación de Texto:</strong> GPT, ChatGPT para contenido automático</li>
+                        <li><strong>Reconocimiento de Voz:</strong> Dictado, comandos por voz</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 4: Sistemas & Robótica -->
+            <div id="sistemas-robotica" class="tab-content">
+                <h1>🤖 Sistemas Expertos & Robótica</h1>
+
+                <h2>🎓 Sistemas Expertos</h2>
+                <p>Sistema informático que <span class="highlight">emula la capacidad de tomar decisiones de un humano experto</span> en un dominio específico, con capacidad explicativa de la resolución del problema.</p>
+
+                <h3>🧠 Tipos de Razonamiento</h3>
+                <div class="card">
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">📋 Basado en Reglas</div>
+                        Aplicación de reglas, evaluación de resultados y aplicación de nuevas reglas según la situación.
+                    </div>
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">📚 Basado en Casos</div>
+                        Resolver nuevos problemas basándose en soluciones similares de problemas anteriores.
+                    </div>
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">📊 Basado en Redes Bayesianas</div>
+                        Fundamentado en estadística y teorema de Bayes para toma de decisiones probabilística.
+                    </div>
+                </div>
+
+                <h3>🔧 Componentes de un Sistema Experto</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Base de Conocimientos (BC):</strong> Conjunto de reglas que representan conocimientos del dominio experto
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Base de Hechos:</strong> Contiene datos de partida y se actualiza con nuevos hechos durante la ejecución
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Motor de Inferencia:</strong> Interpreta reglas de BC y realiza procesos de inferencia para obtener conclusiones
+                    </div>
+                </div>
+
+                <h2>🦾 Robótica</h2>
+                <p>En el ámbito TIC, la robótica tiene dos definiciones principales:</p>
+
+                <div class="card">
+                    <h3>🔧 Robótica Física</h3>
+                    <p>Ciencia que aglutina ingeniería mecánica, electrónica y ciencias de la computación para diseño, construcción y operación de robots físicos.</p>
+                    <ul class="list-styled">
+                        <li><strong>Aplicaciones:</strong> Soldadura, transporte, androides bípedos</li>
+                        <li><strong>Zoomórficos:</strong> Imitan sistemas de locomoción de seres vivos</li>
+                        <li><strong>Industriales:</strong> Cadenas de fabricación automatizadas</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>💼 Automatización Robótica de Procesos (RPA)</h3>
+                    <p>Paquete de software que <span class="highlight">replica acciones humanas</span> interactuando con interfaces de usuario, sin dependencia de APIs de programación.</p>
+                    
+                    <h4>📋 Características del RPA:</h4>
+                    <ul class="list-styled">
+                        <li>Basado en reglas (no requiere IA necesariamente)</li>
+                        <li>Puede incluir ML para clasificación de documentos</li>
+                        <li>Liberación de tareas repetitivas</li>
+                        <li>Integración con sistemas existentes</li>
+                    </ul>
+                </div>
+
+                <h3>🏛️ Servicio de Automatización de Procesos (SAI) - AGE</h3>
+                <div class="card">
+                    <p>La Administración General del Estado cuenta con el <strong>SAI</strong>, correspondiente a la medida 5 del Plan de Digitalización de las AAPP 2021-2025.</p>
+                    
+                    <h4>🎯 Objetivos del SAI:</h4>
+                    <ul class="list-styled">
+                        <li>Mejorar calidad de servicios y procesos de gestión</li>
+                        <li>Utilizar tecnologías de automatización inteligente (RPA)</li>
+                        <li>Proporcionar servicio integral de robotización centralizada</li>
+                        <li>Cubrir desde descubrimiento hasta operación</li>
+                        <li>Desarrollo y mantenimiento de automatizaciones</li>
+                    </ul>
+                </div>
+
+                <h3>🛠️ Herramientas de Desarrollo</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Herramientas</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Lenguajes Convencionales</strong></td>
+                            <td>C, Pascal</td>
+                            <td>Programación tradicional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orientados a IA</strong></td>
+                            <td>LISP, PROLOG</td>
+                            <td>Especializados en IA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orientados a Objetos</strong></td>
+                            <td>Java, C++</td>
+                            <td>Programación modular</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shells</strong></td>
+                            <td>Sistemas con BC vacía</td>
+                            <td>Plantillas reutilizables</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab 5: Agentes Inteligentes -->
+            <div id="agentes" class="tab-content">
+                <h1>🤝 Inteligencia Artificial Distribuida & Agentes</h1>
+
+                <h2>🌐 IA Distribuida (DAI)</h2>
+                <p>La <span class="highlight">DAI</span> se enfoca en sistemas de IA que se ejecutan en múltiples nodos trabajando juntos como un solo sistema inteligente, consistiendo en agentes de aprendizaje autónomos distribuidos.</p>
+
+                <div class="card">
+                    <h3>⚡ Características de Sistemas DAI</h3>
+                    <ul class="list-styled">
+                        <li><strong>Robustos y Elásticos:</strong> Por su escala y distribución</li>
+                        <li><strong>Débilmente Acoplados:</strong> Por necesidad de escalabilidad</li>
+                        <li><strong>Adaptables:</strong> A cambios en problemas o datos</li>
+                        <li><strong>Comunicación Asincrónica:</strong> Entre nodos independientes</li>
+                    </ul>
+                </div>
+
+                <h3>🤖 Tipos de Agentes Inteligentes</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Agente Reactivo:</strong> Bajo nivel, responde a estímulos inmediatos sin planificar. No mantiene representación interna del entorno. Inteligencia conjunta, no individual.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Agente Cognitivo/Deliberativo:</strong> Capacidad de razonamiento, usa información pasada para decisiones. Mantiene representación interna, aprende y se adapta. Puede comunicarse y lograr acuerdos.
+                    </div>
+                </div>
+
+                <h3>🏗️ Características de los Agentes</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Descripción</th>
+                            <th>Importancia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Continuidad Temporal</strong></td>
+                            <td>Proceso que se ejecuta sin fin</td>
+                            <td>Funcionamiento permanente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Autonomía</strong></td>
+                            <td>Toma decisiones sin intervención humana</td>
+                            <td>Independencia operativa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sociabilidad</strong></td>
+                            <td>Comunica con otros agentes y humanos</td>
+                            <td>Coordinación y colaboración</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Racionalidad</strong></td>
+                            <td>Decisiones lógicas basadas en información</td>
+                            <td>Efectividad en objetivos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reactividad</strong></td>
+                            <td>Actúa por cambios en el entorno</td>
+                            <td>Adaptación dinámica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Proactividad</strong></td>
+                            <td>Objetivos específicos que lograr</td>
+                            <td>Iniciativa y planificación</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>⚙️ Sistemas de Coordinación</h2>
+                
+                <h3>🔄 Tipos según Coordinación</h3>
+                <div class="card">
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">🎯 Sistemas de Resolución Distribuida de Problemas (SRDP)</div>
+                        <p>Interacciones prefijadas. Requiere agente coordinador para asignar tareas.</p>
+                        <strong>Fases:</strong> Dividir problema → Resolver subproblemas → Combinar soluciones
+                    </div>
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">🤝 Sistemas Multiagente (SMA)</div>
+                        <p>Múltiples agentes autónomos que deciden cómo cooperar y quién realiza cada tarea.</p>
+                        <strong>Problema principal:</strong> Coordinación de conocimientos y actividades
+                    </div>
+                </div>
+
+                <h3>💬 Sistemas de Comunicación</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Pizarra:</strong> Arbitrada por controlador que determina orden de contribuciones
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Mensajes:</strong> Intercambio directo entre dos agentes
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Red de Contratos:</strong> Roles contratista (gestiona) y oferente (ejecuta)
+                    </div>
+                </div>
+
+                <h3>🗣️ Lenguajes de Comunicación</h3>
+                <div class="card">
+                    <h4>KIF (Knowledge Interchange Format)</h4>
+                    <p>Lenguaje intermedio independiente de programación específica para representar conocimiento entre agentes con diferentes estructuras.</p>
+                    
+                    <h4>KQML (Knowledge Query and Manipulation Language)</h4>
+                    <p>Lenguaje de comunicación basado en texto que permite interacción y coordinación entre agentes.</p>
+                </div>
+
+                <h2>📊 IA Generativa (GenAI)</h2>
+                <p>Facilita la <span class="highlight">creación de contenido nuevo</span> (texto, imágenes, videos, audio) a partir de grandes volúmenes de datos usando modelos de difusión y LLMs con arquitectura Transformer.</p>
+
+                <h3>🔧 Técnicas Clave</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Modelos Fundacionales:</strong> Entrenados con grandes conjuntos de datos como punto de partida para modelos especializados
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ingeniería de Prompts:</strong> Diseño de instrucciones para obtener respuestas específicas (Few-shot, Zero-shot, One-shot)
+                    </div>
+                    <div class="timeline-item">
+                        <strong>RAG:</strong> Combina generación con recuperación de información de BBDD indexadas (embeddings)
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Fine-tuning y RLHF:</strong> Adaptación mediante Reinforcement Learning with Human Feedback
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Aplicaciones de Agentes Distribuidos</h3>
+                    <ul class="list-styled">
+                        <li><strong>Comercio Electrónico:</strong> Estrategias comerciales, reglas financieras</li>
+                        <li><strong>Redes de Telecomunicaciones:</strong> Control de recursos cooperativos WLAN</li>
+                        <li><strong>Enrutamiento:</strong> Modelos de flujo de vehículos en transporte</li>
+                        <li><strong>Programación:</strong> Gestión de recursos con optimización local/global</li>
+                        <li><strong>Sistemas Energéticos:</strong> Monitorización y restauración automática</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="ejercicios" class="tab-content">
+                <h1>📝 Ejercicios Prácticos</h1>
+                <p>Practica con estos ejercicios estilo examen de oposiciones. Las respuestas correctas están marcadas para facilitar el estudio.</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%" id="progress"></div>
+                </div>
+                <p id="score">Progreso: 0/20 preguntas respondidas</p>
+
+                <div class="quiz-container">
+                    <!-- Pregunta 1 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">1</span>
+                            ¿Cuál es la principal finalidad de la Inteligencia Artificial según el documento?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Sustituir completamente a los seres humanos en todas las tareas</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Crear sistemas que imiten la inteligencia humana para realizar tareas, mejorando el rendimiento humano</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Desarrollar únicamente sistemas de automatización industrial</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Crear robots físicos para todas las aplicaciones</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">2</span>
+                            En los algoritmos de búsqueda, ¿qué característica tiene el algoritmo A*?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Solo es completo pero no óptimo</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Es completo y óptimo, considera tanto el camino hasta X como el coste mínimo al objetivo</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Es una búsqueda ciega que no utiliza heurísticas</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Solo funciona en problemas con adversarios</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">3</span>
+                            ¿Cuál de los siguientes NO es un tipo de aprendizaje en Machine Learning?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Aprendizaje supervisado</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Aprendizaje no supervisado</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Aprendizaje por refuerzo</li>
+                            <li class="option" onclick="selectOption(this, true)">d) Aprendizaje determinístico</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">4</span>
+                            En el preprocesado de datos, ¿qué técnica se utiliza para comprimir valores de variables en un rango definido?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Filtrado</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Normalización</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Reducción dimensional</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Limpieza</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                        <div class="question-text">
+                            <span class="question-number">5</span>
+                            ¿Qué algoritmo de clustering es menos sensible a valores atípicos y más efectivo para datos no esféricos?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) K-means</li>
+                            <li class="option" onclick="selectOption(this, true)">b) K-medoids</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Clustering jerárquico aglomerativo</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Gaussian Mixture Model</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">6</span>
+                            ¿Qué propuso el Test de Turing en 1950?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Evaluar la inteligencia de una máquina según su capacidad para generar respuestas indistinguibles de las humanas</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Un método para entrenar redes neuronales</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Una técnica de procesamiento de imágenes</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Un algoritmo de búsqueda heurística</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">7</span>
+                            En visión artificial, ¿qué técnica divide una imagen en regiones más pequeñas?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Extracción de características</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Segmentación</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Reconocimiento de objetos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Seguimiento de objetos</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">8</span>
+                            ¿Cuál es el componente de un sistema experto que contiene las reglas del dominio?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Base de conocimientos (BC)</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Base de hechos</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Motor de inferencia</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Interface de usuario</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">9</span>
+                            En RPA (Automatización Robótica de Procesos), ¿qué característica es fundamental?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Requiere siempre características de IA</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Se basa en reglas y replica acciones humanas sin depender de APIs</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Solo funciona con interfaces de línea de comandos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Necesita robots físicos para operar</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                        <div class="question-text">
+                            <span class="question-number">10</span>
+                            En IA Distribuida, ¿qué diferencia principal existe entre agentes reactivos y cognitivos?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Los reactivos son más inteligentes individualmente</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Los cognitivos mantienen representación interna del entorno y usan información pasada</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Los reactivos requieren más recursos computacionales</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Solo los reactivos pueden comunicarse entre sí</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">11</span>
+                            ¿Qué significa RAG en el contexto de IA Generativa?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Red Artificial Generalizada</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Generación Aumentada por Recuperación</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Renderizado Automático de Gráficos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Respuesta Automatizada Global</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">12</span>
+                            En sistemas multiagente, ¿qué tipo de sistema requiere un agente coordinador que asigne tareas?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Sistemas de Resolución Distribuida de Problemas (SRDP)</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Sistemas Multiagente (SMA) puros</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Sistemas reactivos distribuidos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Sistemas de comunicación por mensajes</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                        <div class="question-text">
+                            <span class="question-number">13</span>
+                            ¿Cuál es uno de los principales riesgos de los LLM según OWASP?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Consumo excesivo de memoria RAM</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Alucinaciones (información incorrecta) y ataques de inyección de prompts</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Incompatibilidad con sistemas operativos modernos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Limitaciones en el procesamiento de texto</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">14</span>
+                            ¿Qué organismo será la autoridad nacional de supervisión de IA en España?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) INCIBE</li>
+                            <li class="option" onclick="selectOption(this, true)">b) AESIA (Agencia Española de Supervisión de la Inteligencia Artificial)</li>
+                            <li class="option" onclick="selectOption(this, false)">c) CNMV</li>
+                            <li class="option" onclick="selectOption(this, false)">d) AEPD</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">15</span>
+                            En Machine Learning, ¿qué técnica utiliza múltiples árboles de decisión y voto por mayoría?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) SVM</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Random Forest</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Regresión logística</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Naive Bayes</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                        <div class="question-text">
+                            <span class="question-number">16</span>
+                            ¿Qué significa la "explicabilidad" (xAI) en inteligencia artificial?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) La capacidad de expandir automáticamente los modelos</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Un tipo de arquitectura de red neuronal</li>
+                            <li class="option" onclick="selectOption(this, true)">c) La capacidad de comprender cómo y por qué los modelos generan ciertos resultados</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Una técnica de optimización de algoritmos</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">17</span>
+                            ¿Cuál es el objetivo principal del algoritmo K-means?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Clasificar datos en categorías predefinidas</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Minimizar la suma de distancias de cada punto a su centroide correspondiente</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Predecir valores numéricos continuos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Reducir la dimensionalidad de los datos</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                        <div class="question-text">
+                            <span class="question-number">18</span>
+                            En el análisis de NLP, ¿qué componente se encarga de identificar la ironía y el sarcasmo?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Análisis léxico</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Análisis sintáctico</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Análisis semántico</li>
+                            <li class="option" onclick="selectOption(this, true)">d) Análisis pragmático</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                        <div class="question-text">
+                            <span class="question-number">19</span>
+                            ¿Qué técnica permite desplegar modelos LLM en dispositivos de menor capacidad manteniendo funcionalidad?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Fine-tuning</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Cuantización</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Ingeniería de prompts</li>
+                            <li class="option" onclick="selectOption(this, false)">d) RLHF</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge difficulty-basic">Básico</div>
+                        <div class="question-text">
+                            <span class="question-number">20</span>
+                            Según el documento, ¿cuál es uno de los principales aspectos éticos de la IA?
+                        </div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) La velocidad de procesamiento</li>
+                            <li class="option" onclick="selectOption(this, true)">b) La equidad y justicia para evitar sesgos discriminatorios</li>
+                            <li class="option" onclick="selectOption(this, false)">c) El coste de implementación</li>
+                            <li class="option" onclick="selectOption(this, false)">d) La compatibilidad con sistemas legacy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="recursos" class="tab-content">
+                <h1>📚 Recursos y FAQ</h1>
+
+                <h2>📖 Glosario de Términos Clave</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <div class="glossary-term">Inteligencia Artificial (IA)</div>
+                        <div class="glossary-definition">Disciplina informática que busca crear sistemas que imiten la inteligencia humana para realizar tareas y aprender de los datos.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Machine Learning (ML)</div>
+                        <div class="glossary-definition">Rama de la IA que desarrolla técnicas para que las computadoras aprendan de datos sin programación explícita.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Deep Learning</div>
+                        <div class="glossary-definition">Redes neuronales con múltiples capas que pueden aprender representaciones de datos abstractas y complejas.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">NLP</div>
+                        <div class="glossary-definition">Procesamiento de Lenguaje Natural - estudia interacciones entre computadoras y lenguaje humano.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Algoritmo A*</div>
+                        <div class="glossary-definition">Algoritmo de búsqueda heurística completo y óptimo que considera tanto el camino recorrido como el coste estimado al objetivo.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Clustering</div>
+                        <div class="glossary-definition">Técnica de aprendizaje no supervisado que agrupa datos similares en subconjuntos o clústers.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Sistema Experto</div>
+                        <div class="glossary-definition">Sistema informático que emula la capacidad de tomar decisiones de un experto humano en un dominio específico.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">RPA</div>
+                        <div class="glossary-definition">Automatización Robótica de Procesos - software que replica acciones humanas en interfaces de usuario.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">Agente Inteligente</div>
+                        <div class="glossary-definition">Entidad autónoma con conocimientos propios y capacidad para tomar decisiones e interactuar con su entorno.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">RAG</div>
+                        <div class="glossary-definition">Generación Aumentada por Recuperación - proceso que combina generación con recuperación de información de BBDD indexadas.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">LLM</div>
+                        <div class="glossary-definition">Large Language Model - modelos de lenguaje grandes que procesan texto mediante tokens usando arquitectura Transformer.</div>
+                    </div>
+                    <div class="glossary-item">
+                        <div class="glossary-term">AESIA</div>
+                        <div class="glossary-definition">Agencia Española de Supervisión de la Inteligencia Artificial - autoridad nacional de supervisión de IA en España.</div>
+                    </div>
+                </div>
+
+                <h2>❓ Preguntas Frecuentes</h2>
+                
+                <div class="card">
+                    <h3>🤔 ¿Cuál es la diferencia entre IA, ML y DL?</h3>
+                    <p><strong>IA</strong> es el campo general que busca crear sistemas inteligentes. <strong>ML</strong> es una rama de la IA que se enfoca en aprender de datos. <strong>DL</strong> es una subcategoría de ML que usa redes neuronales profundas.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 ¿Qué diferencia hay entre aprendizaje supervisado y no supervisado?</h3>
+                    <p>El <strong>supervisado</strong> usa datos con etiquetas conocidas para entrenar el modelo. El <strong>no supervisado</strong> busca patrones en datos sin etiquetas previas.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 ¿Cuándo usar cada algoritmo de clustering?</h3>
+                    <p><strong>K-means:</strong> Datos esféricos, número conocido de clusters. <strong>DBSCAN:</strong> Formas arbitrarias, ruido presente. <strong>Jerárquico:</strong> Estructura de árbol necesaria.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🤖 ¿Qué es mejor: sistemas expertos o machine learning?</h3>
+                    <p>Depende del dominio. <strong>Sistemas expertos</strong> son mejores para reglas claras y explicabilidad. <strong>ML</strong> es mejor para patrones complejos en grandes volúmenes de datos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌐 ¿Por qué usar sistemas distribuidos en IA?</h3>
+                    <p>Permiten <strong>escalabilidad</strong>, <strong>robustez</strong>, <strong>procesamiento paralelo</strong> y <strong>especialización</strong> de tareas entre múltiples agentes.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ ¿Cuáles son los principales aspectos éticos de la IA?</h3>
+                    <p>Responsabilidad, privacidad de datos, equidad y justicia, impacto laboral, seguridad, impacto ambiental y explicabilidad de los sistemas.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ ¿Qué es el SAI en la Administración Pública?</h3>
+                    <p>Servicio de Automatización de Procesos de la AGE que proporciona robotización centralizada basada en tecnología RPA para mejorar la calidad de servicios públicos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔮 ¿Qué diferencia hay entre IA Generativa y IA tradicional?</h3>
+                    <p>La <strong>IA Generativa</strong> crea contenido nuevo (texto, imágenes, audio) mientras que la <strong>IA tradicional</strong> se enfoca en clasificación, predicción y análisis de datos existentes.</p>
+                </div>
+
+                <h2>📊 Estadísticas de Estudio</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">70</div>
+                        <div class="stat-label">Tema del Temario</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30.1</div>
+                        <div class="stat-label">Versión del Documento</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20</div>
+                        <div class="stat-label">Preguntas de Práctica</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Secciones Temáticas</div>
+                    </div>
+                </div>
+
+                <h2>🔗 Referencias y Enlaces</h2>
+                <div class="card">
+                    <h3>📺 Recursos Adicionales</h3>
+                    <ul class="list-styled">
+                        <li><strong>Lista de Reproducción:</strong> Redes Neuronales (YouTube)</li>
+                        <li><strong>Temas Relacionados:</strong> 75 (Tecnologías de explotación de datos), 107 (Tecnologías emergentes), 117 (Transformación digital)</li>
+                        <li><strong>Plan de Digitalización:</strong> AAPP 2021-2025</li>
+                        <li><strong>Estrategia Nacional:</strong> IA 2024</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const toggleBtn = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                toggleBtn.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                toggleBtn.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            const toggleBtn = document.querySelector('.theme-toggle');
+            
+            html.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                toggleBtn.textContent = '🌙 Modo Oscuro';
+            } else {
+                toggleBtn.textContent = '☀️ Modo Claro';
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Quiz functionality
+        let answeredQuestions = 0;
+        const totalQuestions = 20;
+
+        function selectOption(element, isCorrect) {
+            // Check if question already answered
+            const questionCard = element.closest('.question-card');
+            if (questionCard.querySelector('.option.correct, .option.incorrect')) {
+                return;
+            }
+
+            // Mark all options in this question
+            const options = questionCard.querySelectorAll('.option');
+            options.forEach(option => {
+                const isThisCorrect = option.textContent.includes('b)') && element.textContent.includes('b)') ||
+                                     option.textContent.includes('a)') && element.textContent.includes('a)') ||
+                                     option.textContent.includes('c)') && element.textContent.includes('c)') ||
+                                     option.textContent.includes('d)') && element.textContent.includes('d)');
+                
+                if (option === element) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
+                    }
+                } else if (isCorrect && option !== element) {
+                    // Don't mark others
+                } else if (!isCorrect && option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            });
+
+            // Update progress
+            answeredQuestions++;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress');
+            const scoreText = document.getElementById('score');
+            const percentage = (answeredQuestions / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            scoreText.textContent = `Progreso: ${answeredQuestions}/${totalQuestions} preguntas respondidas`;
+        }
+
+        // Initialize progress
+        updateProgress();
+    </script>
+</body>
+</html>
