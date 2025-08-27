@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cambios en Proyectos de Desarrollo de Software</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .tab-button.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .highlight {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .process-step {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            background: var(--bg-hover);
+            transform: scale(1.02);
+        }
+
+        .process-step .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-question {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            display: block;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-hover);
+        }
+
+        .quiz-option.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .quiz-option.incorrect {
+            background: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermedio {
+            background: var(--warning-color);
+            color: black;
+        }
+
+        .difficulty-avanzado {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .glossary-term:last-child {
+            border-bottom: none;
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🔄 Gestión de Cambios en Desarrollo de Software</h1>
+        <button class="theme-toggle" id="themeToggle">🌙 Modo Claro</button>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="resumen">📋 Resumen General</button>
+            <button class="tab-button" data-tab="gestion-cambios">🔄 Gestión de Cambios</button>
+            <button class="tab-button" data-tab="configuracion">⚙️ Configuración y Versiones</button>
+            <button class="tab-button" data-tab="despliegues">🚀 Despliegues y Entornos</button>
+            <button class="tab-button" data-tab="herramientas">🛠️ Herramientas</button>
+            <button class="tab-button" data-tab="ejercicios">📝 Ejercicios Prácticos</button>
+            <button class="tab-button" data-tab="recursos">📚 Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div class="tab-content active" id="resumen">
+            <div class="card">
+                <h3>🎯 Resumen Ejecutivo</h3>
+                <p>La gestión de cambios en proyectos de desarrollo de software es un proceso fundamental que permite responder a nuevas necesidades y modificaciones del software actual, garantizando un proceso de mejora continua. Este tema abarca tres áreas principales:</p>
+                
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>Tipos de Cambios ITIL</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div>Tipos de Entornos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div>Enfoques de Despliegue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2</div>
+                        <div>Metodologías Principales</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Conceptos Clave</h3>
+                <ul>
+                    <li><strong>Gestión de Cambios:</strong> Proceso para dar respuesta a nuevas necesidades y modificaciones</li>
+                    <li><strong>Gestión de Configuración:</strong> Control estricto de cambios y versiones estables</li>
+                    <li><strong>Gestión de Versiones:</strong> Publicación controlada de elementos de configuración</li>
+                    <li><strong>Gestión de Entornos:</strong> Definición y normalización de entornos de desarrollo</li>
+                    <li><strong>Despliegues:</strong> Implementación de componentes de infraestructura y aplicaciones</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Comprender los tipos de cambios según ITIL 4</h4>
+                        <p>Distinguir entre cambios estándar, normales y de emergencia</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Dominar la gestión de configuración</h4>
+                        <p>Aplicar procedimientos para control de versiones y configuraciones</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Conocer estrategias de despliegue</h4>
+                        <p>Implementar diferentes enfoques: Big Bang, por fases, entrega continua</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Gestionar entornos efectivamente</h4>
+                        <p>Definir y mantener entornos desde desarrollo hasta producción</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Gestión de Cambios -->
+        <div class="tab-content" id="gestion-cambios">
+            <div class="card">
+                <h3>🔄 Definición de Gestión de Cambios</h3>
+                <p>Es la forma de dar respuesta a nuevas necesidades y modificaciones al software actual, suponiendo un <span class="highlight">proceso de mejora del software</span>. Está motivado por:</p>
+                <ul>
+                    <li>Modificación de requisitos y limitaciones iniciales</li>
+                    <li>Errores operacionales o funcionales</li>
+                    <li>Necesaria adecuación del software a normativa legal</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📋 MÉTRICA V3 - Gestión de Cambios</h3>
+                <h4>Interfaz de Gestión de Proyectos (GPS)</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <strong>GPS 5</strong><br>
+                        Petición de Cambio de Requisito
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">6</div>
+                        <strong>GPS 6</strong><br>
+                        Análisis de la Petición de Cambio
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">9</div>
+                        <strong>GPS 9</strong><br>
+                        Registro del Cambio de Requisito
+                    </div>
+                </div>
+
+                <h4>Proceso de Mantenimiento de SS.II</h4>
+                <p><strong>MS1 - Registro de Petición:</strong> Sistema estandarizado de registro de información para peticiones de mantenimiento</p>
+            </div>
+
+            <div class="card">
+                <h3>🎯 ITIL 4 - Práctica de Control de Cambios</h3>
+                <p>Orientada a conseguir el <span class="highlight">máximo número de cambios exitosos</span> en servicios, asegurando la gestión adecuada de riesgos.</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Cambio</th>
+                            <th>Características</th>
+                            <th>Autorización</th>
+                            <th>Riesgo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Estándar</strong></td>
+                            <td>Pre-autorizados, documentados, sin necesidad de autorización</td>
+                            <td>Automática</td>
+                            <td>Bajo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Normales</strong></td>
+                            <td>Planificados, analizados, iniciados por peticiones</td>
+                            <td>CAB (Comité Asesor del Cambio)</td>
+                            <td>Medio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emergencia</strong></td>
+                            <td>Implementación urgente, priorizados</td>
+                            <td>ECAB (autoridad ágil)</td>
+                            <td>Alto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Configuración y Versiones -->
+        <div class="tab-content" id="configuracion">
+            <div class="card">
+                <h3>⚙️ Gestión de la Configuración</h3>
+                <p>Conjunto de procesos destinados a <span class="highlight">asegurar la calidad</span> de todo producto obtenido durante las etapas del desarrollo de un sistema de información.</p>
+                
+                <h4>Elementos de Configuración del Software</h4>
+                <ul>
+                    <li>Ejecutables</li>
+                    <li>Código fuente</li>
+                    <li>Modelos de datos</li>
+                    <li>Modelos de procesos</li>
+                    <li>Especificaciones de requisitos</li>
+                    <li>Especificaciones de pruebas</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📋 MÉTRICA V3 - Actividades de Configuración</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Estudio de Viabilidad del Sistema (EVS)</h4>
+                        <ul>
+                            <li>EVS-GC1: Definición de requisitos de Gestión de la Configuración</li>
+                            <li>EVS-GC2: Establecimiento del plan de Gestión de la Configuración</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Análisis, Diseño, Construcción e Implantación</h4>
+                        <ul>
+                            <li>GC 1: Identificación y Registro de Productos</li>
+                            <li>GC 2: Identificación y Registro del Producto Global</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Mantenimiento del Sistema de Información (MSI)</h4>
+                        <ul>
+                            <li>MSI-GC 1: Registro del Cambio en el Sistema de Gestión de la Configuración</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏷️ Gestión de Versiones</h3>
+                <p>Según ITIL 4, una <strong>versión</strong> es una publicación de un servicio u otro elemento de configuración que está disponible para su uso.</p>
+                
+                <h4>Enfoques de Gestión de Versiones</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <strong>Tradicional</strong><br>
+                        Plan de despliegue estructurado
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <strong>Ágil</strong><br>
+                        Despliegue en pequeños incrementos
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <strong>DevOps</strong><br>
+                        Integración y entrega continua
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 ITIL 4 - Gestión de la Configuración del Servicio</h3>
+                <p>Garantiza que se dispone de información necesaria y confiable sobre:</p>
+                <ul>
+                    <li>Configuración de servicios</li>
+                    <li>Relaciones entre elementos</li>
+                    <li>Elementos de configuración (CI - Configuration Item)</li>
+                </ul>
+
+                <h4>Procesos Incluidos</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        Identificar nuevos CI y agregarlos al CMS/CMDB
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        Actualizar datos cuando se implementan cambios
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        Verificar registros de configuración
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        Auditoría para identificar elementos no documentados
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Despliegues y Entornos -->
+        <div class="tab-content" id="despliegues">
+            <div class="card">
+                <h3>🚀 Tipos de Enfoques de Despliegues</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Enfoque</th>
+                            <th>Descripción</th>
+                            <th>Ventajas</th>
+                            <th>Desventajas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Big Bang</strong></td>
+                            <td>Implementación como un solo proceso una única vez</td>
+                            <td>Simple, rápido</td>
+                            <td>Alto riesgo, difícil rollback</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Por Fases</strong></td>
+                            <td>Fragmentado por módulos o funcionalidades</td>
+                            <td>Menor riesgo, control incremental</td>
+                            <td>Más complejo, tiempo extendido</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Entrega Continua</strong></td>
+                            <td>Automatizada en cualquier momento</td>
+                            <td>Flexibilidad máxima</td>
+                            <td>Requiere infraestructura avanzada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blue/Green</strong></td>
+                            <td>Despliegue (blue) → Liberación (green)</td>
+                            <td>Rollback instantáneo</td>
+                            <td>Requiere doble infraestructura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Canary Release</strong></td>
+                            <td>Liberación gradual a usuarios incrementales</td>
+                            <td>Detección temprana de problemas</td>
+                            <td>Gestión compleja de usuarios</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>🏢 Gestión de Entornos</h3>
+                <p>Objetivos principales:</p>
+                <ul>
+                    <li>Definir y normalizar los distintos entornos necesarios</li>
+                    <li>Establecer procedimiento de despliegue y configuración</li>
+                    <li>Mantener entornos con SW y HW necesario</li>
+                    <li>Promocionar y desplegar versiones en cada entorno</li>
+                </ul>
+
+                <h4>Tipos de Entornos (Secuencia Típica)</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Entorno Local</h4>
+                        <p>Desarrollo individual en máquina del desarrollador</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2. Entorno de Desarrollo</h4>
+                        <p>Integración de código de múltiples desarrolladores</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>3. Entorno de Integración</h4>
+                        <p>Verificación de compatibilidad entre componentes</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>4. Entorno de Pruebas/Cualificación</h4>
+                        <p>Ejecución de pruebas funcionales y no funcionales</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>5. Entorno de Preproducción/Staging</h4>
+                        <p>Réplica exacta del entorno de producción para pruebas finales</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>6. Entorno de Producción</h4>
+                        <p>Entorno real donde operan los usuarios finales</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Entrega Continua - Modalidades</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">Pull</div>
+                        <strong>Pull Model</strong><br>
+                        Proceso detecta nueva versión y despliega automáticamente
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">Push</div>
+                        <strong>Push Model</strong><br>
+                        Servidor de integración continua realiza el despliegue
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Herramientas -->
+        <div class="tab-content" id="herramientas">
+            <div class="card">
+                <h3>🛠️ Herramientas de Gestión de Versiones</h3>
+                <h4>Control de Versiones</h4>
+                <p>Permiten guardar registro histórico de modificaciones, gestionar líneas de base y recuperar versiones específicas.</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Modelo</th>
+                            <th>Herramientas</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cliente-Servidor</strong></td>
+                            <td>
+                                • Apache Subversion (SVN) - Abierto<br>
+                                • CVS<br>
+                                • Visual SourceSafe - Propietario<br>
+                                • IBM Rational Rose - Propietario<br>
+                                • Perforce Helix - Propietario
+                            </td>
+                            <td>Repositorio centralizado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Distribuido</strong></td>
+                            <td>
+                                • Git<br>
+                                • GitLab<br>
+                                • GitHub<br>
+                                • BitBucket<br>
+                                • Fossil<br>
+                                • Mercurial<br>
+                                • Monotone<br>
+                                • Gerrit
+                            </td>
+                            <td>Repositorios distribuidos, mayor flexibilidad</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Repositorio de Artefactos</h4>
+                <p>Para archivos binarios, librerías y paquetes compilados:</p>
+                <ul>
+                    <li><strong>Nexus</strong> - Sonatype</li>
+                    <li><strong>JFrog Artifactory</strong> - JFrog</li>
+                    <li><strong>Apache Archiva</strong> - Apache</li>
+                    <li><strong>npm</strong> - Node.js packages</li>
+                    <li><strong>Docker Registry</strong> - Contenedores</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Herramientas de Gestión de Configuración</h3>
+                <h4>Gestión de Servicios</h4>
+                <ul>
+                    <li><strong>BCM Remedy</strong> - BMC Software</li>
+                    <li><strong>EasyVista</strong></li>
+                    <li><strong>ServiceNow</strong></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🚀 Herramientas de Gestión de Despliegues</h3>
+                
+                <h4>Sistemas Virtuales</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <strong>VirtualBox</strong><br>
+                        Virtualización local
+                    </div>
+                    <div class="process-step">
+                        <strong>Vagrant</strong><br>
+                        Gestión de máquinas virtuales
+                    </div>
+                    <div class="process-step">
+                        <strong>Docker</strong><br>
+                        Contenedorización
+                    </div>
+                </div>
+
+                <h4>Sistemas en la Nube (PaaS)</h4>
+                <ul>
+                    <li><strong>OpenShift</strong> - Red Hat</li>
+                </ul>
+
+                <h4>Herramientas de Infraestructura</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Herramienta</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Ansible</strong></td>
+                            <td>Configuración</td>
+                            <td>Automatización sin agentes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chef</strong></td>
+                            <td>Configuración</td>
+                            <td>Gestión de configuración basada en recetas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Puppet</strong></td>
+                            <td>Configuración</td>
+                            <td>Gestión declarativa de infraestructura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SaltStack</strong></td>
+                            <td>Configuración</td>
+                            <td>Automatización y orquestación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Terraform</strong></td>
+                            <td>IaC</td>
+                            <td>Infraestructura como código</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CloudFormation</strong></td>
+                            <td>IaC</td>
+                            <td>AWS Infraestructura como código</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div class="tab-content" id="ejercicios">
+            <div class="card">
+                <h3>📝 Ejercicios Prácticos - Gestión de Cambios</h3>
+                <p>Pon a prueba tus conocimientos con estos ejercicios de tipo examen de oposiciones.</p>
+            </div>
+
+            <!-- Pregunta 1 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>1. ¿Cuáles son los tres tipos de cambios según ITIL 4?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="a"> a) Urgente, Normal, Programado
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q1" value="b"> b) Estándar, Normal, Emergencia
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="c"> c) Menor, Mayor, Crítico
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="d"> d) Funcional, Técnico, Operacional
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> Según ITIL 4, los tres tipos son: Estándar (bajo riesgo, pre-autorizados), Normal (planificados y autorizados por CAB) y Emergencia (urgentes, autorizados por ECAB).</p>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>2. ¿Qué actividad de MÉTRICA V3 se encarga del "Análisis de la Petición de Cambio de Requisitos"?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="a"> a) GPS 5
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q2" value="b"> b) GPS 6
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="c"> c) GPS 9
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="d"> d) MS1
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> GPS 6 se encarga del "Análisis de la Petición de Cambio de Requisitos" dentro de la Interfaz de Gestión de Proyectos.</p>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>3. ¿Cuál es el objetivo principal de la gestión de la configuración?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="a"> a) Acelerar el desarrollo de software
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q3" value="b"> b) Asegurar la calidad mediante control estricto de cambios y disponibilidad de versiones estables
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="c"> c) Reducir los costos de mantenimiento
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="d"> d) Automatizar los despliegues
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> La gestión de configuración busca asegurar la calidad a través del control estricto de cambios y la disponibilidad constante de versiones estables.</p>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>4. ¿Qué significa CAB en el contexto de gestión de cambios?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="a"> a) Control de Acceso de Base
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q4" value="b"> b) Comité Asesor del Cambio
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="c"> c) Centro de Análisis de Bugs
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="d"> d) Configuración Automática de Base
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> CAB (Change Advisory Board) es el Comité Asesor del Cambio que analiza y autoriza los cambios normales.</p>
+            </div>
+
+            <!-- Pregunta 5 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>5. ¿Cuál de los siguientes NO es un elemento de configuración del software según el documento?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="a"> a) Código fuente
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="b"> b) Modelos de datos
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q5" value="c"> c) Hardware de servidores
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="d"> d) Especificaciones de requisitos
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: c)</strong> Los elementos de configuración del SW incluyen ejecutables, código fuente, modelos de datos, modelos de procesos, especificaciones de requisitos y pruebas, pero no hardware.</p>
+            </div>
+
+            <!-- Pregunta 6 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>6. En un despliegue "Blue/Green", ¿cuál es la secuencia correcta?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q6" value="a"> a) Green (despliegue) → Blue (liberación)
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q6" value="b"> b) Blue (despliegue) → Green (liberación)
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q6" value="c"> c) Ambos simultáneamente
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q6" value="d"> d) Depende del tipo de aplicación
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> En Blue/Green deployment, primero se despliega en el entorno "blue" y después se libera para el usuario en "green".</p>
+            </div>
+
+            <!-- Pregunta 7 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>7. ¿Cuántos tipos de entornos se mencionan en el documento?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q7" value="a"> a) 4
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q7" value="b"> b) 5
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q7" value="c"> c) 6
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q7" value="d"> d) 7
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: c)</strong> Se mencionan 6 tipos: Local, Desarrollo, Integración, Pruebas/Cualificación, Preproducción/Staging, y Producción.</p>
+            </div>
+
+            <!-- Pregunta 8 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>8. ¿Cuál es la diferencia principal entre los modelos Pull y Push en entrega continua?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q8" value="a"> a) Pull: proceso detecta nueva versión automáticamente; Push: servidor de integración realiza el despliegue
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q8" value="b"> b) Pull: despliegue manual; Push: despliegue automático
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q8" value="c"> c) Pull: para desarrolladores; Push: para usuarios finales
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q8" value="d"> d) No hay diferencia significativa
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: a)</strong> En Pull, un proceso detecta nueva versión y despliega automáticamente; en Push, el servidor de integración continua realiza el despliegue.</p>
+            </div>
+
+            <!-- Pregunta 9 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>9. ¿Cuál de estas herramientas NO es un sistema de control de versiones distribuido?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q9" value="a"> a) Git
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q9" value="b"> b) Apache Subversion (SVN)
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q9" value="c"> c) Mercurial
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q9" value="d"> d) Fossil
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> Apache Subversion (SVN) es un sistema Cliente-Servidor, no distribuido. Git, Mercurial y Fossil son sistemas distribuidos.</p>
+            </div>
+
+            <!-- Pregunta 10 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>10. ¿Qué significa CI en el contexto de gestión de configuración según ITIL 4?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q10" value="a"> a) Continuous Integration
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q10" value="b"> b) Configuration Item
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q10" value="c"> c) Change Implementation
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q10" value="d"> d) Control Interface
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> CI significa Configuration Item (Elemento de Configuración) en el contexto de gestión de configuración del servicio.</p>
+            </div>
+
+            <!-- Pregunta 11 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>11. ¿Cuál es el enfoque de despliegue más simple pero con mayor riesgo?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q11" value="a"> a) Big Bang
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q11" value="b"> b) Por fases
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q11" value="c"> c) Entrega continua
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q11" value="d"> d) Canary release
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: a)</strong> Big Bang es el más simple (un solo proceso, una vez) pero tiene alto riesgo y es difícil hacer rollback.</p>
+            </div>
+
+            <!-- Pregunta 12 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>12. ¿Cuál de estas actividades NO forma parte de los procesos de gestión de configuración del servicio según ITIL 4?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q12" value="a"> a) Identificar nuevos elementos de configuración y agregarlos al CMS
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q12" value="b"> b) Actualizar datos de configuración cuando se implementan cambios
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q12" value="c"> c) Verificar que los registros de configuración sean correctos
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q12" value="d"> d) Desarrollar nuevas funcionalidades del software
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: d)</strong> Desarrollar nuevas funcionalidades no es parte de la gestión de configuración; las otras tres opciones sí son procesos incluidos.</p>
+            </div>
+
+            <!-- Pregunta 13 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>13. ¿Qué herramienta se menciona como ejemplo de repositorio de artefactos para Node.js?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q13" value="a"> a) Nexus
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q13" value="b"> b) JFrog Artifactory
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q13" value="c"> c) npm
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q13" value="d"> d) Docker Registry
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: c)</strong> npm es el repositorio de artefactos específico para paquetes de Node.js mencionado en el documento.</p>
+            </div>
+
+            <!-- Pregunta 14 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>14. En MÉTRICA V3, ¿en qué proceso se encuentra la actividad "MSI-GC 1"?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q14" value="a"> a) Estudio de Viabilidad del Sistema
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q14" value="b"> b) Análisis del Sistema de Información
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q14" value="c"> c) Construcción del Sistema de Información
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q14" value="d"> d) Mantenimiento del Sistema de Información
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: d)</strong> MSI-GC 1 (Registro del Cambio en el Sistema de Gestión de la Configuración) pertenece al proceso de Mantenimiento del Sistema de Información.</p>
+            </div>
+
+            <!-- Pregunta 15 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>15. ¿Cuál es una ventaja del despliegue "Por fases"?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q15" value="a"> a) Implementación más rápida
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q15" value="b"> b) Menor riesgo y control incremental
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q15" value="c"> c) Menor complejidad
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q15" value="d"> d) Requiere menos recursos
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> El despliegue por fases ofrece menor riesgo y control incremental, aunque es más complejo y toma más tiempo.</p>
+            </div>
+
+            <!-- Pregunta 16 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>16. ¿Qué significa ECAB en el contexto de cambios de emergencia?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q16" value="a"> a) Emergency Change Analysis Board
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q16" value="b"> b) Emergency Change Advisory Board
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q16" value="c"> c) Extended Change Advisory Board
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q16" value="d"> d) Executive Change Advisory Board
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> ECAB es Emergency Change Advisory Board, la autoridad que autoriza de manera ágil los cambios de emergencia.</p>
+            </div>
+
+            <!-- Pregunta 17 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>17. ¿Cuál de estas herramientas es específicamente de "Infraestructura como Código" (IaC)?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q17" value="a"> a) Ansible
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q17" value="b"> b) Docker
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q17" value="c"> c) Terraform
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q17" value="d"> d) ServiceNow
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: c)</strong> Terraform es específicamente una herramienta de Infraestructura como Código (IaC), junto con CloudFormation.</p>
+            </div>
+
+            <!-- Pregunta 18 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-intermedio">Intermedio</div>
+                <h4>18. En un "Canary release", ¿cómo se caracteriza la estrategia de liberación?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q18" value="a"> a) Se libera para todos los usuarios simultáneamente
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q18" value="b"> b) Se libera para un número reducido de usuarios que va incrementando gradualmente
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q18" value="c"> c) Se alternan dos versiones diferentes
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q18" value="d"> d) Se despliega por módulos funcionales
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: b)</strong> En Canary release se despliega y libera para un reducido número de usuarios que se va incrementando gradualmente.</p>
+            </div>
+
+            <!-- Pregunta 19 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-basico">Básico</div>
+                <h4>19. ¿Cuál de estos NO es un motivo para la gestión de cambios según el documento?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q19" value="a"> a) Modificación de requisitos iniciales
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q19" value="b"> b) Errores operacionales o funcionales
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q19" value="c"> c) Adecuación a normativa legal
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q19" value="d"> d) Mejora del rendimiento del hardware
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: d)</strong> La mejora del rendimiento del hardware no se menciona como motivo; los motivos son modificación de requisitos, errores operacionales/funcionales y adecuación a normativa legal.</p>
+            </div>
+
+            <!-- Pregunta 20 -->
+            <div class="quiz-question">
+                <div class="difficulty-badge difficulty-avanzado">Avanzado</div>
+                <h4>20. ¿En qué entorno DevOps está integrada la gestión de versiones?</h4>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="q20" value="a"> a) Solo con integración continua
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q20" value="b"> b) Solo con herramientas de entrega continua
+                    </label>
+                    <label class="quiz-option correct">
+                        <input type="radio" name="q20" value="c"> c) Con integración continua y herramientas para entrega continua
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q20" value="d"> d) Con herramientas de monitoreo únicamente
+                    </label>
+                </div>
+                <p><strong>Respuesta correcta: c)</strong> En un entorno DevOps, la gestión de versiones está integrada con la integración continua Y las herramientas para entrega continua.</p>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div class="tab-content" id="recursos">
+            <div class="card">
+                <h3>📚 Glosario de Términos Clave</h3>
+                
+                <div class="glossary-term">
+                    <strong>CAB (Change Advisory Board)</strong><br>
+                    Comité Asesor del Cambio que analiza y autoriza los cambios normales en ITIL 4.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>CI (Configuration Item)</strong><br>
+                    Elemento de Configuración que requiere gestión para la entrega de un servicio TI.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>CMDB (Configuration Management Database)</strong><br>
+                    Base de datos que contiene información sobre elementos de configuración y sus relaciones.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>CMS (Configuration Management System)</strong><br>
+                    Sistema que incluye herramientas, datos y información sobre la configuración.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>DevOps</strong><br>
+                    Conjunto de prácticas que combinan desarrollo de software y operaciones TI.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>ECAB (Emergency Change Advisory Board)</strong><br>
+                    Autoridad que autoriza cambios de emergencia de manera ágil.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>IaC (Infrastructure as Code)</strong><br>
+                    Gestión y aprovisionamiento de infraestructura a través de código.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Release</strong><br>
+                    Versión de un servicio o elemento de configuración disponible para uso.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Rollback</strong><br>
+                    Proceso de revertir cambios a una versión anterior estable.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Staging</strong><br>
+                    Entorno de preproducción que replica el entorno de producción para pruebas finales.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❓ Preguntas Frecuentes (FAQ)</h3>
+                
+                <h4>¿Cuál es la diferencia entre cambio estándar y cambio normal?</h4>
+                <p>Los cambios estándar son de bajo riesgo, pre-autorizados y no requieren autorización adicional. Los cambios normales deben ser planificados, analizados y autorizados por el CAB.</p>
+
+                <h4>¿Qué incluye un elemento de configuración de software?</h4>
+                <p>Incluye ejecutables, código fuente, modelos de datos, modelos de procesos, especificaciones de requisitos y especificaciones de pruebas.</p>
+
+                <h4>¿Cuándo se usa un despliegue Blue/Green vs Canary?</h4>
+                <p>Blue/Green se usa cuando necesitas rollback instantáneo y tienes infraestructura duplicada. Canary se usa para detectar problemas tempranamente liberando gradualmente a usuarios.</p>
+
+                <h4>¿Qué es la diferencia entre Git y SVN?</h4>
+                <p>Git es un sistema distribuido donde cada desarrollador tiene una copia completa del repositorio. SVN es cliente-servidor con un repositorio centralizado.</p>
+
+                <h4>¿Cuál es la secuencia típica de entornos?</h4>
+                <p>Local → Desarrollo → Integración → Pruebas/Cualificación → Preproducción/Staging → Producción.</p>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Metodologías y Marcos de Referencia</h3>
+                <ul>
+                    <li><strong>MÉTRICA V3:</strong> Metodología española para desarrollo de sistemas de información</li>
+                    <li><strong>ITIL 4:</strong> Marco de mejores prácticas para gestión de servicios TI</li>
+                    <li><strong>DevOps:</strong> Prácticas que integran desarrollo y operaciones</li>
+                    <li><strong>Agile:</strong> Metodologías ágiles para desarrollo iterativo</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>💡 Consejos para el Examen</h3>
+                <ul>
+                    <li>Memoriza los 3 tipos de cambios ITIL: Estándar, Normal, Emergencia</li>
+                    <li>Conoce las actividades GPS de MÉTRICA V3: GPS 5, GPS 6, GPS 9</li>
+                    <li>Distingue entre herramientas cliente-servidor vs distribuidas</li>
+                    <li>Recuerda la secuencia de entornos de desarrollo</li>
+                    <li>Entiende las diferencias entre enfoques de despliegue</li>
+                    <li>Conoce las herramientas principales de cada categoría</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Load saved theme or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '🌙 Modo Oscuro';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Quiz functionality
+        const quizOptions = document.querySelectorAll('.quiz-option input[type="radio"]');
+        quizOptions.forEach(option => {
+            option.addEventListener('change', (e) => {
+                const questionName = e.target.name;
+                const allOptionsForQuestion = document.querySelectorAll(`input[name="${questionName}"]`);
+                
+                // Reset all options for this question
+                allOptionsForQuestion.forEach(opt => {
+                    opt.parentElement.classList.remove('correct', 'incorrect');
+                });
+
+                // Find the correct answer and mark it
+                const correctOption = document.querySelector(`input[name="${questionName}"][value="b"]`) ||
+                                    document.querySelector(`input[name="${questionName}"]`).parentElement.parentElement.querySelector('.quiz-option.correct input') ||
+                                    document.querySelector('.quiz-option.correct input[name="' + questionName + '"]');
+                
+                if (correctOption) {
+                    correctOption.parentElement.classList.add('correct');
+                }
+
+                // Mark selected answer as correct or incorrect
+                if (e.target.parentElement.classList.contains('correct')) {
+                    e.target.parentElement.classList.add('correct');
+                } else {
+                    e.target.parentElement.classList.add('incorrect');
+                }
+            });
+        });
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

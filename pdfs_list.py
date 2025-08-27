@@ -57,79 +57,79 @@ pdfs = [
         "filename": "agilismo.pdf",
         "title": "Metodologías Ágiles",
         "category": "Desarrollo",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "auditoria.pdf",
         "title": "Auditoría Informática",
         "category": "Auditoría",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "cambios.pdf",
         "title": "Gestión de Cambios",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "centro si.pdf",
         "title": "Centro de Sistemas de Información",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "ciberseguridad.pdf",
         "title": "Ciberseguridad",
         "category": "Seguridad",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "ciencia.pdf",
         "title": "Ciencia de Datos",
         "category": "Datos",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "cloud.pdf",
         "title": "Cloud Computing",
         "category": "Cloud",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "contratos.pdf",
         "title": "Contratos Informáticos",
         "category": "Jurídico",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "empleadopublico.pdf",
         "title": "Empleado Público",
         "category": "Jurídico",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "ens.pdf",
         "title": "Esquema Nacional de Seguridad",
         "category": "Seguridad",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "gantt.pdf",
         "title": "Diagramas de Gantt",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "gestionproyectos.pdf",
         "title": "Gestión de Proyectos",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "governanza.pdf",
         "title": "Gobernanza TI",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "ia.pdf",

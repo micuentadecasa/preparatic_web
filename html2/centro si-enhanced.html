@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Sistemas de Información - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .list-enhanced {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-enhanced li {
+            background: var(--bg-secondary);
+            margin: 0.5rem 0;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .list-enhanced li:hover {
+            background: var(--bg-hover);
+            transform: translateX(5px);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+
+        .question {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            background: var(--bg-secondary);
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .options li.correct {
+            background: #10b981;
+            color: white;
+        }
+
+        .options li.incorrect {
+            background: #ef4444;
+            color: white;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .difficulty-basico { background: #10b981; color: white; }
+        .difficulty-intermedio { background: #f59e0b; color: white; }
+        .difficulty-avanzado { background: #ef4444; color: white; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .glossary-term {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro de Sistemas de Información</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+    </header>
+
+    <div class="container">
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('organizacion')">Organización</button>
+            <button class="tab" onclick="showTab('funciones')">Funciones TIC</button>
+            <button class="tab" onclick="showTab('departamentos')">Departamentos</button>
+            <button class="tab" onclick="showTab('age')">Unidades AGE</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </nav>
+
+        <!-- TAB 1: RESUMEN GENERAL -->
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2>🎯 Resumen Ejecutivo</h2>
+                <div class="highlight-box">
+                    <p><strong>Centro de Sistemas de Información:</strong> Organización especializada que gestiona de forma integral todos los aspectos tecnológicos de una institución, desde el desarrollo de software hasta la atención a usuarios, garantizando la operatividad, seguridad y evolución de los sistemas informáticos.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">8</span>
+                    <div class="stat-label">Funciones Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Actividades de Desarrollo</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Tipos de Mantenimiento</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Ejes Fundamentales AGE</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Conceptos Clave</h3>
+                <ul class="list-enhanced">
+                    <li><strong>Sistema de Información (S.I.):</strong> Conjunto de elementos para tratar, almacenar, administrar y comunicar datos</li>
+                    <li><strong>DevOps:</strong> Prácticas que unifican desarrollo y operaciones para acelerar el ciclo de vida del software</li>
+                    <li><strong>C.A.U. (Centro de Atención a Usuarios):</strong> Servicio integral de resolución de solicitudes y problemas</li>
+                    <li><strong>ITIL v4:</strong> Estándar de gestión de servicios de tecnologías de la información</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎓 Objetivos de Aprendizaje</h3>
+                <ul class="list-enhanced">
+                    <li>Comprender la estructura organizativa de un centro de sistemas de información</li>
+                    <li>Identificar las principales funciones y responsabilidades de cada departamento</li>
+                    <li>Conocer los modelos organizativos clásicos y nuevos</li>
+                    <li>Entender el marco normativo de las unidades TIC en la AGE</li>
+                    <li>Dominar los procesos de desarrollo, mantenimiento y operación de sistemas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 2: ORGANIZACIÓN -->
+        <div id="organizacion" class="tab-content">
+            <div class="card">
+                <h2>🏢 Modelos de Organización</h2>
+                <h3>Definición de Sistema de Información</h3>
+                <p>Un Sistema de Información (S.I.) es un conjunto de elementos con la misión de tratar, almacenar, administrar y comunicar datos entre sí.</p>
+                
+                <div class="highlight-box">
+                    <h4>Componentes de un S.I.:</h4>
+                    <ul class="list-enhanced">
+                        <li><strong>Personas:</strong> Usuarios, administradores, desarrolladores</li>
+                        <li><strong>Recursos materiales:</strong> Máquinas y elementos de comunicación</li>
+                        <li><strong>Recursos inmateriales:</strong> Software en general</li>
+                        <li><strong>Técnicas y procedimientos:</strong> Órdenes y metodologías de trabajo</li>
+                        <li><strong>Datos:</strong> Información procesada y almacenada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Modelo Organizativo Clásico</h3>
+                <ul class="list-enhanced">
+                    <li><strong>Estructura simple o "en peine":</strong> Organización jerárquica básica</li>
+                    <li><strong>Estructura funcional o de Taylor:</strong> División por especialización funcional</li>
+                    <li><strong>Estructura divisional:</strong> Organización por proyectos o productos</li>
+                    <li><strong>Estructura matricial:</strong> Combinación de estructuras funcional y divisional</li>
+                    <li><strong>Estructura virtual:</strong> Organización flexible y adaptativa</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Modelo Organizativo Nuevo</h3>
+                <ul class="list-enhanced">
+                    <li><strong>En red:</strong> Estructura interconectada y colaborativa</li>
+                    <li><strong>Horizontal o por macroprocesos:</strong> Organización por procesos de negocio</li>
+                    <li><strong>Federal:</strong> Autonomía local con coordinación central</li>
+                    <li><strong>En trébol:</strong> Estructura flexible con tres componentes principales</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 3: FUNCIONES TIC -->
+        <div id="funciones" class="tab-content">
+            <div class="card">
+                <h2>⚙️ Funciones de Desarrollo</h2>
+                <h3>Desarrollo de Sistemas</h3>
+                <p>Basado en la metodología Métrica v3, incluye las siguientes actividades:</p>
+                <ul class="list-enhanced">
+                    <li><strong>PSI - Planificación de Sistemas de Información:</strong> Definición de la estrategia</li>
+                    <li><strong>EVS - Estudio de Viabilidad del Sistema:</strong> Análisis de factibilidad</li>
+                    <li><strong>ASI - Análisis del Sistema de Información:</strong> Especificación de requisitos</li>
+                    <li><strong>DSI - Diseño del Sistema de Información:</strong> Arquitectura técnica</li>
+                    <li><strong>IAS - Implantación y Aceptación del Sistema:</strong> Puesta en producción</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔧 Tipos de Mantenimiento</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Correctivo</h4>
+                        <p>Cambios necesarios para corregir errores detectados en el sistema</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Evolutivo</h4>
+                        <p>Cambios para cubrir expansión o cambios en necesidades de usuario</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Adaptativo</h4>
+                        <p>Cambios que afectan a entornos operativos (configuración, SGBD, etc.)</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Perfectivo</h4>
+                        <p>Acciones para mejorar la calidad interna del sistema</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🚀 DevOps</h3>
+                <div class="highlight-box">
+                    <p><strong>DevOps</strong> es el acrónimo de <em>development</em> (desarrollo) y <em>operations</em> (operaciones). Es un conjunto de prácticas que unifican el desarrollo de Software (Dev) y las operaciones TI (Ops).</p>
+                    <p><strong>Objetivo:</strong> Acelerar el ciclo de vida del desarrollo de software y proporcionar entrega continua de alta calidad.</p>
+                </div>
+
+                <h4>Funciones DevOps:</h4>
+                <ul class="list-enhanced">
+                    <li>Configuración y paquetizado de aplicaciones</li>
+                    <li>Pruebas automatizadas y pasos a producción</li>
+                    <li>Integración continua y despliegue continuo (CI/CD)</li>
+                    <li>Soporte a entornos no productivos</li>
+                    <li>Plataformado y gestión de infraestructura</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 4: DEPARTAMENTOS -->
+        <div id="departamentos" class="tab-content">
+            <div class="card">
+                <h2>🖥️ Departamento de Sistemas</h2>
+                <p>Se encarga de garantizar el correcto funcionamiento de los sistemas informáticos y tecnológicos.</p>
+
+                <h3>Administración de Sistemas</h3>
+                <ul class="list-enhanced">
+                    <li><strong>Implantación de Hardware:</strong> Instalación y configuración de equipos</li>
+                    <li><strong>Implantación de Software:</strong> Despliegue de aplicaciones</li>
+                    <li><strong>Inventariado:</strong> Control de activos tecnológicos</li>
+                    <li><strong>Optimización:</strong> Mejora del rendimiento de sistemas</li>
+                    <li><strong>Monitorización:</strong> Supervisión continua de sistemas</li>
+                    <li><strong>Gestión del Software:</strong> Licenciamiento y actualizaciones</li>
+                    <li><strong>Rendimiento:</strong> Análisis y optimización de performance</li>
+                    <li><strong>Copias de Seguridad:</strong> Respaldo y recuperación de datos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🌐 Comunicaciones</h3>
+                <ul class="list-enhanced">
+                    <li><strong>Diseño, instalación y optimización de redes:</strong> Infraestructura de conectividad</li>
+                    <li><strong>Gestión de usuarios en red:</strong> Control de accesos y permisos</li>
+                    <li><strong>Gestión de la electrónica en red:</strong> Equipos activos y pasivos</li>
+                    <li><strong>Control de accesos en red:</strong> Seguridad y autenticación</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🗄️ Bases de Datos</h3>
+                <ul class="list-enhanced">
+                    <li><strong>Diseñar y Administrar la estructura de BBDD:</strong> Modelado y arquitectura</li>
+                    <li><strong>Velar por la integridad:</strong> Consistencia y validez de datos</li>
+                    <li><strong>Gestión y ocupación de espacios de BBDD:</strong> Optimización de almacenamiento</li>
+                    <li><strong>Definición de esquemas:</strong> Estructura lógica de datos</li>
+                    <li><strong>Diccionario de datos:</strong> Metadatos y documentación</li>
+                    <li><strong>Copias de seguridad:</strong> Respaldo de información crítica</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>👥 Centro de Atención a Usuarios (C.A.U.)</h3>
+                <div class="highlight-box">
+                    <p>También denominado <strong>"Help Desk"</strong>, es el servicio integral de resolución de solicitudes y problemas de usuarios, sean simples o complejos.</p>
+                    <p><strong>Estándar:</strong> ITIL v4 (Information Technology Infrastructure Library)</p>
+                </div>
+                <p>Gestiona solicitudes mediante escalados a especialistas de mantenimiento y/o aplicaciones cuando es necesario.</p>
+            </div>
+
+            <div class="card">
+                <h3>🔒 Seguridad</h3>
+                <p>Tradicionalmente encuadrada dentro de Sistemas, ha cobrado importancia propia con perfiles especializados.</p>
+                <ul class="list-enhanced">
+                    <li><strong>Definición de parámetros y procedimientos de seguridad</strong></li>
+                    <li><strong>Análisis de riesgos:</strong> Identificación y evaluación de amenazas</li>
+                    <li><strong>Gestión de Usuarios:</strong> Control de accesos y permisos</li>
+                    <li><strong>Gestión de Incidencias de Seguridad:</strong> Respuesta a amenazas</li>
+                    <li><strong>Definición de normativas:</strong> Políticas de seguridad</li>
+                    <li><strong>Administración de elementos de Seguridad:</strong> IPS, firewalls, etc.</li>
+                    <li><strong>Auditorías de Seguridad:</strong> Evaluación y cumplimiento</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 5: UNIDADES AGE -->
+        <div id="age" class="tab-content">
+            <div class="card">
+                <h2>🏛️ Unidades TIC en la Administración General del Estado</h2>
+                <div class="highlight-box">
+                    <p><strong>Marco Normativo:</strong> Real Decreto 1125/2024, de 5 de noviembre, que deroga el RD 806/2014. Regula la organización y los instrumentos operativos para la Administración Digital de la Administración del Estado.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Objetivo de la Norma</h3>
+                <p>Dotar a la Administración del Estado de una arquitectura organizativa en materia TIC para afrontar con éxito el reto de la transformación digital de las administraciones públicas.</p>
+
+                <div class="highlight-box">
+                    <h4>Beneficios esperados:</h4>
+                    <ul class="list-enhanced">
+                        <li>Mejorar la eficiencia y eficacia de las actuaciones digitales</li>
+                        <li>Agilizar la toma de decisiones</li>
+                        <li>Favorecer la generación de sinergias y colaboración</li>
+                        <li>Garantizar la sostenibilidad de las inversiones del PRTR</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Tres Ejes Fundamentales</h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>1er Eje</h4>
+                        <h5>CETIC</h5>
+                        <p>Comisión de Estrategia Sobre Tecnologías de la Información y las Comunicaciones como órgano colegiado superior</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>2º Eje</h4>
+                        <h5>AEAD</h5>
+                        <p>Agencia Estatal de Administración Digital, presidiendo el CDTIC y las Comisiones de Trabajo</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>3er Eje</h4>
+                        <h5>Ámbito Departamental</h5>
+                        <p>CMAD y Unidades TIC ministeriales y de organismos públicos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔧 Instrumentos Operativos</h3>
+                <ul class="list-enhanced">
+                    <li><strong>CETIC:</strong> Comisión de Estrategia Sobre Tecnologías de la Información y las Comunicaciones</li>
+                    <li><strong>AEAD:</strong> Agencia Estatal de Administración Digital</li>
+                    <li><strong>CDTIC:</strong> Comité de Dirección de las Tecnologías de la Información y las Comunicaciones</li>
+                    <li><strong>CMAD:</strong> Comisiones Ministeriales de Administración Digital</li>
+                    <li><strong>Unidades TIC ministeriales:</strong> En cada departamento ministerial</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📋 Plan de Recuperación, Transformación y Resiliencia (PRTR)</h3>
+                <p>El nuevo marco organizativo busca garantizar la sostenibilidad en el tiempo de las fuertes inversiones realizadas en el marco del PRTR para la transformación digital de las administraciones públicas.</p>
+            </div>
+        </div>
+
+        <!-- TAB 6: EJERCICIOS PRÁCTICOS -->
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h2>📝 Ejercicios Prácticos</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <p id="question-counter">Pregunta 1 de 20</p>
+            </div>
+
+            <div class="quiz-container">
+                <!-- Question 1 -->
+                <div class="question active" data-question="1">
+                    <h3>¿Cuáles son los componentes principales de un Sistema de Información?
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Solo personas y software</li>
+                        <li onclick="selectAnswer(this, true)">Personas, recursos materiales, recursos inmateriales, técnicas y datos</li>
+                        <li onclick="selectAnswer(this, false)">Únicamente hardware y software</li>
+                        <li onclick="selectAnswer(this, false)">Solo datos y procedimientos</li>
+                    </ul>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question" data-question="2">
+                    <h3>¿Qué significa el acrónimo DevOps?
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Device Operations</li>
+                        <li onclick="selectAnswer(this, true)">Development and Operations</li>
+                        <li onclick="selectAnswer(this, false)">Developer Options</li>
+                        <li onclick="selectAnswer(this, false)">Design Operations</li>
+                    </ul>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question" data-question="3">
+                    <h3>¿Cuál es el objetivo principal del mantenimiento correctivo?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, true)">Corregir errores detectados en el sistema</li>
+                        <li onclick="selectAnswer(this, false)">Mejorar el rendimiento del sistema</li>
+                        <li onclick="selectAnswer(this, false)">Adaptar el sistema a nuevos entornos</li>
+                        <li onclick="selectAnswer(this, false)">Añadir nuevas funcionalidades</li>
+                    </ul>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="question" data-question="4">
+                    <h3>¿Qué actividad pertenece al proceso PSI según Métrica v3?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Diseño del Sistema de Información</li>
+                        <li onclick="selectAnswer(this, true)">Planificación de Sistemas de Información</li>
+                        <li onclick="selectAnswer(this, false)">Análisis del Sistema de Información</li>
+                        <li onclick="selectAnswer(this, false)">Implantación y Aceptación del Sistema</li>
+                    </ul>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="question" data-question="5">
+                    <h3>¿Cuál es el estándar de gestión para Centros de Atención a Usuarios?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">ISO 27001</li>
+                        <li onclick="selectAnswer(this, true)">ITIL v4</li>
+                        <li onclick="selectAnswer(this, false)">COBIT</li>
+                        <li onclick="selectAnswer(this, false)">PMI</li>
+                    </ul>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="question" data-question="6">
+                    <h3>¿Qué Real Decreto regula actualmente las unidades TIC en la AGE?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Real Decreto 806/2014</li>
+                        <li onclick="selectAnswer(this, true)">Real Decreto 1125/2024</li>
+                        <li onclick="selectAnswer(this, false)">Real Decreto 203/2021</li>
+                        <li onclick="selectAnswer(this, false)">Real Decreto 951/2005</li>
+                    </ul>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="question" data-question="7">
+                    <h3>¿Cuáles son los tres ejes fundamentales del sistema organizativo TIC en la AGE?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">CETIC, CDTIC, CMAD</li>
+                        <li onclick="selectAnswer(this, true)">CETIC, AEAD, ámbito departamental</li>
+                        <li onclick="selectAnswer(this, false)">AEAD, CDTIC, Unidades TIC</li>
+                        <li onclick="selectAnswer(this, false)">Comisiones, Agencias, Ministerios</li>
+                    </ul>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="question" data-question="8">
+                    <h3>¿Qué tipo de mantenimiento se aplica cuando hay cambios en el gestor de base de datos?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Correctivo</li>
+                        <li onclick="selectAnswer(this, false)">Evolutivo</li>
+                        <li onclick="selectAnswer(this, true)">Adaptativo</li>
+                        <li onclick="selectAnswer(this, false)">Perfectivo</li>
+                    </ul>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="question" data-question="9">
+                    <h3>¿Cuál de estas NO es una estructura del modelo organizativo clásico?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Estructura simple o "en peine"</li>
+                        <li onclick="selectAnswer(this, false)">Estructura funcional o de Taylor</li>
+                        <li onclick="selectAnswer(this, true)">Estructura horizontal o por macroprocesos</li>
+                        <li onclick="selectAnswer(this, false)">Estructura matricial</li>
+                    </ul>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="question" data-question="10">
+                    <h3>¿Qué significa AEAD en el contexto de la AGE?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Agencia Española de Administración de Datos</li>
+                        <li onclick="selectAnswer(this, true)">Agencia Estatal de Administración Digital</li>
+                        <li onclick="selectAnswer(this, false)">Asociación Estatal de Administración Digital</li>
+                        <li onclick="selectAnswer(this, false)">Agencia Española de Administración Departamental</li>
+                    </ul>
+                </div>
+
+                <!-- Question 11 -->
+                <div class="question" data-question="11">
+                    <h3>¿Cuál de estas tareas pertenece a la administración de sistemas?
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Análisis de requisitos</li>
+                        <li onclick="selectAnswer(this, true)">Monitorización de sistemas</li>
+                        <li onclick="selectAnswer(this, false)">Diseño de interfaces</li>
+                        <li onclick="selectAnswer(this, false)">Pruebas de usuario</li>
+                    </ul>
+                </div>
+
+                <!-- Question 12 -->
+                <div class="question" data-question="12">
+                    <h3>¿Qué función principal tiene DevOps en una organización?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Desarrollar únicamente aplicaciones</li>
+                        <li onclick="selectAnswer(this, true)">Hacer de puente entre desarrollo y sistemas</li>
+                        <li onclick="selectAnswer(this, false)">Administrar únicamente bases de datos</li>
+                        <li onclick="selectAnswer(this, false)">Gestionar únicamente la seguridad</li>
+                    </ul>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="question" data-question="13">
+                    <h3>¿Cuál de estos NO es un componente del modelo organizativo nuevo?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">En red</li>
+                        <li onclick="selectAnswer(this, false)">Horizontal o por macroprocesos</li>
+                        <li onclick="selectAnswer(this, true)">Estructura divisional</li>
+                        <li onclick="selectAnswer(this, false)">Federal</li>
+                    </ul>
+                </div>
+
+                <!-- Question 14 -->
+                <div class="question" data-question="14">
+                    <h3>¿Qué actividad corresponde al DSI en Métrica v3?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Análisis del Sistema de Información</li>
+                        <li onclick="selectAnswer(this, true)">Diseño del Sistema de Información</li>
+                        <li onclick="selectAnswer(this, false)">Estudio de Viabilidad del Sistema</li>
+                        <li onclick="selectAnswer(this, false)">Planificación de Sistemas de Información</li>
+                    </ul>
+                </div>
+
+                <!-- Question 15 -->
+                <div class="question" data-question="15">
+                    <h3>¿Cuál es una función específica del departamento de comunicaciones?
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Desarrollo de aplicaciones</li>
+                        <li onclick="selectAnswer(this, true)">Gestión de usuarios en red</li>
+                        <li onclick="selectAnswer(this, false)">Auditoría de sistemas</li>
+                        <li onclick="selectAnswer(this, false)">Análisis de requisitos</li>
+                    </ul>
+                </div>
+
+                <!-- Question 16 -->
+                <div class="question" data-question="16">
+                    <h3>¿Qué tipo de mantenimiento busca mejorar la calidad interna del sistema?
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Correctivo</li>
+                        <li onclick="selectAnswer(this, false)">Evolutivo</li>
+                        <li onclick="selectAnswer(this, false)">Adaptativo</li>
+                        <li onclick="selectAnswer(this, true)">Perfectivo</li>
+                    </ul>
+                </div>
+
+                <!-- Question 17 -->
+                <div class="question" data-question="17">
+                    <h3>¿Qué significa CMAD en el contexto organizativo de la AGE?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Comité Ministerial de Administración Digital</li>
+                        <li onclick="selectAnswer(this, true)">Comisiones Ministeriales de Administración Digital</li>
+                        <li onclick="selectAnswer(this, false)">Centro Ministerial de Administración Digital</li>
+                        <li onclick="selectAnswer(this, false)">Coordinación Ministerial de Administración Digital</li>
+                    </ul>
+                </div>
+
+                <!-- Question 18 -->
+                <div class="question" data-question="18">
+                    <h3>¿Cuál de estas tareas es específica del área de bases de datos?
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Configuración de redes</li>
+                        <li onclick="selectAnswer(this, true)">Definición de esquemas</li>
+                        <li onclick="selectAnswer(this, false)">Atención a usuarios</li>
+                        <li onclick="selectAnswer(this, false)">Desarrollo de interfaces</li>
+                    </ul>
+                </div>
+
+                <!-- Question 19 -->
+                <div class="question" data-question="19">
+                    <h3>¿Qué característica define principalmente a la función de seguridad actual?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Está siempre integrada en el departamento de sistemas</li>
+                        <li onclick="selectAnswer(this, true)">Ha cobrado importancia propia con perfiles especializados</li>
+                        <li onclick="selectAnswer(this, false)">Solo se ocupa de firewalls</li>
+                        <li onclick="selectAnswer(this, false)">No requiere personal especializado</li>
+                    </ul>
+                </div>
+
+                <!-- Question 20 -->
+                <div class="question" data-question="20">
+                    <h3>¿Cuál es el objetivo del Plan de Recuperación, Transformación y Resiliencia (PRTR) en el contexto TIC?
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </h3>
+                    <ul class="options">
+                        <li onclick="selectAnswer(this, false)">Reducir el personal TIC</li>
+                        <li onclick="selectAnswer(this, false)">Eliminar las tecnologías antiguas</li>
+                        <li onclick="selectAnswer(this, true)">Garantizar la sostenibilidad de las inversiones en transformación digital</li>
+                        <li onclick="selectAnswer(this, false)">Centralizar todos los servicios TIC</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn" onclick="previousQuestion()" id="prevBtn">Anterior</button>
+                    <div>
+                        <span id="score">Puntuación: 0/20</span>
+                    </div>
+                    <button class="btn" onclick="nextQuestion()" id="nextBtn">Siguiente</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: RECURSOS Y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos</h2>
+                
+                <div class="glossary-term">
+                    <h4>AEAD</h4>
+                    <p>Agencia Estatal de Administración Digital. Organismo responsable de coordinar la transformación digital en la Administración del Estado.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>ASI</h4>
+                    <p>Análisis del Sistema de Información. Proceso de Métrica v3 que especifica los requisitos funcionales y no funcionales del sistema.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>C.A.U.</h4>
+                    <p>Centro de Atención a Usuarios. Servicio integral de resolución de solicitudes y problemas de usuarios, también conocido como Help Desk.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>CETIC</h4>
+                    <p>Comisión de Estrategia Sobre Tecnologías de la Información y las Comunicaciones. Órgano colegiado superior para la Administración del Estado.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>CMAD</h4>
+                    <p>Comisiones Ministeriales de Administración Digital. Instrumentos de coordinación en el ámbito departamental.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>DevOps</h4>
+                    <p>Conjunto de prácticas que agrupan el desarrollo de Software (Dev) y las operaciones TI (Ops) para acelerar el ciclo de vida del desarrollo.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>DSI</h4>
+                    <p>Diseño del Sistema de Información. Proceso de Métrica v3 que define la arquitectura técnica del sistema.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>EVS</h4>
+                    <p>Estudio de Viabilidad del Sistema. Proceso de Métrica v3 que analiza la factibilidad técnica y económica del proyecto.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>IAS</h4>
+                    <p>Implantación y Aceptación del Sistema. Proceso final de Métrica v3 para la puesta en producción del sistema.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>ITIL</h4>
+                    <p>Information Technology Infrastructure Library. Conjunto de conceptos y buenas prácticas para la gestión de servicios TI, actualmente en versión 4.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Métrica v3</h4>
+                    <p>Metodología de planificación, desarrollo y mantenimiento de sistemas de información de la Administración Pública española.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>PRTR</h4>
+                    <p>Plan de Recuperación, Transformación y Resiliencia. Plan español para la implementación de los fondos europeos Next Generation EU.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>PSI</h4>
+                    <p>Planificación de Sistemas de Información. Proceso inicial de Métrica v3 que define la estrategia de sistemas de información.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Sistema de Información</h4>
+                    <p>Conjunto de elementos (personas, recursos materiales e inmateriales, técnicas y datos) para tratar, almacenar, administrar y comunicar información.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let totalQuestions = 20;
+        let score = 0;
+        let answered = Array(totalQuestions + 1).fill(false);
+
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                button.textContent = '🌙 Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                button.textContent = '☀️ Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '☀️ Modo Oscuro';
+            }
+        });
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function selectAnswer(element, isCorrect) {
+            // Prevent multiple selections for the same question
+            if (answered[currentQuestion]) return;
+            
+            const options = element.parentNode.children;
+            
+            // Remove any existing classes
+            Array.from(options).forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark the selected answer
+            if (isCorrect) {
+                element.classList.add('correct');
+                if (!answered[currentQuestion]) {
+                    score++;
+                    answered[currentQuestion] = true;
+                }
+            } else {
+                element.classList.add('incorrect');
+                // Also show the correct answer
+                Array.from(options).forEach(option => {
+                    if (option.onclick.toString().includes('true')) {
+                        option.classList.add('correct');
+                    }
+                });
+                answered[currentQuestion] = true;
+            }
+            
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Puntuación: ${score}/${totalQuestions}`;
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('question-counter').textContent = `Pregunta ${currentQuestion} de ${totalQuestions}`;
+        }
+
+        function showQuestion(questionNum) {
+            // Hide all questions
+            const questions = document.querySelectorAll('.question');
+            questions.forEach(question => question.classList.remove('active'));
+            
+            // Show selected question
+            const targetQuestion = document.querySelector(`[data-question="${questionNum}"]`);
+            if (targetQuestion) {
+                targetQuestion.classList.add('active');
+            }
+            
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentQuestion === 1;
+            nextBtn.disabled = currentQuestion === totalQuestions;
+            
+            if (currentQuestion === totalQuestions) {
+                nextBtn.textContent = 'Finalizar';
+            } else {
+                nextBtn.textContent = 'Siguiente';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // Initialize quiz
+        updateProgress();
+        updateNavigationButtons();
+    </script>
+</body>
+</html>

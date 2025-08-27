@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratos de las Administraciones Públicas - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tabs {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .options {
+            list-style: none;
+            margin: 0.5rem 0;
+        }
+
+        .options li {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            background: var(--bg-secondary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+        }
+
+        .options li.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .options li.incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: black;
+        }
+
+        .difficulty.avanzado {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-left: 50px;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -41px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #66b3ff);
+            transition: width 0.3s ease;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #3a8eef;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+                padding: 0.75rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">📋 Contratos de las Administraciones Públicas</div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Cambiar tema</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('ley-principios')">Ley y Principios</button>
+            <button class="tab" onclick="showTab('requisitos-tipos')">Requisitos y Tipos</button>
+            <button class="tab" onclick="showTab('procedimientos')">Procedimientos</button>
+            <button class="tab" onclick="showTab('racionalizacion')">Racionalización</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h3>🎯 Resumen Ejecutivo</h3>
+                <div class="highlight-box">
+                    <p><strong>Tema 011 - Contratos de las Administraciones Públicas</strong></p>
+                    <p>Estudio integral de la contratación pública basado en la Ley 9/2017 de Contratos del Sector Público, abarcando desde los principios fundamentales hasta los procedimientos específicos de adjudicación.</p>
+                </div>
+                
+                <h4>📊 Estadísticas Clave</h4>
+                <div class="grid">
+                    <div class="card">
+                        <h4>Umbrales SARA</h4>
+                        <ul>
+                            <li><strong>Suministros/Servicios AGE:</strong> 143.000 €</li>
+                            <li><strong>Suministros/Servicios otras AAPP:</strong> 221.000 €</li>
+                            <li><strong>Obras y Concesiones:</strong> 5.538.000 €</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Contratos Menores</h4>
+                        <ul>
+                            <li><strong>Obras:</strong> < 40.000 €</li>
+                            <li><strong>Suministros/Servicios:</strong> < 15.000 €</li>
+                            <li><strong>Presupuestos mínimos:</strong> 3 ofertas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>🎯 Objetivos de Aprendizaje</h4>
+                <ul>
+                    <li>Comprender los principios básicos de la contratación pública</li>
+                    <li>Dominar los tipos de contratos y sus características</li>
+                    <li>Conocer los procedimientos de adjudicación</li>
+                    <li>Entender los sistemas de racionalización técnica</li>
+                    <li>Aplicar la normativa en casos prácticos</li>
+                </ul>
+
+                <h4>📈 Conceptos Principales</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Directivas Europeas (2014)</h4>
+                        <p>Base normativa: Directivas 2014/24/UE, 2014/23/UE y 2014/25/UE</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Ley 9/2017</h4>
+                        <p>Transposición al ordenamiento español - Ley de Contratos del Sector Público</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Principios Fundamentales</h4>
+                        <p>Transparencia, libre competencia, no discriminación e igualdad de trato</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Ley y Principios -->
+        <div id="ley-principios" class="tab-content">
+            <div class="card">
+                <h3>⚖️ La Ley de Contratos del Sector Público</h3>
+                
+                <div class="highlight-box">
+                    <h4>📋 Contexto Legislativo</h4>
+                    <p>La Ley 9/2017, de 8 de noviembre, surge del marco de la <strong>Estrategia Europa 2020</strong> para garantizar un uso racional de los fondos públicos y promover un crecimiento sostenible.</p>
+                </div>
+
+                <h4>🇪🇺 Directivas Europeas Fundamentales</h4>
+                <div class="grid">
+                    <div class="card">
+                        <h4>Directiva 2014/24/UE</h4>
+                        <p>Contratación pública general (deroga 2004/18/CE)</p>
+                    </div>
+                    <div class="card">
+                        <h4>Directiva 2014/23/UE</h4>
+                        <p>Contratos de concesión</p>
+                    </div>
+                    <div class="card">
+                        <h4>Directiva 2014/25/UE</h4>
+                        <p>Entidades operadoras (agua, energía, transportes, servicios postales)</p>
+                    </div>
+                </div>
+
+                <h4>🎯 Objetivos Principales de la Ley</h4>
+                <ol>
+                    <li><strong>Mayor transparencia</strong> en la contratación pública</li>
+                    <li><strong>Mejor relación calidad-precio</strong></li>
+                    <li><strong>Simplificación de trámites</strong> y reducción de burocracia</li>
+                    <li><strong>Facilitar acceso de PYMEs</strong> mediante división en lotes</li>
+                    <li><strong>Normas estrictas</strong> contra ofertas anormalmente bajas</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>🌟 Principios Comunes</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🔓 Libertad de Acceso</h4>
+                        <p>Favorecer la concurrencia en las licitaciones</p>
+                        <ul>
+                            <li>Acceso libre a las licitaciones</li>
+                            <li>Eliminación de barreras artificiales</li>
+                            <li>Promoción de la competencia</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📢 Publicidad y Transparencia</h4>
+                        <p>Maximizar el número de licitadores</p>
+                        <ul>
+                            <li>Publicación de procedimientos</li>
+                            <li>Información accesible</li>
+                            <li>Mejor relación calidad-precio</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚖️ No Discriminación</h4>
+                        <p>Igualdad de trato entre licitadores</p>
+                        <ul>
+                            <li>Mismas oportunidades para todos</li>
+                            <li>Criterios objetivos</li>
+                            <li>Evaluación imparcial</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>♻️ Criterios Transversales Obligatorios</h4>
+                    <p>En toda contratación pública se incorporarán de manera transversal y preceptiva:</p>
+                    <ul>
+                        <li><strong>Criterios sociales</strong> relacionados con el objeto del contrato</li>
+                        <li><strong>Criterios medioambientales</strong> sostenibles</li>
+                        <li><strong>Facilitación del acceso</strong> a pequeñas y medianas empresas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Requisitos y Tipos -->
+        <div id="requisitos-tipos" class="tab-content">
+            <div class="card">
+                <h3>📋 Requisitos para la Celebración de Contratos</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>✅ Necesidad e Idoneidad</h4>
+                        <ul>
+                            <li>Solo contratos necesarios para fines institucionales</li>
+                            <li>Programación anticipada de la actividad</li>
+                            <li>Anuncio de información previa</li>
+                            <li>Contratos sujetos a regulación armonizada</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>💼 Capacidad y Solvencia</h4>
+                        <ul>
+                            <li>Solvencia económica y financiera</li>
+                            <li>Solvencia profesional o técnica</li>
+                            <li>Clasificación para contratos de obras > 500.000€</li>
+                            <li>Inscripción en ROLECE</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>📊 Clasificación de Empresas</h4>
+                    <p>Los acuerdos de clasificación se adoptan por la <strong>Junta Consultiva de Contratación Pública del Estado</strong> y se inscriben en el <strong>Registro Oficial de Licitadores y Empresas Clasificadas del Sector Público (ROLECE)</strong>.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📑 Tipos de Contratos</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🏗️ Contrato de Obras</h4>
+                        <p>Construcción, reforma, reparación, conservación, demolición, etc.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🏛️ Concesión de Obras</h4>
+                        <p>Gestión de obra pública con contraprestación del uso</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🛠️ Concesión de Servicios</h4>
+                        <p>Gestión de servicio público con riesgo operacional</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📦 Contrato de Suministro</h4>
+                        <p>Adquisición, arrendamiento, alquiler de productos</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🤝 Contrato de Servicios</h4>
+                        <p>Prestaciones de hacer diferentes de obras</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🔄 Contratos Mixtos</h4>
+                        <p>Prestaciones de dos o más tipos diferentes</p>
+                    </div>
+                </div>
+
+                <h4>📊 Umbrales de Regulación Armonizada (SARA)</h4>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo de Contrato</th>
+                                <th>AGE</th>
+                                <th>Otras AAPP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Suministros y Servicios</td>
+                                <td>143.000 €</td>
+                                <td>221.000 €</td>
+                            </tr>
+                            <tr>
+                                <td>Obras, Concesión de Obras y Servicios</td>
+                                <td colspan="2">5.538.000 €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><small>* Valores actualizados a Diciembre 2023 - Orden HFP/1352/2023</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Procedimientos -->
+        <div id="procedimientos" class="tab-content">
+            <div class="card">
+                <h3>⚙️ Procedimientos de Contratación</h3>
+                
+                <h4>📋 Expediente de Contratación</h4>
+                <p>La celebración de contratos requiere la previa tramitación del correspondiente expediente, iniciado por el órgano de contratación <strong>motivando la necesidad del contrato</strong>.</p>
+
+                <h4>⏱️ Tipos de Tramitación</h4>
+                <div class="grid">
+                    <div class="card">
+                        <h4>📅 Ordinaria</h4>
+                        <p>Tramitación habitual con plazos estándar definidos en la ley</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚡ Urgente</h4>
+                        <p>Para necesidades inaplazables o por razones de interés público. Reduce plazos con preferencia en el despacho.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🚨 Emergencia</h4>
+                        <p>Acontecimientos catastróficos, grave peligro o defensa nacional. Sin requisitos formales habituales.</p>
+                    </div>
+                </div>
+
+                <h4>📄 Pliegos de Contratación</h4>
+                <ul>
+                    <li><strong>Cláusulas administrativas generales</strong> - Aprobados por Consejo de Ministros</li>
+                    <li><strong>Cláusulas administrativas particulares (PCAP)</strong> - Específicos del contrato</li>
+                    <li><strong>Prescripciones técnicas generales</strong> - Aprobados por Consejo de Ministros</li>
+                    <li><strong>Prescripciones técnicas particulares (PPTP)</strong> - Específicos del contrato</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Formas de Adjudicación</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>📝 Contrato Menor</h4>
+                        <p><strong>Umbrales:</strong></p>
+                        <ul>
+                            <li>Obras: < 40.000 €</li>
+                            <li>Suministros/Servicios: < 15.000 €</li>
+                        </ul>
+                        <p><strong>Requisitos:</strong></p>
+                        <ul>
+                            <li>Mínimo 3 presupuestos</li>
+                            <li>Informe del órgano</li>
+                            <li>Aprobación del gasto</li>
+                            <li>Incorporación de factura</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🌐 Procedimiento Abierto</h4>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Cualquier empresario puede presentar oferta</li>
+                            <li>No hay negociación</li>
+                            <li>SARA: min 35 días (reducible a 15)</li>
+                            <li>No SARA: min 15 días</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚡ Abierto Simplificado</h4>
+                        <p><strong>Condiciones:</strong></p>
+                        <ul>
+                            <li>Obras ≤ 2.000.000 €</li>
+                            <li>Suministros/Servicios < 143.000 €</li>
+                            <li>Criterios juicio valor ≤ 25%</li>
+                            <li>Min 15 días (obras: 20 días)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🚀 Supersimplificado</h4>
+                        <p><strong>Límites:</strong></p>
+                        <ul>
+                            <li>Obras < 80.000 €</li>
+                            <li>Suministros/Servicios < 60.000 €</li>
+                            <li>Min 10 días (corrientes: 5 días)</li>
+                            <li>Sin acreditación solvencia</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔒 Procedimiento Restringido</h4>
+                    <p>Solicitud de participación → Selección por solvencia → Presentación de ofertas</p>
+                    <ul>
+                        <li>Ideal para servicios intelectuales complejos</li>
+                        <li>Consultoría, arquitectura, ingeniería</li>
+                        <li>Posibles primas por gastos de presentación</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>🤝 Procedimientos con Negociación</h4>
+                    <p><strong>Con publicidad:</strong></p>
+                    <ul>
+                        <li>Trabajo previo de diseño/adaptación</li>
+                        <li>Proyecto o solución innovadora</li>
+                        <li>Complejidad específica</li>
+                        <li>Especificaciones técnicas imprecisas</li>
+                    </ul>
+                    
+                    <p><strong>Sin publicidad:</strong></p>
+                    <ul>
+                        <li>No se presentaron ofertas</li>
+                        <li>Solo un empresario posible</li>
+                        <li>Contratos secretos o reservados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Racionalización -->
+        <div id="racionalizacion" class="tab-content">
+            <div class="card">
+                <h3>🔧 Racionalización Técnica de la Contratación</h3>
+                
+                <h4>📋 Acuerdos Marco (AM)</h4>
+                <div class="highlight-box">
+                    <p>Sistema para <strong>preestablecer condiciones o términos</strong> comunes a todos los contratos basados en ese acuerdo marco.</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🎯 Conceptos Clave</h4>
+                        <ul>
+                            <li><strong>Acuerdo Marco:</strong> Condiciones preestablecidas</li>
+                            <li><strong>Contrato Basado:</strong> Contrato específico derivado del AM</li>
+                            <li><strong>Segunda Licitación:</strong> Cuando no todos los términos están fijados</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📊 AM en Vigor</h4>
+                        <ul>
+                            <li><strong>AM 02/2020:</strong> Ordenadores, portátiles, monitores (12 lotes)</li>
+                            <li><strong>AM 05/2023:</strong> Impresoras, multifuncionales, escáneres</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>⚡ Sistemas Dinámicos de Adquisición (SDA)</h4>
+                <p>Procesos totalmente electrónicos para obras, servicios y suministros de uso corriente.</p>
+                
+                <div class="card">
+                    <h4>🖥️ SDA Activos</h4>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>SDA 25/2022 - Software</h4>
+                            <ul>
+                                <li>Lote 1: Software de sistema</li>
+                                <li>Lote 2: Gestión de infraestructura</li>
+                                <li>Lote 3: Analítica de datos</li>
+                                <li>Lote 4: Ciberseguridad</li>
+                                <li>Lote 5: Administración digital</li>
+                                <li>Lote 6: Productividad y colaboración</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card">
+                            <h4>Otros SDA Relevantes</h4>
+                            <ul>
+                                <li><strong>SDA 26/2021:</strong> Desarrollo de sistemas administración electrónica</li>
+                                <li><strong>SDA 24/2022:</strong> Equipos comunicaciones, servidores y almacenamiento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>🏢 Centrales de Contratación</h4>
+                <p>Integran en un único expediente prestaciones de varios ministerios y organismos.</p>
+                <ul>
+                    <li><strong>Contratos centralizados principales:</strong> Telecomunicaciones, Servicios postales, Seguridad de edificios, Limpieza</li>
+                    <li><strong>Diferencia con AM:</strong> Servicios concretos definidos, importe determinado, financiación establecida</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ Gobierno de la Contratación en la AGE</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🎯 DGRCC</h4>
+                        <p><strong>Dirección General de Racionalización y Centralización de la Contratación</strong></p>
+                        <ul>
+                            <li>Dependiente del Ministerio de Hacienda</li>
+                            <li>Impulso y gestión de contratación centralizada</li>
+                            <li>Seguimiento del Sector Público Estatal</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚖️ JCC</h4>
+                        <p><strong>Junta de Contratación Centralizada</strong></p>
+                        <ul>
+                            <li>Órgano de contratación del sistema estatal</li>
+                            <li>Adscrita a la DGRCC</li>
+                            <li>Gestión operativa</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🏛️ JCCPE</h4>
+                        <p><strong>Junta Consultiva de Contratación Pública del Estado</strong></p>
+                        <ul>
+                            <li>Órgano consultivo</li>
+                            <li>Adscrita al Ministerio de Hacienda</li>
+                            <li>Asesoramiento en contratación pública</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>🛠️ Herramientas de Soporte</h4>
+                <div class="grid">
+                    <div class="card">
+                        <h4>🌐 Plataforma de Contratación</h4>
+                        <p>Portal web central para información de contratación y perfil del contratante</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🔗 Conecta - Centralización</h4>
+                        <p>Plataforma para gestión de acuerdos marco y SDA</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📋 Registro de Contratos</h4>
+                        <p>Inscripción de datos básicos de contratos adjudicados</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📄 DEUC</h4>
+                        <p>Documento Europeo Único de Contratación para declaración empresarial</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h3>📝 Ejercicios Prácticos</h3>
+                <p>Practica tus conocimientos sobre contratos públicos con estas preguntas tipo examen.</p>
+                
+                <div class="quiz-container">
+                    <div class="question">
+                        <h4>1. ¿Cuál es el umbral para contratos de suministros SARA en la AGE? <span class="difficulty basico">Básico</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 221.000 €</li>
+                            <li onclick="selectAnswer(this, true)">b) 143.000 €</li>
+                            <li onclick="selectAnswer(this, false)">c) 500.000 €</li>
+                            <li onclick="selectAnswer(this, false)">d) 5.538.000 €</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>2. Los contratos menores de obras tienen un límite de: <span class="difficulty basico">Básico</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 15.000 €</li>
+                            <li onclick="selectAnswer(this, false)">b) 50.000 €</li>
+                            <li onclick="selectAnswer(this, true)">c) 40.000 €</li>
+                            <li onclick="selectAnswer(this, false)">d) 143.000 €</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>3. ¿Cuál es el principio que busca favorecer la concurrencia? <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, true)">a) Libertad de acceso a las licitaciones</li>
+                            <li onclick="selectAnswer(this, false)">b) Publicidad y transparencia</li>
+                            <li onclick="selectAnswer(this, false)">c) No discriminación</li>
+                            <li onclick="selectAnswer(this, false)">d) Eficiencia económica</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>4. La Ley 9/2017 transpone principalmente las directivas: <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 2004/18/CE y 2004/17/CE</li>
+                            <li onclick="selectAnswer(this, true)">b) 2014/24/UE y 2014/23/UE</li>
+                            <li onclick="selectAnswer(this, false)">c) Solo 2014/25/UE</li>
+                            <li onclick="selectAnswer(this, false)">d) 2014/26/UE y 2014/27/UE</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>5. Para contratos de obras superiores a 500.000€ es requisito: <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Autorización del Consejo de Ministros</li>
+                            <li onclick="selectAnswer(this, true)">b) Clasificación del empresario</li>
+                            <li onclick="selectAnswer(this, false)">c) Procedimiento restringido obligatorio</li>
+                            <li onclick="selectAnswer(this, false)">d) Segunda licitación</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>6. ¿Qué organismo es competente para resolver recursos especiales en materia de contratación en la AGE? <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Junta Consultiva de Contratación Pública</li>
+                            <li onclick="selectAnswer(this, false)">b) Consejo de Estado</li>
+                            <li onclick="selectAnswer(this, true)">c) Tribunal Administrativo Central de Recursos Contractuales</li>
+                            <li onclick="selectAnswer(this, false)">d) Tribunal de Cuentas</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>7. El procedimiento abierto simplificado abreviado (supersimplificado) se aplica a: <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, true)">a) Obras < 80.000€ y suministros/servicios < 60.000€</li>
+                            <li onclick="selectAnswer(this, false)">b) Solo suministros corrientes</li>
+                            <li onclick="selectAnswer(this, false)">c) Contratos de servicios intelectuales</li>
+                            <li onclick="selectAnswer(this, false)">d) Todos los contratos no SARA</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>8. ¿Cuál es la finalidad principal de los Acuerdos Marco? <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Reducir precios únicamente</li>
+                            <li onclick="selectAnswer(this, true)">b) Preestablecer condiciones comunes para contratos</li>
+                            <li onclick="selectAnswer(this, false)">c) Acelerar todos los procedimientos</li>
+                            <li onclick="selectAnswer(this, false)">d) Eliminar la necesidad de licitación</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>9. La tramitación de emergencia se puede usar en caso de: <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Urgencia administrativa normal</li>
+                            <li onclick="selectAnswer(this, false)">b) Falta de presupuesto</li>
+                            <li onclick="selectAnswer(this, true)">c) Acontecimientos catastróficos o defensa nacional</li>
+                            <li onclick="selectAnswer(this, false)">d) Contratos superiores a 5.538.000€</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>10. ¿Qué significa ROLECE? <span class="difficulty basico">Básico</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Registro Oficial de Licitaciones Centralizadas</li>
+                            <li onclick="selectAnswer(this, true)">b) Registro Oficial de Licitadores y Empresas Clasificadas del Sector Público</li>
+                            <li onclick="selectAnswer(this, false)">c) Registro de Ofertas y Licitaciones Europeas</li>
+                            <li onclick="selectAnswer(this, false)">d) Registro Oficial de Legislación Contractual Europea</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>11. El plazo mínimo para presentación de ofertas en procedimiento abierto no SARA es: <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 35 días</li>
+                            <li onclick="selectAnswer(this, false)">b) 20 días</li>
+                            <li onclick="selectAnswer(this, true)">c) 15 días</li>
+                            <li onclick="selectAnswer(this, false)">d) 10 días</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>12. La Administración debe pagar las facturas en un plazo de: <span class="difficulty basico">Básico</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 15 días</li>
+                            <li onclick="selectAnswer(this, false)">b) 20 días</li>
+                            <li onclick="selectAnswer(this, true)">c) 30 días</li>
+                            <li onclick="selectAnswer(this, false)">d) 45 días</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>13. ¿Cuál es el objetivo principal de FACe? <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Control de gastos públicos</li>
+                            <li onclick="selectAnswer(this, true)">b) Punto general de entrada de facturas electrónicas</li>
+                            <li onclick="selectAnswer(this, false)">c) Registro de contratos adjudicados</li>
+                            <li onclick="selectAnswer(this, false)">d) Plataforma de licitaciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>14. En el procedimiento restringido, ¿qué se evalúa primero? <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) El precio de la oferta</li>
+                            <li onclick="selectAnswer(this, false)">b) Los criterios técnicos</li>
+                            <li onclick="selectAnswer(this, true)">c) La solvencia del empresario</li>
+                            <li onclick="selectAnswer(this, false)">d) Los criterios sociales</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>15. Los contratos mixtos se tratan según: <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) El tipo de contrato de mayor valor económico</li>
+                            <li onclick="selectAnswer(this, true)">b) La prestación principal</li>
+                            <li onclick="selectAnswer(this, false)">c) El primer tipo mencionado en el pliego</li>
+                            <li onclick="selectAnswer(this, false)">d) Las normas más restrictivas</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>16. ¿Qué directiva regula las entidades que operan en sectores especiales? <span class="difficulty intermedio">Intermedio</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 2014/24/UE</li>
+                            <li onclick="selectAnswer(this, false)">b) 2014/23/UE</li>
+                            <li onclick="selectAnswer(this, true)">c) 2014/25/UE</li>
+                            <li onclick="selectAnswer(this, false)">d) 2014/26/UE</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>17. El DEUC es: <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Un registro de empresas europeas</li>
+                            <li onclick="selectAnswer(this, true)">b) Un formulario normalizado para declaraciones empresariales</li>
+                            <li onclick="selectAnswer(this, false)">c) Una directiva europea</li>
+                            <li onclick="selectAnswer(this, false)">d) Un sistema de clasificación</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>18. Para contratos menores, ¿cuántos presupuestos mínimos se requieren? <span class="difficulty basico">Básico</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) 1</li>
+                            <li onclick="selectAnswer(this, false)">b) 2</li>
+                            <li onclick="selectAnswer(this, true)">c) 3</li>
+                            <li onclick="selectAnswer(this, false)">d) 5</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>19. La Junta de Contratación Centralizada (JCC) está adscrita a: <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Ministerio de Administraciones Públicas</li>
+                            <li onclick="selectAnswer(this, true)">b) DGRCC (Ministerio de Hacienda)</li>
+                            <li onclick="selectAnswer(this, false)">c) Consejo de Estado</li>
+                            <li onclick="selectAnswer(this, false)">d) Tribunal de Cuentas</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <h4>20. ¿Cuál es una característica del diálogo competitivo? <span class="difficulty avanzado">Avanzado</span></h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">a) Se aplica solo a contratos menores</li>
+                            <li onclick="selectAnswer(this, false)">b) No requiere publicidad previa</li>
+                            <li onclick="selectAnswer(this, true)">c) Permite desarrollar soluciones con candidatos seleccionados</li>
+                            <li onclick="selectAnswer(this, false)">d) Es obligatorio para obras superiores a 5.538.000€</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button class="btn" onclick="resetQuiz()">🔄 Reiniciar Quiz</button>
+                    <button class="btn btn-secondary" onclick="showResults()">📊 Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h3>📚 Glosario de Términos Clave</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h4>🏛️ AGE</h4>
+                        <p>Administración General del Estado</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📋 AM</h4>
+                        <p>Acuerdo Marco - Sistema de preestablecimiento de condiciones contractuales</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚡ SDA</h4>
+                        <p>Sistema Dinámico de Adquisición - Proceso electrónico para compras corrientes</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🎯 SARA</h4>
+                        <p>Sujetos a Regulación Armonizada - Contratos que superan umbrales europeos</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📄 PCAP</h4>
+                        <p>Pliego de Cláusulas Administrativas Particulares</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🔧 PPTP</h4>
+                        <p>Pliego de Prescripciones Técnicas Particulares</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📋 ROLECE</h4>
+                        <p>Registro Oficial de Licitadores y Empresas Clasificadas del Sector Público</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🏛️ DGRCC</h4>
+                        <p>Dirección General de Racionalización y Centralización de la Contratación</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>⚖️ JCCPE</h4>
+                        <p>Junta Consultiva de Contratación Pública del Estado</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>💻 FACe</h4>
+                        <p>Punto General de Entrada de Facturas Electrónicas</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>📄 DEUC</h4>
+                        <p>Documento Europeo Único de Contratación</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>🤝 JCC</h4>
+                        <p>Junta de Contratación Centralizada</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❓ Preguntas Frecuentes (FAQ)</h3>
+                
+                <div class="card">
+                    <h4>¿Cuándo es obligatoria la clasificación de empresas?</h4>
+                    <p>Para contratos de obras cuyo valor estimado sea igual o superior a 500.000 euros. Para contratos de servicios no es exigible.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Qué diferencia hay entre procedimiento ordinario y simplificado?</h4>
+                    <p>El simplificado tiene límites de valor (obras ≤ 2M€, suministros/servicios < 143k€) y restricciones en criterios de juicio de valor (≤ 25% del total).</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Cuándo se puede usar tramitación urgente?</h4>
+                    <p>Cuando la celebración responda a una necesidad inaplazable o sea preciso acelerar por razones de interés público, con declaración motivada.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Qué es la segunda licitación en Acuerdos Marco?</h4>
+                    <p>Nueva licitación para adjudicar contratos basados cuando no todos los términos están fijados en el acuerdo marco.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Cuál es la diferencia entre AM y contratos centralizados?</h4>
+                    <p>Los AM preestablecen condiciones; los centralizados definen servicios concretos, importe y financiación en un único expediente.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Qué plazo tiene la Administración para pagar?</h4>
+                    <p>30 días desde la aprobación de certificaciones de obra o documentos de conformidad.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Cuándo es obligatorio dividir en lotes?</h4>
+                    <p>Como norma general, salvo justificación en expediente. Facilita acceso de PYMEs según la Ley 9/2017.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>¿Qué es el encargo a medios propios personificados?</h4>
+                    <p>Ejecución directa de prestaciones a través de otra persona jurídica propia, previo encargo, sin considerarse contrato.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Consejos para el Examen</h3>
+                <div class="highlight-box">
+                    <h4>📋 Estrategias de Estudio</h4>
+                    <ul>
+                        <li><strong>Memoriza los umbrales:</strong> 143k€, 221k€, 5.538k€</li>
+                        <li><strong>Diferencia procedimientos:</strong> Abierto vs Restringido vs Negociado</li>
+                        <li><strong>Conoce las excepciones:</strong> Tramitación urgente vs emergencia</li>
+                        <li><strong>Domina AM y SDA:</strong> Conceptos y ejemplos prácticos</li>
+                        <li><strong>Organigrama AGE:</strong> DGRCC, JCC, JCCPE y sus funciones</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>⚠️ Errores Comunes</h4>
+                    <ul>
+                        <li>Confundir umbrales SARA entre AGE y otras AAPP</li>
+                        <li>No distinguir entre contratos menores y simplificados</li>
+                        <li>Mezclar conceptos de AM y contratos centralizados</li>
+                        <li>Confundir plazos de procedimientos</li>
+                        <li>No recordar las directivas europeas base</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let quizAnswers = {};
+        
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '🌞 Cambiar tema';
+                currentTheme = 'light';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.removeAttribute('data-theme');
+                themeToggle.innerHTML = '🌙 Cambiar tema';
+                currentTheme = 'dark';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function selectAnswer(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('li');
+            const questionNum = element.closest('.question').querySelector('h4').textContent.split('.')[0];
+            
+            // Reset all options in this question
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark the correct answer
+            if (isCorrect) {
+                element.classList.add('correct');
+                quizAnswers[questionNum] = true;
+            } else {
+                element.classList.add('incorrect');
+                // Show the correct answer
+                options.forEach(option => {
+                    if (option.onclick.toString().includes('true')) {
+                        option.classList.add('correct');
+                    }
+                });
+                quizAnswers[questionNum] = false;
+            }
+        }
+        
+        function resetQuiz() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            quizAnswers = {};
+        }
+        
+        function showResults() {
+            const totalQuestions = 20;
+            const correctAnswers = Object.values(quizAnswers).filter(answer => answer === true).length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            let resultMessage = `Resultado: ${correctAnswers}/${totalQuestions} (${percentage}%)\\n\\n`;
+            
+            if (percentage >= 80) {
+                resultMessage += '🎉 ¡Excelente! Dominas muy bien la materia.';
+            } else if (percentage >= 60) {
+                resultMessage += '👍 Buen trabajo, pero puedes mejorar.';
+            } else {
+                resultMessage += '📚 Necesitas repasar más la materia.';
+            }
+            
+            alert(resultMessage);
+        }
+        
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                toggleTheme();
+            }
+        });
+        
+        // Smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                html {
+                    scroll-behavior: smooth;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

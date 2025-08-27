@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologías Predictivas: Gantt, PERT - Guía Completa</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .main-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), #6ec6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .tabs-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            background: var(--bg-card);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(110, 198, 255, 0.1));
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(76, 175, 80, 0.1));
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1));
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .formula-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question {
+            margin-bottom: 2rem;
+        }
+
+        .question-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .question-options {
+            list-style: none;
+        }
+
+        .question-options li {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .question-options li:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .question-options li.correct {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: var(--success-color);
+        }
+
+        .question-options li.incorrect {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: var(--error-color);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .badge-basico { background: rgba(40, 167, 69, 0.2); color: var(--success-color); }
+        .badge-intermedio { background: rgba(255, 193, 7, 0.2); color: var(--warning-color); }
+        .badge-avanzado { background: rgba(220, 53, 69, 0.2); color: var(--error-color); }
+
+        .glossary-term {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .term-title {
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #6ec6ff);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .tabs-nav { flex-direction: column; }
+            .tab-btn { min-width: unset; }
+            .theme-toggle { position: static; margin: 0 auto 1rem; }
+            .header { text-align: center; }
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .expandable-section {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .expandable-header {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .expandable-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .expandable-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .expandable-section.expanded .expandable-content {
+            max-height: 1000px;
+            padding: 1rem;
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .expandable-section.expanded .arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">🌙</button>
+            <h1 class="main-title">Metodologías Predictivas para Gestión de Proyectos</h1>
+            <p class="subtitle">GANTT y PERT - Guía Completa de Estudio</p>
+        </header>
+
+        <main class="tabs-container">
+            <nav class="tabs-nav" role="tablist">
+                <button class="tab-btn active" data-tab="resumen" role="tab">📋 Resumen General</button>
+                <button class="tab-btn" data-tab="gantt" role="tab">📊 Diagramas GANTT</button>
+                <button class="tab-btn" data-tab="pert" role="tab">🔗 Método PERT</button>
+                <button class="tab-btn" data-tab="calculos" role="tab">⚡ Cálculos y Holguras</button>
+                <button class="tab-btn" data-tab="tecnicas" role="tab">🚀 Técnicas de Compresión</button>
+                <button class="tab-btn" data-tab="ejercicios" role="tab">🎯 Ejercicios Prácticos</button>
+                <button class="tab-btn" data-tab="recursos" role="tab">📚 Recursos y FAQ</button>
+            </nav>
+
+            <div id="resumen" class="tab-content active">
+                <div class="card">
+                    <h2 class="card-title">🎯 Objetivos de Aprendizaje</h2>
+                    <ul>
+                        <li>Dominar las técnicas de planificación GANTT y PERT</li>
+                        <li>Calcular caminos críticos y holguras de actividades</li>
+                        <li>Aplicar técnicas de compresión temporal</li>
+                        <li>Interpretar diagramas de redes y cronogramas</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📊 Estadísticas Clave</h2>
+                    <div class="grid-layout">
+                        <div class="highlight-box">
+                            <h3>GANTT</h3>
+                            <p>Representación visual del cronograma del proyecto con barras horizontales que muestran duración y secuencia de tareas</p>
+                        </div>
+                        <div class="highlight-box">
+                            <h3>PERT</h3>
+                            <p>Técnica de evaluación y revisión de programas que utiliza redes para modelar dependencias entre actividades</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">🔑 Conceptos Principales</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h3>Planificación de Proyectos</h3>
+                            <p>Previsión en fechas de la realización del conjunto de actividades, considerando recursos y costes para lograr un resultado comprometido</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>Camino Crítico</h3>
+                            <p>Secuencia de actividades que determina la duración mínima del proyecto. Cualquier retraso en estas actividades retrasa el proyecto completo</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3>Holguras</h3>
+                            <p>Tiempo disponible para retrasar una actividad sin afectar la duración total del proyecto o las actividades siguientes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <h3>💡 Según Métrica v3</h3>
+                    <p>La planificación contempla diversas técnicas: PERT, GANTT, EDT y diagramas de extrapolación. Otras técnicas basadas en redes incluyen CPM (Critical Path Method) y el Método de ROY.</p>
+                </div>
+            </div>
+
+            <div id="gantt" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📊 Diagrama de Gantt</h2>
+                    <div class="definition-box">
+                        <p><strong>Definición:</strong> El diagrama de Gantt o cronograma representa el plan de trabajo, mostrando las tareas a realizar, el momento de su comienzo y terminación, y la forma en que las distintas tareas están encadenadas entre sí.</p>
+                    </div>
+
+                    <h3>🎨 Representación del Diagrama</h3>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Eje Y (Ordenadas):</strong> Relación de actividades a realizar
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Eje X (Abscisas):</strong> Escala de tiempos
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Barras:</strong> Duración y situación temporal mediante líneas en el lugar correspondiente
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📈 Elementos del Diagrama</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>Representación</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Agregación/Fase</strong></td>
+                                <td>Barra gruesa</td>
+                                <td>Agrupa múltiples tareas relacionadas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tarea</strong></td>
+                                <td>Barra delgada</td>
+                                <td>Actividad específica con duración definida</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hito</strong></td>
+                                <td>Rombo o triángulo</td>
+                                <td>Punto o evento significativo sin duración</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📊 Patrón de Límites</h2>
+                    <div class="warning-box">
+                        <p><strong>Técnica de Métrica v3:</strong> Establece límites de recursos aproximados considerando tres situaciones del proyecto:</p>
+                    </div>
+
+                    <div class="grid-layout">
+                        <div class="card">
+                            <h3>🚀 Arranque</h3>
+                            <p>Se van incorporando recursos hasta alcanzar el máximo. Fase de inicio del proyecto.</p>
+                        </div>
+                        <div class="card">
+                            <h3>⚡ Pleno Rendimiento</h3>
+                            <p>Estabilidad en el número de recursos. Fase de desarrollo principal.</p>
+                        </div>
+                        <div class="card">
+                            <h3>🏁 Finalización</h3>
+                            <p>Las tareas van terminándose y los técnicos abandonan gradualmente el proyecto.</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📋 Distribución de Recursos</h3>
+                        <ul>
+                            <li>Las tres situaciones tienen igual duración</li>
+                            <li>El jefe de proyecto está durante todo el ciclo de vida</li>
+                            <li>Mitad del esfuerzo en pleno rendimiento</li>
+                            <li>Otra mitad dividida entre arranque y finalización</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📈 Seguimiento del Cronograma</h2>
+                    <div class="definition-box">
+                        <h3>📏 Línea Base</h3>
+                        <p>Versión aprobada del cronograma que permite comparar la programación inicial con lo ejecutado realmente. Solo se puede modificar mediante procedimientos formales de control de cambios.</p>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-number">✓</div>
+                        <div>
+                            <strong>Comparación:</strong> Las fechas aprobadas se comparan con las reales de inicio y finalización para determinar desviaciones.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pert" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🔗 Diagrama PERT</h2>
+                    <div class="definition-box">
+                        <p><strong>Program Evaluation and Review Technique:</strong> Permite representar gráficamente la vinculación entre actividades y eventos mediante redes o grafos, reflejando interdependencias independientemente de la dimensión temporal.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">🎯 Métodos de Diagramación</h2>
+                    
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>📊 PDM - Precedence Diagramming Method</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Activity in Node:</strong> Cada actividad es un nodo del grafo y las flechas representan las dependencias.</p>
+                            <h4>Relaciones de Precedencia:</h4>
+                            <ul>
+                                <li><strong>Final a Inicio (FS):</strong> El inicio de la actividad sucesora depende de la finalización de la predecesora</li>
+                                <li><strong>Final a Final (FF):</strong> La finalización de la sucesora depende de la finalización de la predecesora</li>
+                                <li><strong>Inicio a Inicio (SS):</strong> El inicio de la sucesora depende del inicio de la predecesora</li>
+                                <li><strong>Inicio a Final (SF):</strong> La finalización de la sucesora depende del inicio de la predecesora</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>🏹 ADM - Arrow Diagramming Method</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p><strong>Activity on Arrow:</strong> Las flechas indican las actividades (relaciones "final a inicio"). El inicio o final se representa con círculos denominados sucesos, eventos o nodos.</p>
+                            <div class="highlight-box">
+                                <p><strong>Ejemplo:</strong> La actividad A se realiza entre el suceso 1 y el 2.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📏 Principios del PERT</h2>
+                    <div class="grid-layout">
+                        <div class="card">
+                            <h3>🎯 Unicidad</h3>
+                            <p>Los sucesos de inicio y final del proyecto deben ser únicos</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔀 Designación Unívoca</h3>
+                            <p>No puede haber dos flechas que salgan del mismo nodo y vayan al mismo nodo</p>
+                        </div>
+                        <div class="card">
+                            <h3>➡️ Designación Sucesiva</h3>
+                            <p>Los nodos se dibujan de izquierda a derecha y de arriba abajo, sin formar bucles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">🔗 Tipos de Prelaciones</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Notación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Precedencia Lineal</strong></td>
+                                <td>Para iniciar B es necesario haber finalizado A</td>
+                                <td>A &lt; B</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Precedencia Convergente</strong></td>
+                                <td>Para iniciar D es necesario haber finalizado A, B y C</td>
+                                <td>A,B,C &lt; D</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Precedencia Divergente</strong></td>
+                                <td>Para iniciar B, C o D, es necesario que haya finalizado A</td>
+                                <td>A &lt; B,C,D</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">👻 Actividades Ficticias</h2>
+                    <div class="warning-box">
+                        <p><strong>Características:</strong> No consumen tiempo ni recursos. Se utilizan para resolver problemas de representación gráfica.</p>
+                    </div>
+
+                    <h3>📋 Casos de Uso:</h3>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Prelaciones Mixtas:</strong> Cuando se presentan simultáneamente prelaciones lineales y de convergencia/divergencia
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Actividades Paralelas:</strong> Para evitar incumplir el principio de designación unívoca
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">📊 Herramientas de Análisis</h2>
+                    <div class="grid-layout">
+                        <div class="card">
+                            <h3>📋 Matriz de Encadenamientos</h3>
+                            <p>Matriz cuadrada de dimensión igual al número de actividades. Una X indica que para iniciar la actividad de la fila debe haberse finalizado la de la columna.</p>
+                        </div>
+                        <div class="card">
+                            <h3>📋 Tabla de Precedencias</h3>
+                            <p>Tabla con dos columnas: izquierda con todas las actividades del proyecto, derecha con las actividades precedentes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">⏱️ Asignación de Tiempos</h2>
+                    <div class="highlight-box">
+                        <p><strong>Diferencia con CPM:</strong> Mientras CPM asume duraciones conocidas con certeza, PERT considera tiempos probabilísticos.</p>
+                    </div>
+
+                    <h3>📊 Tres Estimaciones de Tiempo:</h3>
+                    <div class="grid-layout">
+                        <div class="card">
+                            <h3>🟢 Optimista (a)</h3>
+                            <p>Mínima duración para la actividad si todo saliera según lo esperado</p>
+                        </div>
+                        <div class="card">
+                            <h3>🟡 Más Probable (m)</h3>
+                            <p>Duración modal para circunstancias ni muy favorables ni desfavorables</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔴 Pesimista (b)</h3>
+                            <p>Tiempo máximo que durará la actividad</p>
+                        </div>
+                    </div>
+
+                    <div class="formula-box">
+                        <h4>📈 Distribuciones Utilizadas:</h4>
+                        <p><strong>Triangular:</strong> Distribución básica</p>
+                        <p><strong>Beta:</strong> Más utilizada por su mejor ajuste estadístico</p>
+                        <br>
+                        <p><strong>Duración Esperada:</strong> (a + 4m + b) / 6</p>
+                        <p><strong>Desviación Estándar:</strong> (b - a) / 6</p>
+                        <p><strong>Varianza:</strong> ((b - a) / 6)²</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calculos" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">⏰ Tiempos Early y Last</h2>
+                    <div class="grid-layout">
+                        <div class="definition-box">
+                            <h3>⏰ Tiempo Early</h3>
+                            <p><strong>Definición:</strong> Tiempo mínimo necesario para llegar a ese suceso. Es el tiempo más temprano posible en el que pueden comenzar todas las actividades que parten del mismo.</p>
+                            <div class="formula-box">
+                                EARLY(j) = Máximo [EARLY(i) + Duración(Actividad i_j)]
+                            </div>
+                        </div>
+                        <div class="definition-box">
+                            <h3>⏰ Tiempo Last</h3>
+                            <p><strong>Definición:</strong> Tiempo máximo que puede retrasarse sin retrasar la duración del proyecto. Es el tiempo más tarde posible en el que puede empezar una actividad.</p>
+                            <div class="formula-box">
+                                LAST(i) = Mínimo [LAST(j) - Duración(Actividad i_j)]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📊 Oscilación de un Suceso</h3>
+                        <p>Diferencia entre sus tiempos Last y Early. Indica la flexibilidad temporal disponible.</p>
+                        <div class="formula-box">
+                            Oscilación = LAST - EARLY
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">⚡ Tipos de Holguras</h2>
+                    
+                    <div class="expandable-section expanded">
+                        <div class="expandable-header">
+                            <h3>🎯 Holgura Total</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Tiempo de retraso máximo en la ejecución de una actividad sin afectar a la duración total del proyecto.</p>
+                            <div class="formula-box">
+                                Holgura_Total(i_j) = LAST(j) - EARLY(i) - Duración(i_j)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>🔓 Holgura Libre</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Tiempo que puede alargarse la ejecución sin afectar a las siguientes. Solo puede gastarse en la propia actividad o las precedentes.</p>
+                            <div class="formula-box">
+                                Holgura_Libre(i_j) = EARLY(j) - EARLY(i) - Duración(i_j)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>🔒 Holgura Independiente</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Tiempo suplementario si las precedentes terminaran lo más tarde posible y las posteriores lo antes posible. Solo se puede gastar en esta actividad.</p>
+                            <div class="formula-box">
+                                Holgura_Independiente(i_j) = EARLY(j) - LAST(i) - Duración(i_j)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>🎛️ Holgura Condicional</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Tiempo extra para la realización si el suceso origen y final se dan en sus fechas más tardías. Siempre es positiva o nula.</p>
+                            <div class="formula-box">
+                                Holgura_Condicional(i_j) = LAST(j) - LAST(i) - Duración(i_j)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>📊 Relación entre Holguras</h3>
+                        <div class="formula-box">
+                            Holgura Total ≥ Holgura Libre ≥ Holgura Independiente
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">🛤️ Camino Crítico</h2>
+                    <div class="definition-box">
+                        <p>Formado por aquellas actividades que, de retrasarse, provocarían un retraso global del proyecto. El tiempo más temprano y el más tardío en el que pueden comenzar estas actividades coinciden y <strong>su holgura es 0</strong>.</p>
+                    </div>
+
+                    <h3>🎯 Características del Camino Crítico:</h3>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>Es el que tiene <strong>mayor duración</strong> entre los eventos inicio y final del proyecto</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>Marca el <strong>mínimo tiempo posible</strong> en el que se puede realizar el proyecto</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div>Las <strong>oscilaciones de los sucesos</strong> que forman parte del camino crítico son 0</div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>📊 Consideraciones Importantes</h3>
+                        <ul>
+                            <li>Puede existir más de un camino crítico en un proyecto</li>
+                            <li>Incluso puede suceder que todas las actividades del grafo sean críticas</li>
+                            <li>En proyectos con varios caminos críticos, se considera el más desfavorable</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h3>📈 Distribución Normal del Proyecto</h3>
+                        <p>Si el camino crítico contiene un número elevado de actividades, se puede aplicar el teorema central del límite:</p>
+                        <ul>
+                            <li><strong>Media:</strong> Suma de las medias de las actividades críticas</li>
+                            <li><strong>Varianza:</strong> Suma de las varianzas de las actividades críticas</li>
+                            <li><strong>Desviación típica:</strong> Raíz cuadrada de la varianza del proyecto</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tecnicas" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🚀 Técnicas de Compresión de la Planificación Temporal</h2>
+                    <div class="highlight-box">
+                        <p>Cuando existe riesgo de retraso en la planificación, PMBOK define dos técnicas principales para comprimir la planificación y recuperar tiempo, evitando que los retrasos afecten al camino crítico.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">⚡ Fast Tracking</h2>
+                    <div class="definition-box">
+                        <h3>🎯 Definición</h3>
+                        <p>Consiste en la <strong>ejecución paralela</strong> de tareas que originalmente fueron planificadas como tareas secuenciales.</p>
+                    </div>
+
+                    <h3>📋 Características:</h3>
+                    <div class="grid-layout">
+                        <div class="card">
+                            <div class="icon">✅</div>
+                            <h4>Ventajas</h4>
+                            <ul>
+                                <li>No supone ningún coste adicional</li>
+                                <li>Debería considerarse primero</li>
+                                <li>Permite recuperar tiempo significativo</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <div class="icon">⚠️</div>
+                            <h4>Desventajas</h4>
+                            <ul>
+                                <li>Genera riesgo adicional</li>
+                                <li>Aumenta probabilidad de retrabajos</li>
+                                <li>Requiere sincronización de tareas y recursos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-number">⚡</div>
+                        <div>
+                            <strong>Requisito:</strong> Solo es posible si las tareas se pueden solapar en su ejecución
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">💰 Crashing</h2>
+                    <div class="definition-box">
+                        <h3>🎯 Definición</h3>
+                        <p>Consiste en <strong>añadir recursos</strong> para reducir la duración de una tarea.</p>
+                    </div>
+
+                    <h3>📊 Consideraciones Importantes:</h3>
+                    <div class="warning-box">
+                        <ul>
+                            <li><strong>Incrementa el coste</strong> del proyecto</li>
+                            <li>El <strong>ahorro de tiempo no es proporcional</strong> al aumento de recursos</li>
+                            <li>Más eficiente <strong>añadir pocos recursos a varias tareas</strong> del camino crítico</li>
+                            <li>Menos eficiente añadir gran cantidad de recursos a una única tarea</li>
+                        </ul>
+                    </div>
+
+                    <h3>📋 Proceso de Análisis:</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1. Análisis Coste-Beneficio</h4>
+                            <p>Determinar qué actividades pueden producir mayor ahorro de tiempo con menor inversión</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2. Selección de Actividades</h4>
+                            <p>Priorizar actividades del camino crítico con mejor relación coste/tiempo</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>3. Distribución de Recursos</h4>
+                            <p>Distribuir recursos adicionales entre múltiples tareas críticas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">⚖️ Comparación de Técnicas</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>Fast Tracking</th>
+                                <th>Crashing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Coste</strong></td>
+                                <td>Sin coste adicional</td>
+                                <td>Incrementa el coste</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Riesgo</strong></td>
+                                <td>Aumenta el riesgo</td>
+                                <td>Riesgo controlado</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aplicabilidad</strong></td>
+                                <td>Solo si las tareas pueden solaparse</td>
+                                <td>Aplicable a cualquier actividad</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prioridad</strong></td>
+                                <td>Considerar primero</td>
+                                <td>Considerar después</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efectos Secundarios</strong></td>
+                                <td>Retrabajos, sincronización</td>
+                                <td>Impacto presupuestario</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">🎯 Estrategia de Aplicación</h2>
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Identificar el problema:</strong> Detectar riesgo de retraso en el camino crítico
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Evaluar Fast Tracking:</strong> Determinar si las actividades pueden ejecutarse en paralelo
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Aplicar Fast Tracking:</strong> Si es viable, implementar ejecución paralela
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Considerar Crashing:</strong> Si Fast Tracking no es suficiente, analizar coste-beneficio de recursos adicionales
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <strong>Implementar Crashing:</strong> Añadir recursos de forma distribuida en el camino crítico
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ejercicios" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🎯 Ejercicios Prácticos</h2>
+                    <p>Evalúa tus conocimientos sobre metodologías predictivas GANTT y PERT con estos ejercicios diseñados para exámenes de oposiciones.</p>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="question">
+                        <div class="difficulty-badge badge-basico">Básico</div>
+                        <div class="question-title">1. ¿Cuál es el objetivo principal del diagrama de Gantt según Métrica v3?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Calcular el camino crítico del proyecto</li>
+                            <li data-correct="true">Representar el plan de trabajo mostrando tareas, su comienzo y terminación</li>
+                            <li data-correct="false">Establecer las dependencias probabilísticas entre actividades</li>
+                            <li data-correct="false">Optimizar la asignación de recursos humanos</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-basico">Básico</div>
+                        <div class="question-title">2. En un diagrama de Gantt, ¿qué representa el eje de ordenadas (eje Y)?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">La escala de tiempos</li>
+                            <li data-correct="true">La relación de actividades a realizar</li>
+                            <li data-correct="false">Los recursos asignados al proyecto</li>
+                            <li data-correct="false">Los hitos del proyecto</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">3. ¿Qué significa PERT?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Project Evaluation and Resource Technique</li>
+                            <li data-correct="true">Program Evaluation and Review Technique</li>
+                            <li data-correct="false">Procedural Evaluation and Risk Technique</li>
+                            <li data-correct="false">Process Enhancement and Review Technology</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">4. En el método PDM, ¿qué tipo de dependencia representa "Final a Inicio"?</div>
+                        <ul class="question-options">
+                            <li data-correct="true">El inicio de la actividad sucesora depende de la finalización de la predecesora</li>
+                            <li data-correct="false">La finalización de la sucesora depende de la finalización de la predecesora</li>
+                            <li data-correct="false">El inicio de la sucesora depende del inicio de la predecesora</li>
+                            <li data-correct="false">La finalización de la sucesora depende del inicio de la predecesora</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">5. ¿Cuáles son las tres situaciones diferenciadas en el Patrón de Límites de Métrica v3?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Inicio, Desarrollo, Cierre</li>
+                            <li data-correct="true">Arranque, Pleno rendimiento, Finalización</li>
+                            <li data-correct="false">Planificación, Ejecución, Control</li>
+                            <li data-correct="false">Análisis, Diseño, Implementación</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">6. ¿Cuál es la diferencia principal entre CPM y PERT en cuanto a la estimación de tiempos?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">CPM usa tiempos probabilísticos, PERT usa tiempos determinísticos</li>
+                            <li data-correct="true">CPM asume duraciones conocidas con certeza, PERT considera tiempos probabilísticos</li>
+                            <li data-correct="false">Ambos usan la misma metodología de estimación</li>
+                            <li data-correct="false">CPM no considera tiempos, solo dependencias</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">7. En PERT, ¿cuáles son las tres estimaciones de tiempo para cada actividad?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Mínimo, Máximo, Promedio</li>
+                            <li data-correct="true">Optimista (a), Más probable (m), Pesimista (b)</li>
+                            <li data-correct="false">Temprano, Tardío, Esperado</li>
+                            <li data-correct="false">Inicio, Duración, Final</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">8. ¿Cuál es la fórmula para calcular la Holgura Total de una actividad?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">EARLY(j) - EARLY(i) - Duración(i_j)</li>
+                            <li data-correct="true">LAST(j) - EARLY(i) - Duración(i_j)</li>
+                            <li data-correct="false">EARLY(j) - LAST(i) - Duración(i_j)</li>
+                            <li data-correct="false">LAST(j) - LAST(i) - Duración(i_j)</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">9. ¿Qué caracteriza a las actividades del camino crítico?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Tienen la mayor duración individual</li>
+                            <li data-correct="true">Su holgura es 0 y cualquier retraso retrasa el proyecto completo</li>
+                            <li data-correct="false">Requieren más recursos que las demás</li>
+                            <li data-correct="false">Son las más complejas técnicamente</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">10. ¿Cuál es la principal ventaja de la técnica Fast Tracking?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Reduce significativamente los riesgos del proyecto</li>
+                            <li data-correct="true">No supone ningún coste adicional</li>
+                            <li data-correct="false">Mejora la calidad del resultado final</li>
+                            <li data-correct="false">Elimina las dependencias entre tareas</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">11. En el método ADM, ¿qué representan los círculos?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Las actividades del proyecto</li>
+                            <li data-correct="true">Los sucesos, eventos o nodos que no consumen recursos</li>
+                            <li data-correct="false">Los recursos asignados a cada tarea</li>
+                            <li data-correct="false">Los hitos principales del proyecto</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">12. ¿Cuándo se utilizan las actividades ficticias en PERT?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Cuando una actividad no tiene duración definida</li>
+                            <li data-correct="true">Para resolver problemas de representación gráfica en prelaciones mixtas</li>
+                            <li data-correct="false">Cuando hay incertidumbre en los tiempos de ejecución</li>
+                            <li data-correct="false">Para representar actividades de alta complejidad</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-basico">Básico</div>
+                        <div class="question-title">13. ¿Qué es la línea base del cronograma según PMBOK?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">El cronograma inicial sin aprobar</li>
+                            <li data-correct="true">La versión aprobada del cronograma que solo se modifica con control de cambios</li>
+                            <li data-correct="false">El cronograma más optimista posible</li>
+                            <li data-correct="false">La fecha límite de entrega del proyecto</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">14. ¿Qué establece el principio de "designación unívoca" en PERT?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Cada actividad debe tener una duración única</li>
+                            <li data-correct="true">No puede haber dos flechas que salgan del mismo nodo y vayan al mismo nodo</li>
+                            <li data-correct="false">Cada nodo debe representar solo una actividad</li>
+                            <li data-correct="false">Los nombres de las actividades deben ser únicos</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">15. ¿Cuál es la principal desventaja de la técnica Crashing?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">No permite recuperar tiempo en el proyecto</li>
+                            <li data-correct="true">Incrementa el coste del proyecto</li>
+                            <li data-correct="false">Solo se puede aplicar a una actividad</li>
+                            <li data-correct="false">Requiere cambiar toda la planificación</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">16. ¿Cómo se calcula la duración esperada en la distribución Beta de PERT?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">(a + m + b) / 3</li>
+                            <li data-correct="true">(a + 4m + b) / 6</li>
+                            <li data-correct="false">(a + 2m + b) / 4</li>
+                            <li data-correct="false">(2a + 3m + 2b) / 7</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">17. ¿Qué tipo de holgura puede gastarse solo en la propia actividad?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Holgura Total</li>
+                            <li data-correct="false">Holgura Libre</li>
+                            <li data-correct="true">Holgura Independiente</li>
+                            <li data-correct="false">Holgura Condicional</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-basico">Básico</div>
+                        <div class="question-title">18. Según Métrica v3, ¿durante cuánto tiempo permanece el jefe de proyecto en el patrón de límites?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Solo durante la fase de pleno rendimiento</li>
+                            <li data-correct="true">Durante todo el ciclo de vida del proyecto</li>
+                            <li data-correct="false">Solo durante el arranque y finalización</li>
+                            <li data-correct="false">Desde el arranque hasta el pleno rendimiento</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-avanzado">Avanzado</div>
+                        <div class="question-title">19. ¿Qué relación existe entre los diferentes tipos de holguras?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Holgura Libre ≥ Holgura Total ≥ Holgura Independiente</li>
+                            <li data-correct="true">Holgura Total ≥ Holgura Libre ≥ Holgura Independiente</li>
+                            <li data-correct="false">Holgura Independiente ≥ Holgura Total ≥ Holgura Libre</li>
+                            <li data-correct="false">Todas las holguras son siempre iguales</li>
+                        </ul>
+                    </div>
+
+                    <div class="question">
+                        <div class="difficulty-badge badge-intermedio">Intermedio</div>
+                        <div class="question-title">20. ¿Cuál es la ventaja principal de aplicar el teorema central del límite en proyectos con muchas actividades críticas?</div>
+                        <ul class="question-options">
+                            <li data-correct="false">Reduce el número de actividades críticas</li>
+                            <li data-correct="true">Permite evaluar la probabilidad de completar el proyecto en un tiempo determinado</li>
+                            <li data-correct="false">Elimina la incertidumbre de los tiempos</li>
+                            <li data-correct="false">Simplifica el cálculo de holguras</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="recursos" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📚 Glosario de Términos</h2>
+                    
+                    <div class="glossary-term">
+                        <div class="term-title">ADM (Arrow Diagramming Method)</div>
+                        <p>Método de diagramación donde las flechas representan actividades y los círculos representan sucesos o eventos. Utilizado habitualmente en diagramas PERT y CPM.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Actividades Ficticias</div>
+                        <p>Actividades que no consumen tiempo ni recursos, utilizadas para resolver problemas de representación gráfica en redes de proyectos.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Camino Crítico</div>
+                        <p>Secuencia de actividades que determina la duración mínima del proyecto. Las actividades críticas tienen holgura cero.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">CPM (Critical Path Method)</div>
+                        <p>Método de la ruta crítica que asume duraciones de actividades conocidas con certeza, a diferencia de PERT que considera tiempos probabilísticos.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Crashing</div>
+                        <p>Técnica de compresión que consiste en añadir recursos para reducir la duración de actividades, incrementando el coste del proyecto.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Cronograma</div>
+                        <p>Sinónimo de diagrama de Gantt. Representación del plan de trabajo mostrando tareas, su comienzo y terminación.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">EDT (Estructura de Descomposición del Trabajo)</div>
+                        <p>Descomposición jerárquica del trabajo del proyecto en componentes manejables. Una de las técnicas contempladas por Métrica v3.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Fast Tracking</div>
+                        <p>Técnica de compresión que consiste en ejecutar en paralelo tareas originalmente planificadas como secuenciales. No incrementa costes.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Hito</div>
+                        <p>Punto o evento significativo dentro del proyecto que no tiene duración y aparece en instantes de tiempo concretos.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Holgura</div>
+                        <p>Tiempo disponible para retrasar una actividad sin afectar otros aspectos del proyecto. Existen cuatro tipos: total, libre, independiente y condicional.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Línea Base</div>
+                        <p>Versión aprobada de un modelo de programación que solo se puede modificar mediante procedimientos formales de control de cambios.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Matriz de Encadenamientos</div>
+                        <p>Matriz cuadrada donde una X indica que para iniciar la actividad de la fila debe haberse finalizado la de la columna correspondiente.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">PDM (Precedence Diagramming Method)</div>
+                        <p>Método donde cada actividad es un nodo del grafo y las flechas representan dependencias. Permite diferentes tipos de relaciones de precedencia.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">PERT (Program Evaluation and Review Technique)</div>
+                        <p>Técnica que permite representar gráficamente la vinculación entre actividades y eventos mediante redes, considerando tiempos probabilísticos.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Prelaciones</div>
+                        <p>Restricciones que indican en qué orden deben ejecutarse las actividades. Pueden ser lineales, convergentes o divergentes.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Suceso</div>
+                        <p>En ADM, círculo que representa el inicio o final de una actividad. No consume recursos ni tiempo.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Tiempo Early</div>
+                        <p>Tiempo mínimo necesario para llegar a un suceso; el tiempo más temprano posible en que pueden comenzar las actividades que parten de él.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Tiempo Last</div>
+                        <p>Tiempo máximo que puede retrasarse sin retrasar la duración del proyecto; el tiempo más tarde posible en que puede empezar una actividad.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">❓ Preguntas Frecuentes</h2>
+                    
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Cuál es la diferencia principal entre GANTT y PERT?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>GANTT se centra en la representación temporal visual mediante barras horizontales, mostrando cuándo ocurren las actividades. PERT se enfoca en las dependencias entre actividades mediante redes, mostrando cómo se relacionan las actividades independientemente del tiempo.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Cuándo debo usar actividades ficticias?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Las actividades ficticias se usan en dos casos: 1) Cuando hay prelaciones mixtas (algunas actividades comparten predecesoras, otras no), 2) Para actividades paralelas que necesitan partir y llegar a los mismos nodos, evitando violar el principio de designación unívoca.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Cómo identifico el camino crítico?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>El camino crítico se identifica por: 1) Actividades con holgura total = 0, 2) El camino más largo desde el inicio al final del proyecto, 3) Actividades donde Early = Last para sus nodos de inicio y fin, 4) Cualquier retraso en estas actividades retrasa todo el proyecto.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Qué técnica de compresión debo usar primero?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Siempre considera Fast Tracking primero porque no tiene coste adicional. Solo si Fast Tracking no es suficiente o viable (las tareas no pueden solaparse), entonces considera Crashing, pero recuerda que incrementa el coste del proyecto.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Cuál es la diferencia entre holgura libre e independiente?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Holgura libre puede usarse sin afectar las actividades siguientes si todas comenzaron lo antes posible. Holgura independiente puede usarse solo en la actividad actual, independientemente de cuándo terminen las predecesoras o comiencen las siguientes.</p>
+                        </div>
+                    </div>
+
+                    <div class="expandable-section">
+                        <div class="expandable-header">
+                            <h3>¿Por qué PERT usa tres estimaciones de tiempo?</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            <p>Las tres estimaciones (optimista, más probable, pesimista) permiten modelar la incertidumbre inherente en los proyectos. A diferencia de CPM que asume tiempos conocidos, PERT reconoce que los tiempos reales pueden variar y usa distribuciones probabilísticas (Beta o Triangular) para estimar duraciones más realistas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Expandable sections
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.expandable-header')) {
+                const section = e.target.closest('.expandable-section');
+                section.classList.toggle('expanded');
+            }
+        });
+
+        // Quiz functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.question-options li')) {
+                const li = e.target.closest('.question-options li');
+                const question = li.closest('.question');
+                const options = question.querySelectorAll('.question-options li');
+                
+                // Remove previous selections
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect');
+                });
+                
+                // Show correct answer
+                const isCorrect = li.getAttribute('data-correct') === 'true';
+                if (isCorrect) {
+                    li.classList.add('correct');
+                } else {
+                    li.classList.add('incorrect');
+                    // Also highlight the correct answer
+                    options.forEach(option => {
+                        if (option.getAttribute('data-correct') === 'true') {
+                            option.classList.add('correct');
+                        }
+                    });
+                }
+            }
+        });
+
+        // Progress tracking
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            const answeredQuestions = document.querySelectorAll('.question-options li.correct, .question-options li.incorrect').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                bar.style.width = progress + '%';
+            });
+        }
+
+        // Update progress when questions are answered
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.question-options li')) {
+                setTimeout(updateProgress, 100);
+            }
+        });
+
+        // Initialize progress
+        updateProgress();
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gobernanza TIC - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .tab-button:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.2);
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: [data-theme="dark"] & { 0 2px 8px rgba(0, 0, 0, 0.3) };
+            box-shadow: [data-theme="light"] & { 0 2px 8px rgba(0, 0, 0, 0.1) };
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-hover);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .question h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option {
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background: #2d5a2d;
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .option.incorrect {
+            background: #5a2d2d;
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .basico { background: #4caf50; color: white; }
+        .intermedio { background: #ff9800; color: white; }
+        .avanzado { background: #f44336; color: white; }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .expandable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .expandable .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .expandable.expanded .content {
+            max-height: 1000px;
+        }
+
+        .expandable .toggle-icon {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .expandable.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-hover);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--bg-hover);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--accent-color), #66b3ff);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📋 Gobernanza TIC - Guía Completa</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Cambiar Tema</button>
+    </header>
+
+    <div class="container">
+        <nav class="tab-navigation">
+            <button class="tab-button active" onclick="showTab('resumen')">📊 Resumen General</button>
+            <button class="tab-button" onclick="showTab('normativo')">📜 Contexto Normativo</button>
+            <button class="tab-button" onclick="showTab('modelo')">🏛️ Modelo de Gobernanza</button>
+            <button class="tab-button" onclick="showTab('organos')">⚙️ Órganos y Competencias</button>
+            <button class="tab-button" onclick="showTab('estrategia')">🚀 Estrategia TIC 2021-2025</button>
+            <button class="tab-button" onclick="showTab('ejercicios')">✅ Ejercicios Prácticos</button>
+            <button class="tab-button" onclick="showTab('recursos')">📚 Recursos y FAQ</button>
+        </nav>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2>📊 Resumen Ejecutivo</h2>
+                <p>La <strong>Gobernanza TIC en la Administración General del Estado</strong> establece el marco organizativo y operativo para la transformación digital de la administración pública española.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div>Año del nuevo modelo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">AEAD</div>
+                        <div>Agencia principal</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">CETIC</div>
+                        <div>Órgano máximo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2021-2025</div>
+                        <div>Plan Digitalización</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Objetivos de Aprendizaje</h3>
+                    <ul>
+                        <li>Comprender el marco normativo actual de la gobernanza TIC</li>
+                        <li>Identificar los órganos competentes y sus funciones</li>
+                        <li>Analizar el modelo de gobernanza establecido por el RD 1125/2024</li>
+                        <li>Conocer la estrategia de transformación digital 2021-2025</li>
+                        <li>Entender el papel de la Oficina del Dato</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔑 Conceptos Clave</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Real Decreto 1125/2024</h3>
+                        <p>Establece el nuevo modelo de gobernanza TIC, derogando el RD 806/2014</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>AEAD (Agencia Estatal)</h3>
+                        <p>Sustituyó a la SGAD como órgano directivo principal</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Servicios Transversales</h3>
+                        <p>Medios y servicios de uso obligatorio cuando respondan a necesidades comunes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Transformación Digital</h3>
+                        <p>Proceso integral de modernización de la Administración</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Contexto Normativo -->
+        <div id="normativo" class="tab-content">
+            <div class="card">
+                <h2>📜 Evolución Normativa</h2>
+                <p>El marco normativo de la gobernanza TIC ha evolucionado significativamente desde 2013 hasta 2024.</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>2013 - RD 695/2013</h3>
+                        <p><strong>Creación de la DTIC</strong></p>
+                        <p>Inicialmente adscrita al Ministerio de Presidencia, modificada por RD 802/2014 para su adscripción a la Secretaría de Estado de AAPP.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2014 - RD 806/2014</h3>
+                        <p><strong>Primer modelo de Gobernanza TIC</strong></p>
+                        <p>Determinó el modelo basado en estrategia global de transformación digital. Derogó el RD 589/2005.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2016 - RD 424/2016</h3>
+                        <p><strong>SGAD</strong></p>
+                        <p>Cambio de denominación de DTIC por Secretaría General de Administración Digital, manteniendo el mismo rango.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2020 - RD 139/2020</h3>
+                        <p><strong>Reubicación ministerial</strong></p>
+                        <p>La SGAD pasa al Ministerio de Asuntos Económicos y Transformación Digital (MAETD), dependiendo de SEDIA.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2020 - Orden ETD/803/2020</h3>
+                        <p><strong>Oficina del Dato</strong></p>
+                        <p>Creación para la gobernanza del dato en la AGE.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2021 - Ley 22/2021</h3>
+                        <p><strong>Creación de AEAD</strong></p>
+                        <p>Disposición Adicional 117ª crea la Agencia Estatal de Administración Digital.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>2024 - RD 1125/2024 y 1118/2024</h3>
+                        <p><strong>Nuevo modelo actual</strong></p>
+                        <p>Establecimiento del modelo vigente y estatuto de la AEAD.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Normativa Clave</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Norma</th>
+                            <th>Objeto Principal</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RD 1125/2024</td>
+                            <td>Nuevo modelo de Gobernanza TIC</td>
+                            <td>✅ Vigente</td>
+                        </tr>
+                        <tr>
+                            <td>RD 1118/2024</td>
+                            <td>Estatuto de la AEAD</td>
+                            <td>✅ Vigente</td>
+                        </tr>
+                        <tr>
+                            <td>RD 806/2014</td>
+                            <td>Modelo anterior de Gobernanza TIC</td>
+                            <td>❌ Derogado</td>
+                        </tr>
+                        <tr>
+                            <td>Orden ETD/803/2020</td>
+                            <td>Creación Oficina del Dato</td>
+                            <td>✅ Vigente</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Modelo de Gobernanza -->
+        <div id="modelo" class="tab-content">
+            <div class="card">
+                <h2>🏛️ Estructura del Modelo</h2>
+                <p>El modelo de gobernanza TIC se establece mediante el <strong>Real Decreto 1125/2024</strong>, creando una estructura jerárquica y coordinada.</p>
+
+                <div class="highlight-box">
+                    <h3>🎯 Principios Fundamentales</h3>
+                    <ul>
+                        <li><strong>Coordinación:</strong> Actuación coordinada entre todos los ministerios</li>
+                        <li><strong>Transversalidad:</strong> Servicios compartidos de uso obligatorio</li>
+                        <li><strong>Eficiencia:</strong> Racionalización de recursos TIC</li>
+                        <li><strong>Transformación:</strong> Orientación hacia la Administración digital</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Jerarquía de Gobernanza</h2>
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>1. Nivel Estratégico <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>CETIC (Comisión de Estrategia TIC)</strong></p>
+                        <ul>
+                            <li>Órgano máximo de gobernanza</li>
+                            <li>Presidida por el titular del Ministerio para la Transformación Digital</li>
+                            <li>Representación de todos los ministerios</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>2. Nivel Operativo <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>AEAD (Agencia Estatal de Administración Digital)</strong></p>
+                        <ul>
+                            <li>Órgano directivo principal</li>
+                            <li>Ejecuta las directrices de CETIC</li>
+                            <li>Coordina la transformación digital</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>3. Nivel Departamental <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>CMAD (Comisiones Ministeriales de Administración Digital)</strong></p>
+                        <ul>
+                            <li>Una por cada ministerio</li>
+                            <li>Coordinación interna departamental</li>
+                            <li>Enlace con AEAD</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>4. Nivel Técnico <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Unidades TIC</strong></p>
+                        <ul>
+                            <li>Prestación directa de servicios</li>
+                            <li>Desarrollo e implementación</li>
+                            <li>Soporte técnico especializado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Medios y Servicios Transversales</h2>
+                <p>Una de las principales novedades del modelo actual es la <strong>declaración de servicios transversales</strong>.</p>
+                
+                <div class="highlight-box">
+                    <h3>📝 Características:</h3>
+                    <ul>
+                        <li><strong>Obligatoriedad:</strong> Uso obligatorio y sustitutivo</li>
+                        <li><strong>Catálogo:</strong> Forman parte del catálogo de servicios comunes</li>
+                        <li><strong>Eficiencia:</strong> Evitan duplicidades y optimizan recursos</li>
+                        <li><strong>Excepciones:</strong> Posibles por razones técnicas o económicas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Órganos y Competencias -->
+        <div id="organos" class="tab-content">
+            <div class="card">
+                <h2>🏢 CETIC - Comisión de Estrategia TIC</h2>
+                <p><strong>Órgano colegiado máximo</strong> adscrito al Ministerio para la Transformación Digital y de la Función Pública.</p>
+
+                <div class="highlight-box">
+                    <h3>👥 Composición:</h3>
+                    <ul>
+                        <li><strong>Presidente:</strong> Titular del Ministerio para la Transformación Digital</li>
+                        <li><strong>Vicepresidencia 1ª:</strong> Secretario de Estado de Función Pública</li>
+                        <li><strong>Vicepresidencia 2ª:</strong> Secretario de Estado de Digitalización e IA</li>
+                        <li><strong>Dirección AEAD</strong></li>
+                        <li><strong>Representantes ministeriales</strong> (Subsecretarios o equivalentes)</li>
+                        <li><strong>Abogacía General del Estado</strong> (con voz pero sin voto)</li>
+                    </ul>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>🎯 Funciones Principales <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <ol>
+                            <li><strong>Fijar líneas estratégicas</strong> en materia TIC</li>
+                            <li><strong>Aprobar propuesta de Estrategia TIC</strong> para el Consejo de Ministros</li>
+                            <li><strong>Informar anteproyectos</strong> de normativa TIC</li>
+                            <li><strong>Definir prioridades de inversión</strong> TIC</li>
+                            <li><strong>Declarar servicios transversales</strong> y excepciones</li>
+                            <li><strong>Declarar proyectos prioritarios</strong></li>
+                            <li><strong>Informar proyectos sectoriales</strong> con impacto TIC</li>
+                            <li><strong>Impulsar colaboración</strong> interadministrativa</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏛️ AEAD - Agencia Estatal de Administración Digital</h2>
+                <p>Órgano directivo principal, adscrito al Ministerio para la Transformación Digital a través de la Secretaría de Estado de Función Pública.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>4 Fines</h3>
+                        <p>Digitalización, Eficiencia, Transformación, Coordinación</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>4 Direcciones</h3>
+                        <p>Administración Digital, Infraestructuras, Ciberseguridad, Secretaría General</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>📋 Estructura Orgánica <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <ul>
+                            <li><strong>Dirección de Administración Digital:</strong>
+                                <ul>
+                                    <li>Servicios Digitales Orientados a la Ciudadanía</li>
+                                    <li>Nuevos Servicios Innovadores</li>
+                                    <li>Servicios Digitales para la Gestión</li>
+                                </ul>
+                            </li>
+                            <li><strong>Dirección de Infraestructuras y Operaciones:</strong>
+                                <ul>
+                                    <li>Infraestructuras y Cloud</li>
+                                    <li>Puesto de Trabajo</li>
+                                    <li>Comunicaciones</li>
+                                </ul>
+                            </li>
+                            <li><strong>Dirección de Ciberseguridad:</strong>
+                                <ul>
+                                    <li>Planificación de Ciberseguridad</li>
+                                    <li>Operación de Ciberseguridad (COCS)</li>
+                                    <li>Tecnologías Disruptivas e Integridad</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏢 CMAD - Comisiones Ministeriales</h2>
+                <p>Órganos colegiados departamentales para el impulso y coordinación interna en materia de Administración digital.</p>
+
+                <div class="highlight-box">
+                    <h3>⚙️ Características:</h3>
+                    <ul>
+                        <li><strong>Una por ministerio</strong></li>
+                        <li><strong>Presididas por Subsecretario</strong> (o delegado con rango de DG mínimo)</li>
+                        <li><strong>Miembros con rango mínimo</strong> de Subdirector General</li>
+                        <li><strong>AEAD participa</strong> con voz pero sin voto</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔧 Unidades TIC</h2>
+                <p>Instrumentos fundamentales para la transformación digital en ámbitos sectoriales.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Función Principal</h3>
+                        <p>Provisión de servicios TIC especializados</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Áreas de Actuación</h3>
+                        <p>Soporte, desarrollo, consultoría, seguridad</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Estrategia TIC 2021-2025 -->
+        <div id="estrategia" class="tab-content">
+            <div class="card">
+                <h2>🚀 Plan de Digitalización AAPP 2021-2025</h2>
+                <p>Principal elemento del <strong>componente 11</strong> del Plan de Recuperación, Transformación y Resiliencia, enmarcado en la estrategia España Digital 2026.</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <p style="text-align: center; margin-top: 0.5rem;"><em>Progreso estimado del Plan (2021-2025)</em></p>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Tres Ejes de Actuación</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>1️⃣ Transformar Digitalmente</h3>
+                        <p>Iniciativas transversales para servicios eficientes, seguros y tecnologías emergentes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>2️⃣ Proyectos Tractores</h3>
+                        <p>Digitalización sectorial: Sanidad, Justicia, Empleo</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>3️⃣ Apoyo Territorial</h3>
+                        <p>Digitalización de CCAA y Entidades Locales</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💡 Medidas Clave del Plan</h2>
+                
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>📱 App Factory <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Objetivo:</strong> 50% de servicios públicos disponibles en app móviles para finales de 2025.</p>
+                        <ul>
+                            <li>Desarrollo de aplicaciones móviles de calidad</li>
+                            <li>Mejorar acceso a servicios públicos</li>
+                            <li>Relación más fluida con la ciudadanía</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>🖱️ Administración en un Clic <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Objetivo:</strong> Acceso centralizado a información y servicios digitales.</p>
+                        <ul>
+                            <li>Evitar dispersión de información</li>
+                            <li>Reducir barreras de acceso</li>
+                            <li>Unificar experiencia de usuario</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>🔬 GobTechLab <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Objetivo:</strong> Laboratorio de innovación para servicios públicos digitales.</p>
+                        <ul>
+                            <li>Participación ciudadana en diseño</li>
+                            <li>Experimentación con tecnologías emergentes</li>
+                            <li>IA, analítica de datos y blockchain</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>🤖 Servicio de Automatización Inteligente <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Objetivo:</strong> Mejorar calidad y eficiencia de procesos administrativos.</p>
+                        <ul>
+                            <li>Plataforma corporativa de automatización</li>
+                            <li>Robotización de actuaciones</li>
+                            <li>Inteligencia artificial aplicada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>📊 Gestión Transparente de Datos <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Objetivo:</strong> Dato de calidad, seguro y transparente.</p>
+                        <ul>
+                            <li>Soluciones Data Lake y Big Data</li>
+                            <li>Master Data Management (MDM)</li>
+                            <li>Business Intelligence (BI)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="quiz-container">
+                <h2>✅ Ejercicios Prácticos - Gobernanza TIC</h2>
+                <p>Ponte a prueba con estas 20 preguntas sobre gobernanza TIC en la Administración General del Estado.</p>
+                
+                <div class="question">
+                    <h3>1. ¿Cuál es el órgano máximo de gobernanza TIC en la AGE? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) AEAD</div>
+                        <div class="option" onclick="selectOption(this, true)">B) CETIC</div>
+                        <div class="option" onclick="selectOption(this, false)">C) CMAD</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Oficina del Dato</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>2. ¿Qué Real Decreto establece el modelo actual de gobernanza TIC? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) RD 806/2014</div>
+                        <div class="option" onclick="selectOption(this, true)">B) RD 1125/2024</div>
+                        <div class="option" onclick="selectOption(this, false)">C) RD 1118/2024</div>
+                        <div class="option" onclick="selectOption(this, false)">D) RD 695/2013</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>3. ¿Qué significa AEAD? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Agencia Española de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Agencia Estatal de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Autoridad Estatal de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Asociación Estatal de Administración Digital</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>4. ¿Quién preside la CETIC? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) El Director de la AEAD</div>
+                        <div class="option" onclick="selectOption(this, true)">B) El titular del Ministerio para la Transformación Digital y de la Función Pública</div>
+                        <div class="option" onclick="selectOption(this, false)">C) El Secretario de Estado de Digitalización e IA</div>
+                        <div class="option" onclick="selectOption(this, false)">D) El Presidente del Gobierno</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>5. ¿Cuál es una de las principales novedades del modelo de gobernanza actual? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Creación de la SGAD</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Declaración de medios y servicios compartidos</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Eliminación de las CMAD</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Supresión de las unidades TIC</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>6. ¿En qué año se creó la Oficina del Dato? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 2019</div>
+                        <div class="option" onclick="selectOption(this, true)">B) 2020</div>
+                        <div class="option" onclick="selectOption(this, false)">C) 2021</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 2022</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>7. ¿Cuál es el período de vigencia del Plan de Digitalización de las AAPP? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 2020-2024</div>
+                        <div class="option" onclick="selectOption(this, true)">B) 2021-2025</div>
+                        <div class="option" onclick="selectOption(this, false)">C) 2022-2026</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 2019-2023</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>8. ¿Cuántas direcciones tiene la estructura orgánica de la AEAD? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 2</div>
+                        <div class="option" onclick="selectOption(this, false)">B) 3</div>
+                        <div class="option" onclick="selectOption(this, true)">C) 4</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 5</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>9. ¿Qué significa CMAD? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Comité Ministerial de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Comisión Ministerial de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Consejo Ministerial de Administración Digital</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Centro Ministerial de Administración Digital</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>10. ¿Cuál de estas NO es una función de la CETIC? <span class="difficulty-badge avanzado">Avanzado</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Fijar líneas estratégicas</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Definir prioridades de inversión TIC</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Ejecutar directamente proyectos TIC</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Declarar proyectos prioritarios</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>11. ¿Cuál es el objetivo de App Factory para 2025? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) 25% de servicios en apps móviles</div>
+                        <div class="option" onclick="selectOption(this, true)">B) 50% de servicios en apps móviles</div>
+                        <div class="option" onclick="selectOption(this, false)">C) 75% de servicios en apps móviles</div>
+                        <div class="option" onclick="selectOption(this, false)">D) 100% de servicios en apps móviles</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>12. ¿Qué Real Decreto derogó el modelo anterior de gobernanza? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">A) RD 1125/2024 derogó RD 806/2014</div>
+                        <div class="option" onclick="selectOption(this, false)">B) RD 1118/2024 derogó RD 695/2013</div>
+                        <div class="option" onclick="selectOption(this, false)">C) RD 806/2014 derogó RD 589/2005</div>
+                        <div class="option" onclick="selectOption(this, false)">D) RD 424/2016 derogó RD 695/2013</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>13. ¿Cuál es el nombre del laboratorio de innovación del Plan de Digitalización? <span class="difficulty-badge avanzado">Avanzado</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) InnoLab</div>
+                        <div class="option" onclick="selectOption(this, true)">B) GobTechLab</div>
+                        <div class="option" onclick="selectOption(this, false)">C) AdminLab</div>
+                        <div class="option" onclick="selectOption(this, false)">D) DigitalLab</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>14. ¿Cuál de estos NO es un eje del Plan de Digitalización? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Transformar digitalmente la Administración</div>
+                        <div class="option" onclick="selectOption(this, false)">B) Desplegar proyectos tractores</div>
+                        <div class="option" onclick="selectOption(this, true)">C) Crear nuevos ministerios digitales</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Apoyar digitalización territorial</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>15. ¿Qué organismo precedió a la AEAD? <span class="difficulty-badge basico">Básico</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) DTIC</div>
+                        <div class="option" onclick="selectOption(this, true)">B) SGAD</div>
+                        <div class="option" onclick="selectOption(this, false)">C) CETIC</div>
+                        <div class="option" onclick="selectOption(this, false)">D) CMAD</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>16. ¿Quién actúa como Secretario de la CETIC? <span class="difficulty-badge avanzado">Avanzado</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) El Director de la AEAD</div>
+                        <div class="option" onclick="selectOption(this, true)">B) El titular de la Secretaría General de la AEAD</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Un representante de la Abogacía del Estado</div>
+                        <div class="option" onclick="selectOption(this, false)">D) El Secretario de Estado de Digitalización</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>17. ¿Cuál es la principal característica de los servicios transversales? <span class="difficulty-badge avanzado">Avanzado</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Son opcionales para los ministerios</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Su uso es obligatorio y sustitutivo</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Solo los usa la AEAD</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Son exclusivos de cada ministerio</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>18. ¿Cuál es el centro de operaciones de ciberseguridad de la Administración? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) CSOC</div>
+                        <div class="option" onclick="selectOption(this, true)">B) COCS</div>
+                        <div class="option" onclick="selectOption(this, false)">C) CERT</div>
+                        <div class="option" onclick="selectOption(this, false)">D) CCN</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>19. ¿En qué estrategia se enmarca el Plan de Digitalización 2021-2025? <span class="difficulty-badge intermedio">Intermedio</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Agenda Digital 2020</div>
+                        <div class="option" onclick="selectOption(this, true)">B) España Digital 2026</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Plan Digital 2030</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Estrategia Nacional 2025</div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>20. ¿Qué disposición de la Ley 40/2015 regula la Comisión Sectorial de Administración Electrónica? <span class="difficulty-badge avanzado">Avanzado</span></h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">A) Disposición Adicional 8ª</div>
+                        <div class="option" onclick="selectOption(this, true)">B) Disposición Adicional 9ª</div>
+                        <div class="option" onclick="selectOption(this, false)">C) Disposición Adicional 10ª</div>
+                        <div class="option" onclick="selectOption(this, false)">D) Disposición Final 3ª</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos</h2>
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>AEAD <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Agencia Estatal de Administración Digital:</strong> Órgano directivo principal encargado de impulsar la racionalización de las TIC en la AGE, sustituyó a la SGAD en 2024.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>CETIC <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Comisión de Estrategia sobre Tecnologías de la Información y Comunicaciones:</strong> Órgano máximo de gobernanza TIC, presidido por el titular del Ministerio para la Transformación Digital.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>CMAD <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Comisión Ministerial de Administración Digital:</strong> Órganos colegiados departamentales responsables del impulso y coordinación interna en materia de Administración digital.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>COCS <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Centro de Operaciones de Ciberseguridad:</strong> Centro dirigido por la AEAD para la operación de la ciberseguridad en la Administración del Estado.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>CSAE <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Comisión Sectorial de Administración Electrónica:</strong> Órgano técnico de cooperación entre todas las administraciones públicas en materia de administración electrónica.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>Servicios Transversales <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Medios y servicios declarados transversales:</strong> Servicios comunes cuyo uso es obligatorio y sustitutivo cuando respondan a necesidades comunes de múltiples unidades administrativas.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>Transformación Digital <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p><strong>Proceso integral de modernización:</strong> Cambio estructural de la administración mediante la adopción de tecnologías digitales para mejorar servicios y procesos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❓ Preguntas Frecuentes</h2>
+                
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>¿Cuál es la diferencia entre SGAD y AEAD? <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p>La SGAD (Secretaría General de Administración Digital) fue el organismo predecesor que operó hasta 2024. La AEAD (Agencia Estatal de Administración Digital) es su sustituta con mayor autonomía y capacidades ampliadas, creada por la Ley 22/2021 y regulada por el RD 1118/2024.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>¿Por qué se cambió el modelo de gobernanza en 2024? <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p>El cambio responde a la necesidad de una mayor coordinación, la obligatoriedad de servicios transversales, y la adaptación a los nuevos retos de la transformación digital post-pandemia y los fondos europeos.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>¿Qué papel juega la Oficina del Dato? <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p>Creada en 2020, establece pautas comunes para la gobernanza del dato en la AGE, desarrolla estrategias de gestión de datos y coordina iniciativas de Big Data e IA. Depende de la SEDIA.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>¿Cómo se relaciona con el Plan de Recuperación? <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p>El Plan de Digitalización 2021-2025 es el componente 11 de la IV Política Palanca del Plan de Recuperación, Transformación y Resiliencia, recibiendo financiación europea para la modernización digital.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h3>¿Qué son los servicios transversales y por qué son obligatorios? <span class="toggle-icon">▼</span></h3>
+                    <div class="content">
+                        <p>Son medios y servicios comunes declarados por la CETIC cuando respondan a necesidades transversales. Su uso es obligatorio para evitar duplicidades, optimizar recursos y garantizar la interoperabilidad.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Referencias Normativas Clave</h2>
+                <ul>
+                    <li><strong>Real Decreto 1125/2024:</strong> Modelo actual de gobernanza TIC</li>
+                    <li><strong>Real Decreto 1118/2024:</strong> Estatuto de la AEAD</li>
+                    <li><strong>Ley 22/2021:</strong> Creación de la AEAD (Disposición Adicional 117ª)</li>
+                    <li><strong>Orden ETD/803/2020:</strong> Creación de la Oficina del Dato</li>
+                    <li><strong>Ley 40/2015:</strong> Disposición Adicional 9ª (CSAE)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>📊 Datos de Interés</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div>Año del nuevo modelo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15</div>
+                        <div>Ministerios representados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div>Direcciones en AEAD</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>Ejes del Plan Digital</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected tab and activate button
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '🌙 Cambiar Tema' : '☀️ Cambiar Tema';
+        }
+
+        function toggleExpand(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function selectOption(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                } else if (option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            });
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = savedTheme === 'dark' ? '🌙 Cambiar Tema' : '☀️ Cambiar Tema';
+        });
+
+        // Smooth progress bar animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const progressFill = document.querySelector('.progress-fill');
+                if (progressFill) {
+                    progressFill.style.width = '75%';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

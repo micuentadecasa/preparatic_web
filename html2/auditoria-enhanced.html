@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría Informática - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--bg-hover));
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .question {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            background: var(--bg-card);
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+        }
+
+        .options li.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4CAF50;
+        }
+
+        .options li.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty.basico { background: #4CAF50; color: white; }
+        .difficulty.intermedio { background: #FF9800; color: white; }
+        .difficulty.avanzado { background: #f44336; color: white; }
+
+        .progress-bar {
+            background: var(--bg-secondary);
+            height: 8px;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-color), #42a5f5);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1rem 0;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .collapsible {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .collapsible-header {
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .collapsible-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible.active .collapsible-content {
+            padding: 1rem;
+            max-height: 1000px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .glossary-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Auditoría Informática - Guía de Estudio</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'tab1')">Resumen General</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2')">Conceptos y Contenidos</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3')">Administración</button>
+            <button class="tab-button" onclick="openTab(event, 'tab4')">Planeamiento y Organización</button>
+            <button class="tab-button" onclick="openTab(event, 'tab5')">Infraestructura y Prácticas</button>
+            <button class="tab-button" onclick="openTab(event, 'tab6')">Ejercicios Prácticos</button>
+            <button class="tab-button" onclick="openTab(event, 'tab7')">Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="tab1" class="tab-content active">
+            <div class="card">
+                <h2>📋 Resumen Ejecutivo - Auditoría Informática</h2>
+                <div class="highlight-box">
+                    <p><strong>La Auditoría Informática</strong> es una herramienta fundamental que ayuda a las organizaciones a supervisar su sistema de control y gestionar sus riesgos, contribuyendo a establecer un clima de confianza en el uso de las TIC.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <p>Funciones Principales</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <p>Objetivos Clave</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <p>Fases del Proceso</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <p>Tipos de Controles</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🎯 Objetivos Principales</h3>
+                    <ul>
+                        <li>Salvaguardar los activos</li>
+                        <li>Mantener la integridad de los datos</li>
+                        <li>Cumplir los fines organizacionales</li>
+                        <li>Utilizar eficientemente los recursos</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>🔍 Tipos de Pruebas</h3>
+                    <ul>
+                        <li><strong>Sustantivas:</strong> Miden riesgos por deficiencias</li>
+                        <li><strong>Cumplimiento:</strong> Verifican controles existentes</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>⚙️ Características de Controles</h3>
+                    <ul>
+                        <li>Simples y fiables</li>
+                        <li>Revisables periódicamente</li>
+                        <li>Adecuados al contexto</li>
+                        <li>Rentables (beneficio > coste)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📈 Objetivos de Aprendizaje</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Comprender el concepto de auditoría informática</h4>
+                        <p>Entender la definición, propósito y alcance de la auditoría de sistemas de información.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Dominar los tipos de controles</h4>
+                        <p>Clasificar y aplicar controles preventivos, detectivos, correctivos y compensatorios.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Conocer el marco administrativo</h4>
+                        <p>Identificar órganos especializados y normativa aplicable en la administración pública.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Implementar procesos de auditoría</h4>
+                        <p>Planificar, ejecutar y documentar auditorías siguiendo metodologías estándar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Conceptos y Contenidos -->
+        <div id="tab2" class="tab-content">
+            <div class="card">
+                <h2>💡 Conceptos Fundamentales</h2>
+                
+                <div class="highlight-box">
+                    <h3>Definición según Ron Weber</h3>
+                    <p><strong>Auditoría:</strong> Proceso de <em>recoger, agrupar y evaluar evidencias</em> para determinar si un Sistema de Información salvaguarda los activos, mantiene la integridad de los datos, lleva a cabo los fines de la organización y utiliza eficientemente los recursos.</p>
+                </div>
+
+                <h3>🎯 Las 5 Funciones de la Auditoría Informática</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>1. Eficacia y Eficiencia</h4>
+                        <p>Velar por que se alcancen los objetivos con el menor coste posible.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>2. Cumplimiento Normativo</h4>
+                        <p>Verificar el cumplimiento de normas y estándares vigentes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>3. Calidad de Sistemas</h4>
+                        <p>Verificar la calidad y proponer mejoras en los sistemas.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>4. Control Interno</h4>
+                        <p>Supervisar mecanismos de protección de recursos y datos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>5. Seguridad</h4>
+                        <p>Comprobar e impulsar la seguridad de los sistemas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🛡️ Clasificación de Controles</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>Por el momento en que actúan</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>Preventivos:</strong> A priori, evitan problemas</li>
+                            <li><strong>Reactivos:</strong> A posteriori, responden a incidentes</li>
+                            <li><strong>Concurrentes:</strong> Durante el proceso</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>Por su frecuencia</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>Continuos:</strong> Operan permanentemente</li>
+                            <li><strong>Periódicos:</strong> Se ejecutan en intervalos regulares</li>
+                            <li><strong>Esporádicos:</strong> Se activan según necesidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>Por su naturaleza</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>Generales:</strong> Organizativos, operativos, de desarrollo, hardware, software</li>
+                            <li><strong>De aplicación:</strong> Controles de entrada, proceso y salida</li>
+                            <li><strong>Detectivos:</strong> Reportan errores (ej. logs de acceso)</li>
+                            <li><strong>Correctivos:</strong> Facilitan vuelta a la normalidad</li>
+                            <li><strong>Compensatorios:</strong> Reducen riesgo ante debilidades</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Tipos de Auditoría</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Por el sujeto</h4>
+                        <ul>
+                            <li><strong>Interna:</strong> Personal propio</li>
+                            <li><strong>Externa:</strong> Profesionales ajenos</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Por su amplitud</h4>
+                        <ul>
+                            <li><strong>Total:</strong> Toda la organización</li>
+                            <li><strong>Parcial:</strong> Áreas específicas</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Por su frecuencia</h4>
+                        <ul>
+                            <li><strong>Periódica:</strong> Programada</li>
+                            <li><strong>Ocasional:</strong> Por necesidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🎭 Clasificaciones Especializadas</h3>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Operativas:</strong> Evalúan eficacia y eficiencia</li>
+                        <li><strong>Cumplimiento:</strong> Verifican controles internos</li>
+                        <li><strong>Forenses:</strong> Descubren fraudes y delitos</li>
+                        <li><strong>Regularidad:</strong> Verifican cumplimiento normativo</li>
+                        <li><strong>Triple E (VFM):</strong> Economía, eficacia y eficiencia</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Administración -->
+        <div id="tab3" class="tab-content">
+            <div class="card">
+                <h2>🏛️ Marco Administrativo</h2>
+                
+                <div class="highlight-box">
+                    <p>La función de control en la Administración Pública española se desarrolla en <strong>tres ámbitos:</strong></p>
+                    <ul>
+                        <li>🏛️ <strong>Control político:</strong> Ejercido por el Parlamento</li>
+                        <li>⚖️ <strong>Control judicial:</strong> Ejercido por los Tribunales</li>
+                        <li>📋 <strong>Control administrativo:</strong> Ejercido por órganos administrativos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏢 Órganos Especializados</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🏛️ Tribunal de Cuentas</h3>
+                        <p><strong>Tipo:</strong> Órgano supremo fiscalizador externo</p>
+                        <p><strong>Función:</strong> Controla la actividad económica y presupuestaria</p>
+                        <p><strong>Destinatario:</strong> Parlamento</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>💼 IGAE (Intervención General)</h3>
+                        <p><strong>Tipo:</strong> Órgano interno de la Administración</p>
+                        <p><strong>Función:</strong> Examina gestión del gasto público</p>
+                        <p><strong>Obligación:</strong> Plan de Auditorías anual desde 1984</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>🔍 Inspecciones Generales</h3>
+                        <p><strong>Ámbito:</strong> Control interno por Ministerios</p>
+                        <p><strong>Función:</strong> Supervisar funcionamiento administrativo</p>
+                        <p><strong>Incluye:</strong> Seguimiento de objetivos y análisis de riesgos</p>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>🔧 Otros Órganos Especializados</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>Inspección General de Hacienda y AAPP:</strong> Auditoría interna especializada</li>
+                            <li><strong>Comisión Sectorial de Administración Electrónica:</strong> Materia de e-Administración</li>
+                            <li><strong>Dirección General de Gobernanza Pública:</strong> Evaluación de calidad de servicios</li>
+                            <li><strong>Agencia Española de Protección de Datos:</strong> Supervisión del RGPD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Marco Normativo</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>📜 Sector Público</h3>
+                        <ul>
+                            <li>Normas de Auditoría del Sector Público (IGAE)</li>
+                            <li>Resolución ICAC sobre auditoría en entornos informatizados</li>
+                            <li>Serie CCN-STIC (000-800)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>⚖️ Procedimiento Administrativo</h3>
+                        <ul>
+                            <li>Ley 39/2015 del Procedimiento Administrativo Común</li>
+                            <li>RD 4/2010 - Esquema Nacional de Seguridad (ENS)</li>
+                            <li>RD 3/2010 - Esquema Nacional de Interoperabilidad (ENI)</li>
+                            <li>MAGERIT v3 - Gestión de riesgos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>🔒 Protección de Datos</h3>
+                        <ul>
+                            <li>RGPD (UE) 2016/679</li>
+                            <li>LO 3/2018 de Protección de Datos</li>
+                            <li>Directiva (UE) 2016/680</li>
+                            <li>LO 7/2021 - Datos para fines penales</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🌐 Estándares Internacionales</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>COBIT (ISACA)</h4>
+                            <p>Control de objetivos para TIC. Estándares de gestión y control de SI.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>ITIL</h4>
+                            <p>Mejores prácticas para gestión de procesos de TIC.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>ISO/IEC 27000</h4>
+                            <p>Familia de normas para gestión de seguridad de la información.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>NIST</h4>
+                            <p>Publicaciones especiales del Instituto Nacional de Estándares de EE.UU.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Planeamiento y Organización -->
+        <div id="tab4" class="tab-content">
+            <div class="card">
+                <h2>📋 Planeamiento de la Auditoría</h2>
+                
+                <div class="highlight-box">
+                    <p>La auditoría se considera uno de los <strong>procesos estratégicos</strong> en la organización, encuadrado en la pirámide documental organizacional.</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>🎯 Nivel Estratégico</h4>
+                        <ul>
+                            <li>Política de Seguridad</li>
+                            <li>Política de Calidad</li>
+                            <li>Manual de Calidad</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🗺️ Nivel Táctico</h4>
+                        <ul>
+                            <li>Plan de Seguridad</li>
+                            <li>Plan de Calidad</li>
+                            <li>Normas de Seguridad y Calidad</li>
+                            <li>Especificaciones, estándares y guías</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>⚙️ Nivel Operativo</h4>
+                        <ul>
+                            <li>Procedimientos de Seguridad y Calidad</li>
+                            <li>Instrucciones Técnicas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📝 Elementos de la Documentación</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>📜 Políticas</h3>
+                        <p><strong>Qué y por qué</strong></p>
+                        <ul>
+                            <li>Declaración de intenciones de alto nivel</li>
+                            <li>Reflejan objetivos organizacionales</li>
+                            <li>Aprobadas por alta dirección</li>
+                            <li>Perdurables en el tiempo</li>
+                            <li>Conocidas por toda la organización</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>📋 Normativas</h3>
+                        <p><strong>Reglas generales obligatorias</strong></p>
+                        <ul>
+                            <li>Desarrollan políticas de alto nivel</li>
+                            <li>Definidas por órgano responsable</li>
+                            <li>Ajustadas al despliegue tecnológico</li>
+                            <li>Conocidas por usuarios del sistema</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>⚙️ Procedimientos</h3>
+                        <p><strong>Cómo actuar</strong></p>
+                        <ul>
+                            <li>Marco de actuación específico</li>
+                            <li>Desarrollados por unidad responsable</li>
+                            <li>Documentados y actualizados</li>
+                            <li>Conocidos por ejecutores y usuarios</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>🔧 Instrucciones</h3>
+                        <p><strong>Pasos técnicos precisos</strong></p>
+                        <ul>
+                            <li>Forma precisa de implementación</li>
+                            <li>Pasos de obligado cumplimiento</li>
+                            <li>Documentadas técnicamente</li>
+                            <li>Conocidas por técnicos responsables</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏢 Organización del Departamento de Auditoría</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>Estructura recomendada:</strong> Departamento separado, dependiente de la alta dirección. La AEAT sugiere entre <strong>0.5% - 1%</strong> del personal total de la organización.</p>
+                </div>
+
+                <h3>🎯 Funciones del Departamento</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🛡️ Controles</h4>
+                        <p>Establecer, mantener y mejorar controles efectivos evaluando su eficacia y eficiencia.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>⚠️ Riesgos</h4>
+                        <p>Contribuir al establecimiento y mejora del sistema de gestión de riesgos.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🔒 Seguridad</h4>
+                        <p>Velar por el mantenimiento de la seguridad organizacional.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>📋 Consultoría</h4>
+                        <p>Actuar como órgano de asesoría al servicio de la dirección.</p>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>🏆 Certificaciones ISACA</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>CISA:</strong> Certified Information Systems Auditor</li>
+                            <li><strong>CISM:</strong> Certified Information Security Manager</li>
+                            <li><strong>CGEIT:</strong> Certified In the Governance of Enterprises IT</li>
+                            <li><strong>CRISC:</strong> Certified in Risk and Information Systems Control</li>
+                        </ul>
+                        <p><em>ISACA también establece un Código de Ética Profesional para sus miembros.</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Infraestructura y Prácticas -->
+        <div id="tab5" class="tab-content">
+            <div class="card">
+                <h2>🔧 Infraestructura Técnica</h2>
+                
+                <div class="highlight-box">
+                    <p>Existen diversas técnicas especializadas para analizar programas que apoyan al auditor en el trabajo de campo.</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🔍 Traceo</h3>
+                        <p><strong>Función:</strong> Indica el camino del programa durante la ejecución</p>
+                        <ul>
+                            <li>Muestra valores de variables</li>
+                            <li>Rastrea ejecución de instrucciones</li>
+                            <li>Puede aplicarse a partes o todo el programa</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>🗺️ Mapeo</h3>
+                        <p><strong>Función:</strong> Características del programa</p>
+                        <ul>
+                            <li>Tamaño en bytes</li>
+                            <li>Localización en memoria</li>
+                            <li>Fecha de última modificación</li>
+                            <li>Otros metadatos relevantes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>📊 Comparación de Código</h3>
+                        <p><strong>Función:</strong> Análisis comparativo</p>
+                        <ul>
+                            <li>Compara códigos fuente</li>
+                            <li>Compara códigos objeto</li>
+                            <li>Identifica diferencias y cambios</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>📈 Job Accounting Software</h3>
+                        <p><strong>Función:</strong> Informe de contabilidad del sistema</p>
+                        <ul>
+                            <li>Acumula información de uso</li>
+                            <li>Facilita facturación a usuarios</li>
+                            <li>Evalúa uso del sistema</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Herramientas CAAT</h3>
+                    <p><em>(Computer Audit Assisted Techniques)</em></p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>ACL</h4>
+                            <p>Herramienta de análisis de datos</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Auto Audit</h4>
+                            <p>Automatización de procesos de auditoría</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>AuditMaster</h4>
+                            <p>Suite completa de auditoría</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Delos</h4>
+                            <p>Plataforma de análisis especializada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚡ Prácticas Operativas</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. 📋 Planificación</h4>
+                        <p><strong>Resultado:</strong> Plan de trabajo/guión de auditoría</p>
+                        <ul>
+                            <li>Punto de control: objetivos a supervisar</li>
+                            <li>Directriz de auditoría: tareas por punto</li>
+                            <li>Identificación de medios humanos y técnicos</li>
+                            <li>Técnicas: entrevistas, encuestas, observación</li>
+                            <li>Calendario con puntos de control</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>2. 📢 Formalización</h4>
+                        <p>Notificación al responsable de la unidad auditada</p>
+                        <p><strong>Trabajo de campo:</strong> Recoger evidencias suficientes, relevantes y competentes</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>3. 🔍 Ejecución</h4>
+                        <p>Examen y evaluación de la información obtenida en la fase previa</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>4. 📊 Comunicación</h4>
+                        <p>Informes de auditoría con estructura definida</p>
+                        <ul>
+                            <li>Reunión de cierre</li>
+                            <li>Borrador de informe</li>
+                            <li>Tramitación con período de alegaciones</li>
+                            <li>Informe definitivo con anexos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4>5. 📈 Seguimiento</h4>
+                        <p>Implementación de recomendaciones en tiempo determinado</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📄 Tipos de Evidencias</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🔍 Físicas</h3>
+                        <p>Obtenidas mediante inspección directa u observación del entorno y equipos.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>📋 Documentales</h3>
+                        <p>Obtenidas a partir de documentos, cartas, informes y registros oficiales.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>🗣️ Testimoniales</h3>
+                        <p>Resultado de entrevistas, cuestionarios y declaraciones de personal.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>📊 Analíticas</h3>
+                        <p>Obtenidas por medio de comparaciones, cálculos y análisis estadísticos.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>⚠️ Impacto de Hallazgos</h3>
+                    <ul>
+                        <li><strong>🟢 Bajo:</strong> Vulnerabilidad del sistema</li>
+                        <li><strong>🟡 Medio:</strong> Posible debilidad del sistema de control</li>
+                        <li><strong>🔴 Alto:</strong> Debilidad que requiere controles adicionales o más estrictos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Guía CCN-STIC 802</h2>
+                
+                <div class="highlight-box">
+                    <p>La seguridad de los sistemas de información será auditada según términos específicos, pudiendo incluir revisión de medidas del RGPD.</p>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>🔍 Aspectos a Auditar</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li>Política de seguridad define roles y funciones</li>
+                            <li>Procedimientos para resolución de conflictos</li>
+                            <li>Designación de personas según "separación de funciones"</li>
+                            <li>Análisis de riesgos con revisión anual</li>
+                            <li>Cumplimiento de medidas de seguridad del Anexo II</li>
+                            <li>Sistema de gestión de seguridad documentado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📊 Categoría BÁSICA</h4>
+                        <p><strong>Autoevaluación</strong> realizada por personal administrativo</p>
+                        <ul>
+                            <li>Documentar medidas implantadas</li>
+                            <li>Revisión por responsable de seguridad</li>
+                            <li>Elevación de conclusiones</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🔍 Categoría MEDIA/ALTA</h4>
+                        <p><strong>Auditoría formal</strong> cada 2 años</p>
+                        <ul>
+                            <li>Informe sobre grado de cumplimiento</li>
+                            <li>Identificación de deficiencias</li>
+                            <li>Medidas correctoras</li>
+                            <li>Extraordinaria si hay cambios sustanciales</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="tab6" class="tab-content">
+            <div class="card">
+                <h2>🧠 Ejercicios Prácticos de Auditoría Informática</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p id="progress-text">Progreso: 0/20 preguntas completadas</p>
+            </div>
+
+            <div class="quiz-container">
+                <!-- Question 1 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>1. Según Ron Weber, ¿cuál NO es uno de los objetivos principales de la auditoría de sistemas de información?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">Salvaguardar los activos</li>
+                        <li data-answer="b" class="correct">Maximizar los beneficios económicos</li>
+                        <li data-answer="c">Mantener la integridad de los datos</li>
+                        <li data-answer="d">Utilizar eficientemente los recursos</li>
+                    </ul>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>2. ¿Cuántas son las funciones principales que debe cumplir la auditoría informática?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">3</li>
+                        <li data-answer="b">4</li>
+                        <li data-answer="c" class="correct">5</li>
+                        <li data-answer="d">6</li>
+                    </ul>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>3. Los controles que actúan durante la realización del proceso que se observa se denominan:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">Preventivos</li>
+                        <li data-answer="b">Reactivos</li>
+                        <li data-answer="c" class="correct">Concurrentes o concomitantes</li>
+                        <li data-answer="d">Correctivos</li>
+                    </ul>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>4. ¿Cuál es el órgano supremo fiscalizador de las cuentas del Estado en España?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'a')">
+                        <li data-answer="a" class="correct">Tribunal de Cuentas</li>
+                        <li data-answer="b">IGAE</li>
+                        <li data-answer="c">Inspecciones Generales</li>
+                        <li data-answer="d">Agencia Tributaria</li>
+                    </ul>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>5. ¿Desde qué año debe la IGAE elaborar anualmente un Plan de Auditorías?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">1982</li>
+                        <li data-answer="b" class="correct">1984</li>
+                        <li data-answer="c">1986</li>
+                        <li data-answer="d">1988</li>
+                    </ul>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="question">
+                    <span class="difficulty avanzado">AVANZADO</span>
+                    <h4>6. El Real Decreto que regula el Esquema Nacional de Seguridad (ENS) es:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'a')">
+                        <li data-answer="a" class="correct">RD 4/2010, de 8 de enero</li>
+                        <li data-answer="b">RD 3/2010, de 8 de enero</li>
+                        <li data-answer="c">RD 5/2010, de 8 de enero</li>
+                        <li data-answer="d">RD 2/2010, de 8 de enero</li>
+                    </ul>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>7. ¿Qué significa la certificación CISA de ISACA?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'd')">
+                        <li data-answer="a">Certified Information Security Administrator</li>
+                        <li data-answer="b">Certified Information Systems Administrator</li>
+                        <li data-answer="c">Certified Information Security Analyst</li>
+                        <li data-answer="d" class="correct">Certified Information Systems Auditor</li>
+                    </ul>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>8. Las pruebas que verifican el grado de cumplimiento de los controles existentes se denominan:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">Pruebas sustantivas</li>
+                        <li data-answer="b" class="correct">Pruebas de cumplimiento</li>
+                        <li data-answer="c">Pruebas analíticas</li>
+                        <li data-answer="d">Pruebas documentales</li>
+                    </ul>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>9. ¿Cuál es el porcentaje recomendado por la AEAT para personal de auditoría en una organización?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'a')">
+                        <li data-answer="a" class="correct">0,5% - 1%</li>
+                        <li data-answer="b">1% - 2%</li>
+                        <li data-answer="c">2% - 3%</li>
+                        <li data-answer="d">3% - 5%</li>
+                    </ul>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="question">
+                    <span class="difficulty avanzado">AVANZADO</span>
+                    <h4>10. La técnica que indica el camino del programa durante su ejecución se denomina:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'a')">
+                        <li data-answer="a" class="correct">Traceo</li>
+                        <li data-answer="b">Mapeo</li>
+                        <li data-answer="c">Job Accounting</li>
+                        <li data-answer="d">Comparación de código</li>
+                    </ul>
+                </div>
+
+                <!-- Question 11 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>11. ¿Cuántos niveles tiene la pirámide documental organizacional para auditoría?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">2</li>
+                        <li data-answer="b">4</li>
+                        <li data-answer="c" class="correct">3</li>
+                        <li data-answer="d">5</li>
+                    </ul>
+                </div>
+
+                <!-- Question 12 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>12. Las auditorías que descubren fraudes y delitos se conocen como:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">Auditorías operativas</li>
+                        <li data-answer="b">Auditorías de cumplimiento</li>
+                        <li data-answer="c" class="correct">Auditorías forenses</li>
+                        <li data-answer="d">Auditorías de regularidad</li>
+                    </ul>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="question">
+                    <span class="difficulty avanzado">AVANZADO</span>
+                    <h4>13. Según la Guía CCN-STIC 802, ¿cada cuántos años se requiere auditoría para sistemas de categoría MEDIA y ALTA?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">1 año</li>
+                        <li data-answer="b" class="correct">2 años</li>
+                        <li data-answer="c">3 años</li>
+                        <li data-answer="d">5 años</li>
+                    </ul>
+                </div>
+
+                <!-- Question 14 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>14. ¿Cuáles son los tres ámbitos de control en la Administración Pública española?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'd')">
+                        <li data-answer="a">Interno, externo y mixto</li>
+                        <li data-answer="b">Central, autonómico y local</li>
+                        <li data-answer="c">Preventivo, detectivo y correctivo</li>
+                        <li data-answer="d" class="correct">Político, judicial y administrativo</li>
+                    </ul>
+                </div>
+
+                <!-- Question 15 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>15. Los controles que reducen el riesgo ante una debilidad existente se denominan:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'd')">
+                        <li data-answer="a">Preventivos</li>
+                        <li data-answer="b">Detectivos</li>
+                        <li data-answer="c">Correctivos</li>
+                        <li data-answer="d" class="correct">Compensatorios</li>
+                    </ul>
+                </div>
+
+                <!-- Question 16 -->
+                <div class="question">
+                    <span class="difficulty avanzado">AVANZADO</span>
+                    <h4>16. ¿Cuál de las siguientes NO es una herramienta CAAT mencionada en el documento?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">ACL</li>
+                        <li data-answer="b">AuditMaster</li>
+                        <li data-answer="c" class="correct">COBIT</li>
+                        <li data-answer="d">Delos</li>
+                    </ul>
+                </div>
+
+                <!-- Question 17 -->
+                <div class="question">
+                    <span class="difficulty basico">BÁSICO</span>
+                    <h4>17. ¿Cuántas fases tiene el proceso operativo de auditoría?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">4</li>
+                        <li data-answer="b" class="correct">5</li>
+                        <li data-answer="c">6</li>
+                        <li data-answer="d">7</li>
+                    </ul>
+                </div>
+
+                <!-- Question 18 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>18. La Ley Orgánica de Protección de Datos Personales vigente es:</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'b')">
+                        <li data-answer="a">LO 2/2018</li>
+                        <li data-answer="b" class="correct">LO 3/2018</li>
+                        <li data-answer="c">LO 4/2018</li>
+                        <li data-answer="d">LO 5/2018</li>
+                    </ul>
+                </div>
+
+                <!-- Question 19 -->
+                <div class="question">
+                    <span class="difficulty avanzado">AVANZADO</span>
+                    <h4>19. Para sistemas de categoría BÁSICA según el ENS, ¿qué tipo de evaluación se requiere?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'a')">
+                        <li data-answer="a" class="correct">Autoevaluación</li>
+                        <li data-answer="b">Auditoría externa</li>
+                        <li data-answer="c">Auditoría interna</li>
+                        <li data-answer="d">No se requiere evaluación</li>
+                    </ul>
+                </div>
+
+                <!-- Question 20 -->
+                <div class="question">
+                    <span class="difficulty intermedio">INTERMEDIO</span>
+                    <h4>20. ¿En qué consiste la metodología MAGERIT v3?</h4>
+                    <ul class="options" onclick="selectAnswer(this, 'c')">
+                        <li data-answer="a">Gestión de calidad de software</li>
+                        <li data-answer="b">Auditoría de sistemas informáticos</li>
+                        <li data-answer="c" class="correct">Análisis y gestión de riesgos de sistemas de información</li>
+                        <li data-answer="d">Implementación de controles de seguridad</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="tab7" class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos</h2>
+                
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <div class="glossary-term">Auditoría Informática</div>
+                        <p>Proceso de recoger, agrupar y evaluar evidencias para determinar si un sistema de información salvaguarda activos, mantiene integridad de datos, cumple objetivos organizacionales y usa recursos eficientemente.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">CAAT</div>
+                        <p>Computer Audit Assisted Techniques. Herramientas informáticas que apoyan el proceso de auditoría como ACL, AuditMaster, Auto Audit y Delos.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">COBIT</div>
+                        <p>Control Objectives for Information and Related Technologies. Marco de referencia de ISACA para la gestión y control de sistemas de información.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Controles Compensatorios</div>
+                        <p>Controles que se implementan cuando otros controles no están disponibles, son inabordables o fallan en su aplicación, reduciendo el riesgo ante debilidades existentes.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">ENS</div>
+                        <p>Esquema Nacional de Seguridad. Marco normativo español para la seguridad de sistemas de información del sector público, regulado por RD 4/2010.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Evidencia</div>
+                        <p>Cualquier información empleada por el auditor para determinar si el proceso auditado cumple con los criterios y objetivos establecidos.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">IGAE</div>
+                        <p>Intervención General de la Administración del Estado. Órgano interno que examina la gestión del gasto público y debe elaborar anualmente un Plan de Auditorías desde 1984.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">ISACA</div>
+                        <p>Information Systems Audit and Control Association. Organización que establece estándares para auditoría, control y seguridad de sistemas de información.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">ITIL</div>
+                        <p>Information Technology Infrastructure Library. Conjunto de mejores prácticas para la gestión de servicios de TI creado por el gobierno del Reino Unido.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">MAGERIT</div>
+                        <p>Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información. Marco español para la gestión de riesgos: identificar, evaluar, responder, monitorizar y reportar.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mapeo</div>
+                        <p>Técnica de auditoría que proporciona características del programa como tamaño, localización en memoria y fecha de última modificación.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">RGPD</div>
+                        <p>Reglamento General de Protección de Datos (UE) 2016/679. Marco europeo para la protección de datos personales.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Traceo</div>
+                        <p>Técnica que indica el camino del programa durante la ejecución, mostrando valores de variables y rastro de instrucciones ejecutadas.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Triple E (VFM)</div>
+                        <p>Value For Money audit. Auditoría de economía, eficacia y eficiencia que mide costes de desarrollo, mantenimiento y operación de sistemas de información.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❓ Preguntas Frecuentes</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Cuál es la diferencia entre auditoría interna y externa?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p><strong>Auditoría Interna:</strong> Realizada por personal de la propia entidad. Proporciona una perspectiva desde dentro de la organización y conocimiento profundo de los procesos internos.</p>
+                        <p><strong>Auditoría Externa:</strong> Realizada por profesionales ajenos a la entidad. Ofrece objetividad e independencia, aportando una perspectiva imparcial y experiencia en diferentes organizaciones.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Qué diferencia hay entre pruebas sustantivas y de cumplimiento?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p><strong>Pruebas Sustantivas:</strong> Miden el riesgo por deficiencia de controles existentes o por su ausencia. Se utilizan para determinar si se cumplen los objetivos de salvaguarda de activos, integridad de datos, eficacia y eficiencia.</p>
+                        <p><strong>Pruebas de Cumplimiento:</strong> Verifican el grado de cumplimiento mediante análisis de muestra. Proporcionan evidencia de que los controles clave existen y son aplicados efectiva y uniformemente.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Cuándo se requiere auditoría según el ENS?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p><strong>Categoría BÁSICA:</strong> No requiere auditoría formal. Bastará con autoevaluación realizada por el personal que administra el sistema.</p>
+                        <p><strong>Categoría MEDIA/ALTA:</strong> Requiere auditoría formal cada 2 años de forma ordinaria, y de forma extraordinaria cuando se produzcan modificaciones sustanciales en el sistema.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Qué son los controles compensatorios?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Son controles que se implementan cuando:</p>
+                        <ul>
+                            <li>Su coste lo hace inabordable</li>
+                            <li>No está efectivamente implantado</li>
+                            <li>Falla su aplicación</li>
+                        </ul>
+                        <p>Su función es reducir el riesgo ante una debilidad existente mediante medidas alternativas que mitigen la vulnerabilidad.</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Cuáles son las certificaciones principales de ISACA?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul>
+                            <li><strong>CISA:</strong> Certified Information Systems Auditor - Auditoría de sistemas</li>
+                            <li><strong>CISM:</strong> Certified Information Security Manager - Gestión de seguridad</li>
+                            <li><strong>CGEIT:</strong> Certified In the Governance of Enterprises IT - Gobernanza TI</li>
+                            <li><strong>CRISC:</strong> Certified in Risk and Information Systems Control - Gestión de riesgos</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <h3>¿Qué herramientas CAAT están disponibles?</h3>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p><strong>CAAT (Computer Audit Assisted Techniques)</strong> incluye herramientas como:</p>
+                        <ul>
+                            <li><strong>ACL:</strong> Herramienta de análisis de datos</li>
+                            <li><strong>Auto Audit:</strong> Automatización de procesos de auditoría</li>
+                            <li><strong>AuditMaster:</strong> Suite completa de auditoría</li>
+                            <li><strong>Delos:</strong> Plataforma de análisis especializada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Enlaces de Interés</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📋 Normativa Nacional</h4>
+                        <ul>
+                            <li>CCN-CERT (Series CCN-STIC)</li>
+                            <li>Ley 39/2015 Procedimiento Administrativo</li>
+                            <li>RD 4/2010 ENS</li>
+                            <li>RD 3/2010 ENI</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🌐 Organizaciones Internacionales</h4>
+                        <ul>
+                            <li>ISACA (Information Systems Audit)</li>
+                            <li>ITIL (IT Service Management)</li>
+                            <li>NIST (National Institute Standards)</li>
+                            <li>Instituto SANS</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>📊 Estándares ISO</h4>
+                        <ul>
+                            <li>ISO/IEC 27001 (SGSI)</li>
+                            <li>ISO/IEC 27002 (Buenas prácticas)</li>
+                            <li>ISO/IEC 15408 (Criterios comunes)</li>
+                            <li>ISO/IEC 18045 (Metodología evaluación)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>⚖️ Protección de Datos</h4>
+                        <ul>
+                            <li>RGPD (UE) 2016/679</li>
+                            <li>LO 3/2018 Protección de Datos</li>
+                            <li>Directiva (UE) 2016/680</li>
+                            <li>Agencia Española Protección Datos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let completedQuestions = 0;
+        const totalQuestions = 20;
+
+        function toggleTheme() {
+            if (currentTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'light');
+                currentTheme = 'light';
+            } else {
+                document.body.removeAttribute('data-theme');
+                currentTheme = 'dark';
+            }
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function openTab(event, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleCollapsible(header) {
+            const collapsible = header.parentElement;
+            const icon = header.querySelector('span');
+            
+            collapsible.classList.toggle('active');
+            icon.textContent = collapsible.classList.contains('active') ? '▲' : '▼';
+        }
+
+        function selectAnswer(optionsList, correctAnswer) {
+            const options = optionsList.querySelectorAll('li');
+            let alreadyAnswered = false;
+            
+            options.forEach(option => {
+                if (option.classList.contains('correct') || option.classList.contains('incorrect')) {
+                    alreadyAnswered = true;
+                }
+            });
+            
+            if (alreadyAnswered) return;
+            
+            options.forEach(option => {
+                const answer = option.getAttribute('data-answer');
+                if (answer === correctAnswer) {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            completedQuestions++;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const percentage = (completedQuestions / totalQuestions) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Progreso: ${completedQuestions}/${totalQuestions} preguntas completadas`;
+            
+            if (completedQuestions === totalQuestions) {
+                progressText.textContent += ' - ¡Ejercicios completados! 🎉';
+            }
+        }
+
+        // Load saved theme
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+                if (currentTheme === 'light') {
+                    document.body.setAttribute('data-theme', 'light');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Proyectos TI - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #16a34a;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px 12px 0 0;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 2rem;
+            min-height: 600px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tab-content {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color), #6366f1);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .list-item {
+            background: var(--bg-hover);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            background: var(--bg-secondary);
+            transform: translateX(4px);
+        }
+
+        .quiz-question {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-option {
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-card);
+            transform: translateX(4px);
+        }
+
+        .quiz-option.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-basic {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermediate {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty-advanced {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .process-flow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            background: var(--bg-hover);
+            padding: 1rem;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .methodology-card {
+            background: var(--bg-hover);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .methodology-card:hover {
+            background: var(--bg-secondary);
+            transform: scale(1.02);
+        }
+
+        .glossary-term {
+            background: var(--bg-hover);
+            border-left: 3px solid var(--accent-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .tab:last-child {
+                border-bottom: none;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .process-step::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">📊 Gestión de Proyectos TI</div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">📋 Resumen General</button>
+            <button class="tab" onclick="showTab(1)">🎯 Conceptos Básicos</button>
+            <button class="tab" onclick="showTab(2)">📈 Planificación Estratégica</button>
+            <button class="tab" onclick="showTab(3)">⚙️ Gestión de Proyectos</button>
+            <button class="tab" onclick="showTab(4)">🔧 PMBOK & Métrica v3</button>
+            <button class="tab" onclick="showTab(5)">📝 Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab(6)">📚 Recursos y FAQ</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tab 1: Resumen General -->
+            <div class="tab-panel active">
+                <div class="highlight-box">
+                    <h2>📊 Dirección y Gestión de Proyectos de Tecnologías de la Información</h2>
+                    <p>Guía completa sobre la gestión estratégica, planificación de recursos, seguimiento de proyectos y toma de decisiones en el ámbito de las TIC.</p>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Objetivos de Aprendizaje</h3>
+                        <ul>
+                            <li>Comprender los conceptos fundamentales de gestión de proyectos</li>
+                            <li>Dominar las técnicas de planificación estratégica en TIC</li>
+                            <li>Aplicar metodologías como PMBOK v7 y Métrica v3</li>
+                            <li>Gestionar recursos humanos y técnicos eficientemente</li>
+                            <li>Implementar sistemas de seguimiento y control</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Estadísticas Clave</h3>
+                        <div class="list-item">
+                            <strong>4 Fases:</strong> Ciclo de vida típico de un proyecto
+                        </div>
+                        <div class="list-item">
+                            <strong>4 Ps:</strong> Personal, Producto, Proceso, Proyecto
+                        </div>
+                        <div class="list-item">
+                            <strong>W5HH:</strong> Why, What, When, Who, Where, How, How much
+                        </div>
+                        <div class="list-item">
+                            <strong>12 Principios:</strong> PMBOK v7 base de comportamiento
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗺️ Conceptos Principales</h3>
+                    <div class="grid grid-3">
+                        <div class="methodology-card">
+                            <h4>📋 Proyecto</h4>
+                            <p>Organización temporal de recursos para cumplir un objetivo específico</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📈 Planificación Estratégica</h4>
+                            <p>Evaluación sistemática para definir objetivos y estrategias a largo plazo</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>⚡ Gestión Ágil</h4>
+                            <p>Enfoque iterativo e incremental para el desarrollo de proyectos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Fases del Ciclo de Vida</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <strong>Estudio Preliminar</strong>
+                            <p>Decisión de acometer el proyecto</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Diseño</strong>
+                            <p>Elaboración del plan de proyecto</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Ejecución</strong>
+                            <p>Seguimiento y control</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Cierre</strong>
+                            <p>Finalización y documentación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Conceptos Básicos -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>🎯 Conceptos Básicos de Gestión de Proyectos</h2>
+                    <p>Fundamentos esenciales para comprender la dirección de proyectos en TIC</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Definición de Proyecto</h3>
+                    <p><strong>Proyecto:</strong> Organización de recursos de todo tipo, reunidos en una organización temporal, para cumplir un determinado objetivo.</p>
+                    
+                    <h4>Características determinantes:</h4>
+                    <div class="grid grid-2">
+                        <div class="list-item">
+                            <strong>Objetivo definido:</strong> Resultado deseado con características específicas
+                        </div>
+                        <div class="list-item">
+                            <strong>Recursos limitados:</strong> Medios disponibles para la consecución
+                        </div>
+                        <div class="list-item">
+                            <strong>Responsabilidad:</strong> Persona/entidad que dirige la ejecución
+                        </div>
+                        <div class="list-item">
+                            <strong>Actividades estructuradas:</strong> Tareas ordenadas en el tiempo
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>👥 Stakeholders (Interesados)</h3>
+                        <ul>
+                            <li><strong>Cliente/Usuario:</strong> Beneficiario final</li>
+                            <li><strong>Director del proyecto:</strong> Responsable principal</li>
+                            <li><strong>Organización ejecutora:</strong> Entidad que realiza</li>
+                            <li><strong>Equipo de proyecto:</strong> Recursos humanos</li>
+                            <li><strong>Patrocinador:</strong> Apoyo económico/político</li>
+                            <li><strong>PMO:</strong> Oficina de gestión de proyectos</li>
+                            <li><strong>Proveedores:</strong> Suministradores externos</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏢 Tipos de Organización</h3>
+                        <div class="methodology-grid">
+                            <div class="methodology-card">
+                                <h4>Funcional</h4>
+                                <p>Estructura jerárquica tradicional por departamentos</p>
+                            </div>
+                            <div class="methodology-card">
+                                <h4>Por Proyecto</h4>
+                                <p>Equipo dedicado exclusivamente al proyecto</p>
+                            </div>
+                            <div class="methodology-card">
+                                <h4>Matricial</h4>
+                                <p>Combinación de estructura funcional y por proyecto</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>👨‍💼 Función Directiva en TIC</h3>
+                    <div class="grid grid-2">
+                        <div>
+                            <h4>Funciones Principales:</h4>
+                            <ul>
+                                <li>Planificación estratégica de las TIC</li>
+                                <li>Gestión de los recursos</li>
+                                <li>Gestión del cambio tecnológico</li>
+                                <li>Gestión de proyectos</li>
+                                <li>Liderazgo de equipos</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Estilos de Dirección:</h4>
+                            <div class="list-item">
+                                <strong>Democrático:</strong> Participativo y colaborativo
+                            </div>
+                            <div class="list-item">
+                                <strong>Autocrático:</strong> Decisiones centralizadas
+                            </div>
+                            <div class="list-item">
+                                <strong>Burocrático:</strong> Seguimiento estricto de procedimientos
+                            </div>
+                            <div class="list-item">
+                                <strong>Laissez-faire:</strong> Autonomía del equipo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Planificación Estratégica -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>📈 Planificación Estratégica en TIC</h2>
+                    <p>Proceso sistemático para definir objetivos a largo plazo y desarrollar estrategias para alcanzarlos</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Definición y Objetivos</h3>
+                    <p><strong>Planificación Estratégica:</strong> Proceso de evaluación sistemática de la naturaleza de un negocio, definiendo objetivos a medio y largo plazo, desarrollando estrategias y acotando recursos necesarios.</p>
+                    
+                    <h4>Principios básicos para Plan Estratégico TI:</h4>
+                    <div class="grid grid-2">
+                        <div class="list-item">
+                            <strong>Alineación:</strong> Planes TI con objetivos de negocio
+                        </div>
+                        <div class="list-item">
+                            <strong>Eficiencia:</strong> Mejoras que supongan ahorro presupuestario
+                        </div>
+                        <div class="list-item">
+                            <strong>Innovación:</strong> Nuevas áreas propiciadas por las TIC
+                        </div>
+                        <div class="list-item">
+                            <strong>Control:</strong> Mecanismos de seguimiento y modificación
+                        </div>
+                        <div class="list-item">
+                            <strong>Gestión del cambio:</strong> Involucrar alta dirección y personal
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Elaboración del Plan Estratégico</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <strong>1. Misión y Visión</strong>
+                            <p>Razón de existir y valores institucionales</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>2. Análisis DAFO</strong>
+                            <p>Situación interna y externa</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>3. Objetivos</strong>
+                            <p>Definición de metas y estrategias</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>4. Planificación</strong>
+                            <p>Proyectos y actividades concretas</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>5. Seguimiento</strong>
+                            <p>Evaluación y control</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Misión y Visión</h3>
+                        <h4>La Misión representa:</h4>
+                        <ul>
+                            <li>La razón de existir de la organización</li>
+                            <li>El propósito organizacional</li>
+                            <li>La obligación autoimpuesta</li>
+                            <li>Lo que la organización debe realizar</li>
+                            <li>Lo que NO debe hacer</li>
+                        </ul>
+                        
+                        <h4>La Visión incluye:</h4>
+                        <p>Criterios y valores profundos transformados en valores institucionales de grupo</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Matriz DAFO</h3>
+                        <p>Método de análisis que estudia datos organizacionales, contexto y entorno para diagnosticar situación y definir acciones.</p>
+                        
+                        <div style="overflow-x: auto; margin-top: 1rem;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: var(--bg-hover);">
+                                        <th style="border: 1px solid var(--border-color); padding: 0.8rem;">Organización (Interno)</th>
+                                        <th style="border: 1px solid var(--border-color); padding: 0.8rem;">Contexto (Externo)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border: 1px solid var(--border-color); padding: 0.8rem;"><strong>Debilidades (D)</strong></td>
+                                        <td style="border: 1px solid var(--border-color); padding: 0.8rem;"><strong>Amenazas (A)</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid var(--border-color); padding: 0.8rem;"><strong>Fortalezas (F)</strong></td>
+                                        <td style="border: 1px solid var(--border-color); padding: 0.8rem;"><strong>Oportunidades (O)</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Planificación Operativa</h3>
+                    <p>Conversión de estrategias en programas y proyectos concretos basados en presupuestos disponibles.</p>
+                    
+                    <div class="list-item">
+                        <strong>Objetivo:</strong> Llegar del Plan Estratégico a programas y proyectos específicos de trabajo
+                    </div>
+                    
+                    <h4>Elementos incluidos:</h4>
+                    <ul>
+                        <li>Definición de proyectos específicos</li>
+                        <li>Asignación de recursos y presupuestos</li>
+                        <li>Establecimiento de indicadores de seguimiento</li>
+                        <li>Cronogramas de ejecución</li>
+                        <li>Sistemas de evaluación continua</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 4: Gestión de Proyectos -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>⚙️ Gestión de Proyectos de Desarrollo</h2>
+                    <p>Conjunto de actividades y técnicas para desarrollar proyectos software de calidad dentro del presupuesto y tiempo establecido</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Las Cuatro P's de la Gestión</h3>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>👥 Personal</h4>
+                            <p>Recursos humanos, roles, responsabilidades y competencias necesarias</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📦 Producto</h4>
+                            <p>Entregables, funcionalidades y características del resultado final</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🔄 Proceso</h4>
+                            <p>Metodología, actividades y flujos de trabajo establecidos</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>📊 Proyecto</h4>
+                            <p>Planificación, seguimiento, control y gestión integral</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Marco W5HH</h3>
+                    <p>Preguntas fundamentales que debe responder todo proyecto:</p>
+                    <div class="grid grid-2">
+                        <div class="list-item">
+                            <strong>Why (Por qué):</strong> Justificación del proyecto
+                        </div>
+                        <div class="list-item">
+                            <strong>What (Qué):</strong> Entregables y objetivos
+                        </div>
+                        <div class="list-item">
+                            <strong>When (Cuándo):</strong> Cronograma y plazos
+                        </div>
+                        <div class="list-item">
+                            <strong>Who (Quién):</strong> Recursos humanos y responsables
+                        </div>
+                        <div class="list-item">
+                            <strong>Where (Dónde):</strong> Ubicación y contexto
+                        </div>
+                        <div class="list-item">
+                            <strong>How (Cómo):</strong> Metodología y procesos
+                        </div>
+                        <div class="list-item">
+                            <strong>How much (Cuánto):</strong> Presupuesto y recursos
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔑 Elementos Clave de la Gestión</h3>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <strong>Comienzo</strong>
+                            <p>Ámbito, alcance y objetivos</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Medición</strong>
+                            <p>Métricas y estimación</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Riesgos</strong>
+                            <p>Análisis mediante Magerit</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Planificación</strong>
+                            <p>Cronograma temporal</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>Control</strong>
+                            <p>Sistema de seguimiento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🎯 Tareas Críticas</h3>
+                        <div class="list-item">
+                            <strong>Estimación:</strong>
+                            <ul>
+                                <li>Duración de actividades</li>
+                                <li>Coste del proyecto</li>
+                                <li>Esfuerzo requerido</li>
+                            </ul>
+                        </div>
+                        <div class="list-item">
+                            <strong>Planificación:</strong>
+                            <ul>
+                                <li>Asignación de personas</li>
+                                <li>Distribución de tiempos</li>
+                                <li>Secuenciación de tareas</li>
+                            </ul>
+                        </div>
+                        <div class="list-item">
+                            <strong>Seguimiento:</strong>
+                            <ul>
+                                <li>Monitorización continua</li>
+                                <li>Control de desviaciones</li>
+                                <li>Acciones correctivas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚠️ Gestión de Riesgos</h3>
+                        <p><strong>Metodología Magerit:</strong></p>
+                        <div class="process-flow" style="flex-direction: column;">
+                            <div class="process-step">
+                                <strong>Identificar</strong>
+                                <p>Reconocer amenazas y vulnerabilidades</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Estimar</strong>
+                                <p>Valorar probabilidad e impacto</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Evaluar</strong>
+                                <p>Priorizar riesgos identificados</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Gestionar</strong>
+                                <p>Definir estrategias de mitigación</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Supervisar</strong>
+                                <p>Seguimiento continuo de riesgos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Planificación de Proyectos</h3>
+                    <p><strong>Definición:</strong> Selección de estrategia para producir un producto, definición de actividades y asignación de recursos.</p>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4>Proceso de Planificación:</h4>
+                            <ul>
+                                <li>Identificar tareas y dependencias</li>
+                                <li>Estimar esfuerzo por tareas</li>
+                                <li>Asignar recursos disponibles</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Tipos de Planificación:</h4>
+                            <ul>
+                                <li><strong>Temporal:</strong> Cronogramas y plazos</li>
+                                <li><strong>Recursos:</strong> Personal y medios técnicos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: PMBOK & Métrica v3 -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>🔧 PMBOK v7 y Métrica v3</h2>
+                    <p>Principales metodologías y estándares para la gestión de proyectos tecnológicos</p>
+                </div>
+
+                <div class="card">
+                    <h3>📚 PMBOK v7 (Project Management Body of Knowledge)</h3>
+                    <p><strong>Estándar del PMI (Project Management Institute)</strong> - Acreditado por ANSI - Versión 7 liberada en 2021</p>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4>🎯 12 Principios Fundamentales</h4>
+                            <p>Comportamientos deseables como base para abordar la gestión de proyectos:</p>
+                            <ol>
+                                <li>Prestar atención-cuidado</li>
+                                <li>Equipo</li>
+                                <li>Partes interesadas</li>
+                                <li>Valor</li>
+                                <li>Pensamiento holístico</li>
+                                <li>Liderazgo</li>
+                                <li>Adaptación</li>
+                                <li>Calidad</li>
+                                <li>Complejidad</li>
+                                <li>Oportunidades y amenazas</li>
+                                <li>Adaptabilidad y resiliencia</li>
+                                <li>Gestión de cambios</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h4>🏗️ Estructura del PMBOK v7</h4>
+                            <div class="list-item">
+                                <strong>Visión sistémica:</strong> Entrega de valor integral
+                            </div>
+                            <div class="list-item">
+                                <strong>Centrado en resultados:</strong> Alineación con objetivos estratégicos
+                            </div>
+                            <div class="list-item">
+                                <strong>8 Dominios:</strong> Actividades para cumplir principios
+                            </div>
+                            <div class="list-item">
+                                <strong>Herramientas:</strong> Modelos, métodos y artefactos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Herramientas y Técnicas PMBOK</h3>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>📊 Diagramas de Gantt</h4>
+                            <p>Representación visual de cronogramas y dependencias</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🔄 Diagramas PERT</h4>
+                            <p>Técnica de evaluación y revisión de programas</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>🎯 Camino Crítico</h4>
+                            <p>Análisis de ruta más larga del proyecto</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>💻 Software de Gestión</h4>
+                            <p>Herramientas digitales de planificación y seguimiento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚙️ Métrica v3 - Interfaz de Gestión de Proyectos</h3>
+                    <p><strong>Finalidad:</strong> Planificación, seguimiento y control de actividades y recursos en el desarrollo de Sistemas de Información</p>
+                    
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <strong>GPI - Inicio</strong>
+                            <p>Estimación y planificación inicial</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>GPS - Seguimiento</strong>
+                            <p>Control durante desarrollo</p>
+                        </div>
+                        <div class="process-step">
+                            <strong>GPF - Finalización</strong>
+                            <p>Cierre y documentación</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>🚀 Actividades de Inicio (GPI)</h3>
+                        <p>Se realizan tras el Estudio de Viabilidad del Sistema:</p>
+                        <ul>
+                            <li>Estimación de Esfuerzo</li>
+                            <li>Planificación del proyecto</li>
+                            <li>Definición de alcance</li>
+                            <li>Identificación de recursos necesarios</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Actividades de Seguimiento (GPS)</h3>
+                        <p>Durante Análisis, Diseño, Construcción, Implantación y Mantenimiento:</p>
+                        <ul>
+                            <li>Asignación de tareas</li>
+                            <li>Gestión de incidencias</li>
+                            <li>Control de cambios en requisitos</li>
+                            <li>Seguimiento de planificación</li>
+                            <li>Aceptación interna de tareas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏁 Actividades de Finalización (GPF)</h3>
+                    <p>Al concluir el proyecto:</p>
+                    <div class="list-item">
+                        <strong>Cierre del Proyecto:</strong> Evaluación final y lecciones aprendidas
+                    </div>
+                    <div class="list-item">
+                        <strong>Registro de Documentación:</strong> Archivo de toda la documentación de gestión
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Técnicas de Planificación</h3>
+                    <div class="grid grid-2">
+                        <div>
+                            <h4>Planificación Temporal:</h4>
+                            <ul>
+                                <li><strong>WBS:</strong> Estructura de descomposición del trabajo</li>
+                                <li><strong>GANTT:</strong> Diagrama de barras temporales</li>
+                                <li><strong>PERT:</strong> Técnica de evaluación y revisión</li>
+                                <li><strong>CPM:</strong> Método del camino crítico</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Planificación de Recursos:</h4>
+                            <ul>
+                                <li><strong>Inventario de recursos:</strong> Descripción, disponibilidad, fecha y duración</li>
+                                <li><strong>Recursos Humanos:</strong> Patrón de límites e histograma</li>
+                                <li><strong>Recursos Técnicos:</strong> Hardware y Software necesarios</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>📝 Ejercicios Prácticos</h2>
+                    <p>Cuestionario de 20 preguntas para evaluar conocimientos en gestión de proyectos TI</p>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>1. ¿Cuáles son las cuatro fases típicas del ciclo de vida de un proyecto?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Inicio, Planificación, Desarrollo, Cierre</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Estudio preliminar, Diseño, Ejecución/seguimiento/control, Cierre</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Análisis, Diseño, Construcción, Implantación</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Planificación, Ejecución, Monitoreo, Finalización</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>2. ¿Qué significan las "cuatro P's" en la gestión de proyectos de desarrollo?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Planificación, Producto, Proceso, Personal</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Personal, Producto, Proceso, Proyecto</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Presupuesto, Plazos, Personal, Producto</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Planificación, Presupuesto, Proceso, Proyecto</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>3. En el marco W5HH, ¿qué pregunta NO está incluida?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Why (Por qué)</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) How much (Cuánto)</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">C) Which (Cuál)</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Where (Dónde)</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>4. ¿Cuál es la definición correcta de proyecto según el documento?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) Organización de recursos de todo tipo, reunidos en una organización temporal, para cumplir un determinado objetivo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Conjunto de actividades secuenciales para obtener un producto final</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Proceso de desarrollo de software con metodologías específicas</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Plan estratégico de una organización a largo plazo</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>5. ¿Cuántos principios fundamentales incluye PMBOK v7?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) 10 principios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) 12 principios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) 8 principios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) 15 principios</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>6. En la matriz DAFO, ¿qué representa la "F"?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Factores</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Fortalezas</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Funciones</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Facilidades</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>7. ¿Cuáles son los tres grupos de actividades en la Interfaz de Gestión de Proyectos de Métrica v3?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) GPI (Inicio), GPS (Seguimiento y Control), GPF (Finalización)</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Análisis, Diseño, Construcción</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Planificación, Ejecución, Cierre</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Estudio, Desarrollo, Implantación</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <h4>8. ¿Qué metodología se menciona específicamente para el análisis de riesgos?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) COBIT</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Magerit</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) ITIL</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) ISO 27001</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>9. ¿Cuál NO es un tipo de organización para proyectos mencionado en el documento?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Funcional</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Por proyecto</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Matricial</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">D) Jerárquica</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>10. ¿Qué significa PMI en el contexto de PMBOK?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) Project Management Institute</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Project Management International</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Program Management Institute</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Project Management Index</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>11. ¿Cuáles son los pasos del proceso de control de proyectos?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) Definir medida, Registrar avance, Calcular desviación, Tomar acciones</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Planificar, Ejecutar, Controlar, Cerrar</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Iniciar, Desarrollar, Probar, Implementar</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Analizar, Diseñar, Construir, Mantener</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <h4>12. ¿Qué significa WBS en las técnicas de planificación temporal?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Work-Based System</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Work Breakdown Structure</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Workflow Business Structure</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Work-Build System</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>13. ¿Cuál es una función principal de la dirección TIC?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Desarrollo de aplicaciones</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Gestión del cambio tecnológico</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Mantenimiento de hardware</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Programación de sistemas</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>14. ¿Qué incluyen las líneas base del proyecto?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Solo cronograma</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Solo costes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">C) Alcance, cronograma y costes</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Solo alcance</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <h4>15. ¿Cuántos dominios reemplazaron a las áreas de conocimiento en PMBOK v7?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) 10 dominios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) 8 dominios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) 12 dominios</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) 6 dominios</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>16. ¿Cuál NO es un estilo de dirección de proyectos mencionado?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Democrático</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Autocrático</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">C) Colaborativo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Burocrático</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <h4>17. ¿Qué representa la misión de una organización?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) La razón de existir de la organización</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Los objetivos a largo plazo</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Las estrategias competitivas</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Los valores corporativos únicamente</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <h4>18. En Magerit, ¿cuáles son los cinco pasos para la gestión de riesgos?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">A) Identificar, Estimar, Evaluar, Gestionar, Supervisar</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) Planificar, Analizar, Mitigar, Controlar, Revisar</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Detectar, Valorar, Priorizar, Actuar, Monitorizar</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Reconocer, Calcular, Decidir, Implementar, Verificar</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <h4>19. ¿Qué herramienta de gestión NO se menciona en la lista de herramientas populares?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Microsoft Project</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">B) JIRA</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">C) GitHub</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Trello</div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <h4>20. ¿Cuál es la finalidad principal de la Interfaz de Gestión de Proyectos en Métrica v3?</h4>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">A) Desarrollo de aplicaciones web</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, true)">B) Planificación, seguimiento y control de actividades y recursos en el desarrollo de Sistemas de Información</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">C) Gestión de bases de datos</div>
+                    <div class="quiz-option" onclick="selectAnswer(this, false)">D) Análisis de requisitos funcionales</div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div class="tab-panel">
+                <div class="highlight-box">
+                    <h2>📚 Recursos y Preguntas Frecuentes</h2>
+                    <p>Glosario de términos, recursos adicionales y respuestas a dudas comunes</p>
+                </div>
+
+                <div class="card">
+                    <h3>📖 Glosario de Términos</h3>
+                    
+                    <div class="glossary-term">
+                        <strong>ANSI:</strong> American National Standards Institute - Organismo estadounidense de normalización que acredita estándares como PMBOK.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>CPM (Critical Path Method):</strong> Método del camino crítico para identificar la secuencia más larga de actividades dependientes en un proyecto.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>DAFO:</strong> Matriz de análisis de Debilidades, Amenazas, Fortalezas y Oportunidades para el análisis estratégico organizacional.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>Gantt:</strong> Tipo de diagrama de barras que ilustra un cronograma de proyecto mostrando fechas de inicio y fin de actividades.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>GPI:</strong> Gestión de Proyectos de Inicio - Actividades iniciales en Métrica v3 para estimación y planificación.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>GPF:</strong> Gestión de Proyectos de Finalización - Actividades de cierre en Métrica v3 para documentación final.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>GPS:</strong> Gestión de Proyectos de Seguimiento - Actividades de control durante el desarrollo en Métrica v3.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>Magerit:</strong> Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información desarrollada en España.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>Métrica v3:</strong> Metodología de planificación, desarrollo y mantenimiento de sistemas de información desarrollada por el Ministerio español.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>PERT:</strong> Program Evaluation and Review Technique - Técnica de evaluación y revisión de programas para gestión de proyectos.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>PMI:</strong> Project Management Institute - Instituto líder mundial en gestión de proyectos, desarrollador del estándar PMBOK.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>PMO:</strong> Project Management Office - Oficina de Gestión de Proyectos que estandariza procesos de gobernanza relacionados con proyectos.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>PMBOK:</strong> Project Management Body of Knowledge - Guía de fundamentos para la dirección de proyectos del PMI.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>Stakeholder:</strong> Persona, grupo u organización que puede afectar o verse afectada por una decisión, actividad o resultado de un proyecto.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>W5HH:</strong> Marco de preguntas para definición de proyectos: Why, What, When, Who, Where, How, How much.
+                    </div>
+                    
+                    <div class="glossary-term">
+                        <strong>WBS:</strong> Work Breakdown Structure - Estructura de descomposición del trabajo que organiza jerárquicamente los entregables del proyecto.
+                    </div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>❓ Preguntas Frecuentes</h3>
+                        
+                        <div class="list-item">
+                            <strong>¿Cuál es la diferencia entre PMBOK v6 y v7?</strong>
+                            <p>PMBOK v7 pasa de 10 áreas de conocimiento a 8 dominios, incorpora 12 principios fundamentales y se centra más en la entrega de valor que en procesos específicos.</p>
+                        </div>
+                        
+                        <div class="list-item">
+                            <strong>¿Es obligatorio usar Métrica v3 en proyectos públicos?</strong>
+                            <p>Métrica v3 es la metodología recomendada para el desarrollo de sistemas de información en la Administración Pública española, especialmente en proyectos gubernamentales.</p>
+                        </div>
+                        
+                        <div class="list-item">
+                            <strong>¿Qué diferencia hay entre director de proyecto y gestor de proyecto?</strong>
+                            <p>El director de proyecto tiene responsabilidad integral sobre resultados y toma de decisiones estratégicas, mientras que el gestor se enfoca más en la coordinación operativa.</p>
+                        </div>
+                        
+                        <div class="list-item">
+                            <strong>¿Cuándo aplicar metodologías ágiles vs. tradicionales?</strong>
+                            <p>Las metodologías ágiles son mejores para proyectos con requisitos cambiantes y equipos pequeños. Las tradicionales funcionan mejor en proyectos grandes con requisitos bien definidos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔗 Herramientas Recomendadas</h3>
+                        
+                        <h4>Software de Gestión de Proyectos:</h4>
+                        <ul>
+                            <li><strong>Microsoft Project:</strong> Herramienta profesional completa</li>
+                            <li><strong>JIRA:</strong> Ideal para proyectos de desarrollo ágil</li>
+                            <li><strong>Trello:</strong> Gestión visual simple con tableros Kanban</li>
+                            <li><strong>Planview:</strong> Gestión de portafolios empresariales</li>
+                            <li><strong>Clarizen:</strong> Gestión colaborativa en la nube</li>
+                        </ul>
+                        
+                        <h4>Técnicas de Estimación:</h4>
+                        <ul>
+                            <li><strong>Puntos de Función:</strong> Medición de funcionalidad</li>
+                            <li><strong>Planning Poker:</strong> Estimación consensuada en equipos ágiles</li>
+                            <li><strong>Análogos:</strong> Basado en proyectos similares anteriores</li>
+                            <li><strong>Paramétrico:</strong> Usando modelos matemáticos</li>
+                        </ul>
+                        
+                        <h4>Frameworks Complementarios:</h4>
+                        <ul>
+                            <li><strong>SCRUM:</strong> Framework ágil para desarrollo iterativo</li>
+                            <li><strong>PRINCE2:</strong> Metodología estructurada de gestión</li>
+                            <li><strong>COBIT:</strong> Framework de gobierno TI</li>
+                            <li><strong>ITIL:</strong> Mejores prácticas en gestión de servicios TI</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📋 Checklist de Gestión de Proyectos</h3>
+                    <div class="grid grid-2">
+                        <div>
+                            <h4>✅ Fase de Inicio:</h4>
+                            <ul>
+                                <li>Definir objetivo y alcance del proyecto</li>
+                                <li>Identificar stakeholders clave</li>
+                                <li>Crear acta de constitución del proyecto</li>
+                                <li>Realizar análisis de viabilidad inicial</li>
+                                <li>Definir criterios de éxito</li>
+                            </ul>
+                            
+                            <h4>✅ Fase de Planificación:</h4>
+                            <ul>
+                                <li>Crear WBS (estructura de descomposición)</li>
+                                <li>Estimar duración y recursos</li>
+                                <li>Desarrollar cronograma con Gantt</li>
+                                <li>Planificar gestión de riesgos</li>
+                                <li>Definir plan de comunicaciones</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>✅ Fase de Ejecución:</h4>
+                            <ul>
+                                <li>Dirigir y gestionar el trabajo del proyecto</li>
+                                <li>Gestionar el equipo del proyecto</li>
+                                <li>Gestionar las comunicaciones</li>
+                                <li>Implementar respuestas a los riesgos</li>
+                                <li>Gestionar la participación de stakeholders</li>
+                            </ul>
+                            
+                            <h4>✅ Fase de Cierre:</h4>
+                            <ul>
+                                <li>Obtener aceptación formal de entregables</li>
+                                <li>Documentar lecciones aprendidas</li>
+                                <li>Liberar recursos del proyecto</li>
+                                <li>Archivar documentos del proyecto</li>
+                                <li>Celebrar éxitos del equipo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+
+        function showTab(tabIndex) {
+            // Hide all tab panels
+            const panels = document.querySelectorAll('.tab-panel');
+            const tabs = document.querySelectorAll('.tab');
+            
+            panels.forEach(panel => panel.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab panel
+            panels[tabIndex].classList.add('active');
+            tabs[tabIndex].classList.add('active');
+            
+            currentTab = tabIndex;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌚 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function selectAnswer(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                } else if (option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            });
+        }
+
+        // Load saved theme
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.querySelector('.theme-toggle').textContent = '🌚 Modo Oscuro';
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentTab > 0) {
+                showTab(currentTab - 1);
+            } else if (e.key === 'ArrowRight' && currentTab < 6) {
+                showTab(currentTab + 1);
+            }
+        });
+    </script>
+</body>
+</html>

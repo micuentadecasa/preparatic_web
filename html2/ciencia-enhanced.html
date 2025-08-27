@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciencia de Datos - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="light"] .header {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .theme-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--accent-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--bg-card);
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .tab {
+            background: var(--bg-card);
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-right: 1px solid var(--border-color);
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .tab-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 2rem;
+            min-height: 600px;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+        
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .card h4 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .highlight {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .list {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .list li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .quiz-container {
+            margin-top: 2rem;
+        }
+        
+        .question {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .options li {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .options li:hover {
+            background: var(--bg-hover);
+        }
+        
+        .options li.correct {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+        
+        .options li.selected:not(.correct) {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .difficulty.basico {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .difficulty.intermedio {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .difficulty.avanzado {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .progress-bar {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: var(--accent-color);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-left: 1rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <header class="header">
+        <div class="header-content">
+            <h1>📊 Ciencia de Datos - Guía Completa</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">☀️ Modo Claro</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('ciclo')">Ciclo de Vida</button>
+            <button class="tab" onclick="showTab('fundamentos')">Fundamentos</button>
+            <button class="tab" onclick="showTab('herramientas')">Herramientas</button>
+            <button class="tab" onclick="showTab('bigdata')">Big Data</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tab 1: Resumen General -->
+            <div id="resumen" class="content-section active">
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">1962</div>
+                        <div class="stat-label">Año de Origen</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Fases CRISP-DM</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Vs de Big Data</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Objetivos de Aprendizaje</h3>
+                    <ul class="list">
+                        <li>Comprender el <span class="highlight">ciclo de vida completo</span> de los procesos de modelado de datos</li>
+                        <li>Dominar las técnicas de <span class="highlight">ETL, preprocesado y validación</span></li>
+                        <li>Aplicar <span class="highlight">fundamentos estadísticos</span> en ciencia de datos</li>
+                        <li>Conocer las principales <span class="highlight">herramientas y lenguajes</span></li>
+                        <li>Entender conceptos de <span class="highlight">Big Data y MLOps</span></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Resumen Ejecutivo</h3>
+                    <p>La <strong>Ciencia de Datos</strong> es un campo académico interdisciplinario que utiliza estadísticas, computación científica, métodos, procesos, algoritmos y sistemas científicos para extraer conocimientos de datos estructurados y no estructurados.</p>
+                    
+                    <h4>Pioneros Históricos</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1962 - John W. Tukey</h4>
+                            <p>Estadístico estadounidense que cuestionó el futuro de la estadística como ciencia empírica. Creador del diagrama de caja y bigotes.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>1974 - Peter Naur</h4>
+                            <p>Científico danés, ganador del premio Turing (2005), quien acuñó el término "Ciencia de Datos".</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2001 - William S. Cleveland</h4>
+                            <p>Introdujo la Ciencia de Datos como disciplina unificada e independiente de la Estadística tradicional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>🔍 Tipos de Análisis</h3>
+                        <h4>Análisis Descriptivo</h4>
+                        <p>Examina datos para obtener información sobre lo que ha ocurrido. Utiliza visualizaciones como gráficos y tablas.</p>
+                        
+                        <h4>Análisis Diagnóstico</h4>
+                        <p>Examen profundo para entender por qué ocurrió algo. Usa minería de datos y correlaciones.</p>
+                        
+                        <h4>Análisis Predictivo</h4>
+                        <p>Utiliza datos históricos para predecir patrones futuros mediante machine learning.</p>
+                        
+                        <h4>Análisis Prescriptivo</h4>
+                        <p>Predice y sugiere respuestas óptimas usando simulación y redes neuronales.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>⚙️ Metodología CRISP-DM</h3>
+                        <p>Modelo estándar para minería de datos concebido en 1996:</p>
+                        <ol class="list">
+                            <li>Comprensión del negocio</li>
+                            <li>Comprensión de los datos</li>
+                            <li>Preparación de los datos</li>
+                            <li>Fase de Modelado</li>
+                            <li>Evaluación</li>
+                            <li>Implantación</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Tecnologías Clave</h3>
+                    <div class="grid">
+                        <div>
+                            <h4>Inteligencia Artificial</h4>
+                            <p>Modelos de ML para análisis predictivos y prescriptivos</p>
+                        </div>
+                        <div>
+                            <h4>Computación en la Nube</h4>
+                            <p>Flexibilidad y capacidad de procesamiento para análisis avanzado</p>
+                        </div>
+                        <div>
+                            <h4>Internet de las Cosas</h4>
+                            <p>Dispositivos conectados que generan datos masivos</p>
+                        </div>
+                        <div>
+                            <h4>Computación Cuántica</h4>
+                            <p>Cálculos complejos a alta velocidad para algoritmos cuantitativos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Ciclo de Vida -->
+            <div id="ciclo" class="content-section">
+                <div class="card">
+                    <h3>🔄 Ciclo Completo de Modelado de Datos</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1. Obtención de Datos</h4>
+                            <p>Los datos masivos vienen de múltiples fuentes, diversos volúmenes, se generan rápidamente y deben verificarse su corrección.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2. Preprocesamiento</h4>
+                            <p>Tratamiento inicial: limpieza y filtrado de datos que no cumplen criterios de calidad o contienen errores.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>3. Transformación e Integración</h4>
+                            <p>Homogenización de datos de múltiples fuentes para hacerlos comparables (estructurados vs no estructurados).</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>4. Análisis de Datos</h4>
+                            <p>Procesamiento usando algoritmos y métodos estadísticos para responder preguntas de los científicos de datos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>5. Interpretación</h4>
+                            <p>Evaluación de resultados aplicando experiencia del campo para entender, completar y corregir la información.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>6. Validación</h4>
+                            <p>Verificación de robustez y detección de sesgos mediante técnicas externas o diferentes enfoques.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>📥 ETL (Extract, Transform, Load)</h3>
+                        <h4>Extracción</h4>
+                        <p>Datos de diferentes orígenes: BBDD, plataformas tecnológicas, protocolos de comunicación</p>
+                        
+                        <h4>Transformación</h4>
+                        <p>Limpieza, depuración, corrección y estandarización de datos</p>
+                        
+                        <h4>Carga</h4>
+                        <p>Incorporación a estructuras OLAP, sobrescribiendo o agregando información</p>
+                        
+                        <h4>Herramientas Comerciales</h4>
+                        <ul class="list">
+                            <li>Power Center, Oracle Data Integrator (ODI)</li>
+                            <li>SAS Data Integrator, Azure Data Factory</li>
+                            <li>SSIS, AWS Glue</li>
+                        </ul>
+                        
+                        <h4>Herramientas Open Source</h4>
+                        <ul class="list">
+                            <li>Pentaho, CLover ETL, KETL</li>
+                            <li>Talend Open Studio Integration</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>🧹 Preprocesado de Datos</h3>
+                        <h4>Pasos del Preprocesado</h4>
+                        <ol class="list">
+                            <li><strong>Recopilar/Crear datos:</strong> Set de datos disponible</li>
+                            <li><strong>Descubrimiento:</strong> Búsqueda de conjuntos importantes</li>
+                            <li><strong>Limpiar y validar:</strong> Data Scrubbing/Cleansing</li>
+                            <li><strong>Reducción:</strong> Selección de datos relevantes</li>
+                            <li><strong>Enriquecer:</strong> Agregación y conexión de datos</li>
+                            <li><strong>Almacenar:</strong> Preparación para uso futuro</li>
+                        </ol>
+                        
+                        <h4>Técnicas de Reducción</h4>
+                        <ul class="list">
+                            <li>Selección de características e instancias</li>
+                            <li>Data squashing (datasets más pequeños)</li>
+                            <li>Discretización</li>
+                        </ul>
+                        
+                        <h4>Herramientas Principales</h4>
+                        <ul class="list">
+                            <li>Pandas y Numpy (Python)</li>
+                            <li>Weka, RapidMiner, R Studio</li>
+                            <li>Azure ML, IBM Watson Studio</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Modelado de Datos</h3>
+                    <p>Objetivo: producir datos de mayor calidad, estructurados y consistentes para aplicaciones empresariales.</p>
+                    
+                    <div class="grid">
+                        <div>
+                            <h4>Modelo Conceptual</h4>
+                            <p>Orden teórico sobre datos según entidades del mundo real</p>
+                        </div>
+                        <div>
+                            <h4>Modelo Lógico</h4>
+                            <p>Establece valores clave, entidades discretas y relaciones en estructura lógica</p>
+                        </div>
+                        <div>
+                            <h4>Modelo Físico</h4>
+                            <p>Divide datos en tablas, índices y clústeres reales necesarios para almacenamiento</p>
+                        </div>
+                    </div>
+                    
+                    <h4>Algoritmos de Modelado</h4>
+                    <ul class="list">
+                        <li><strong>Árboles de Decisión:</strong> Clasificación mediante división lógica del dataset</li>
+                        <li><strong>Redes Neuronales:</strong> Reconocimiento de patrones complejos</li>
+                        <li><strong>SVM:</strong> Algoritmos supervisados para clasificación/regresión</li>
+                        <li><strong>Regresión Logística/Lineal:</strong> Predicción de variables categóricas/numéricas</li>
+                        <li><strong>Series Temporales:</strong> Combinación de técnicas tradicionales y forecasting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 3: Fundamentos Estadísticos -->
+            <div id="fundamentos" class="content-section">
+                <div class="card">
+                    <h3>📊 Fundamentos Estadísticos</h3>
+                    <p>La estadística juega un papel clave en la creación de modelos predictivos a partir de datos históricos.</p>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h3>📈 Estadística Descriptiva</h3>
+                            <p>Técnica matemática que obtiene, organiza, presenta y describe conjuntos de datos.</p>
+                            
+                            <h4>Conceptos Fundamentales</h4>
+                            <ul class="list">
+                                <li><strong>Dispersión:</strong> Distancia entre valores de una variable</li>
+                                <li><strong>Promedio:</strong> Media aritmética de los valores</li>
+                                <li><strong>Sesgo/Curtosis:</strong> Cualidad de la curva de datos</li>
+                                <li><strong>Asimetría:</strong> Distribución de datos respecto al promedio</li>
+                            </ul>
+                            
+                            <h4>Tipos de Gráficos</h4>
+                            <ul class="list">
+                                <li>Gráficos de barras, círculo, lineales</li>
+                                <li>Polígonos, diagramas de dispersión</li>
+                                <li>Histogramas y box plots</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>🔍 Estadística Inferencial</h3>
+                            <p>Determina propiedades de una población estadística a partir de una muestra mediante inducción.</p>
+                            
+                            <h4>Categorías Principales</h4>
+                            <ul class="list">
+                                <li><strong>Pruebas de hipótesis:</strong> Validación de conclusiones construidas</li>
+                                <li><strong>Intervalos de confianza:</strong> Estimación de parámetros poblacionales</li>
+                            </ul>
+                            
+                            <h4>Tipos</h4>
+                            <ul class="list">
+                                <li><strong>Paramétrica:</strong> Asume distribuciones específicas</li>
+                                <li><strong>No paramétrica:</strong> Sin asumir distribuciones</li>
+                            </ul>
+                            
+                            <h4>Características</h4>
+                            <p>Al ser resultado de cálculo probabilístico, conlleva cierto margen de error pero permite generalizar conclusiones.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Métodos de Validación</h3>
+                    <p>Estrategias para estimar capacidad predictiva de modelos con nuevas observaciones.</p>
+                    
+                    <div class="grid">
+                        <div>
+                            <h4>Validación Simple</h4>
+                            <p>Reparto aleatorio en dos grupos: entrenamiento y evaluación</p>
+                        </div>
+                        <div>
+                            <h4>Leave One Out (LOOCV)</h4>
+                            <p>Método iterativo usando todas las observaciones excepto una</p>
+                        </div>
+                        <div>
+                            <h4>K-Fold Cross-Validation</h4>
+                            <p>División aleatoria en k grupos, k-1 para entrenar y 1 para validar</p>
+                        </div>
+                        <div>
+                            <h4>Bootstrapping</h4>
+                            <p>Muestreo aleatorio con reposición del mismo tamaño que muestra original</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🤖 MLOps - Machine Learning Operations</h3>
+                    <p>Parte de la cultura DevOps relacionada con modelos de ML y automatización de procesos.</p>
+                    
+                    <h4>Objetivo</h4>
+                    <p>Desarrollar, entrenar y desplegar modelos en producción de manera fiable con procedimientos automatizados.</p>
+                    
+                    <h4>Tres Niveles de Implementación</h4>
+                    <ul class="list">
+                        <li><strong>Data:</strong> Datos, fases, ingestión, curado</li>
+                        <li><strong>Model:</strong> Testing, evaluación, empaquetado, despliegue</li>
+                        <li><strong>Code:</strong> Código donde se ejecuta el modelo</li>
+                    </ul>
+                    
+                    <h4>Beneficios de MLOps</h4>
+                    <ul class="list">
+                        <li>Mejora comunicación entre equipos técnicos</li>
+                        <li>Facilita y acelera gestión de datos</li>
+                        <li>Genera flujos automáticos</li>
+                        <li>Reduce sesgo en toma de decisiones</li>
+                    </ul>
+                    
+                    <h4>Herramientas Populares</h4>
+                    <ul class="list">
+                        <li>Mlflow, DVC, Kubeflow, ONNX</li>
+                        <li>TensorFlow Extended, Apache Airflow</li>
+                        <li>Jupyter, PyTorch, Metaflow</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 4: Herramientas y Lenguajes -->
+            <div id="herramientas" class="content-section">
+                <div class="card">
+                    <h3>🛠️ Principales Técnicas de Ciencia de Datos</h3>
+                    <div class="grid">
+                        <div>
+                            <h4>Clasificación</h4>
+                            <p>Separa elementos en diferentes categorías (algoritmos supervisados)</p>
+                        </div>
+                        <div>
+                            <h4>Regresión</h4>
+                            <p>Traza valores óptimos de variables relacionadas en línea o plano</p>
+                        </div>
+                        <div>
+                            <h4>Agrupación</h4>
+                            <p>Agrupa puntos con afinidad o atributos compartidos (no supervisados)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🐍 Python - Lenguaje Líder</h3>
+                    <p>Lenguaje de alto nivel, interpretado y de propósito general, ideal para desarrollo rápido de aplicaciones de ciencia de datos.</p>
+                    
+                    <h4>Ventajas de Python</h4>
+                    <ul class="list">
+                        <li>Sintaxis simple y fácil aprendizaje</li>
+                        <li>Potencial de scripting y verbosidad</li>
+                        <li>Portabilidad y alto rendimiento</li>
+                        <li>Amplio ecosistema de librerías</li>
+                    </ul>
+                    
+                    <h4>Librerías Esenciales</h4>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>NumPy</h4>
+                            <p>Estructuras numéricas multidimensionales, operaciones aritméticas, filtrado y funciones matemáticas de alto nivel.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Pandas</h4>
+                            <p>Manipulación de datos: lectura de múltiples fuentes (CSV, SQLite, JSON), operaciones entre columnas, detección de outliers.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Scikit-learn</h4>
+                            <p>Preprocesamiento, transformaciones y modelos ML: SVM, Random Forest, Gradient Boosting, K-means, DBSCAN.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Matplotlib</h4>
+                            <p>Generación de gráficos bidimensionales a partir de listas o arrays.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Plotly</h4>
+                            <p>Herramientas gráficas, analíticas y estadísticas con front-end JavaScript y D3.js.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Otros Lenguajes y Plataformas</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>R</h4>
+                            <p>Especializado en procesamiento estadístico y gráficos. Ideal para modelado lineal/no lineal, clasificación y pruebas estadísticas.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Julia</h4>
+                            <p>Lenguaje de uso general adecuado para análisis numérico y ciencia computacional de alto rendimiento.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Scala</h4>
+                            <p>Lenguaje multiparadigma que integra características orientadas a objetos y funcionales. Produce bytecode Java.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Jupyter Notebook</h4>
+                            <p>Aplicación web que permite crear documentos con código vivo, ecuaciones, visualizaciones y texto. Compatible con 40+ lenguajes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 IDEs y Herramientas de Desarrollo</h3>
+                    <div class="grid">
+                        <div>
+                            <h4>Spyder</h4>
+                            <p>IDE científico con herramientas de exploración/visualización y ejecución interactiva</p>
+                        </div>
+                        <div>
+                            <h4>PyCharm</h4>
+                            <p>Editor inteligente con autocompletado, detección y corrección de errores</p>
+                        </div>
+                        <div>
+                            <h4>Trifacta</h4>
+                            <p>Plataforma para explorar y preparar datos crudos y heterogéneos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Big Data y Ecosistemas -->
+            <div id="bigdata" class="content-section">
+                <div class="card">
+                    <h3>📊 Big Data - Las 5 Vs</h3>
+                    <p>Según Gartner: "activos de información caracterizados por volumen elevado, velocidad elevada y alta variedad".</p>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Volumen</h4>
+                            <p>Gran cantidad de datos a procesar</p>
+                        </div>
+                        <div class="card">
+                            <h4>Velocidad</h4>
+                            <p>Datos en movimiento y creación en tiempo real</p>
+                        </div>
+                        <div class="card">
+                            <h4>Variedad</h4>
+                            <p>Diferentes tipos de fuentes y datos</p>
+                        </div>
+                        <div class="card">
+                            <h4>Veracidad</h4>
+                            <p>Grado de fiabilidad e incertidumbre</p>
+                        </div>
+                        <div class="card">
+                            <h4>Valor</h4>
+                            <p>Capacidad de transformar datos en información útil</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🐘 Ecosistema Hadoop</h3>
+                    <p>Inspirado en Google File System (GFS) y paradigma MapReduce para procesamiento distribuido.</p>
+                    
+                    <h4>Componentes Principales</h4>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>HDFS</h4>
+                            <p>Sistema de archivos distribuido optimizado para grandes cantidades de datos con alta disponibilidad y tolerancia a fallos.</p>
+                        </div>
+                        <div class="card">
+                            <h4>MapReduce</h4>
+                            <p>Paradigma de programación para escalabilidad masiva. Map divide datos en tuplas clave/valor, Reduce combina resultados.</p>
+                        </div>
+                        <div class="card">
+                            <h4>YARN</h4>
+                            <p>Gestor de recursos que permite ejecutar múltiples aplicaciones compartiendo gestión común de recursos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Herramientas del Ecosistema Hadoop</h3>
+                    
+                    <h4>Captura y Manipulación</h4>
+                    <div class="grid">
+                        <div>
+                            <h4>Sqoop</h4>
+                            <p>Transferencia masiva entre Hadoop y sistemas relacionales</p>
+                        </div>
+                        <div>
+                            <h4>Flume</h4>
+                            <p>Captura y movimiento de grandes volúmenes de logs</p>
+                        </div>
+                        <div>
+                            <h4>Kafka</h4>
+                            <p>Plataforma distribuida de streaming en tiempo real</p>
+                        </div>
+                        <div>
+                            <h4>Chukwa</h4>
+                            <p>Recolección, análisis y visualización de logs</p>
+                        </div>
+                    </div>
+                    
+                    <h4>Almacenamiento</h4>
+                    <div class="grid">
+                        <div>
+                            <h4>Hive</h4>
+                            <p>Data Warehouse con lenguaje HiveQL similar a SQL</p>
+                        </div>
+                        <div>
+                            <h4>HBase</h4>
+                            <p>Base de datos NoSQL orientada a columnas</p>
+                        </div>
+                        <div>
+                            <h4>Impala</h4>
+                            <p>Motor SQL de baja latencia para análisis interactivo</p>
+                        </div>
+                    </div>
+                    
+                    <h4>Procesamiento</h4>
+                    <div class="grid">
+                        <div>
+                            <h4>Spark</h4>
+                            <p>Framework de computación en clúster, 100x más rápido en memoria que MapReduce</p>
+                        </div>
+                        <div>
+                            <h4>Storm</h4>
+                            <p>Procesamiento en tiempo real con topologías master-slave</p>
+                        </div>
+                        <div>
+                            <h4>Pig</h4>
+                            <p>Lenguaje PigLatin para análisis de datos, traduce a MapReduce</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗄️ Bases de Datos NoSQL</h3>
+                    <p>Alternativa a bases relacionales con características específicas para Big Data.</p>
+                    
+                    <h4>Características</h4>
+                    <ul class="list">
+                        <li>No utilizan SQL como lenguaje principal</li>
+                        <li>No usan estructuras fijas como tablas</li>
+                        <li>No permiten operaciones JOIN</li>
+                        <li>Emplean arquitecturas distribuidas</li>
+                        <li>Alta escalabilidad horizontal</li>
+                    </ul>
+                    
+                    <h4>Tipos Principales</h4>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Clave-Valor</h4>
+                            <p>Cada elemento con clave única</p>
+                            <p><em>Ej: Redis, DynamoDB</em></p>
+                        </div>
+                        <div class="card">
+                            <h4>Documentos</h4>
+                            <p>Datos semi-estructurados en XML/JSON</p>
+                            <p><em>Ej: MongoDB, CouchDB</em></p>
+                        </div>
+                        <div class="card">
+                            <h4>Grafos</h4>
+                            <p>Nodos y aristas para relaciones complejas</p>
+                            <p><em>Ej: Neo4j, OrientDB</em></p>
+                        </div>
+                        <div class="card">
+                            <h4>Columnas</h4>
+                            <p>Enfoque columnar vs transaccional</p>
+                            <p><em>Ej: Cassandra, HBase</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="ejercicios" class="content-section">
+                <div class="card">
+                    <h3>🎯 Quiz de Ciencia de Datos</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number" id="score">0</div>
+                            <div class="stat-label">Puntuación</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="answered">0</div>
+                            <div class="stat-label">Respondidas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">20</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-container">
+                    <!-- Pregunta 1 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>1. ¿En qué año se acuñó por primera vez el término "Ciencia de Datos"?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">1962</li>
+                            <li onclick="selectAnswer(this, true)">1974</li>
+                            <li onclick="selectAnswer(this, false)">2001</li>
+                            <li onclick="selectAnswer(this, false)">1996</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>2. ¿Cuántas fases principales tiene la metodología CRISP-DM?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">5</li>
+                            <li onclick="selectAnswer(this, true)">6</li>
+                            <li onclick="selectAnswer(this, false)">7</li>
+                            <li onclick="selectAnswer(this, false)">8</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>3. ¿Qué significa ETL en el contexto de ciencia de datos?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Extract, Test, Load</li>
+                            <li onclick="selectAnswer(this, true)">Extract, Transform, Load</li>
+                            <li onclick="selectAnswer(this, false)">Execute, Transform, Learn</li>
+                            <li onclick="selectAnswer(this, false)">Evaluate, Transform, Link</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>4. ¿Cuál de las siguientes NO es una de las 5 Vs de Big Data?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Volumen</li>
+                            <li onclick="selectAnswer(this, false)">Velocidad</li>
+                            <li onclick="selectAnswer(this, true)">Vulnerabilidad</li>
+                            <li onclick="selectAnswer(this, false)">Variedad</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>5. ¿Qué componente de Hadoop se encarga de la gestión de recursos?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">HDFS</li>
+                            <li onclick="selectAnswer(this, false)">MapReduce</li>
+                            <li onclick="selectAnswer(this, true)">YARN</li>
+                            <li onclick="selectAnswer(this, false)">Hive</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="question">
+                        <div class="difficulty avanzado">Avanzado</div>
+                        <h4>6. ¿Cuál es el tamaño de bloque típico en HDFS?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">32 MB</li>
+                            <li onclick="selectAnswer(this, true)">64 MB o 128 MB</li>
+                            <li onclick="selectAnswer(this, false)">256 MB</li>
+                            <li onclick="selectAnswer(this, false)">512 MB</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>7. ¿Qué librería de Python se utiliza principalmente para manipulación de datos?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">NumPy</li>
+                            <li onclick="selectAnswer(this, true)">Pandas</li>
+                            <li onclick="selectAnswer(this, false)">Matplotlib</li>
+                            <li onclick="selectAnswer(this, false)">Scikit-learn</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>8. ¿Qué método de validación usa todas las observaciones excepto una para entrenar?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Validación Simple</li>
+                            <li onclick="selectAnswer(this, true)">Leave One Out Cross-Validation (LOOCV)</li>
+                            <li onclick="selectAnswer(this, false)">K-Fold Cross-Validation</li>
+                            <li onclick="selectAnswer(this, false)">Bootstrapping</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="question">
+                        <div class="difficulty avanzado">Avanzado</div>
+                        <h4>9. ¿Qué algoritmo de machine learning es mejor para datos con muchas relaciones como redes sociales?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Árboles de Decisión</li>
+                            <li onclick="selectAnswer(this, false)">Regresión Lineal</li>
+                            <li onclick="selectAnswer(this, true)">Bases de datos orientadas a Grafos</li>
+                            <li onclick="selectAnswer(this, false)">K-means</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>10. ¿Qué significa MLOps?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, true)">Machine Learning Operations</li>
+                            <li onclick="selectAnswer(this, false)">Multiple Learning Options</li>
+                            <li onclick="selectAnswer(this, false)">Model Logic Operations</li>
+                            <li onclick="selectAnswer(this, false)">Manual Learning Optimization</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>11. ¿Cuál es el objetivo principal del análisis predictivo?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Describir lo que ha pasado</li>
+                            <li onclick="selectAnswer(this, true)">Predecir patrones futuros</li>
+                            <li onclick="selectAnswer(this, false)">Explicar por qué ocurrió algo</li>
+                            <li onclick="selectAnswer(this, false)">Sugerir acciones óptimas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>12. ¿Qué base de datos NoSQL es mejor para almacenar documentos JSON?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Redis</li>
+                            <li onclick="selectAnswer(this, true)">MongoDB</li>
+                            <li onclick="selectAnswer(this, false)">Neo4j</li>
+                            <li onclick="selectAnswer(this, false)">Cassandra</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="question">
+                        <div class="difficulty avanzado">Avanzado</div>
+                        <h4>13. ¿Cuál es la diferencia principal entre Hadoop 1.0 y Hadoop 2.0?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">HDFS mejorado</li>
+                            <li onclick="selectAnswer(this, true)">Introducción de YARN</li>
+                            <li onclick="selectAnswer(this, false)">Mejor MapReduce</li>
+                            <li onclick="selectAnswer(this, false)">Soporte para Python</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>14. ¿Qué técnica se usa para extraer información de sitios web automáticamente?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Data Mining</li>
+                            <li onclick="selectAnswer(this, true)">Web Scraping</li>
+                            <li onclick="selectAnswer(this, false)">ETL</li>
+                            <li onclick="selectAnswer(this, false)">OLAP</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>15. ¿Qué herramienta de Hadoop se utiliza para consultas SQL sobre Big Data?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, true)">Hive</li>
+                            <li onclick="selectAnswer(this, false)">Pig</li>
+                            <li onclick="selectAnswer(this, false)">Storm</li>
+                            <li onclick="selectAnswer(this, false)">Kafka</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="question">
+                        <div class="difficulty avanzado">Avanzado</div>
+                        <h4>16. ¿Cuál es la ventaja principal de Apache Spark sobre MapReduce?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Mejor tolerancia a fallos</li>
+                            <li onclick="selectAnswer(this, true)">Procesamiento en memoria más rápido</li>
+                            <li onclick="selectAnswer(this, false)">Menor uso de recursos</li>
+                            <li onclick="selectAnswer(this, false)">Mejor escalabilidad</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="question">
+                        <div class="difficulty basico">Básico</div>
+                        <h4>17. ¿Qué tipo de análisis busca entender "por qué" ocurrió algo?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Análisis Descriptivo</li>
+                            <li onclick="selectAnswer(this, true)">Análisis Diagnóstico</li>
+                            <li onclick="selectAnswer(this, false)">Análisis Predictivo</li>
+                            <li onclick="selectAnswer(this, false)">Análisis Prescriptivo</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>18. ¿Qué significa PMML en el contexto de minería de datos?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Python Machine Learning Module</li>
+                            <li onclick="selectAnswer(this, true)">Predictive Model Markup Language</li>
+                            <li onclick="selectAnswer(this, false)">Parallel Mining Markup Language</li>
+                            <li onclick="selectAnswer(this, false)">Pattern Matching Machine Learning</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="question">
+                        <div class="difficulty avanzado">Avanzado</div>
+                        <h4>19. ¿Cuál es el rol principal de un Data Steward?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">Crear modelos de ML</li>
+                            <li onclick="selectAnswer(this, false)">Desarrollar algoritmos</li>
+                            <li onclick="selectAnswer(this, true)">Velar por calidad, seguridad y disponibilidad de datos</li>
+                            <li onclick="selectAnswer(this, false)">Visualizar resultados</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="question">
+                        <div class="difficulty intermedio">Intermedio</div>
+                        <h4>20. ¿Qué recomendación UIT-T hace referencia a grandes volúmenes de datos?</h4>
+                        <ul class="options">
+                            <li onclick="selectAnswer(this, false)">UIT-T Y.3500</li>
+                            <li onclick="selectAnswer(this, true)">UIT-T Y.3600</li>
+                            <li onclick="selectAnswer(this, false)">UIT-T Y.3700</li>
+                            <li onclick="selectAnswer(this, false)">UIT-T Y.3800</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="recursos" class="content-section">
+                <div class="card">
+                    <h3>📚 Glosario de Términos Clave</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Big Data</h4>
+                            <p>Activos de información caracterizados por volumen elevado, velocidad elevada y alta variedad que demandan soluciones innovadoras de procesado.</p>
+                        </div>
+                        <div class="card">
+                            <h4>CRISP-DM</h4>
+                            <p>Cross-Industry Standard Process for Data Mining. Metodología estándar para proyectos de minería de datos con 6 fases principales.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Data Lake</h4>
+                            <p>Repositorio de almacenamiento que contiene grandes cantidades de datos en su formato nativo hasta que se necesiten.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Data Warehouse</h4>
+                            <p>Sistema de almacenamiento de datos diseñado para consultas y análisis en lugar de procesamiento de transacciones.</p>
+                        </div>
+                        <div class="card">
+                            <h4>ETL</h4>
+                            <p>Extract, Transform, Load. Proceso que permite mover datos de diferentes fuentes, formatearlos y cargarlos en un destino.</p>
+                        </div>
+                        <div class="card">
+                            <h4>HDFS</h4>
+                            <p>Hadoop Distributed File System. Sistema de archivos distribuido optimizado para almacenar grandes volúmenes de datos.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Machine Learning</h4>
+                            <p>Subcampo de la inteligencia artificial que permite a las computadoras aprender sin ser explícitamente programadas.</p>
+                        </div>
+                        <div class="card">
+                            <h4>MapReduce</h4>
+                            <p>Paradigma de programación para procesamiento paralelo de grandes conjuntos de datos en clusters distribuidos.</p>
+                        </div>
+                        <div class="card">
+                            <h4>MLOps</h4>
+                            <p>Machine Learning Operations. Conjunto de prácticas para automatizar y simplificar flujos de trabajo de ML en producción.</p>
+                        </div>
+                        <div class="card">
+                            <h4>NoSQL</h4>
+                            <p>Bases de datos no relacionales que no utilizan SQL tradicional, diseñadas para escalabilidad horizontal y flexibilidad.</p>
+                        </div>
+                        <div class="card">
+                            <h4>OLAP</h4>
+                            <p>Online Analytical Processing. Tecnología para análisis multidimensional rápido de datos empresariales.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Web Scraping</h4>
+                            <p>Técnica para extraer información de sitios web de forma automatizada mediante software especializado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Preguntas Frecuentes</h3>
+                    
+                    <h4>¿Cuál es la diferencia entre Data Mining y Machine Learning?</h4>
+                    <p>Data Mining se centra en descubrir patrones en datos existentes, mientras que Machine Learning construye modelos que pueden predecir o clasificar nuevos datos basándose en patrones aprendidos.</p>
+                    
+                    <h4>¿Cuándo usar bases de datos NoSQL vs SQL?</h4>
+                    <p>NoSQL es mejor para datos no estructurados, escalabilidad horizontal y desarrollo ágil. SQL es mejor para datos estructurados, transacciones ACID y consultas complejas.</p>
+                    
+                    <h4>¿Qué es mejor: Python o R para ciencia de datos?</h4>
+                    <p>Python es mejor para desarrollo integral de aplicaciones y producción. R es superior para análisis estadístico especializado y investigación académica.</p>
+                    
+                    <h4>¿Cómo elegir el algoritmo de ML apropiado?</h4>
+                    <p>Depende del tipo de problema (clasificación, regresión, clustering), tamaño de datos, interpretabilidad requerida y recursos computacionales disponibles.</p>
+                    
+                    <h4>¿Qué roles son esenciales en un equipo de Data Science?</h4>
+                    <p>Data Scientist, Data Engineer, Data Analyst, ML Engineer y Data Steward son roles fundamentales, cada uno con responsabilidades específicas en el pipeline de datos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Recursos Adicionales</h3>
+                    
+                    <h4>Herramientas de Visualización</h4>
+                    <ul class="list">
+                        <li><strong>Tableau:</strong> Líder en visualización empresarial</li>
+                        <li><strong>Power BI:</strong> Solución de Microsoft para BI</li>
+                        <li><strong>Plotly:</strong> Visualizaciones interactivas para Python/R</li>
+                        <li><strong>D3.js:</strong> Biblioteca JavaScript para visualizaciones web</li>
+                    </ul>
+                    
+                    <h4>Plataformas Cloud para Big Data</h4>
+                    <ul class="list">
+                        <li><strong>AWS:</strong> S3, EMR, Redshift, Glue</li>
+                        <li><strong>Google Cloud:</strong> BigQuery, DataFlow, DataProc</li>
+                        <li><strong>Azure:</strong> Data Factory, HDInsight, Synapse</li>
+                    </ul>
+                    
+                    <h4>Distribuciones Hadoop</h4>
+                    <ul class="list">
+                        <li><strong>Cloudera:</strong> Primera distribución comercial con consola propia</li>
+                        <li><strong>Hortonworks:</strong> Sin software propietario, innovadores en YARN</li>
+                        <li><strong>MapR:</strong> Reemplaza HDFS con sistema propio MapRFS</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Normativas y Estándares</h3>
+                    
+                    <h4>UNE 66175:2003</h4>
+                    <p>Sistemas de gestión de la calidad. Guía para la implantación de sistemas de indicadores. Recomendada para elaboración de cuadros de mando.</p>
+                    
+                    <h4>UIT-T Y.3600</h4>
+                    <p>Recomendación UIT que hace referencia a grandes volúmenes de datos - requisitos y capacidades basados en computación en la nube.</p>
+                    
+                    <h4>PMML (Predictive Model Markup Language)</h4>
+                    <p>Estándar del Data Mining Group para intercambio de modelos predictivos entre diferentes plataformas y aplicaciones.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'dark';
+        let quizScore = 0;
+        let questionsAnswered = 0;
+
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                button.textContent = '🌙 Modo Oscuro';
+                currentTheme = 'light';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                button.textContent = '☀️ Modo Claro';
+                currentTheme = 'dark';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function showTab(tabName) {
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected content section
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function selectAnswer(element, isCorrect) {
+            const question = element.parentNode.parentNode;
+            const options = question.querySelectorAll('.options li');
+            
+            // Remove previous selections
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct');
+            });
+            
+            // Mark all correct answers
+            options.forEach(option => {
+                if (option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            });
+            
+            // Mark selected answer
+            if (!isCorrect) {
+                element.classList.add('selected');
+            }
+            
+            // Update score only if not already answered
+            if (!question.classList.contains('answered')) {
+                questionsAnswered++;
+                if (isCorrect) {
+                    quizScore++;
+                }
+                question.classList.add('answered');
+                
+                // Update stats
+                document.getElementById('score').textContent = quizScore;
+                document.getElementById('answered').textContent = questionsAnswered;
+                document.getElementById('progress').style.width = (questionsAnswered / 20 * 100) + '%';
+            }
+            
+            // Disable further clicks on this question
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+        }
+
+        // Load saved theme
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                toggleTheme();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologías Ágiles - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+        }
+
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tabs-container {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .tab:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section {
+            background-color: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .content-section {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .highlight-box {
+            background-color: var(--bg-hover);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            margin: 1rem 0;
+        }
+
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .principle-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .principle-card:hover {
+            background-color: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background-color: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .quiz-container {
+            margin: 1rem 0;
+        }
+
+        .question-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .option {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .option:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .option.correct {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+
+        .option.incorrect {
+            background-color: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .basico { background-color: rgba(76, 175, 80, 0.3); color: #4caf50; }
+        .intermedio { background-color: rgba(255, 193, 7, 0.3); color: #ffc107; }
+        .avanzado { background-color: rgba(244, 67, 54, 0.3); color: #f44336; }
+
+        .glossary-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .term {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .definition {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .tabs-container {
+                flex-direction: column;
+            }
+
+            .tab {
+                min-width: 100%;
+            }
+
+            .principle-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">📚 Metodologías Ágiles</div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </header>
+
+    <div class="main-container">
+        <div class="tabs-container">
+            <button class="tab active" onclick="showTab(event, 'resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab(event, 'fundamentos')">Fundamentos Ágiles</button>
+            <button class="tab" onclick="showTab(event, 'metodologias')">Metodologías Populares</button>
+            <button class="tab" onclick="showTab(event, 'escalado')">Agile a Gran Escala</button>
+            <button class="tab" onclick="showTab(event, 'lean')">Metodologías Lean</button>
+            <button class="tab" onclick="showTab(event, 'ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab(event, 'recursos')">Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="content-section">
+                <h2 class="section-title">Resumen Ejecutivo: Metodologías Ágiles</h2>
+                
+                <div class="highlight-box">
+                    <h3>🎯 Objetivos de Aprendizaje</h3>
+                    <ul>
+                        <li>Comprender los valores y principios del Manifiesto Ágil</li>
+                        <li>Distinguir entre metodologías ágiles y tradicionales (Waterfall)</li>
+                        <li>Conocer las metodologías ágiles más populares (Scrum, Kanban, XP)</li>
+                        <li>Entender el escalado ágil (SAFe, LeSS) para grandes organizaciones</li>
+                        <li>Aplicar principios Lean al desarrollo de software</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">📊 Conceptos Clave</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Manifiesto Ágil (2001)</h4>
+                        <p>Documento fundacional que establece 4 valores y 12 principios para el desarrollo ágil de software</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Iterativo e Incremental</h4>
+                        <p>Desarrollo en pequeños ciclos que añaden valor progresivamente al producto</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Flexibilidad al Cambio</h4>
+                        <p>Capacidad de adaptarse a nuevos requisitos y cambios durante el desarrollo</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Colaboración Cliente</h4>
+                        <p>Participación activa del cliente en el proceso de desarrollo</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">🔢 Estadísticas Importantes</h3>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>4 Valores fundamentales</strong> del Manifiesto Ágil</li>
+                        <li><strong>12 Principios</strong> que guían el desarrollo ágil</li>
+                        <li><strong>Cono de incertidumbre:</strong> 4x factor de error al inicio de proyectos</li>
+                        <li><strong>SAFe:</strong> 50-120 personas organizadas en 5-12 equipos</li>
+                        <li><strong>Program Increment (PI):</strong> Típicamente 10 semanas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Fundamentos Ágiles -->
+        <div id="fundamentos" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Fundamentos de las Metodologías Ágiles</h2>
+                
+                <h3 class="subsection-title">📜 Manifiesto Ágil (2001)</h3>
+                <div class="highlight-box">
+                    <h4>Los 4 Valores Fundamentales:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div style="text-align: center;">
+                            <strong style="color: var(--accent-color);">VALORAMOS MÁS</strong>
+                            <ul style="list-style: none; margin: 1rem 0;">
+                                <li>• Individuos e interacciones</li>
+                                <li>• Software que funciona</li>
+                                <li>• Colaboración con el cliente</li>
+                                <li>• Responder ante el cambio</li>
+                            </ul>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong style="color: var(--text-secondary);">QUE</strong>
+                            <ul style="list-style: none; margin: 1rem 0; color: var(--text-secondary);">
+                                <li>• Procesos y herramientas</li>
+                                <li>• Documentación exhaustiva</li>
+                                <li>• Negociación de contratos</li>
+                                <li>• Seguimiento del plan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">🎯 Los 12 Principios Ágiles</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <strong>1. Satisfacer al cliente</strong><br>
+                        Entrega temprana y continua de software valioso
+                    </div>
+                    <div class="principle-card">
+                        <strong>2. Aceptar cambios</strong><br>
+                        Incluso en etapas tardías del desarrollo
+                    </div>
+                    <div class="principle-card">
+                        <strong>3. Entrega frecuente</strong><br>
+                        Software funcionando cada pocas semanas
+                    </div>
+                    <div class="principle-card">
+                        <strong>4. Colaboración habitual</strong><br>
+                        Entre negocio y desarrolladores
+                    </div>
+                    <div class="principle-card">
+                        <strong>5. Personas motivadas</strong><br>
+                        Dar el entorno y apoyo necesario
+                    </div>
+                    <div class="principle-card">
+                        <strong>6. Conversación cara a cara</strong><br>
+                        Método más eficiente de comunicación
+                    </div>
+                    <div class="principle-card">
+                        <strong>7. Software funcionando</strong><br>
+                        Principal medida de progreso
+                    </div>
+                    <div class="principle-card">
+                        <strong>8. Desarrollo sostenible</strong><br>
+                        Ritmo constante indefinidamente
+                    </div>
+                    <div class="principle-card">
+                        <strong>9. Excelencia técnica</strong><br>
+                        Atención continua y buen diseño
+                    </div>
+                    <div class="principle-card">
+                        <strong>10. Simplicidad</strong><br>
+                        Arte de maximizar trabajo no realizado
+                    </div>
+                    <div class="principle-card">
+                        <strong>11. Equipos auto-organizados</strong><br>
+                        Las mejores arquitecturas emergen del equipo
+                    </div>
+                    <div class="principle-card">
+                        <strong>12. Mejora continua</strong><br>
+                        Reflexión regular sobre cómo ser más efectivo
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">🔄 Ciclo de Deming (PDCA)</h3>
+                <div class="highlight-box">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem;">
+                            <h4 style="color: var(--accent-color);">PLAN</h4>
+                            <p>Planificar las acciones a realizar</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <h4 style="color: var(--accent-color);">DO</h4>
+                            <p>Ejecutar las acciones planificadas</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <h4 style="color: var(--accent-color);">CHECK</h4>
+                            <p>Verificar y evaluar resultados</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <h4 style="color: var(--accent-color);">ACT</h4>
+                            <p>Actuar según resultados obtenidos</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem;"><em>La metodología ágil enfatiza especialmente las fases de feedback (Check) y acción (Act) para favorecer la mejora continua.</em></p>
+                </div>
+
+                <h3 class="subsection-title">📐 Triángulo de Hierro vs Enfoque Ágil</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Waterfall (Triángulo de Hierro)</th>
+                            <th>Metodologías Ágiles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Alcance</strong></td>
+                            <td>Fijo desde el inicio</td>
+                            <td>Variable y adaptable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiempo</strong></td>
+                            <td>Variable</td>
+                            <td>Fijo (iteraciones regulares)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recursos</strong></td>
+                            <td>Variables</td>
+                            <td>Fijos (equipo estable)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cambios</strong></td>
+                            <td>Costosos y complejos</td>
+                            <td>Bienvenidos y esperados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Metodologías Populares -->
+        <div id="metodologias" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Metodologías Ágiles Más Populares</h2>
+                
+                <h3 class="subsection-title">🏉 SCRUM</h3>
+                <div class="highlight-box">
+                    <p><strong>Definición:</strong> Conjunto de prácticas y recomendaciones basadas en proceso iterativo e incremental que promueve comunicación, trabajo en equipo y feedback rápido.</p>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Roles Principales:</h4>
+                    <ul>
+                        <li><strong>Product Owner:</strong> Responsable del Product Backlog y priorización</li>
+                        <li><strong>Scrum Master:</strong> Facilitador del proceso y eliminador de impedimentos</li>
+                        <li><strong>Scrum Team:</strong> Equipo de desarrollo multidisciplinar</li>
+                    </ul>
+
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Eventos/Reuniones:</h4>
+                    <ul>
+                        <li><strong>Sprint Planning:</strong> Planificación del sprint</li>
+                        <li><strong>Daily Scrum:</strong> Reunión diaria de sincronización</li>
+                        <li><strong>Sprint Review:</strong> Revisión del incremento desarrollado</li>
+                        <li><strong>Sprint Retrospective:</strong> Mejora del proceso del equipo</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">📋 KANBAN</h3>
+                <div class="highlight-box">
+                    <p><strong>Definición:</strong> Método para gestionar la creación de productos con especial atención a la entrega continuada sin sobrecargar al equipo.</p>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">3 Principios Fundamentales:</h4>
+                    <ol>
+                        <li><strong>Visualizar el trabajo:</strong> Tablero Kanban público para transparencia</li>
+                        <li><strong>Limitar WIP:</strong> Cantidad de trabajo en progreso controlada</li>
+                        <li><strong>Mejorar el flujo:</strong> Eliminar cuellos de botella continuamente</li>
+                    </ol>
+                </div>
+
+                <h3 class="subsection-title">⚡ Extreme Programming (XP)</h3>
+                <div class="highlight-box">
+                    <p><strong>Definición:</strong> Marco ágil enfocado en producir software de mayor calidad y mejorar la eficiencia del equipo.</p>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Características Fundamentales:</h4>
+                    <ul>
+                        <li>Pruebas unitarias continuas</li>
+                        <li>Planificación flexible y abierta</li>
+                        <li>Respuesta rápida ante cambios</li>
+                        <li>Interacción continua desarrollador-cliente</li>
+                        <li>Refactorización del código constante</li>
+                        <li>Propiedad compartida del código</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">🔧 Otras Metodologías Relevantes</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">Feature Driven Development (FDD)</h4>
+                        <p>Desarrollo basado en funcionalidades. Iteraciones cortas con funcionalidades tangibles.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">Test Driven Development (TDD)</h4>
+                        <p>Escribir pruebas primero, código después, y refactorización final.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">Behavior Driven Development (BDD)</h4>
+                        <p>Extensión del TDD usando historias de usuario: "Como [rol] quiero [característica] para que [beneficios]"</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">Dynamic Systems Development Method (DSDM)</h4>
+                        <p>Marco común para entrega rápida de aplicaciones (RAD) con principios básicos definidos.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">Crystal</h4>
+                        <p>Familia de metodologías ligeras y adaptables que resalta trabajo en equipo y comunicación.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Agile a Gran Escala -->
+        <div id="escalado" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Agile a Gran Escala</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>Problema:</strong> Scrum funciona bien para un equipo, pero la guía no especifica cómo trabajar con múltiples equipos sobre el mismo producto (escalado horizontal) o llevar agilismo más allá del software (escalado vertical).</p>
+                </div>
+
+                <h3 class="subsection-title">🎯 SAFe (Scaled Agile Framework)</h3>
+                <div class="highlight-box">
+                    <p><strong>Estructura:</strong> 4 niveles organizados jerárquicamente</p>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Nivel de Programa:</h4>
+                    <ul>
+                        <li><strong>Alcance:</strong> 5-12 equipos (50-120 personas)</li>
+                        <li><strong>Program Increment (PI):</strong> ~10 semanas predefinidas</li>
+                        <li><strong>Release Management Team roles:</strong>
+                            <ul style="margin-left: 1rem;">
+                                <li>Release Train Engineer</li>
+                                <li>Product Management</li>
+                                <li>System Architect/Engineer</li>
+                                <li>Business Owners</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Nivel de Equipo:</h4>
+                    <ul>
+                        <li><strong>Roles:</strong> Scrum Master, Product Owner, Development Team (5-9 personas), Agile Team</li>
+                        <li><strong>Metodologías:</strong> Scrum, Extreme Programming, etc.</li>
+                        <li><strong>Objetivo:</strong> Definir, desarrollar y probar User Stories</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">🔗 LeSS (Large-Scale Scrum)</h3>
+                <div class="highlight-box">
+                    <p><strong>Enfoque:</strong> Escalado más puro de Scrum manteniendo principios originales</p>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: var(--accent-color);">Principios de Organización:</h4>
+                    <ul>
+                        <li>Un equipo de equipos ágiles autoorganizados</li>
+                        <li>Entrega de incrementos cada poco tiempo</li>
+                        <li>Visión y arquitectura común</li>
+                        <li>Duración de iteraciones común</li>
+                        <li>Colaboración cara a cara</li>
+                        <li>Entrega de valor incremental</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">⚖️ Comparación LeSS vs SAFe</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>LeSS</th>
+                            <th>SAFe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Scrum Masters</strong></td>
+                            <td>1 full time por cada 2-3 equipos</td>
+                            <td>No especifica número</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rol "Supremo"</strong></td>
+                            <td>No existe, todos iguales</td>
+                            <td>Release Train Engineer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Owner</strong></td>
+                            <td>Product Owner único</td>
+                            <td>Product Manager</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Metodología Equipo</strong></td>
+                            <td>Solo Scrum</td>
+                            <td>Scrum, XP o Kanban</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Backlogs</strong></td>
+                            <td>1 por grupo de equipos</td>
+                            <td>1 por equipo + Backlog Programa</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="subsection-title">🔄 Scrum de Scrums</h3>
+                <div class="principle-card">
+                    <p><strong>Concepto:</strong> Escalado puro de la metodología Scrum manteniendo todos sus principios fundamentales pero aplicados a múltiples equipos coordinados.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Metodologías Lean -->
+        <div id="lean" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Metodologías Lean</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>Origen:</strong> Sistema de producción de Toyota. Mary y Tom Poppendieck lo trasladan al software.</p>
+                    <p><strong>Objetivo:</strong> Eliminar desperdicios en procesos para reducir costes y aumentar calidad, entregando productos más rápido y con mejor calidad.</p>
+                    <p><strong>Relación con Agile:</strong> Lean es el paraguas bajo el que se instala Agile, integrando aprendizajes y prácticas en su ADN.</p>
+                </div>
+
+                <h3 class="subsection-title">🎯 Los 7 Principios Lean</h3>
+                <div class="principle-grid">
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">1. Eliminar Desperdicios</h4>
+                        <p>Cualquier cosa que no añade valor desde el punto de vista del cliente. Ejemplo: hacer más de lo necesario.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">2. Amplificar el Aprendizaje</h4>
+                        <p>No se obtiene una versión perfecta a la primera. Realizar varias versiones como proceso de aprendizaje.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">3. Decidir lo Más Tarde Posible</h4>
+                        <p>Retrasar decisiones hasta tener suficiente información para decidir correctamente.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">4. Entregar Tan Rápido Como Sea Posible</h4>
+                        <p>Pequeñas entregas desde el inicio, recogiendo feedback del cliente para mejora continua.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">5. Empoderar al Equipo</h4>
+                        <p>Involucrar a los desarrolladores en la toma de decisiones importantes del proyecto.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">6. Embeber la Calidad</h4>
+                        <p>Adquirir prácticas que aseguren la calidad lo antes posible en el proceso.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4 style="color: var(--accent-color);">7. Ver el Todo</h4>
+                        <p>Evitar que expertos maximicen solo su área. Ver el sistema como un todo integrado.</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">🛠️ Prácticas y Técnicas Lean</h3>
+                
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">Value Stream Mapping (VSM)</h4>
+                    <p>Representa la secuencia de actividades, duración promedio y tiempos de espera. Se usa para analizar el flujo desde solicitud hasta entrega, identificando puntos de mejora.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">5S (Organización del Workplace)</h4>
+                    <ol>
+                        <li><strong>Sort (Clasificar):</strong> Separar necesario de innecesario</li>
+                        <li><strong>Set in Order (Ordenar):</strong> Ubicar elementos siguiendo lógica de localización</li>
+                        <li><strong>Shine (Limpiar):</strong> Eliminar del código lo innecesario</li>
+                        <li><strong>Standardize (Estandarizar):</strong> Procedimientos formales para todos los pasos</li>
+                        <li><strong>Sustain (Sostener):</strong> Mantener proceso mediante formación y comunicación</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">Evento KAIZEN (Mejora Continua)</h4>
+                    <p>Evento donde se incorporan cambios al proceso. Representantes de áreas involucradas trabajan máximo una semana en modificaciones para lograr mejora pactada.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">Método Kanban</h4>
+                    <p>Control simple y visual del flujo de estados de tareas. Limita la cantidad de trabajo sin terminar en cada etapa del flujo.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">Poka-yoke (A Prueba de Errores)</h4>
+                    <p>Técnica para evitar errores en operación del sistema. Ejemplo: sistema que impide modificar tareas asignadas a otro miembro del equipo.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="color: var(--accent-color);">Jidoka (Autocontrol de Calidad)</h4>
+                    <p>Los procesos automáticos tienen autocontrol de calidad. Si hay anomalía, el proceso se detiene impidiendo afectar al resto.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Ejercicios Prácticos - Metodologías Ágiles</h2>
+                
+                <div class="quiz-container">
+                    <!-- Pregunta 1 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">1. ¿Cuántos valores fundamentales establece el Manifiesto Ágil?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) 3 valores</li>
+                            <li class="option" onclick="selectOption(this, true)">b) 4 valores ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) 5 valores</li>
+                            <li class="option" onclick="selectOption(this, false)">d) 12 valores</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">2. ¿Cuál es la principal diferencia entre Agile y Waterfall respecto a los cambios?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Waterfall acepta cambios más fácilmente</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Agile acepta cambios como algo beneficioso ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Ambos rechazan cambios por igual</li>
+                            <li class="option" onclick="selectOption(this, false)">d) No hay diferencias significativas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">3. ¿Cuáles son las fases del Ciclo de Deming (PDCA)?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Plan, Do, Check, Act ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Prepare, Develop, Control, Analyze</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Plan, Deploy, Check, Approve</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Process, Design, Create, Assess</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">4. ¿Cuáles son los tres roles principales en SCRUM?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Manager, Developer, Tester</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Product Owner, Scrum Master, Scrum Team ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Architect, Programmer, Analyst</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Cliente, Proveedor, Usuario</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">5. ¿Cuáles son los 3 principios fundamentales de Kanban?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Visualizar trabajo, Limitar WIP, Mejorar flujo ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Planificar, Ejecutar, Controlar</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Analizar, Diseñar, Implementar</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Crear, Probar, Desplegar</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">6. En el Triángulo de Hierro tradicional, ¿qué variables son fijas y cuáles variables?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Alcance fijo, Tiempo y Recursos variables ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Tiempo fijo, Alcance y Recursos variables</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Recursos fijos, Tiempo y Alcance variables</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Todas las variables son fijas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 7 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">7. ¿Qué significa TDD (Test Driven Development)?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Escribir código primero, luego tests</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Escribir tests primero, luego código, después refactorizar ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Probar el sistema al final del desarrollo</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Desarrollar sin tests automatizados</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 8 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">8. En SAFe, ¿cuántas personas típicamente forman un Program Increment?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) 20-30 personas</li>
+                            <li class="option" onclick="selectOption(this, true)">b) 50-120 personas ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) 200-300 personas</li>
+                            <li class="option" onclick="selectOption(this, false)">d) No hay límite específico</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 9 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">9. ¿Cuál es el primer principio Lean?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Eliminar desperdicios ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Amplificar el aprendizaje</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Decidir lo más tarde posible</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Empoderar al equipo</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 10 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">10. ¿Qué representa el "Cono de Incertidumbre"?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) El riesgo financiero del proyecto</li>
+                            <li class="option" onclick="selectOption(this, true)">b) La incertidumbre en estimaciones al inicio del proyecto ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) La complejidad técnica del sistema</li>
+                            <li class="option" onclick="selectOption(this, false)">d) El número de cambios esperados</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 11 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">11. ¿Cuál es la duración típica de un Program Increment en SAFe?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) 4 semanas</li>
+                            <li class="option" onclick="selectOption(this, false)">b) 6 semanas</li>
+                            <li class="option" onclick="selectOption(this, true)">c) 10 semanas ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">d) 12 semanas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 12 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">12. ¿Qué significa BDD (Behavior Driven Development)?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Desarrollo basado en bugs</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Desarrollo basado en comportamiento usando historias de usuario ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Desarrollo basado en bases de datos</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Desarrollo basado en benchmarks</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 13 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">13. ¿Cuál de los siguientes NO es un evento de Scrum?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Sprint Planning</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Daily Scrum</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Sprint Review</li>
+                            <li class="option" onclick="selectOption(this, true)">d) Weekly Status Meeting ✓</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 14 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">14. ¿Cuál es la principal diferencia entre LeSS y SAFe en cuanto a Product Backlogs?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) LeSS: 1 por grupo de equipos; SAFe: 1 por equipo + Backlog Programa ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) LeSS: 1 por equipo; SAFe: 1 por grupo</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Ambos usan 1 backlog global</li>
+                            <li class="option" onclick="selectOption(this, false)">d) No hay diferencias significativas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 15 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">15. ¿Qué técnica Lean se refiere a "a prueba de errores"?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Kaizen</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Jidoka</li>
+                            <li class="option" onclick="selectOption(this, true)">c) Poka-yoke ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">d) 5S</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 16 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">16. En el desarrollo iterativo e incremental, ¿qué se fija en metodologías ágiles vs Waterfall?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, true)">a) Ágiles: tiempo y recursos fijos, alcance variable ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">b) Ágiles: alcance fijo, tiempo variable</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Ambos tienen alcance fijo</li>
+                            <li class="option" onclick="selectOption(this, false)">d) No hay diferencias en la fijación de variables</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 17 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge basico">Básico</div>
+                        <div class="question">17. ¿En qué año se publicó el Manifiesto Ágil?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) 1999</li>
+                            <li class="option" onclick="selectOption(this, true)">b) 2001 ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) 2003</li>
+                            <li class="option" onclick="selectOption(this, false)">d) 2005</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 18 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">18. ¿Cuál es el objetivo principal de Lean aplicado al software?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Aumentar la documentación</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Eliminar desperdicios y aumentar calidad ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Reducir el número de desarrolladores</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Implementar más herramientas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 19 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge avanzado">Avanzado</div>
+                        <div class="question">19. ¿Qué representa VSM (Value Stream Mapping) en Lean?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Un método de estimación de costes</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Secuencia de actividades desde solicitud hasta entrega ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Una técnica de programación</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Un tipo de diagrama UML</li>
+                        </ul>
+                    </div>
+
+                    <!-- Pregunta 20 -->
+                    <div class="question-card">
+                        <div class="difficulty-badge intermedio">Intermedio</div>
+                        <div class="question">20. ¿Cuál es la característica principal del desarrollo "iterativo e incremental"?</div>
+                        <ul class="options">
+                            <li class="option" onclick="selectOption(this, false)">a) Desarrollar todo al final del proyecto</li>
+                            <li class="option" onclick="selectOption(this, true)">b) Entregar pequeños incrementos de valor en cada iteración ✓</li>
+                            <li class="option" onclick="selectOption(this, false)">c) Hacer una planificación muy detallada inicial</li>
+                            <li class="option" onclick="selectOption(this, false)">d) Evitar el feedback del cliente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="content-section">
+                <h2 class="section-title">Recursos y FAQ</h2>
+                
+                <h3 class="subsection-title">📖 Glossario de Términos Clave</h3>
+                
+                <div class="glossary-item">
+                    <div class="term">Agile (Ágil)</div>
+                    <div class="definition">Enfoque de desarrollo de software basado en valores y principios que priorizan la satisfacción del cliente, la colaboración y la adaptabilidad al cambio.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Backlog</div>
+                    <div class="definition">Lista priorizada de características, funcionalidades, mejoras y correcciones que deben implementarse en el producto.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">BDD (Behavior Driven Development)</div>
+                    <div class="definition">Extensión del TDD que se centra en el comportamiento del sistema usando historias de usuario en lenguaje natural.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Ciclo de Deming (PDCA)</div>
+                    <div class="definition">Modelo de mejora continua con cuatro fases: Plan (Planificar), Do (Hacer), Check (Verificar), Act (Actuar).</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Cono de Incertidumbre</div>
+                    <div class="definition">Concepto que describe cómo la incertidumbre en estimaciones de proyecto es mayor al inicio y disminuye con el tiempo.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Daily Scrum</div>
+                    <div class="definition">Reunión diaria de 15 minutos del equipo Scrum para sincronizar actividades y crear un plan para las siguientes 24 horas.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Extreme Programming (XP)</div>
+                    <div class="definition">Metodología ágil enfocada en la excelencia técnica mediante prácticas como programación en parejas, TDD y refactoring.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Feature Driven Development (FDD)</div>
+                    <div class="definition">Metodología ágil que organiza el desarrollo alrededor de funcionalidades (features) específicas del sistema.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Iterativo e Incremental</div>
+                    <div class="definition">Enfoque de desarrollo en pequeños ciclos (iterativo) que añaden valor progresivamente (incremental) al producto.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Jidoka</div>
+                    <div class="definition">Principio Lean donde los procesos automáticos tienen autocontrol de calidad y se detienen cuando detectan anomalías.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Kaizen</div>
+                    <div class="definition">Filosofía japonesa de mejora continua mediante pequeños cambios incrementales en los procesos.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Kanban</div>
+                    <div class="definition">Sistema visual para gestionar el flujo de trabajo, limitando el trabajo en progreso (WIP) para optimizar la entrega.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Lean</div>
+                    <div class="definition">Metodología originada en Toyota enfocada en eliminar desperdicios y maximizar el valor entregado al cliente.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">LeSS (Large-Scale Scrum)</div>
+                    <div class="definition">Framework para escalar Scrum a múltiples equipos manteniendo la simplicidad y principios originales.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Manifiesto Ágil</div>
+                    <div class="definition">Documento de 2001 que establece los 4 valores y 12 principios fundamentales del desarrollo ágil de software.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Poka-yoke</div>
+                    <div class="definition">Técnica Lean "a prueba de errores" que previene defectos mediante mecanismos de control automático.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Product Owner</div>
+                    <div class="definition">Rol en Scrum responsable de maximizar el valor del producto gestionando y priorizando el Product Backlog.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Program Increment (PI)</div>
+                    <div class="definition">En SAFe, período de tiempo fijo (típicamente 10 semanas) donde múltiples equipos planifican y ejecutan de forma coordinada.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Refactoring</div>
+                    <div class="definition">Proceso de reestructurar código existente sin cambiar su comportamiento externo para mejorar su estructura interna.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">SAFe (Scaled Agile Framework)</div>
+                    <div class="definition">Framework estructurado en 4 niveles para aplicar principios ágiles en organizaciones grandes.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Scrum Master</div>
+                    <div class="definition">Facilitador del proceso Scrum que ayuda al equipo a seguir las prácticas ágiles y elimina impedimentos.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Sprint</div>
+                    <div class="definition">Período de tiempo fijo (1-4 semanas) en Scrum durante el cual se desarrolla un incremento de producto potencialmente entregable.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">TDD (Test Driven Development)</div>
+                    <div class="definition">Práctica de escribir pruebas antes del código de producción, seguido de implementación y refactorización.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Triángulo de Hierro</div>
+                    <div class="definition">Modelo tradicional que relaciona alcance, tiempo y coste como variables del proyecto, típico de metodologías Waterfall.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Value Stream Mapping (VSM)</div>
+                    <div class="definition">Herramienta Lean que visualiza la secuencia de actividades desde la solicitud hasta la entrega del producto.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">Waterfall (Cascada)</div>
+                    <div class="definition">Metodología tradicional de desarrollo secuencial donde cada fase debe completarse antes de iniciar la siguiente.</div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="term">WIP (Work In Progress)</div>
+                    <div class="definition">Cantidad de trabajo que está siendo desarrollado simultáneamente. Kanban busca limitarlo para optimizar el flujo.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function selectOption(element, isCorrect) {
+            const options = element.parentNode.children;
+            for (let option of options) {
+                option.classList.remove('correct', 'incorrect');
+                option.style.pointerEvents = 'none';
+            }
+            
+            for (let option of options) {
+                if (option.textContent.includes('✓')) {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                }
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+</html>
