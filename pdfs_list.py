@@ -144,64 +144,28 @@ pdfs = [
         "processed": True
     },
     {
-        "filename": "itil 2.pdf",
-        "title": "ITIL v2",
-        "category": "Gestión",
-        "processed": True
-    },
-    {
-        "filename": "itil.pdf",
-        "title": "ITIL",
-        "category": "Gestión",
-        "processed": False
-    },
-    {
         "filename": "mantenimiento.pdf",
         "title": "Mantenimiento de Sistemas",
         "category": "Sistemas",
-        "processed": False
-    },
-    {
-        "filename": "metrica v3 2.pdf",
-        "title": "Métrica v3 - Parte 2",
-        "category": "Desarrollo",
-        "processed": False
-    },
-    {
-        "filename": "metrica v3.pdf",
-        "title": "Métrica v3",
-        "category": "Desarrollo",
-        "processed": False
-    },
-    {
-        "filename": "metrica.pdf",
-        "title": "Métrica",
-        "category": "Desarrollo",
-        "processed": False
-    },
-    {
-        "filename": "metrica_res.pdf",
-        "title": "Métrica - Resumen",
-        "category": "Desarrollo",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "planContinuidad.pdf",
         "title": "Plan de Continuidad",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "planificacion-cmi.pdf",
         "title": "Planificación CMI",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "protecciondatos.pdf",
         "title": "Protección de Datos",
         "category": "Jurídico",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "redes.pdf",

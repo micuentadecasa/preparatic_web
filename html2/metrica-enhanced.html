@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métrica V3 - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #2e7d32;
+            --warning-color: #f57c00;
+            --error-color: #d32f2f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .tabs {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .process-diagram {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .process-box {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin: 0.25rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .interface-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+
+        .technique-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .technique-item {
+            background: var(--bg-hover);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .option {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+        }
+
+        .option.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option.incorrect {
+            background: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-basic { background: var(--success-color); color: white; }
+        .difficulty-intermediate { background: var(--warning-color); color: white; }
+        .difficulty-advanced { background: var(--error-color); color: white; }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+        }
+
+        .term-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .expandable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .expandable-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .expandable.active .expandable-content {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                padding: 0.25rem;
+            }
+            
+            .tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.125rem 0.25rem;
+            border-radius: 4px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--bg-card);
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">📊 Métrica V3</div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('procesos')">Procesos Principales</button>
+            <button class="tab" onclick="showTab('desarrollo')">Desarrollo SI</button>
+            <button class="tab" onclick="showTab('interfaces')">Interfaces</button>
+            <button class="tab" onclick="showTab('tecnicas')">Técnicas y Prácticas</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">📋 Resumen Ejecutivo de Métrica V3</h2>
+                <p>Métrica V3 es una <span class="highlight">metodología de sistematización</span> para la planificación, desarrollo y mantenimiento de sistemas de información, desarrollada por el Consejo Superior de Informática basándose en la norma ISO 12.207.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">7</span>
+                    <div class="stat-label">Procesos Principales</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">Interfaces</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">18</span>
+                    <div class="stat-label">Técnicas</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">13</span>
+                    <div class="stat-label">Prácticas</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Perfiles</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">🎯 Objetivos Principales</h3>
+                    <ul>
+                        <li><strong>Sistematizar procesos:</strong> Planificación, desarrollo y mantenimiento</li>
+                        <li><strong>Enfoque orientado al proceso:</strong> Cada proceso incluye actividades y tareas</li>
+                        <li><strong>Flexibilidad:</strong> Adaptable a cualquier complejidad y magnitud</li>
+                        <li><strong>Calidad:</strong> Incorpora interfaces de aseguramiento</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📊 Estructura General</h3>
+                    <div class="process-diagram">
+                        <div class="process-box">PSI</div>
+                        <div class="process-box">EVS</div>
+                        <div class="process-box">ASI</div>
+                        <div class="process-box">DSI</div>
+                        <div class="process-box">CSI</div>
+                        <div class="process-box">IAS</div>
+                        <div class="process-box">MSI</div>
+                    </div>
+                    <p><strong>Interfaces transversales:</strong></p>
+                    <div style="margin-top: 1rem;">
+                        <span class="interface-badge">GP</span>
+                        <span class="interface-badge">CAL</span>
+                        <span class="interface-badge">SEG</span>
+                        <span class="interface-badge">GC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">📚 Objetivos de Aprendizaje</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Conocimiento Básico</h4>
+                        <p>Comprender la estructura general de Métrica V3 y sus componentes principales</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Dominio de Procesos</h4>
+                        <p>Identificar las actividades de cada proceso y su secuencia lógica</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Aplicación Práctica</h4>
+                        <p>Distinguir técnicas y prácticas, y saber cuándo aplicar cada una</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Preparación Examen</h4>
+                        <p>Resolver ejercicios tipo oposición y casos prácticos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="procesos" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">🔄 Procesos Principales de Métrica V3</h2>
+                <p>La metodología se estructura en 7 procesos principales que cubren todo el ciclo de vida del sistema de información.</p>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3 class="card-title">📋 PSI - Planificación de Sistemas de Información</h3>
+                <p><strong>Objetivo:</strong> Elaborar un marco estratégico que incluya la arquitectura de información y un plan de proyectos alineado con los objetivos organizacionales.</p>
+                <div class="expandable-content">
+                    <h4>Actividades principales:</h4>
+                    <div class="technique-list">
+                        <div class="technique-item">PSI1 - Inicio del Plan de SI</div>
+                        <div class="technique-item">PSI2 - Definición y Organización del PSI</div>
+                        <div class="technique-item">PSI3 - Estudio de la Información Relevante</div>
+                        <div class="technique-item">PSI4 - Identificación de Requisitos</div>
+                        <div class="technique-item">PSI5 - Estudio de los SI Actuales</div>
+                        <div class="technique-item">PSI6 - Diseño del Modelo de SI</div>
+                        <div class="technique-item">PSI7 - Definición de la Arquitectura Tecnológica</div>
+                        <div class="technique-item">PSI8 - Definición del Plan de Acción</div>
+                        <div class="technique-item">PSI9 - Revisión y Finalización del PSI</div>
+                    </div>
+                    <p><strong>Técnicas principales:</strong> FCE, Diagrama de clases, Modelo E/R extendido, Impacto en la organización, Análisis coste/beneficio</p>
+                </div>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3 class="card-title">🔍 EVS - Estudio de Viabilidad del Sistema</h3>
+                <p><strong>Objetivo:</strong> Analizar necesidades, definir alternativas y determinar la viabilidad del desarrollo del sistema.</p>
+                <div class="expandable-content">
+                    <h4>Actividades principales:</h4>
+                    <div class="technique-list">
+                        <div class="technique-item">EVS1 - Establecimiento del Alcance del Sistema</div>
+                        <div class="technique-item">EVS2 - Estudio de la Situación Actual</div>
+                        <div class="technique-item">EVS3 - Definición de Requisitos del Sistema</div>
+                        <div class="technique-item">EVS4 - Estudio de Alternativas de Solución</div>
+                        <div class="technique-item">EVS5 - Valoración de las Alternativas</div>
+                        <div class="technique-item">EVS6 - Selección de la Solución</div>
+                    </div>
+                    <p><strong>Técnicas principales:</strong> Diagrama de clases, Modelo E/R, Casos de uso, DFD, Catalogación, Impacto organizacional</p>
+                </div>
+            </div>
+
+            <div class="card expandable" onclick="toggleExpand(this)">
+                <h3 class="card-title">📊 MSI - Mantenimiento de Sistemas de Información</h3>
+                <p><strong>Objetivo:</strong> Resolver incidencias durante la explotación y evolucionar el sistema para satisfacer nuevas necesidades.</p>
+                <div class="expandable-content">
+                    <h4>Actividades principales:</h4>
+                    <div class="technique-list">
+                        <div class="technique-item">MSI1 - Registro de la Petición</div>
+                        <div class="technique-item">MSI2 - Análisis de la Petición</div>
+                        <div class="technique-item">MSI3 - Preparación de la Implementación</div>
+                        <div class="technique-item">MSI4 - Seguimiento y Evaluación de los Cambios</div>
+                    </div>
+                    <h4>Tipos de Cambios:</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Ejemplos</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Correctivos</strong></td>
+                            <td>Corrección de errores</td>
+                            <td>Bugs, fallos de funcionamiento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Evolutivos</strong></td>
+                            <td>Incorporación de funcionalidades</td>
+                            <td>Nuevos módulos, mejoras</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="desarrollo" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">💻 Desarrollo de Sistemas de Información</h2>
+                <p>El desarrollo de SI en Métrica V3 contempla tanto el <span class="highlight">desarrollo estructurado</span> como el <span class="highlight">desarrollo orientado a objetos</span>.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">📋 ASI - Análisis del Sistema</h3>
+                    <p><strong>Propósito:</strong> Obtener la especificación detallada del sistema mediante catálogo de requisitos y modelos.</p>
+                    <h4>Actividades clave:</h4>
+                    <ul>
+                        <li>ASI1 - Definición del Sistema</li>
+                        <li>ASI2 - Establecimiento de Requisitos</li>
+                        <li>ASI3 - Identificación de Subsistemas</li>
+                        <li>ASI4 - Análisis de Casos de Uso</li>
+                        <li>ASI5 - Análisis de Clases</li>
+                        <li>ASI6 - Elaboración del Modelo de Datos</li>
+                        <li>ASI7 - Elaboración del Modelo de Procesos</li>
+                        <li>ASI8 - Definición de Interfaces de Usuario</li>
+                        <li>ASI9 - Análisis de Consistencia</li>
+                        <li>ASI10 - Especificación del Plan de Pruebas</li>
+                        <li>ASI11 - Presentación y Aprobación</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🏗️ DSI - Diseño del Sistema</h3>
+                    <p><strong>Propósito:</strong> Definir la arquitectura del sistema y del entorno tecnológico, especificando componentes detallados.</p>
+                    <h4>Actividades clave:</h4>
+                    <ul>
+                        <li>DSI1 - Definición de la Arquitectura del Sistema</li>
+                        <li>DSI2 - Diseño de la Arquitectura de Soporte</li>
+                        <li>DSI3 - Diseño de Casos de Uso Reales</li>
+                        <li>DSI4 - Diseño de Clases</li>
+                        <li>DSI5 - Diseño de la Arquitectura de Módulos</li>
+                        <li>DSI6 - Diseño Físico de Datos</li>
+                        <li>DSI7 - Verificación y Aceptación</li>
+                        <li>DSI8 - Generación de Especificaciones</li>
+                        <li>DSI9 - Diseño de la Migración</li>
+                        <li>DSI10 - Especificación Técnica del Plan de Pruebas</li>
+                        <li>DSI11 - Establecimiento de Requisitos de Implantación</li>
+                        <li>DSI12 - Aprobación del Diseño</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">🔧 CSI - Construcción del Sistema</h3>
+                    <p><strong>Propósito:</strong> Construcción de componentes, pruebas, procedimientos de operación y manuales.</p>
+                    <h4>Fases de Pruebas:</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>CSI3 - Pruebas Unitarias</h4>
+                            <p>Verificación de cada componente individualmente</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>CSI4 - Pruebas de Integración</h4>
+                            <p>Verificación de la interacción entre componentes</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>CSI5 - Pruebas del Sistema</h4>
+                            <p>Verificación del sistema completo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🚀 IAS - Implantación y Aceptación</h3>
+                    <p><strong>Propósito:</strong> Realizar la entrega y aceptación del sistema, actividades para puesta en producción.</p>
+                    <h4>Tipos de Pruebas Finales:</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Prueba</th>
+                            <th>Responsable</th>
+                            <th>Objetivo</th>
+                        </tr>
+                        <tr>
+                            <td>IAS5 - Pruebas de Implantación</td>
+                            <td>Equipo de Implantación</td>
+                            <td>Verificar funcionamiento en entorno real</td>
+                        </tr>
+                        <tr>
+                            <td>IAS6 - Pruebas de Aceptación</td>
+                            <td>Usuarios Expertos</td>
+                            <td>Validar cumplimiento de requisitos</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="interfaces" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">🔗 Interfaces de Métrica V3</h2>
+                <p>Las interfaces definen actividades organizativas y de soporte que están presentes <span class="highlight">transversalmente</span> en todos los procesos.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">📊 GP - Gestión de Proyectos</h3>
+                    <p><strong>Finalidad:</strong> Planificación, seguimiento y control de actividades y recursos.</p>
+                    <h4>Grupos de Actividades:</h4>
+                    <div class="technique-list">
+                        <div class="technique-item">GPI - Actividades de Inicio</div>
+                        <div class="technique-item">GPS - Actividades de Seguimiento y Control</div>
+                        <div class="technique-item">GPF - Actividades de Finalización</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">✅ CAL - Aseguramiento de la Calidad</h3>
+                    <p><strong>Objetivo:</strong> Proporcionar marco común para definir y poner en marcha planes de aseguramiento de calidad.</p>
+                    <p>Se aplica desde EVS hasta MSI con actividades específicas por proceso:</p>
+                    <ul>
+                        <li><strong>EVS:</strong> EVS-CAL1, EVS-CAL2, EVS-CAL3</li>
+                        <li><strong>ASI:</strong> ASI-CAL1 hasta ASI-CAL5</li>
+                        <li><strong>DSI:</strong> DSI-CAL1 hasta DSI-CAL4</li>
+                        <li><strong>CSI:</strong> CSI-CAL1 hasta CSI-CAL5</li>
+                        <li><strong>IAS:</strong> IAS-CAL1 hasta IAS-CAL5</li>
+                        <li><strong>MSI:</strong> MSI-CAL1 hasta MSI-CAL3</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">🛡️ SEG - Seguridad</h3>
+                    <p><strong>Particularidad:</strong> Es la única interfaz que tiene presencia desde PSI.</p>
+                    <div style="background: var(--warning-color); color: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <strong>¡RECUÉRDALO FÁCIL!</strong><br>
+                        La interfaz de Seguridad es la única que tiene presencia desde el proceso de Planificación (PSI). Las demás comienzan en EVS o después.
+                    </div>
+                    <h4>Distribución por procesos:</h4>
+                    <ul>
+                        <li><strong>PSI:</strong> PSI-SEG1 hasta PSI-SEG4</li>
+                        <li><strong>EVS:</strong> EVS-SEG1 hasta EVS-SEG6</li>
+                        <li><strong>ASI:</strong> ASI-SEG1 hasta ASI-SEG4</li>
+                        <li><strong>DSI:</strong> DSI-SEG1 hasta DSI-SEG5</li>
+                        <li><strong>CSI:</strong> CSI-SEG1 hasta CSI-SEG4</li>
+                        <li><strong>IAS:</strong> IAS-SEG1 hasta IAS-SEG5</li>
+                        <li><strong>MSI:</strong> MSI-SEG1 hasta MSI-SEG3</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📋 GC - Gestión de la Configuración</h3>
+                    <p><strong>Objetivo:</strong> Mantener la integridad de los productos, garantizando que no se realizan cambios incontrolados.</p>
+                    <h4>Elementos de configuración incluyen:</h4>
+                    <ul>
+                        <li>Ejecutables y código fuente</li>
+                        <li>Modelos de datos y procesos</li>
+                        <li>Especificaciones de requisitos</li>
+                        <li>Pruebas y documentación</li>
+                    </ul>
+                    <p><strong>Procesos donde aparece:</strong> EVS, ASI, DSI, CSI, IAS, MSI</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tecnicas" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">🛠️ Técnicas y Prácticas de Métrica V3</h2>
+                <p>Distinción fundamental: <span class="highlight">Técnicas</span> siguen estándares y criterios específicos, <span class="highlight">Prácticas</span> son más informales y flexibles.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">⚙️ Técnicas de Desarrollo</h3>
+                    <div style="background: var(--accent-color); color: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <strong>¡RECUÉRDALO FÁCIL!</strong><br>
+                        Las técnicas incluyen la mayoría de los diagramas (salvo el diagrama de representación, que es una práctica).
+                    </div>
+                    <div class="technique-list">
+                        <div class="technique-item">Análisis Coste/Beneficio</div>
+                        <div class="technique-item">Casos de Uso</div>
+                        <div class="technique-item">Diagrama de Clases</div>
+                        <div class="technique-item">Diagrama de Componentes</div>
+                        <div class="technique-item">Diagrama de Descomposición</div>
+                        <div class="technique-item">Diagrama de Despliegue</div>
+                        <div class="technique-item">Diagrama de Estructura</div>
+                        <div class="technique-item">Diagrama de Flujo de Datos</div>
+                        <div class="technique-item">Diagrama de Interacción</div>
+                        <div class="technique-item">Diagrama de Paquetes</div>
+                        <div class="technique-item">Diagrama de Transición de Estados</div>
+                        <div class="technique-item">Modelado de Procesos</div>
+                        <div class="technique-item">Modelo Entidad/Relación Extendido</div>
+                        <div class="technique-item">Normalización</div>
+                        <div class="technique-item">Optimización</div>
+                        <div class="technique-item">Reglas de Transformación</div>
+                        <div class="technique-item">Técnicas Matriciales</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📈 Técnicas de Gestión de Proyectos</h3>
+                    <h4>Técnicas de Estimación:</h4>
+                    <ul>
+                        <li>Método Albrecht para Análisis de Puntos Función</li>
+                        <li>Método MARK II para Análisis de Puntos Función</li>
+                        <li>Staffing Size (Orientación a Objetos)</li>
+                    </ul>
+                    <h4>Técnicas de Planificación:</h4>
+                    <ul>
+                        <li>PERT (Program Evaluation & Review Technique)</li>
+                        <li>Diagrama de Gantt</li>
+                        <li>WBS (Work Breakdown Structure)</li>
+                        <li>Diagrama de Extrapolación</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">📝 Prácticas</h3>
+                <div style="background: var(--success-color); color: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <strong>¡RECUÉRDALO FÁCIL!</strong><br>
+                    Las PRácticas incluyen las revisiones, así como PResentaciones, PRototipado, PRuebas...
+                </div>
+                <div class="technique-list">
+                    <div class="technique-item">Análisis de Impacto</div>
+                    <div class="technique-item">Catalogación</div>
+                    <div class="technique-item">Cálculo de Accesos</div>
+                    <div class="technique-item">Caminos de Acceso</div>
+                    <div class="technique-item">Diagrama de Representación</div>
+                    <div class="technique-item">Factores Críticos de Éxito (FCE)</div>
+                    <div class="technique-item">Impacto en la Organización</div>
+                    <div class="technique-item">Presentaciones</div>
+                    <div class="technique-item">Prototipado</div>
+                    <div class="technique-item">Revisión Formal</div>
+                    <div class="technique-item">Revisión Técnica</div>
+                    <div class="technique-item">Sesiones de Trabajo</div>
+                    <div class="technique-item">Entrevistas</div>
+                </div>
+                
+                <h4>Tipos de Pruebas (Prácticas):</h4>
+                <div class="technique-list">
+                    <div class="technique-item">Pruebas Unitarias</div>
+                    <div class="technique-item">Pruebas de Integración</div>
+                    <div class="technique-item">Pruebas del Sistema</div>
+                    <div class="technique-item">Pruebas de Implantación</div>
+                    <div class="technique-item">Pruebas de Aceptación</div>
+                    <div class="technique-item">Pruebas de Regresión</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">📝 Ejercicios Prácticos - Métrica V3</h2>
+                <p>Preguntas tipo oposición para evaluar tu conocimiento sobre la metodología Métrica V3.</p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">1. ¿Cuál es la norma ISO en la que se basa Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) ISO 9001</div>
+                        <div class="option" onclick="selectOption(this, false)">b) ISO 27001</div>
+                        <div class="option" onclick="selectOption(this, true)">c) ISO 12207</div>
+                        <div class="option" onclick="selectOption(this, false)">d) ISO 14001</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">2. ¿Cuántos procesos principales tiene Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) 6</div>
+                        <div class="option" onclick="selectOption(this, true)">b) 7</div>
+                        <div class="option" onclick="selectOption(this, false)">c) 8</div>
+                        <div class="option" onclick="selectOption(this, false)">d) 5</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="3">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">3. ¿Cuál es la única interfaz que tiene presencia desde el proceso PSI?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Gestión de Proyectos (GP)</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Aseguramiento de la Calidad (CAL)</div>
+                        <div class="option" onclick="selectOption(this, true)">c) Seguridad (SEG)</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Gestión de la Configuración (GC)</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">4. En el proceso CSI, ¿qué tipo de pruebas se realizan en CSI4?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Pruebas unitarias</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Pruebas de integración</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Pruebas del sistema</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Pruebas de aceptación</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="0">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">5. ¿Cuál de las siguientes NO es una técnica sino una práctica?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">a) Diagrama de Representación</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Diagrama de Clases</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Diagrama de Componentes</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Diagrama de Despliegue</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">6. ¿Qué significa las siglas MSI en Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Modelado de Sistemas de Información</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Mantenimiento de Sistemas de Información</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Migración de Sistemas de Información</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Monitorización de Sistemas de Información</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">7. En MSI, ¿cuáles son los dos tipos de cambios considerados?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Correctivos y adaptativos</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Evolutivos y perfectivos</div>
+                        <div class="option" onclick="selectOption(this, true)">c) Correctivos y evolutivos</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Urgentes y programados</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="3">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">8. ¿En qué perfil se incluye el Grupo de Aseguramiento de la Calidad?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Directivo</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Jefe de Proyecto</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Consultor</div>
+                        <div class="option" onclick="selectOption(this, true)">d) Analista</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">9. ¿Cuál es el objetivo principal del proceso EVS?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Construir el sistema de información</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Analizar necesidades y determinar viabilidad</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Diseñar la arquitectura del sistema</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Implantar el sistema en producción</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="0">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">10. ¿Cuántas interfaces tiene Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">a) 4</div>
+                        <div class="option" onclick="selectOption(this, false)">b) 3</div>
+                        <div class="option" onclick="selectOption(this, false)">c) 5</div>
+                        <div class="option" onclick="selectOption(this, false)">d) 6</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">11. ¿Qué técnica de estimación es específica para orientación a objetos?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Método Albrecht</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Método MARK II</div>
+                        <div class="option" onclick="selectOption(this, true)">c) Staffing Size</div>
+                        <div class="option" onclick="selectOption(this, false)">d) PERT</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">12. En IAS6, ¿quién realiza las pruebas de aceptación?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Equipo de implantación</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Usuarios expertos</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Programadores</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Analistas</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="3">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">13. ¿Cuál es el enfoque principal de Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Orientado a funciones</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Orientado a datos</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Orientado a objetos</div>
+                        <div class="option" onclick="selectOption(this, true)">d) Orientado al proceso</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="0">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">14. ¿Cuál de las siguientes es una práctica y NO una técnica?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">a) Catalogación</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Normalización</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Casos de Uso</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Optimización</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">15. En el proceso ASI, ¿qué técnica se utiliza para ASI8?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Catalogación</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Casos de uso</div>
+                        <div class="option" onclick="selectOption(this, true)">c) Prototipado</div>
+                        <div class="option" onclick="selectOption(this, false)">d) DFD</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">16. ¿Qué perfil tiene participación limitada solo a CSI y MSI?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Analista</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Programador</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Consultor</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Jefe de Proyecto</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="0">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">17. ¿Cuál es el objetivo del Plan de Sistemas de Información (PSI)?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, true)">a) Elaborar un marco estratégico con arquitectura de información</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Construir los componentes del sistema</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Realizar pruebas de aceptación</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Mantener el sistema en producción</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="3">
+                    <div class="difficulty-badge difficulty-intermediate">Intermedio</div>
+                    <div class="question-text">18. ¿Qué significa FCE en el contexto de Métrica V3?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Factores de Calidad Estructural</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Funciones Críticas Esenciales</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Flujo de Control Extendido</div>
+                        <div class="option" onclick="selectOption(this, true)">d) Factores Críticos de Éxito</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="1">
+                    <div class="difficulty-badge difficulty-advanced">Avanzado</div>
+                    <div class="question-text">19. En DSI6, ¿cuáles son las principales técnicas utilizadas?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Catalogación y casos de uso</div>
+                        <div class="option" onclick="selectOption(this, true)">b) Reglas de transformación y optimización</div>
+                        <div class="option" onclick="selectOption(this, false)">c) Prototipado y pruebas</div>
+                        <div class="option" onclick="selectOption(this, false)">d) DFD y diagramas de clases</div>
+                    </div>
+                </div>
+
+                <div class="question" data-correct="2">
+                    <div class="difficulty-badge difficulty-basic">Básico</div>
+                    <div class="question-text">20. ¿Qué organismo promovió inicialmente la metodología Métrica?</div>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, false)">a) Ministerio de Hacienda</div>
+                        <div class="option" onclick="selectOption(this, false)">b) Agencia Tributaria</div>
+                        <div class="option" onclick="selectOption(this, true)">c) Consejo Superior de Informática</div>
+                        <div class="option" onclick="selectOption(this, false)">d) Instituto Nacional de Estadística</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">📚 Glosario de Términos Clave</h2>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">Términos Fundamentales</h3>
+                    
+                    <div class="glossary-term">
+                        <div class="term-title">Métrica V3</div>
+                        <p>Metodología que permite la sistematización de los procesos de planificación, desarrollo y mantenimiento de sistemas de información, basada en ISO 12207.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">PSI (Planificación de Sistemas de Información)</div>
+                        <p>Proceso que elabora un marco estratégico que incluye la arquitectura de información y un plan de proyectos alineado con objetivos organizacionales.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">EVS (Estudio de Viabilidad del Sistema)</div>
+                        <p>Proceso que analiza necesidades, define alternativas y determina la viabilidad del desarrollo del sistema.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">ASI (Análisis del Sistema de Información)</div>
+                        <p>Proceso que obtiene la especificación detallada del sistema mediante catálogo de requisitos y modelos que cubren necesidades de usuarios.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">DSI (Diseño del Sistema de Información)</div>
+                        <p>Proceso que define la arquitectura del sistema y del entorno tecnológico, especificando detalladamente los componentes.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">CSI (Construcción del Sistema de Información)</div>
+                        <p>Proceso que construye los componentes del sistema, realiza pruebas, desarrolla procedimientos y elabora manuales.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">IAS (Implantación y Aceptación del Sistema)</div>
+                        <p>Proceso que realiza la entrega y aceptación del sistema, ejecutando las actividades necesarias para puesta en producción.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">MSI (Mantenimiento de Sistemas de Información)</div>
+                        <p>Proceso que resuelve incidencias durante la explotación y evoluciona el sistema para satisfacer nuevas necesidades.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Interfaces y Conceptos Técnicos</h3>
+                    
+                    <div class="glossary-term">
+                        <div class="term-title">Interfaces</div>
+                        <p>Actividades organizativas y de soporte presentes transversalmente en todos los procesos: GP, CAL, SEG y GC.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">GP (Gestión de Proyectos)</div>
+                        <p>Interfaz para planificación, seguimiento y control de actividades y recursos humanos y materiales.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">CAL (Aseguramiento de la Calidad)</div>
+                        <p>Interfaz que proporciona marco común para definir y poner en marcha planes de aseguramiento de calidad.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">SEG (Seguridad)</div>
+                        <p>Interfaz que incorpora mecanismos de seguridad adicionales. Única interfaz presente desde PSI hasta MSI.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">GC (Gestión de la Configuración)</div>
+                        <p>Interfaz que mantiene la integridad de los productos, garantizando control de cambios y versiones adecuadas.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Técnicas</div>
+                        <p>Conjunto de heurísticas y procedimientos que se apoyan en estándares, con notaciones específicas y criterios de calidad.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">Prácticas</div>
+                        <p>Medios para conseguir objetivos específicos de manera rápida y precisa, sin criterios preestablecidos. Más informales que las técnicas.</p>
+                    </div>
+
+                    <div class="glossary-term">
+                        <div class="term-title">FCE (Factores Críticos de Éxito)</div>
+                        <p>Práctica utilizada en PSI1 para identificar elementos clave que determinan el éxito del sistema de información.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">❓ Preguntas Frecuentes (FAQ)</h3>
+                
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Cuál es la diferencia entre técnicas y prácticas?</h4>
+                    <div class="expandable-content">
+                        <p><strong>Técnicas:</strong> Siguen estándares específicos, tienen sintaxis y semántica definidas, y cumplen criterios de calidad establecidos. Incluyen la mayoría de diagramas.</p>
+                        <p><strong>Prácticas:</strong> Son más informales, no requieren estándares específicos, y proporcionan medios rápidos para conseguir objetivos. Incluyen pruebas, presentaciones, prototipado.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Por qué la interfaz de Seguridad es especial?</h4>
+                    <div class="expandable-content">
+                        <p>Es la única interfaz que tiene presencia desde el proceso de Planificación (PSI), mientras que las demás interfaces (GP, CAL, GC) comienzan a aplicarse durante o después del proceso EVS.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Qué tipos de desarrollo contempla Métrica V3?</h4>
+                    <div class="expandable-content">
+                        <p>Métrica V3 contempla tanto el <strong>desarrollo estructurado</strong> como el <strong>desarrollo orientado a objetos</strong>, con actividades específicas para cada enfoque en los procesos ASI y DSI.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Cuáles son los perfiles de participantes?</h4>
+                    <div class="expandable-content">
+                        <p>Métrica V3 define 5 categorías de perfiles:</p>
+                        <ul>
+                            <li><strong>Directivo:</strong> Comités, directores y usuarios expertos</li>
+                            <li><strong>Jefe de Proyecto:</strong> Incluye todos los responsables (seguridad, calidad, etc.)</li>
+                            <li><strong>Consultor:</strong> Especialistas técnicos y consultores</li>
+                            <li><strong>Analista:</strong> Incluye equipos técnicos y el Grupo de Aseguramiento de Calidad</li>
+                            <li><strong>Programador:</strong> Participación limitada a CSI y MSI</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Qué tipos de mantenimiento considera MSI?</h4>
+                    <div class="expandable-content">
+                        <p>MSI considera dos tipos de cambios:</p>
+                        <ul>
+                            <li><strong>Correctivos:</strong> Corrección de errores y fallos</li>
+                            <li><strong>Evolutivos:</strong> Incorporación de nuevas funcionalidades</li>
+                        </ul>
+                        <p>Otros marcos añaden tipos adicionales como perfectivos, adaptativos o urgentes.</p>
+                    </div>
+                </div>
+
+                <div class="expandable" onclick="toggleExpand(this)">
+                    <h4 style="cursor: pointer; color: var(--accent-color);">▶ ¿Cuál es la secuencia de pruebas en CSI?</h4>
+                    <div class="expandable-content">
+                        <p>La secuencia es:</p>
+                        <ol>
+                            <li><strong>CSI3:</strong> Pruebas Unitarias</li>
+                            <li><strong>CSI4:</strong> Pruebas de Integración</li>
+                            <li><strong>CSI5:</strong> Pruebas del Sistema</li>
+                        </ol>
+                        <p>Después, en IAS: Pruebas de Implantación (IAS5) y Pruebas de Aceptación (IAS6)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Expandable content functionality
+        function toggleExpand(element) {
+            element.classList.toggle('active');
+        }
+
+        // Quiz functionality
+        function selectOption(optionElement, isCorrect) {
+            const question = optionElement.closest('.question');
+            const options = question.querySelectorAll('.option');
+            
+            // Remove previous selections
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            // Mark all options
+            options.forEach(opt => {
+                const isThisCorrect = opt.getAttribute('onclick').includes('true');
+                if (isThisCorrect) {
+                    opt.classList.add('correct');
+                } else if (opt === optionElement && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+        }
+
+        // Mobile responsiveness for tabs
+        function initializeMobileFeatures() {
+            const tabs = document.querySelector('.tabs');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            tabs.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - tabs.offsetLeft;
+                scrollLeft = tabs.scrollLeft;
+            });
+
+            tabs.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            tabs.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            tabs.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - tabs.offsetLeft;
+                const walk = (x - startX) * 2;
+                tabs.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMobileFeatures();
+        });
+    </script>
+</body>
+</html>

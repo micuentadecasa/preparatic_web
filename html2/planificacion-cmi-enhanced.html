@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas de Planificación y Control - El Cuadro de Mando</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --shadow-dark: var(--shadow-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #6c5ce7);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .tabs-container {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow-dark);
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background-color: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .tab.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-dark);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .question {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .difficulty {
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty.basico {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background-color: var(--warning-color);
+            color: #000;
+        }
+
+        .difficulty.avanzado {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: var(--bg-hover);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .options li:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-color);
+        }
+
+        .correct-answer {
+            background-color: rgba(40, 167, 69, 0.2) !important;
+            border-color: var(--success-color) !important;
+        }
+
+        .correct-answer::after {
+            content: "✓ Respuesta Correcta";
+            color: var(--success-color);
+            font-weight: bold;
+            float: right;
+        }
+
+        .methodology-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .methodology-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .methodology-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background-color: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--bg-primary);
+        }
+
+        .acronym {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), #6c5ce7);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term dt {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .glossary-term dd {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .methodology-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="container">
+            <h1>Herramientas de Planificación y Control de Gestión</h1>
+            <p>El Cuadro de Mando Integral en la Administración Pública</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(1)">Resumen General</button>
+                <button class="tab" onclick="showTab(2)">Planificación Estratégica</button>
+                <button class="tab" onclick="showTab(3)">Planificación de Proyectos</button>
+                <button class="tab" onclick="showTab(4)">Metodologías Ágiles</button>
+                <button class="tab" onclick="showTab(5)">Cuadro de Mando</button>
+                <button class="tab" onclick="showTab(6)">Ejercicios Prácticos</button>
+                <button class="tab" onclick="showTab(7)">Recursos y FAQ</button>
+            </div>
+
+            <!-- Tab 1: Resumen General -->
+            <div id="tab1" class="tab-content active">
+                <div class="card">
+                    <h3>📊 Resumen Ejecutivo</h3>
+                    <p>Esta guía de estudio aborda las herramientas fundamentales de planificación y control de gestión en el ámbito de las Tecnologías de la Información en la Administración Pública, con especial enfoque en el <strong>Cuadro de Mando Integral (CMI)</strong>.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        <span>Niveles de Gestión</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4</span>
+                        <span>Perspectivas CMI</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1948</span>
+                        <span>Origen del Cuadro de Mando</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Objetivos de Aprendizaje</h4>
+                    <ul>
+                        <li>Comprender los niveles de planificación estratégica, táctica y operativa</li>
+                        <li>Dominar las herramientas DAFO, CAME, PERT y GANTT</li>
+                        <li>Conocer las metodologías ágiles de planificación</li>
+                        <li>Implementar el Cuadro de Mando Integral en la gestión pública</li>
+                    </ul>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>📈 Planificación Estratégica</h4>
+                        <p>Herramientas para definir objetivos estratégicos y factores críticos de éxito.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🚀 Gestión de Proyectos</h4>
+                        <p>Metodologías tradicionales y ágiles para la planificación efectiva.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Planificación Estratégica -->
+            <div id="tab2" class="tab-content">
+                <div class="card">
+                    <h3>📋 Niveles de Gestión</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Planificación Estratégica</h4>
+                            <p>Define los <strong>objetivos estratégicos</strong> de la unidad TIC. Representa el nivel más alto de gestión organizacional.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Planificación Táctica</h4>
+                            <p>Diseña los <strong>planes y programas</strong> que permitirán avanzar hacia el cumplimiento de objetivos estratégicos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Planificación Operativa</h4>
+                            <p>Se enfoca en la <strong>ejecución de tareas y procesos</strong> para llevar a cabo los planes tácticos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Modelos de Objetivos</h3>
+                    <div class="grid">
+                        <div class="methodology-card">
+                            <h4>Modelo SMART (Doran)</h4>
+                            <ul>
+                                <li><span class="acronym">S</span>pecific (Específicos)</li>
+                                <li><span class="acronym">M</span>easurable (Medibles)</li>
+                                <li><span class="acronym">A</span>chievable (Alcanzables)</li>
+                                <li><span class="acronym">R</span>elevant (Relevantes)</li>
+                                <li><span class="acronym">T</span>ime-bound (Con plazo)</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Modelo Francés-Serna</h4>
+                            <ul>
+                                <li>Extraerse de reuniones con personas clave</li>
+                                <li>Definirse en base a una acción (verbo infinitivo)</li>
+                                <li>Depurarse y ser priorizados</li>
+                                <li>Medirse mediante indicadores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Factores Críticos de Éxito (FCE)</h3>
+                    <div class="highlight-box">
+                        <p>Los FCE son los "medios" o condiciones que se deben cumplir para alcanzar los objetivos, mientras que los objetivos son los "fines".</p>
+                    </div>
+                    <h4>Características de los FCE:</h4>
+                    <ul>
+                        <li><strong>Temporales:</strong> Limitados en el tiempo</li>
+                        <li><strong>Subjetivos:</strong> Específicos de cada contexto</li>
+                        <li><strong>Vitales:</strong> Absolutamente necesarios</li>
+                        <li><strong>Específicos:</strong> Únicos de la organización</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Matriz DAFO y CAME</h3>
+                    <div class="methodology-comparison">
+                        <div class="methodology-card">
+                            <h4>Matriz DAFO</h4>
+                            <ul>
+                                <li><strong>D</strong>ebilidades</li>
+                                <li><strong>A</strong>menazas</li>
+                                <li><strong>F</strong>ortalezas</li>
+                                <li><strong>O</strong>portunidades</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Matriz CAME</h4>
+                            <ul>
+                                <li><strong>C</strong>orregir debilidades</li>
+                                <li><strong>A</strong>frontar amenazas</li>
+                                <li><strong>M</strong>antener fortalezas</li>
+                                <li><strong>E</strong>xplotar oportunidades</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔑 OKR vs KPI</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                        <thead style="background-color: var(--accent-color); color: white;">
+                            <tr>
+                                <th style="padding: 1rem; text-align: left;">OKR</th>
+                                <th style="padding: 1rem; text-align: left;">KPI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 1rem;">Objetivos generales para la organización</td>
+                                <td style="padding: 1rem;">Aspectos específicos de la operativa</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 1rem;">Marco para definición de objetivos</td>
+                                <td style="padding: 1rem;">Seguimiento del rendimiento</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem;">3-5 Resultados Clave por Objetivo</td>
+                                <td style="padding: 1rem;">Medición continua del desempeño</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Planificación de Proyectos -->
+            <div id="tab3" class="tab-content">
+                <div class="card">
+                    <h3>📊 Metodología Métrica v3</h3>
+                    <p>La planificación de proyectos según Métrica v3 contempla diversas técnicas especializadas:</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 PERT (Program Evaluation & Review Technique)</h3>
+                    <div class="highlight-box">
+                        <p><strong>Objetivo:</strong> Establecer dependencias entre tareas para determinar el encadenamiento en la planificación.</p>
+                    </div>
+                    <h4>Conceptos Fundamentales:</h4>
+                    <ul>
+                        <li><strong>Actividad:</strong> Ejecución de una tarea que requiere recursos</li>
+                        <li><strong>Suceso:</strong> Punto en el tiempo, inicio o fin de actividades</li>
+                    </ul>
+                    <p>Se utiliza mediante matriz de encadenamientos o cuadro de prelaciones para formar el grafo PERT.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📅 Diagrama de Gantt</h3>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li><strong>Eje Y:</strong> Relación de actividades a realizar</li>
+                        <li><strong>Eje X:</strong> Escala de tiempos</li>
+                        <li><strong>Dependencias:</strong> Funcionales (finalizar una para empezar otra) u Orgánicas (liberar recursos)</li>
+                        <li><strong>Hitos:</strong> Actividades que no representan trabajo ni recursos</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <h4>🔍 Patrón de Límites</h4>
+                        <p>El proyecto tiene tres situaciones diferenciadas:</p>
+                        <ol>
+                            <li><strong>Arranque:</strong> Incorporación gradual de recursos hasta el máximo</li>
+                            <li><strong>Pleno rendimiento:</strong> Estabilidad en número de recursos</li>
+                            <li><strong>Finalización:</strong> Abandono gradual del proyecto</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ EDT - Estructura de Descomposición de Trabajo</h3>
+                    <p>También conocida como WBS (Work Breakdown Structure), presenta descomposición de actividades orientada al entregable.</p>
+                    
+                    <h4>Principios de Diseño:</h4>
+                    <div class="grid">
+                        <div class="methodology-card">
+                            <h4>Regla del 100%</h4>
+                            <p>Debe incluir el 100% del trabajo del alcance del proyecto en todos los niveles.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Elementos Mutuamente Exclusivos</h4>
+                            <p>Los elementos no deben solaparse entre sí.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Planificación de Entregables</h4>
+                            <p>Se planifican entregables, no acciones.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Esquema Numerado</h4>
+                            <p>Estructura jerárquica con numeración clara.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Diagrama de Extrapolación</h3>
+                    <p>Utilizado para seguimiento de proyectos software, permite obtener previsiones de desviaciones.</p>
+                    <ul>
+                        <li><strong>Eje X:</strong> Períodos de tiempo de seguimiento</li>
+                        <li><strong>Eje Y:</strong> Estimaciones de duración para hitos</li>
+                        <li><strong>Hipótesis:</strong> Si hay desviación, la tendencia permanece igual o empeora</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Ejemplo:</strong> Proyecto estimado en 20,000 horas y 10 meses. En el mes 5 se re-estima en 22,000 horas → Total: 12.2 meses</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Metodologías Ágiles -->
+            <div id="tab4" class="tab-content">
+                <div class="card">
+                    <h3>🔄 Filosofía Ágil</h3>
+                    <div class="highlight-box">
+                        <p>Los requisitos son dinámicos y el cambio es bienvenido en cualquier etapa. La planificación debe ser flexible e iterativa.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🧅 Cebolla de Planificación Ágil</h3>
+                    <p>Describe cómo la planificación se aplica a diferentes niveles organizacionales:</p>
+                    <ul>
+                        <li>Inversión de tiempo en planificación en el momento óptimo</li>
+                        <li>Adaptación fácil a cambios durante la ejecución</li>
+                        <li>Cobertura del espectro completo de planificación</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>✨ Características de Planes Ágiles</h3>
+                    <div class="grid">
+                        <div class="methodology-card">
+                            <h4>Enfoque al Cliente</h4>
+                            <p>Entrega de valor por encima de "ejecución de un plan"</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Decisiones Tardías</h4>
+                            <p>Toma de decisiones en el último momento responsable</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Entregas Frecuentes</h4>
+                            <p>Feedback rápido y "fallar rápido" para corregir</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Estimaciones Probabilísticas</h4>
+                            <p>Intervalos de fechas en lugar de fechas exactas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Product Backlog</h3>
+                    <p>Lista de trabajo ordenado por prioridades dictada por "negocio", representado por el Product Owner.</p>
+                    <div class="highlight-box">
+                        <h4>Sprint Backlog</h4>
+                        <p>Subconjunto del Product Backlog que enumera las tareas a completar durante el sprint. Es responsabilidad del equipo de desarrollo.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Tablero Kanban</h3>
+                    <p>Herramienta ágil que ayuda a visualizar el trabajo, limitar el trabajo en curso y maximizar la eficiencia.</p>
+                    <h4>Elementos:</h4>
+                    <ul>
+                        <li><strong>Tarjetas:</strong> Representan elementos de trabajo</li>
+                        <li><strong>Columnas:</strong> Etapas diferentes del flujo de trabajo</li>
+                        <li><strong>Límites WIP:</strong> Restricciones de cantidad máxima por etapa</li>
+                        <li><strong>Punto de compromiso:</strong> Entrada de nuevo trabajo</li>
+                        <li><strong>Punto de entrega:</strong> Salida del trabajo completado</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📉 Gráficas de Seguimiento</h3>
+                    <div class="methodology-comparison">
+                        <div class="methodology-card">
+                            <h4>Burndown Chart</h4>
+                            <p>Refleja avance de actividades en tiempo real, mostrando trabajo pendiente. Útil para predecir finalización.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Velocity Chart</h4>
+                            <p>Gráfico de barras de productividad sprint tras sprint. Muestra compromiso vs. tareas terminadas en Story Points.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Diagrama de Flujo Acumulado (CFD)</h3>
+                    <p>Herramienta útil para gestionar carga de trabajo e identificar cuellos de botella.</p>
+                    <h4>Elementos principales:</h4>
+                    <ul>
+                        <li><strong>Trabajo pendiente (backlog)</strong></li>
+                        <li><strong>Tiempo de entrega:</strong> Desde asignación hasta entrega</li>
+                        <li><strong>Trabajo en curso:</strong> Tareas activas</li>
+                        <li><strong>Tiempo de ciclo:</strong> Desde inicio hasta entrega</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 5: Cuadro de Mando -->
+            <div id="tab5" class="tab-content">
+                <div class="card">
+                    <h3>📊 Evolución del Cuadro de Mando</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1948 - Cuadro de Mandos Empresarial</h4>
+                            <p>Aparece en EE.UU. como herramienta de control de indicadores, pero sin mostrar conexión entre ellos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Cuadro de Mando Integral (CMI)</h4>
+                            <p>Desarrollado por Robert Kaplan y David Norton. Incluye activos intangibles además de perspectiva financiera.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Elementos Clave del CMI</h3>
+                    <div class="grid">
+                        <div class="methodology-card">
+                            <h4>Visión</h4>
+                            <p>Hacia dónde quiere ir la organización</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Misión</h4>
+                            <p>Acciones para alcanzar la visión</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Objetivos Estratégicos</h4>
+                            <p>Qué conseguir a medio/largo plazo</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>KPIs</h4>
+                            <p>Indicadores para valorar cumplimiento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Las 4 Perspectivas del CMI</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>💰 Perspectiva Financiera</h4>
+                            <p>Desde el punto de vista de los accionistas. Indicadores basados en contabilidad (ej. ROI).</p>
+                            <ul>
+                                <li>Información basada en el pasado</li>
+                                <li>Métricas contables tradicionales</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>👥 Perspectiva del Cliente</h4>
+                            <p>Mide cumplimiento de expectativas del cliente.</p>
+                            <ul>
+                                <li>Calidad medida por satisfacción</li>
+                                <li>SLA (Service Level Agreements)</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>⚙️ Perspectiva de Procesos Internos</h4>
+                            <p>Análisis desde perspectiva de negocio:</p>
+                            <ul>
+                                <li>Procesos operacionales</li>
+                                <li>Gestión de clientes</li>
+                                <li>Procesos de innovación</li>
+                                <li>Responsabilidad Social Corporativa</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>📚 Desarrollo y Aprendizaje</h4>
+                            <p>Incremento del Capital Intelectual:</p>
+                            <ul>
+                                <li>Capital Humano (personal)</li>
+                                <li>Capital Estructural (procedimientos, BD, patentes)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ Elaboración del Cuadro de Mando</h3>
+                    <h4>Principios fundamentales:</h4>
+                    <ul>
+                        <li><strong>Información imprescindible:</strong> Solo lo relevante</li>
+                        <li><strong>Estructura piramidal:</strong> De general a detallado</li>
+                        <li><strong>Visualización:</strong> Gráficos y cuadros claros</li>
+                        <li><strong>Uniformidad:</strong> Comparación entre áreas</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h4>📋 Norma UNE 66175:2003</h4>
+                        <p>Sistemas de gestión de la calidad. Guía para la implantación de sistemas de indicadores.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ CMI en la Gestión Pública</h3>
+                    <h4>Características especiales:</h4>
+                    <ul>
+                        <li><strong>Enfoque al ciudadano:</strong> Creación de valor público</li>
+                        <li><strong>Indicadores de actividad:</strong> Medición de incidencias y eficacia</li>
+                        <li><strong>Cliente diferenciado:</strong> Según tipo de administración</li>
+                        <li><strong>Procesos externos:</strong> Derivados de contratación con proveedores</li>
+                    </ul>
+
+                    <h4>✅ Ventajas en el sector público:</h4>
+                    <div class="grid">
+                        <div class="methodology-card">
+                            <p>🔍 Transparencia de la gestión pública</p>
+                        </div>
+                        <div class="methodology-card">
+                            <p>📢 Herramienta de comunicación y motivación</p>
+                        </div>
+                        <div class="methodology-card">
+                            <p>🔄 Cultura de mejora continua</p>
+                        </div>
+                        <div class="methodology-card">
+                            <p>⚡ Adopción rápida de decisiones</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💻 Soluciones Comerciales</h3>
+                    <div class="methodology-comparison">
+                        <div class="methodology-card">
+                            <h4>Propietarias</h4>
+                            <ul>
+                                <li>Power BI (Microsoft)</li>
+                                <li>Tableau</li>
+                            </ul>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>Software Abierto</h4>
+                            <ul>
+                                <li>Pentaho</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="tab6" class="tab-content">
+                <div class="card">
+                    <h3>🎯 Ejercicios de Evaluación</h3>
+                    <p>20 preguntas tipo examen con respuestas marcadas para estudio</p>
+                </div>
+
+                <!-- Pregunta 1 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">1</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuáles son los tres niveles de gestión en los sistemas de planificación organizacional?</strong></p>
+                    <ul class="options">
+                        <li>A) Estratégico, Operacional, Administrativo</li>
+                        <li class="correct-answer">B) Estratégico, Táctico, Operativo</li>
+                        <li>C) Superior, Medio, Inferior</li>
+                        <li>D) Planificación, Ejecución, Control</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">2</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué significa el acrónimo SMART en la definición de objetivos según Doran?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) Specific, Measurable, Achievable, Relevant, Time-bound</li>
+                        <li>B) Simple, Modern, Accurate, Realistic, Timely</li>
+                        <li>C) Strategic, Methodical, Applicable, Relevant, Tactical</li>
+                        <li>D) Standard, Measurable, Assignable, Realistic, Tactical</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">3</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>Según Métrica v3, ¿cuál es la diferencia entre objetivos y Factores Críticos de Éxito (FCE)?</strong></p>
+                    <ul class="options">
+                        <li>A) No hay diferencia, son sinónimos</li>
+                        <li class="correct-answer">B) Los objetivos son los "fines", los FCE son los "medios"</li>
+                        <li>C) Los objetivos son a corto plazo, los FCE a largo plazo</li>
+                        <li>D) Los objetivos son cualitativos, los FCE cuantitativos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">4</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué significan las siglas de la matriz DAFO?</strong></p>
+                    <ul class="options">
+                        <li>A) Decisiones, Análisis, Fortalezas, Objetivos</li>
+                        <li class="correct-answer">B) Debilidades, Amenazas, Fortalezas, Oportunidades</li>
+                        <li>C) Datos, Amenazas, Factores, Operaciones</li>
+                        <li>D) Diagnóstico, Análisis, Funciones, Organización</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">5</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>En la matriz CAME, ¿qué estrategia se aplica a las Oportunidades identificadas en DAFO?</strong></p>
+                    <ul class="options">
+                        <li>A) Corregir</li>
+                        <li>B) Afrontar</li>
+                        <li>C) Mantener</li>
+                        <li class="correct-answer">D) Explotar</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">6</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuántos "Resultados Clave" debe contener un OKR?</strong></p>
+                    <ul class="options">
+                        <li>A) 1-2</li>
+                        <li class="correct-answer">B) 3-5</li>
+                        <li>C) 5-7</li>
+                        <li>D) No hay límite establecido</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">7</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué técnica de Métrica v3 establece las dependencias entre las distintas tareas del proyecto?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) PERT</li>
+                        <li>B) GANTT</li>
+                        <li>C) EDT</li>
+                        <li>D) Diagrama de extrapolación</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">8</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>En el diagrama de Gantt, ¿qué diferencia hay entre dependencias funcionales y orgánicas?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) Funcional: finalizar una tarea para empezar otra; Orgánica: liberar un recurso</li>
+                        <li>B) Funcional: relacionada con recursos; Orgánica: relacionada con tiempo</li>
+                        <li>C) No hay diferencia práctica entre ambas</li>
+                        <li>D) Funcional: dentro del proyecto; Orgánica: entre proyectos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">9</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el principio fundamental de la "Regla del 100%" en la EDT?</strong></p>
+                    <ul class="options">
+                        <li>A) El 100% de los recursos deben estar asignados</li>
+                        <li class="correct-answer">B) La EDT debe incluir el 100% del trabajo definido en el alcance</li>
+                        <li>C) El 100% de las tareas deben tener la misma duración</li>
+                        <li>D) El 100% del presupuesto debe estar distribuido</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">10</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>En metodologías ágiles, ¿quién es responsable del Sprint Backlog?</strong></p>
+                    <ul class="options">
+                        <li>A) Product Owner</li>
+                        <li class="correct-answer">B) Equipo de desarrollo</li>
+                        <li>C) Scrum Master</li>
+                        <li>D) Stakeholders</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">11</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Qué elementos NO forman parte de un tablero Kanban?</strong></p>
+                    <ul class="options">
+                        <li>A) Tarjetas y Columnas</li>
+                        <li>B) Límites de trabajo en curso</li>
+                        <li>C) Puntos de compromiso y entrega</li>
+                        <li class="correct-answer">D) Story Points y Velocity</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 12 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">12</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿En qué año aparece la noción de "Cuadro de mandos empresarial"?</strong></p>
+                    <ul class="options">
+                        <li>A) 1945</li>
+                        <li class="correct-answer">B) 1948</li>
+                        <li>C) 1950</li>
+                        <li>D) 1955</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 13 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">13</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Quiénes son los autores del Cuadro de Mando Integral (CMI)?</strong></p>
+                    <ul class="options">
+                        <li>A) Peter Drucker y Michael Porter</li>
+                        <li class="correct-answer">B) Robert Kaplan y David Norton</li>
+                        <li>C) Henry Mintzberg y Gary Hamel</li>
+                        <li>D) Jim Collins y Jerry Porras</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 14 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">14</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál de las siguientes NO es una perspectiva del Cuadro de Mando Integral?</strong></p>
+                    <ul class="options">
+                        <li>A) Perspectiva Financiera</li>
+                        <li>B) Perspectiva del Cliente</li>
+                        <li>C) Perspectiva de Procesos Internos</li>
+                        <li class="correct-answer">D) Perspectiva Competitiva</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 15 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">15</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>En la gestión pública, ¿en qué se enfoca principalmente el CMI?</strong></p>
+                    <ul class="options">
+                        <li>A) Maximización de beneficios</li>
+                        <li class="correct-answer">B) Creación de valor para el ciudadano</li>
+                        <li>C) Competencia con el sector privado</li>
+                        <li>D) Reducción de costes operativos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 16 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">16</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué norma UNE establece el ciclo de vida para el diseño de indicadores?</strong></p>
+                    <ul class="options">
+                        <li>A) UNE 66174:2003</li>
+                        <li class="correct-answer">B) UNE 66175:2003</li>
+                        <li>C) UNE 66176:2003</li>
+                        <li>D) UNE 66177:2003</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 17 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">17</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es una característica distintiva de los Story Points en metodologías ágiles?</strong></p>
+                    <ul class="options">
+                        <li>A) Miden exclusivamente el tiempo de desarrollo</li>
+                        <li class="correct-answer">B) Representan complejidad y esfuerzo requerido</li>
+                        <li>C) Son siempre números enteros del 1 al 10</li>
+                        <li>D) Solo los asigna el Product Owner</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 18 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">18</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>En el Patrón de Límites de Métrica v3, ¿cuáles son las tres situaciones diferenciadas de un proyecto?</strong></p>
+                    <ul class="options">
+                        <li>A) Inicio, Desarrollo, Cierre</li>
+                        <li class="correct-answer">B) Arranque, Pleno rendimiento, Finalización</li>
+                        <li>C) Planificación, Ejecución, Monitoreo</li>
+                        <li>D) Diseño, Implementación, Mantenimiento</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 19 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">19</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué muestra un Diagrama de Flujo Acumulado (CFD) en metodologías ágiles?</strong></p>
+                    <ul class="options">
+                        <li>A) Solo el trabajo pendiente y terminado</li>
+                        <li class="correct-answer">B) Trabajo pendiente, tiempo de entrega, trabajo en curso y tiempo de ciclo</li>
+                        <li>C) Únicamente la velocidad del equipo por sprint</li>
+                        <li>D) Las dependencias entre tareas del proyecto</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 20 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">20</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál de estas es una ventaja específica del CMI en la gestión pública?</strong></p>
+                    <ul class="options">
+                        <li>A) Maximiza los ingresos fiscales</li>
+                        <li>B) Reduce automáticamente la burocracia</li>
+                        <li class="correct-answer">C) Favorece la transparencia de la gestión pública</li>
+                        <li>D) Elimina la necesidad de indicadores financieros</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="tab7" class="tab-content">
+                <div class="card">
+                    <h3>📚 Glosario de Términos Clave</h3>
+                    
+                    <dl>
+                        <div class="glossary-term">
+                            <dt>CMI (Cuadro de Mando Integral)</dt>
+                            <dd>Sistema administrativo que considera perspectivas financieras y activos intangibles para evaluación empresarial.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>FCE (Factores Críticos de Éxito)</dt>
+                            <dd>Condiciones que se deben cumplir para alcanzar los objetivos. Son los "medios" para conseguir los "fines".</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>PERT</dt>
+                            <dd>Program Evaluation & Review Technique. Técnica para establecer dependencias entre tareas del proyecto.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>EDT (WBS)</dt>
+                            <dd>Estructura de Descomposición de Trabajo. Descomposición jerárquica de actividades orientada al entregable.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>OKR</dt>
+                            <dd>Objectives and Key Results. Marco de trabajo para fijar objetivos con 3-5 resultados clave medibles.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>KPI</dt>
+                            <dd>Key Performance Indicators. Indicadores clave de gestión para valorar cumplimiento de objetivos.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Product Backlog</dt>
+                            <dd>Lista de trabajo ordenado por prioridades dictada por el Product Owner en metodologías ágiles.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Sprint Backlog</dt>
+                            <dd>Subconjunto del Product Backlog con tareas a completar durante un sprint. Responsabilidad del equipo de desarrollo.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Story Points</dt>
+                            <dd>Unidad de medida que representa complejidad y esfuerzo requerido para completar una tarea en metodologías ágiles.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Burndown Chart</dt>
+                            <dd>Gráfica que refleja avance de actividades en tiempo real, mostrando serie temporal del trabajo pendiente.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Velocity Chart</dt>
+                            <dd>Gráfico de barras que representa productividad del equipo sprint tras sprint usando Story Points.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>CFD (Cumulative Flow Diagram)</dt>
+                            <dd>Diagrama de Flujo Acumulado para gestionar carga de trabajo e identificar cuellos de botella.</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Referencias y Enlaces de Interés</h3>
+                    <ul>
+                        <li><strong>DATAOBSAE:</strong> <a href="http://dataobsae.administracionelectronica.gob.es/" target="_blank" style="color: var(--accent-color);">Observatorio de la Administración Electrónica</a></li>
+                        <li><strong>Métrica v3:</strong> Metodología oficial para desarrollo de sistemas de información en la AGE</li>
+                        <li><strong>Norma UNE 66175:2003:</strong> Sistemas de gestión de la calidad - Guía para implantación de sistemas de indicadores</li>
+                        <li><strong>Balanced Scorecard Institute:</strong> Recursos sobre implementación de CMI</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Consejos para el Examen</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Puntos Clave a Recordar</h4>
+                        <ul>
+                            <li><strong>Año 1948:</strong> Origen del cuadro de mandos empresarial</li>
+                            <li><strong>Kaplan y Norton:</strong> Autores del CMI</li>
+                            <li><strong>4 Perspectivas CMI:</strong> Financiera, Cliente, Procesos Internos, Desarrollo y Aprendizaje</li>
+                            <li><strong>SMART:</strong> Specific, Measurable, Achievable, Relevant, Time-bound</li>
+                            <li><strong>3 Niveles:</strong> Estratégico, Táctico, Operativo</li>
+                            <li><strong>OKR:</strong> 3-5 Resultados Clave por Objetivo</li>
+                            <li><strong>Sprint Backlog:</strong> Responsabilidad del equipo de desarrollo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Aplicación en la Administración Pública</h3>
+                    <p>El CMI en el sector público se caracteriza por:</p>
+                    <ul>
+                        <li><strong>Enfoque ciudadano:</strong> Creación de valor para el ciudadano por encima de medidas puramente financieras</li>
+                        <li><strong>Transparencia:</strong> Herramienta fundamental para la transparencia de la gestión pública</li>
+                        <li><strong>Indicadores de actividad:</strong> Medición de incidencias y eficacia de sistemas</li>
+                        <li><strong>Adaptación por tipo de administración:</strong> Estatal, autonómica, provincial, local</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
+        }
+
+        // Tab management
+        function showTab(tabNumber) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`tab${tabNumber}`).classList.add('active');
+            
+            // Add active class to selected tab
+            document.querySelectorAll('.tab')[tabNumber - 1].classList.add('active');
+        }
+
+        // Interactive quiz functionality
+        function initializeQuiz() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from siblings
+                    const siblings = this.parentNode.querySelectorAll('li');
+                    siblings.forEach(sibling => {
+                        sibling.style.backgroundColor = '';
+                        sibling.style.borderColor = '';
+                    });
+                    
+                    // Highlight selected option
+                    if (!this.classList.contains('correct-answer')) {
+                        this.style.backgroundColor = 'var(--bg-secondary)';
+                        this.style.borderColor = 'var(--warning-color)';
+                    }
+                });
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            initializeQuiz();
+        });
+
+        // Smooth scrolling for internal links
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(e.target.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                // Enhanced tab navigation handled by browser
+                return;
+            }
+            
+            // Tab switching with arrow keys when focused on tab
+            if (e.target.classList.contains('tab')) {
+                const tabs = Array.from(document.querySelectorAll('.tab'));
+                const currentIndex = tabs.indexOf(e.target);
+                
+                if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    e.preventDefault();
+                    tabs[currentIndex - 1].focus();
+                    tabs[currentIndex - 1].click();
+                } else if (e.key === 'ArrowRight' && currentIndex < tabs.length - 1) {
+                    e.preventDefault();
+                    tabs[currentIndex + 1].focus();
+                    tabs[currentIndex + 1].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

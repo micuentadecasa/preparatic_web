@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métrica v3 - Guía de Estudio Interactiva</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --error-color: #f87171;
+            --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+        }
+
+        .tab.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-dark);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .process-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-hover));
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .process-card:hover {
+            transform: translateX(5px);
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .question h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-hover);
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .options li:hover {
+            background: var(--bg-card);
+        }
+
+        .options li.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 1.2rem;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-basic {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty-intermediate {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty-advanced {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .glossary-term {
+            background: var(--bg-card);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term dt {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Métrica v3 - Metodología de Desarrollo de SI</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">Resumen General</button>
+            <button class="tab" onclick="showTab(1)">Procesos Principales</button>
+            <button class="tab" onclick="showTab(2)">Interfaces</button>
+            <button class="tab" onclick="showTab(3)">Técnicas y Perfiles</button>
+            <button class="tab" onclick="showTab(4)">Fases Detalladas</button>
+            <button class="tab" onclick="showTab(5)">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab(6)">Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div class="tab-content active">
+            <div class="card">
+                <h2>📋 Resumen Ejecutivo de Métrica v3</h2>
+                <p>Métrica v3 es la metodología estándar para la planificación, desarrollo y mantenimiento de sistemas de información en la Administración Pública española. Proporciona un marco estructurado que garantiza la calidad, eficiencia y trazabilidad en todos los proyectos de desarrollo de sistemas.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <p>Procesos Principales</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <p>Interfaces</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <p>Perfiles de Participantes</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <p>Categorías de Técnicas</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Objetivos de Aprendizaje</h2>
+                <ul>
+                    <li>Comprender la estructura completa de Métrica v3</li>
+                    <li>Identificar los 7 procesos principales y su secuencia</li>
+                    <li>Dominar las 4 interfaces y su aplicación</li>
+                    <li>Conocer las técnicas y perfiles involucrados</li>
+                    <li>Aplicar la metodología en casos prácticos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>⭐ Conceptos Clave</h2>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <h3>Metodología Estructurada</h3>
+                        <p>Proporciona un marco sistemático para el desarrollo de SI</p>
+                    </div>
+                    <div class="process-card">
+                        <h3>Calidad Asegurada</h3>
+                        <p>Incluye interfaces de calidad y gestión en todos los procesos</p>
+                    </div>
+                    <div class="process-card">
+                        <h3>Adaptabilidad</h3>
+                        <p>Se adapta a diferentes tipos y tamaños de proyectos</p>
+                    </div>
+                    <div class="process-card">
+                        <h3>Trazabilidad</h3>
+                        <p>Permite seguimiento completo desde planificación hasta mantenimiento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Procesos Principales -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>🔄 Los 7 Procesos de Métrica v3</h2>
+                <p>La metodología Métrica v3 se estructura en 7 procesos secuenciales que cubren todo el ciclo de vida del sistema de información:</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>PSI - Planificación de Sistemas de Información</h3>
+                        <p><strong>Objetivo:</strong> Obtener un marco de referencia para el desarrollo de sistemas de información que responda a los fines estratégicos de la organización.</p>
+                        <p><strong>Actividades principales:</strong></p>
+                        <ul>
+                            <li>Inicio del Plan de Sistemas de Información</li>
+                            <li>Definición y Organización del PSI</li>
+                            <li>Estudio de la Información Relevante</li>
+                            <li>Identificación de Requisitos</li>
+                            <li>Estudio de los Sistemas de Información Actuales</li>
+                            <li>Diseño del Modelo de Sistemas de Información</li>
+                            <li>Definición de la Arquitectura Tecnológica</li>
+                            <li>Definición del Plan de Acción</li>
+                            <li>Revisión y Aprobación del PSI</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>EVS - Estudio de Viabilidad del Sistema</h3>
+                        <p><strong>Objetivo:</strong> Analizar un conjunto concreto de necesidades para proponer una solución a corto plazo, que tenga en cuenta restricciones económicas, técnicas, legales y operativas.</p>
+                        <p><strong>Productos principales:</strong></p>
+                        <ul>
+                            <li>Catálogo de Requisitos</li>
+                            <li>Catálogo de Usuarios</li>
+                            <li>Contexto Tecnológico del Sistema</li>
+                            <li>Modelo de Procesos del Negocio</li>
+                            <li>Valoración de Alternativas de Solución</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>ASI - Análisis del Sistema de Información</h3>
+                        <p><strong>Objetivo:</strong> Conseguir la especificación detallada del sistema de información, a través de un catálogo de requisitos y una serie de modelos que cubran las necesidades de información de los usuarios.</p>
+                        <p><strong>Modelos resultantes:</strong></p>
+                        <ul>
+                            <li>Modelo Conceptual de Datos</li>
+                            <li>Modelo de Procesos</li>
+                            <li>Modelo de Comportamiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>DSI - Diseño del Sistema de Información</h3>
+                        <p><strong>Objetivo:</strong> Obtener la definición de la arquitectura del sistema y del entorno tecnológico que le va a dar soporte, junto con la especificación detallada de los componentes del sistema.</p>
+                        <p><strong>Diseños principales:</strong></p>
+                        <ul>
+                            <li>Diseño de la Arquitectura del Sistema</li>
+                            <li>Diseño del Entorno Tecnológico</li>
+                            <li>Diseño de Casos de Uso Reales</li>
+                            <li>Diseño de Clases</li>
+                            <li>Diseño Físico de Datos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>CSI - Construcción del Sistema de Información</h3>
+                        <p><strong>Objetivo:</strong> Generar el código de los componentes del sistema, crear los procedimientos de operación y seguridad, y elaborar los manuales de usuario final y de explotación.</p>
+                        <p><strong>Productos finales:</strong></p>
+                        <ul>
+                            <li>Componentes del Sistema</li>
+                            <li>Manual de Usuario</li>
+                            <li>Manual de Explotación</li>
+                            <li>Especificaciones de Construcción</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>IAS - Implantación y Aceptación del Sistema</h3>
+                        <p><strong>Objetivo:</strong> Entregar y aceptar el sistema en su entorno de operación, llevar a cabo las actividades oportunas para el paso a producción del sistema.</p>
+                        <p><strong>Fases críticas:</strong></p>
+                        <ul>
+                            <li>Establecimiento del Plan de Implantación</li>
+                            <li>Formación Necesaria para la Implantación</li>
+                            <li>Incorporación del Sistema al Entorno de Operación</li>
+                            <li>Carga de Datos al Entorno de Operación</li>
+                            <li>Pruebas de Implantación del Sistema</li>
+                            <li>Aceptación del Sistema</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3>MSI - Mantenimiento del Sistema de Información</h3>
+                        <p><strong>Objetivo:</strong> Obtener una nueva versión de un sistema de información desarrollado con Métrica v3, a partir de las peticiones de mantenimiento que los usuarios realizan con motivo de un funcionamiento incorrecto o de nuevas necesidades.</p>
+                        <p><strong>Tipos de mantenimiento:</strong></p>
+                        <ul>
+                            <li>Mantenimiento Correctivo</li>
+                            <li>Mantenimiento Evolutivo</li>
+                            <li>Mantenimiento Adaptativo</li>
+                            <li>Mantenimiento Perfectivo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Interfaces -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>🔗 Las 4 Interfaces de Métrica v3</h2>
+                <p>Las interfaces son procesos transversales que dan soporte a los procesos principales durante todo el ciclo de vida del proyecto:</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="card">
+                    <h2>GP - Gestión de Proyectos</h2>
+                    <p><strong>Propósito:</strong> Planificación, seguimiento y control de las actividades y recursos del proyecto.</p>
+                    <h3>Actividades principales:</h3>
+                    <ul>
+                        <li>Estimación de esfuerzo</li>
+                        <li>Planificación temporal</li>
+                        <li>Asignación de recursos</li>
+                        <li>Seguimiento y control</li>
+                        <li>Gestión de riesgos</li>
+                    </ul>
+                    <h3>Técnicas utilizadas:</h3>
+                    <ul>
+                        <li>Análisis de Riesgos</li>
+                        <li>Catalogación</li>
+                        <li>Diagrama de Gantt</li>
+                        <li>Estimación por Puntos de Función</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>CAL - Aseguramiento de la Calidad</h2>
+                    <p><strong>Propósito:</strong> Garantizar que los sistemas desarrollados alcancen los niveles de calidad exigidos.</p>
+                    <h3>Elementos de calidad:</h3>
+                    <ul>
+                        <li>Revisión de productos</li>
+                        <li>Verificación y validación</li>
+                        <li>Auditorías de calidad</li>
+                        <li>Métricas de calidad</li>
+                    </ul>
+                    <h3>Estándares aplicados:</h3>
+                    <ul>
+                        <li>ISO 9001</li>
+                        <li>ISO/IEC 12207</li>
+                        <li>CMMI</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>SEG - Seguridad</h2>
+                    <p><strong>Característica única:</strong> Es la única interfaz presente desde el proceso PSI (Planificación de Sistemas de Información).</p>
+                    <h3>Aspectos de seguridad:</h3>
+                    <ul>
+                        <li>Análisis y gestión de riesgos de seguridad</li>
+                        <li>Especificación de requisitos de seguridad</li>
+                        <li>Diseño de mecanismos de seguridad</li>
+                        <li>Pruebas de seguridad</li>
+                        <li>Plan de seguridad</li>
+                    </ul>
+                    <h3>Normativas aplicables:</h3>
+                    <ul>
+                        <li>Esquema Nacional de Seguridad (ENS)</li>
+                        <li>ISO 27001</li>
+                        <li>LOPD-GDD</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Gestión de la Configuración</h2>
+                    <p><strong>Propósito:</strong> Identificar, organizar y controlar las modificaciones del software y documentación producida durante el desarrollo.</p>
+                    <h3>Actividades principales:</h3>
+                    <ul>
+                        <li>Identificación de elementos de configuración</li>
+                        <li>Control de versiones</li>
+                        <li>Control de cambios</li>
+                        <li>Auditoría de configuración</li>
+                        <li>Gestión de liberaciones</li>
+                    </ul>
+                    <h3>Herramientas comunes:</h3>
+                    <ul>
+                        <li>Sistemas de control de versiones (Git, SVN)</li>
+                        <li>Herramientas de gestión de cambios</li>
+                        <li>Repositorios centralizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Técnicas y Perfiles -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>🛠️ Técnicas y Prácticas</h2>
+                <p>Métrica v3 clasifica las técnicas en tres categorías principales:</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="card">
+                    <h2>Técnicas de Desarrollo</h2>
+                    <ul>
+                        <li><strong>Análisis de Dominio:</strong> Identificación del ámbito del sistema</li>
+                        <li><strong>Análisis Orientado a Objetos:</strong> Modelado mediante objetos</li>
+                        <li><strong>Análisis Estructurado:</strong> Descomposición funcional</li>
+                        <li><strong>Catalogación:</strong> Inventario sistemático de elementos</li>
+                        <li><strong>Diagrama de Clases:</strong> Representación de la estructura estática</li>
+                        <li><strong>Diagrama de Estructura de Datos:</strong> Modelo conceptual de datos</li>
+                        <li><strong>Diagrama de Transición de Estados:</strong> Comportamiento dinámico</li>
+                        <li><strong>Diseño Orientado a Objetos:</strong> Arquitectura de objetos</li>
+                        <li><strong>Modelado de Procesos de Negocio:</strong> Workflows organizacionales</li>
+                        <li><strong>Normalización:</strong> Organización eficiente de datos</li>
+                        <li><strong>Prototipado:</strong> Desarrollo incremental</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Técnicas de Gestión de Proyectos</h2>
+                    <ul>
+                        <li><strong>Análisis de Riesgos:</strong> Identificación y mitigación</li>
+                        <li><strong>Diagrama de Gantt:</strong> Planificación temporal</li>
+                        <li><strong>Estimación por Puntos de Función:</strong> Cálculo de esfuerzo</li>
+                        <li><strong>Planificación:</strong> Organización de recursos y tiempos</li>
+                        <li><strong>Revisión Técnica Formal:</strong> Control de calidad</li>
+                        <li><strong>Seguimiento de Proyectos:</strong> Monitorización continua</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Prácticas</h2>
+                    <ul>
+                        <li><strong>Cálculo de Valor Actual Neto:</strong> Evaluación económica</li>
+                        <li><strong>Construcción de Prototipos:</strong> Validación de requisitos</li>
+                        <li><strong>Impacto en la Organización:</strong> Análisis de cambios</li>
+                        <li><strong>Participación de los Usuarios:</strong> Involucramiento activo</li>
+                        <li><strong>Presentaciones:</strong> Comunicación de resultados</li>
+                        <li><strong>Pruebas:</strong> Verificación y validación</li>
+                        <li><strong>Sesiones de Trabajo:</strong> Colaboración estructurada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>👥 Perfiles de Participantes</h2>
+                <p>Métrica v3 define 5 categorías principales de participantes:</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <h3>1. Directivo</h3>
+                    <ul>
+                        <li>Toma decisiones estratégicas</li>
+                        <li>Aprueba presupuestos y recursos</li>
+                        <li>Define objetivos del proyecto</li>
+                        <li>Responsable final del proyecto</li>
+                    </ul>
+                </div>
+
+                <div class="process-card">
+                    <h3>2. Jefe de Proyecto</h3>
+                    <ul>
+                        <li>Planifica y coordina actividades</li>
+                        <li>Gestiona recursos y tiempos</li>
+                        <li>Controla calidad y riesgos</li>
+                        <li>Reporta al directivo</li>
+                    </ul>
+                </div>
+
+                <div class="process-card">
+                    <h3>3. Consultor</h3>
+                    <ul>
+                        <li>Aporta experiencia especializada</li>
+                        <li>Asesora en tecnologías</li>
+                        <li>Revisa metodología aplicada</li>
+                        <li>Mentor del equipo</li>
+                    </ul>
+                </div>
+
+                <div class="process-card">
+                    <h3>4. Analista</h3>
+                    <ul>
+                        <li>Especifica requisitos del sistema</li>
+                        <li>Diseña la arquitectura</li>
+                        <li>Modela procesos y datos</li>
+                        <li>Documenta especificaciones</li>
+                    </ul>
+                </div>
+
+                <div class="process-card">
+                    <h3>5. Programador</h3>
+                    <ul>
+                        <li>Implementa componentes software</li>
+                        <li>Realiza pruebas unitarias</li>
+                        <li>Documenta código fuente</li>
+                        <li>Mantiene el sistema</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Fases Detalladas -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>📋 Detalle de Actividades por Proceso</h2>
+                <p>Análisis detallado de las actividades principales en cada proceso de Métrica v3:</p>
+            </div>
+
+            <div class="card">
+                <h2>PSI - Actividades Detalladas</h2>
+                <ol>
+                    <li><strong>PSI 1 - Inicio del Plan de Sistemas de Información</strong>
+                        <ul>
+                            <li>Análisis de la necesidad del PSI</li>
+                            <li>Identificación del alcance del PSI</li>
+                            <li>Determinación de responsables</li>
+                        </ul>
+                    </li>
+                    <li><strong>PSI 2 - Definición y Organización del PSI</strong>
+                        <ul>
+                            <li>Especificación del ámbito y alcance</li>
+                            <li>Organización del PSI</li>
+                            <li>Definición del plan de trabajo</li>
+                        </ul>
+                    </li>
+                    <li><strong>PSI 3 - Estudio de la Información Relevante</strong>
+                        <ul>
+                            <li>Selección y análisis de información</li>
+                            <li>Identificación de las necesidades de información</li>
+                        </ul>
+                    </li>
+                    <li><strong>PSI 4 - Identificación de Requisitos</strong>
+                        <ul>
+                            <li>Estudio de los procesos del PSI</li>
+                            <li>Análisis de las necesidades de información</li>
+                            <li>Catalogación de requisitos</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h2>ASI - Análisis del Sistema de Información</h2>
+                <h3>Productos principales:</h3>
+                <ul>
+                    <li><strong>Catálogo de Requisitos:</strong> Especificación detallada de necesidades</li>
+                    <li><strong>Catálogo de Usuarios:</strong> Perfiles y necesidades de usuarios</li>
+                    <li><strong>Modelo Conceptual de Datos:</strong> Estructura lógica de la información</li>
+                    <li><strong>Modelo de Procesos:</strong> Flujos de trabajo del sistema</li>
+                    <li><strong>Modelo de Comportamiento:</strong> Estados y transiciones</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>DSI - Diseño del Sistema de Información</h2>
+                <h3>Arquitectura del Sistema:</h3>
+                <ul>
+                    <li>Subsistemas de diseño</li>
+                    <li>Catálogo de excepciones</li>
+                    <li>Especificación de interfaces entre subsistemas</li>
+                    <li>Especificación del entorno tecnológico</li>
+                </ul>
+                <h3>Diseño de Componentes:</h3>
+                <ul>
+                    <li>Diseño de casos de uso reales</li>
+                    <li>Diseño de clases</li>
+                    <li>Modelo físico de datos</li>
+                    <li>Especificación de componentes</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Criterios de Evaluación en Exámenes</h2>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <h3>Conocimientos Básicos</h3>
+                        <ul>
+                            <li>Identificar los 7 procesos principales</li>
+                            <li>Secuencia correcta de procesos</li>
+                            <li>Propósito de cada proceso</li>
+                            <li>Diferencia entre proceso e interfaz</li>
+                        </ul>
+                    </div>
+                    <div class="process-card">
+                        <h3>Aplicación Práctica</h3>
+                        <ul>
+                            <li>Selección de técnicas apropiadas</li>
+                            <li>Asignación de perfiles por actividad</li>
+                            <li>Identificación de productos por proceso</li>
+                            <li>Casos de uso específicos</li>
+                        </ul>
+                    </div>
+                    <div class="process-card">
+                        <h3>Integración con Normativa</h3>
+                        <ul>
+                            <li>Relación con ENS</li>
+                            <li>Cumplimiento de estándares ISO</li>
+                            <li>Aplicación en Administración Pública</li>
+                            <li>Interoperabilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>🎯 Ejercicios Prácticos - Métrica v3</h2>
+                <p>Preguntas tipo examen para oposiciones de Administración Pública. <strong>Las respuestas correctas están marcadas en verde.</strong></p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>1. ¿Cuántos procesos principales incluye la metodología Métrica v3?</h3>
+                    <ul class="options">
+                        <li>5 procesos</li>
+                        <li class="correct">7 procesos</li>
+                        <li>9 procesos</li>
+                        <li>6 procesos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>2. ¿Cuál es el primer proceso en la secuencia de Métrica v3?</h3>
+                    <ul class="options">
+                        <li>EVS - Estudio de Viabilidad del Sistema</li>
+                        <li class="correct">PSI - Planificación de Sistemas de Información</li>
+                        <li>ASI - Análisis del Sistema de Información</li>
+                        <li>GP - Gestión de Proyectos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>3. ¿Cuál es la característica única de la interfaz SEG (Seguridad)?</h3>
+                    <ul class="options">
+                        <li>Solo se aplica al final del proyecto</li>
+                        <li class="correct">Es la única interfaz presente desde el proceso PSI</li>
+                        <li>No se aplica en todos los procesos</li>
+                        <li>Es optativa en proyectos pequeños</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>4. ¿Qué proceso tiene como objetivo obtener un marco de referencia para el desarrollo de sistemas?</h3>
+                    <ul class="options">
+                        <li>EVS - Estudio de Viabilidad del Sistema</li>
+                        <li class="correct">PSI - Planificación de Sistemas de Información</li>
+                        <li>ASI - Análisis del Sistema de Información</li>
+                        <li>DSI - Diseño del Sistema de Información</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>5. ¿Cuáles son las 4 interfaces de Métrica v3?</h3>
+                    <ul class="options">
+                        <li>GP, CAL, SEG, MSI</li>
+                        <li class="correct">GP, CAL, SEG, Gestión de la Configuración</li>
+                        <li>PSI, EVS, ASI, DSI</li>
+                        <li>GP, CAL, IAS, CSI</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>6. ¿Qué significa DSI en Métrica v3?</h3>
+                    <ul class="options">
+                        <li>Desarrollo de Sistemas Informáticos</li>
+                        <li class="correct">Diseño del Sistema de Información</li>
+                        <li>Definición de Sistemas Integrados</li>
+                        <li>Documentación del Sistema de Información</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>7. ¿En qué proceso se obtiene la especificación detallada del sistema de información?</h3>
+                    <ul class="options">
+                        <li>PSI - Planificación de Sistemas de Información</li>
+                        <li>EVS - Estudio de Viabilidad del Sistema</li>
+                        <li class="correct">ASI - Análisis del Sistema de Información</li>
+                        <li>DSI - Diseño del Sistema de Información</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>8. ¿Cuántas categorías de participantes define Métrica v3?</h3>
+                    <ul class="options">
+                        <li>3 categorías</li>
+                        <li>4 categorías</li>
+                        <li class="correct">5 categorías</li>
+                        <li>6 categorías</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>9. ¿Qué proceso se encarga de generar el código de los componentes del sistema?</h3>
+                    <ul class="options">
+                        <li>DSI - Diseño del Sistema de Información</li>
+                        <li class="correct">CSI - Construcción del Sistema de Información</li>
+                        <li>ASI - Análisis del Sistema de Información</li>
+                        <li>IAS - Implantación y Aceptación del Sistema</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>10. ¿Cuál es el último proceso en la secuencia de Métrica v3?</h3>
+                    <ul class="options">
+                        <li>IAS - Implantación y Aceptación del Sistema</li>
+                        <li class="correct">MSI - Mantenimiento del Sistema de Información</li>
+                        <li>CSI - Construcción del Sistema de Información</li>
+                        <li>DSI - Diseño del Sistema de Información</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>11. ¿Qué técnica se utiliza para el cálculo de esfuerzo en proyectos?</h3>
+                    <ul class="options">
+                        <li>Análisis de Riesgos</li>
+                        <li>Diagrama de Gantt</li>
+                        <li class="correct">Estimación por Puntos de Función</li>
+                        <li>Catalogación</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>12. ¿En qué proceso se define la arquitectura del sistema?</h3>
+                    <ul class="options">
+                        <li>ASI - Análisis del Sistema de Información</li>
+                        <li class="correct">DSI - Diseño del Sistema de Información</li>
+                        <li>CSI - Construcción del Sistema de Información</li>
+                        <li>EVS - Estudio de Viabilidad del Sistema</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>13. ¿Qué interfaz se encarga del aseguramiento de la calidad?</h3>
+                    <ul class="options">
+                        <li>GP - Gestión de Proyectos</li>
+                        <li class="correct">CAL - Aseguramiento de la Calidad</li>
+                        <li>SEG - Seguridad</li>
+                        <li>Gestión de la Configuración</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>14. ¿Cuáles son los tipos de mantenimiento incluidos en MSI?</h3>
+                    <ul class="options">
+                        <li>Correctivo, Evolutivo, Adaptativo</li>
+                        <li class="correct">Correctivo, Evolutivo, Adaptativo, Perfectivo</li>
+                        <li>Correctivo, Preventivo, Evolutivo</li>
+                        <li>Correctivo, Adaptativo, Mejorativo</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>15. ¿Qué producto principal se obtiene en el proceso EVS?</h3>
+                    <ul class="options">
+                        <li>Modelo Conceptual de Datos</li>
+                        <li>Especificación de Construcción</li>
+                        <li class="correct">Catálogo de Requisitos</li>
+                        <li>Manual de Usuario</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>16. ¿Cuál es el objetivo del proceso IAS?</h3>
+                    <ul class="options">
+                        <li>Generar el código del sistema</li>
+                        <li>Diseñar la arquitectura</li>
+                        <li class="correct">Entregar y aceptar el sistema en su entorno de operación</li>
+                        <li>Analizar los requisitos del sistema</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>17. ¿Qué modelos se obtienen principalmente en el proceso ASI?</h3>
+                    <ul class="options">
+                        <li>Modelo de Arquitectura, Modelo de Componentes</li>
+                        <li class="correct">Modelo Conceptual de Datos, Modelo de Procesos, Modelo de Comportamiento</li>
+                        <li>Modelo de Usuarios, Modelo de Requisitos</li>
+                        <li>Modelo de Implantación, Modelo de Pruebas</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-intermediate">Intermedio</span>
+                    <h3>18. ¿Qué perfil es responsable de especificar los requisitos del sistema?</h3>
+                    <ul class="options">
+                        <li>Directivo</li>
+                        <li>Jefe de Proyecto</li>
+                        <li class="correct">Analista</li>
+                        <li>Programador</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-basic">Básico</span>
+                    <h3>19. ¿Cuántas categorías de técnicas define Métrica v3?</h3>
+                    <ul class="options">
+                        <li>2 categorías</li>
+                        <li class="correct">3 categorías</li>
+                        <li>4 categorías</li>
+                        <li>5 categorías</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                    <h3>20. ¿En qué normativa se basa principalmente la interfaz de Seguridad (SEG)?</h3>
+                    <ul class="options">
+                        <li>ISO 9001</li>
+                        <li>CMMI</li>
+                        <li class="correct">Esquema Nacional de Seguridad (ENS)</li>
+                        <li>LOPD-GDD únicamente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos Clave</h2>
+            </div>
+
+            <div class="glossary-term">
+                <dt>ASI (Análisis del Sistema de Información)</dt>
+                <dd>Proceso que tiene como objetivo conseguir la especificación detallada del sistema de información, a través de un catálogo de requisitos y una serie de modelos.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>CAL (Aseguramiento de la Calidad)</dt>
+                <dd>Interfaz que proporciona un marco de trabajo para garantizar que los sistemas desarrollados alcancen los niveles de calidad exigidos.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>CSI (Construcción del Sistema de Información)</dt>
+                <dd>Proceso cuyo objetivo es la generación del código de los componentes del sistema, la creación de procedimientos de operación y seguridad, y la elaboración de manuales.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>DSI (Diseño del Sistema de Información)</dt>
+                <dd>Proceso que obtiene la definición de la arquitectura del sistema y del entorno tecnológico que le va a dar soporte, junto con la especificación detallada de los componentes.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>EVS (Estudio de Viabilidad del Sistema)</dt>
+                <dd>Proceso que analiza un conjunto concreto de necesidades para proponer una solución a corto plazo, considerando restricciones económicas, técnicas, legales y operativas.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>GP (Gestión de Proyectos)</dt>
+                <dd>Interfaz que cubre la planificación, el seguimiento y control de las actividades y de los recursos humanos y materiales que intervienen en el desarrollo de un Sistema de Información.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>IAS (Implantación y Aceptación del Sistema)</dt>
+                <dd>Proceso cuyo objetivo es la entrega y aceptación del sistema en su entorno de operación, realizando las actividades para el paso a producción.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>Interfaz</dt>
+                <dd>Proceso transversal que da soporte a los procesos principales durante todo el ciclo de vida del proyecto. Métrica v3 define 4 interfaces.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>MSI (Mantenimiento del Sistema de Información)</dt>
+                <dd>Proceso que obtiene una nueva versión de un sistema desarrollado con Métrica v3, a partir de peticiones de mantenimiento por funcionamiento incorrecto o nuevas necesidades.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>Proceso Principal</dt>
+                <dd>Conjunto de actividades estructuradas que cubren una fase específica del ciclo de vida del desarrollo de sistemas. Métrica v3 define 7 procesos principales.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>PSI (Planificación de Sistemas de Información)</dt>
+                <dd>Proceso que obtiene un marco de referencia para el desarrollo de sistemas de información que responda a los fines estratégicos de la organización.</dd>
+            </div>
+
+            <div class="glossary-term">
+                <dt>SEG (Seguridad)</dt>
+                <dd>Interfaz única presente desde el proceso PSI que se ocupa del análisis y gestión de riesgos de seguridad y de la especificación de requisitos de seguridad.</dd>
+            </div>
+
+            <div class="card">
+                <h2>❓ Preguntas Frecuentes</h2>
+                
+                <div class="card">
+                    <h3>¿Es obligatorio aplicar todos los procesos de Métrica v3 en todos los proyectos?</h3>
+                    <p>No necesariamente. Métrica v3 es una metodología adaptable. Dependiendo del tamaño, complejidad y tipo de proyecto, se pueden seleccionar los procesos, actividades y técnicas más apropiadas. Sin embargo, la secuencia lógica debe respetarse.</p>
+                </div>
+
+                <div class="card">
+                    <h3>¿Cuál es la diferencia entre un proceso y una interfaz?</h3>
+                    <p>Los procesos principales son secuenciales y cubren fases específicas del desarrollo (PSI, EVS, ASI, DSI, CSI, IAS, MSI). Las interfaces son transversales y dan soporte durante todo el ciclo de vida (GP, CAL, SEG, Gestión de Configuración).</p>
+                </div>
+
+                <div class="card">
+                    <h3>¿Por qué la interfaz SEG está presente desde PSI?</h3>
+                    <p>La seguridad debe considerarse desde la planificación estratégica del sistema, no como un añadido posterior. Esta característica única de SEG refleja la importancia de la seguridad by design en los sistemas de información públicos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>¿Qué tipos de proyectos requieren Métrica v3 en la Administración Pública?</h3>
+                    <p>Métrica v3 es de aplicación recomendada en proyectos de desarrollo, evolución y mantenimiento de sistemas de información en organismos públicos, especialmente cuando requieren garantías de calidad, trazabilidad y cumplimiento normativo.</p>
+                </div>
+
+                <div class="card">
+                    <h3>¿Cómo se relaciona Métrica v3 con otras normativas como ENS o interoperabilidad?</h3>
+                    <p>Métrica v3 es complementaria. La interfaz SEG incorpora los requisitos del ENS, mientras que los procesos de análisis y diseño consideran los estándares de interoperabilidad. Es el marco metodológico que facilita el cumplimiento de estas normativas.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Recursos Adicionales</h2>
+                <ul>
+                    <li><strong>Esquema Nacional de Seguridad (ENS):</strong> Marco normativo para la seguridad de los sistemas de información</li>
+                    <li><strong>Norma Técnica de Interoperabilidad:</strong> Estándares para el intercambio de información</li>
+                    <li><strong>ISO/IEC 12207:</strong> Estándar internacional para procesos del ciclo de vida del software</li>
+                    <li><strong>CMMI:</strong> Modelo de madurez para la mejora de procesos</li>
+                    <li><strong>Guía de Técnicas:</strong> Documento complementario con descripción detallada de técnicas</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>💡 Consejos para Exámenes</h2>
+                <ul>
+                    <li><strong>Memorizar la secuencia:</strong> PSI → EVS → ASI → DSI → CSI → IAS → MSI</li>
+                    <li><strong>Recordar las 4 interfaces:</strong> GP, CAL, SEG, Gestión de Configuración</li>
+                    <li><strong>SEG única desde PSI:</strong> Característica diferenciadora importante</li>
+                    <li><strong>Productos clave por proceso:</strong> Conocer los entregables principales</li>
+                    <li><strong>Perfiles y responsabilidades:</strong> Asociar actividades con perfiles correctos</li>
+                    <li><strong>Técnicas por categoría:</strong> Desarrollo, Gestión de Proyectos, Prácticas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+
+        function showTab(index) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            tabContents[index].classList.add('active');
+            tabs[index].classList.add('active');
+            
+            currentTab = index;
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey) {
+                if (e.key === 'ArrowLeft' && currentTab > 0) {
+                    showTab(currentTab - 1);
+                } else if (e.key === 'ArrowRight' && currentTab < 6) {
+                    showTab(currentTab + 1);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

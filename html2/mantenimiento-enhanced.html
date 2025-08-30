@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento de Sistemas - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.25rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color), #6bb6ff);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .info-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 1.25rem;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .quiz-container {
+            max-width: 800px;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .difficulty {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .difficulty.basico { background: var(--success-color); color: white; }
+        .difficulty.intermedio { background: var(--warning-color); color: black; }
+        .difficulty.avanzado { background: var(--error-color); color: white; }
+
+        .options {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .option {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: var(--success-color);
+        }
+
+        .option.correct::before {
+            content: '✓ ';
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .glossary-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .glossary-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            background: var(--bg-secondary);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-color), #6bb6ff);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: auto;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 1rem;
+            }
+
+            .timeline-item {
+                padding-left: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Mantenimiento de Sistemas</div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('conceptos')">Conceptos Base</button>
+            <button class="tab" onclick="showTab('tipos')">Tipos de Mantenimiento</button>
+            <button class="tab" onclick="showTab('costes')">Costes y Métricas</button>
+            <button class="tab" onclick="showTab('tecnicas')">Técnicas y Herramientas</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2>📊 Resumen Ejecutivo: Mantenimiento de Sistemas</h2>
+                <div class="highlight-box">
+                    <h3>¿Qué es el Mantenimiento de Sistemas?</h3>
+                    <p>Capacidad del software para ser modificado, incluyendo correcciones, mejoras o adaptaciones del sistema después de su entrega para corregir defectos, mejorar rendimiento o adaptarse a cambios del entorno.</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>🎯 Objetivo Principal</h4>
+                        <p>Asegurar la continuidad operacional y evolución del software mediante modificaciones controladas y planificadas.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>📈 Impacto Económico</h4>
+                        <p>Representa el mayor porcentaje de los costes totales del ciclo de vida del sistema (hasta 70-80%).</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>🔧 Tipos Principales</h4>
+                        <p>Correctivo, Adaptativo, Evolutivo y Perfectivo según la metodología MÉTRICA v.3.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>⚙️ Técnicas Avanzadas</h4>
+                        <p>Ingeniería Inversa, Reestructuración, Ingeniería hacia delante y Reingeniería.</p>
+                    </div>
+                </div>
+
+                <h3>📋 Objetivos de Aprendizaje</h3>
+                <ul style="margin-left: 2rem; margin-top: 1rem;">
+                    <li>Comprender el concepto y características de la mantenibilidad</li>
+                    <li>Identificar y clasificar los diferentes tipos de mantenimiento</li>
+                    <li>Analizar los factores que influyen en los costes de mantenimiento</li>
+                    <li>Aplicar técnicas modernas de mantenimiento de software</li>
+                    <li>Utilizar herramientas especializadas para el mantenimiento</li>
+                </ul>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+                <p style="text-align: center; margin-top: 0.5rem;">Progreso del contenido: 100%</p>
+            </div>
+        </div>
+
+        <!-- Tab 2: Conceptos Base -->
+        <div id="conceptos" class="tab-content">
+            <div class="card">
+                <h2>🏗️ Concepto de Mantenibilidad</h2>
+                
+                <div class="highlight-box">
+                    <h3>Definición Formal (ANSI-IEEE)</h3>
+                    <p>"Modificación de un producto software después de su entrega para corregir defectos, mejorar el rendimiento u otros atributos, o adaptar el producto a un entorno modificado."</p>
+                </div>
+
+                <h3>🎯 Características Fundamentales de la Mantenibilidad</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>🔍 Analizabilidad</h4>
+                            <p>Capacidad del producto software para permitir el diagnóstico de deficiencias o causas de fallos, o la identificación de las partes que han de ser modificadas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>🔄 Cambiabilidad</h4>
+                            <p>Capacidad del producto software para permitir que una determinada modificación sea implementada.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>⚖️ Estabilidad</h4>
+                            <p>Capacidad del producto software para evitar efectos inesperados debidos a las modificaciones del software.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>✅ Comprobabilidad</h4>
+                            <p>Capacidad del producto software para permitir que el software modificado sea validado.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>📏 Conformidad</h4>
+                            <p>Capacidad del producto software para cumplir estándares o convenciones relacionadas con la mantenibilidad.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--bg-secondary);">
+                    <h3>💡 Importancia Práctica</h3>
+                    <p>La mantenibilidad es crucial porque determina:</p>
+                    <ul style="margin-left: 2rem; margin-top: 1rem;">
+                        <li>El tiempo necesario para realizar modificaciones</li>
+                        <li>El coste asociado a los cambios</li>
+                        <li>El riesgo de introducir nuevos errores</li>
+                        <li>La capacidad de evolución del sistema</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Tipos de Mantenimiento -->
+        <div id="tipos" class="tab-content">
+            <div class="card">
+                <h2>🔧 Tipos de Mantenimiento según MÉTRICA v.3</h2>
+                
+                <div class="info-grid">
+                    <div class="info-item" style="border-left-color: #dc3545;">
+                        <h4>🚨 Mantenimiento Correctivo</h4>
+                        <p><strong>Definición:</strong> Cambios realizados para corregir errores del software.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Corrección de bugs y defectos</li>
+                            <li>Solución de problemas funcionales</li>
+                            <li>Urgencia variable según criticidad</li>
+                        </ul>
+                        <p><strong>Ejemplo:</strong> Corregir un error de cálculo en nóminas</p>
+                    </div>
+                    
+                    <div class="info-item" style="border-left-color: #28a745;">
+                        <h4>🔄 Mantenimiento Adaptativo</h4>
+                        <p><strong>Definición:</strong> Modificaciones que afectan a los entornos en los que el sistema opera.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Cambios en el entorno operativo</li>
+                            <li>Nuevas versiones de SO o hardware</li>
+                            <li>Adaptación a nuevas regulaciones</li>
+                        </ul>
+                        <p><strong>Ejemplo:</strong> Migración a nueva versión de base de datos</p>
+                    </div>
+                    
+                    <div class="info-item" style="border-left-color: #ffc107;">
+                        <h4>📈 Mantenimiento Evolutivo</h4>
+                        <p><strong>Definición:</strong> Modificaciones para cubrir expansiones o cambios en las necesidades del usuario.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Nuevas funcionalidades</li>
+                            <li>Ampliación de capacidades</li>
+                            <li>Respuesta a nuevos requisitos</li>
+                        </ul>
+                        <p><strong>Ejemplo:</strong> Añadir módulo de facturación electrónica</p>
+                    </div>
+                    
+                    <div class="info-item" style="border-left-color: #6f42c1;">
+                        <h4>⚡ Mantenimiento Perfectivo</h4>
+                        <p><strong>Definición:</strong> Acciones para mejorar la calidad interna del sistema.</p>
+                        <p><strong>Características:</strong></p>
+                        <ul>
+                            <li>Optimización del rendimiento</li>
+                            <li>Mejora de la estructura del código</li>
+                            <li>Reducción de complejidad</li>
+                        </ul>
+                        <p><strong>Ejemplo:</strong> Refactorización para mejorar legibilidad</p>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--bg-secondary);">
+                    <h3>📊 Comparación de Clasificaciones</h3>
+                    <p>Diferentes autores proponen variaciones en la clasificación:</p>
+                    
+                    <div style="overflow-x: auto; margin-top: 1rem;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--bg-card);">
+                                    <th style="padding: 1rem; border: 1px solid var(--border-color);">MÉTRICA v.3</th>
+                                    <th style="padding: 1rem; border: 1px solid var(--border-color);">Lientz & Swanson</th>
+                                    <th style="padding: 1rem; border: 1px solid var(--border-color);">IEEE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Correctivo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Correctivo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Correctivo</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Adaptativo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Adaptativo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Adaptativo</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Evolutivo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Perfectivo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Perfectivo</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Perfectivo</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">-</td>
+                                    <td style="padding: 1rem; border: 1px solid var(--border-color);">Preventivo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Costes y Métricas -->
+        <div id="costes" class="tab-content">
+            <div class="card">
+                <h2>💰 Análisis de Costes de Mantenimiento</h2>
+                
+                <div class="highlight-box">
+                    <h3>🎯 Dato Clave</h3>
+                    <p>Los costes de mantenimiento representan el <strong>mayor porcentaje</strong> de los costes totales del ciclo de vida de un sistema (típicamente 60-80%).</p>
+                </div>
+
+                <h3>📊 Factores que Influyen en los Costes</h3>
+                
+                <div class="info-grid">
+                    <div class="card" style="background: var(--bg-secondary);">
+                        <h4>🔧 Factores Relacionados con el Software</h4>
+                        <ul style="margin-left: 1.5rem;">
+                            <li><strong>Calidad de la documentación:</strong> Mayor calidad = menor coste</li>
+                            <li><strong>Cohesión y acoplamiento de módulos:</strong> Alta cohesión, bajo acoplamiento = menor coste</li>
+                            <li><strong>Lenguaje de programación:</strong> Lenguajes de alto nivel facilitan mantenimiento</li>
+                            <li><strong>Configuración del producto:</strong> Arquitectura modular reduce costes</li>
+                            <li><strong>Calidad de las pruebas:</strong> Mejor testing = menor coste correctivo</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card" style="background: var(--bg-secondary);">
+                        <h4>🏢 Factores Externos</h4>
+                        <ul style="margin-left: 1.5rem;">
+                            <li><strong>Rotación del personal:</strong> Mayor rotación = mayor coste de aprendizaje</li>
+                            <li><strong>Dependencia del entorno de desarrollo:</strong> Entornos complejos aumentan costes</li>
+                            <li><strong>Disponibilidad de herramientas:</strong> Mejores herramientas reducen tiempo</li>
+                            <li><strong>Conocimiento del dominio:</strong> Experiencia reduce tiempo de análisis</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, var(--accent-color), #6bb6ff); color: white;">
+                    <h3>📐 Fórmula TCA de Boehm</h3>
+                    <div style="text-align: center; font-size: 1.2rem; margin: 1rem 0;">
+                        <strong>EMA = TCA × E</strong>
+                    </div>
+                    <p><strong>Donde:</strong></p>
+                    <ul style="margin-left: 2rem;">
+                        <li><strong>EMA:</strong> Esfuerzo de Mantenimiento Anual</li>
+                        <li><strong>TCA:</strong> Tráfico de Cambio Anual (% del sistema que se modifica)</li>
+                        <li><strong>E:</strong> Esfuerzo de Desarrollo inicial</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Ejemplo:</strong> Si un sistema requirió 100 personas-mes para desarrollarse y anualmente se modifica el 15%, el mantenimiento requerirá 15 personas-mes anuales.</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>📈 Distribución Típica de Costes</h4>
+                        <ul>
+                            <li>Correctivo: 15-20%</li>
+                            <li>Adaptativo: 20-25%</li>
+                            <li>Evolutivo: 50-60%</li>
+                            <li>Perfectivo: 5-10%</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>⏱️ Factores de Tiempo</h4>
+                        <ul>
+                            <li>Urgencia de los cambios</li>
+                            <li>Complejidad del análisis</li>
+                            <li>Tiempo de pruebas</li>
+                            <li>Coordinación con usuarios</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Técnicas y Herramientas -->
+        <div id="tecnicas" class="tab-content">
+            <div class="card">
+                <h2>🛠️ Técnicas Avanzadas de Mantenimiento</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>🔍 Ingeniería Inversa (Reverse Engineering)</h4>
+                            <p><strong>Definición:</strong> Proceso de análisis de un sistema para identificar sus componentes y sus interrelaciones, creando representaciones del sistema en otra forma o en un nivel de abstracción más alto.</p>
+                            <div style="margin-top: 1rem; background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                                <strong>Aplicaciones:</strong>
+                                <ul>
+                                    <li>Recuperación de documentación perdida</li>
+                                    <li>Comprensión de sistemas legacy</li>
+                                    <li>Análisis de arquitectura</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>🏗️ Reestructuración (Restructuring)</h4>
+                            <p><strong>Definición:</strong> Transformación de una representación a otra en el mismo nivel de abstracción, preservando el comportamiento externo del sistema.</p>
+                            <div style="margin-top: 1rem; background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                                <strong>Objetivos:</strong>
+                                <ul>
+                                    <li>Mejorar la estructura del código</li>
+                                    <li>Facilitar futuras modificaciones</li>
+                                    <li>Optimizar el rendimiento</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>⚡ Ingeniería hacia Delante (Forward Engineering)</h4>
+                            <p><strong>Definición:</strong> Proceso tradicional que va desde abstracciones de alto nivel y diseños lógicos hacia la implementación física del sistema.</p>
+                            <div style="margin-top: 1rem; background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                                <strong>Características:</strong>
+                                <ul>
+                                    <li>Desarrollo dirigido por modelos</li>
+                                    <li>Generación automática de código</li>
+                                    <li>Transformación de especificaciones</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="info-item">
+                            <h4>🔄 Reingeniería (Reengineering)</h4>
+                            <p><strong>Definición:</strong> Examen y modificación de un sistema para reconstruirlo en una nueva forma, incluyendo ingeniería inversa, reestructuración e ingeniería hacia delante.</p>
+                            <div style="margin-top: 1rem; background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                                <strong>Proceso Completo:</strong>
+                                <ul>
+                                    <li>Análisis del sistema existente</li>
+                                    <li>Rediseño de arquitectura</li>
+                                    <li>Implementación mejorada</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--bg-secondary);">
+                    <h3>🧰 Herramientas de Mantenimiento</h3>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>🔍 Herramientas de Ingeniería Inversa</h4>
+                            <ul>
+                                <li>Analizadores de código estático</li>
+                                <li>Extractores de arquitectura</li>
+                                <li>Visualizadores de dependencias</li>
+                                <li>Generadores de documentación</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>🏗️ Herramientas de Reestructuración</h4>
+                            <ul>
+                                <li>Refactoring automático</li>
+                                <li>Optimizadores de código</li>
+                                <li>Transformadores sintácticos</li>
+                                <li>Analizadores de complejidad</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>🔄 Herramientas de Reingeniería</h4>
+                            <ul>
+                                <li>Plataformas integradas de reingeniería</li>
+                                <li>Convertidores de lenguajes</li>
+                                <li>Migradores de datos</li>
+                                <li>Sistemas de transformación</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4>📊 Herramientas de Análisis</h4>
+                            <ul>
+                                <li>Analizadores de métricas</li>
+                                <li>Detectores de patrones</li>
+                                <li>Evaluadores de calidad</li>
+                                <li>Generadores de reportes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="ejercicios" class="tab-content">
+            <div class="quiz-container">
+                <div class="card">
+                    <h2>🎯 Ejercicios Prácticos - Mantenimiento de Sistemas</h2>
+                    <p>Responde estas preguntas para evaluar tu comprensión del tema. Las respuestas correctas están marcadas para facilitar el estudio.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%;" id="quiz-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 1 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">1</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Cuál es la definición de mantenibilidad según ANSI-IEEE?</h3>
+                    <div class="options">
+                        <div class="option">Capacidad de un sistema para funcionar sin errores</div>
+                        <div class="option correct">Modificación de un producto software después de su entrega para corregir defectos, mejorar rendimiento o adaptarse a cambios</div>
+                        <div class="option">Proceso de desarrollo de software usando metodologías ágiles</div>
+                        <div class="option">Técnica de programación orientada a objetos</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">2</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Cuáles son los cuatro tipos de mantenimiento según MÉTRICA v.3?</h3>
+                    <div class="options">
+                        <div class="option">Funcional, Estructural, Técnico, Operativo</div>
+                        <div class="option correct">Correctivo, Adaptativo, Evolutivo, Perfectivo</div>
+                        <div class="option">Preventivo, Predictivo, Reactivo, Proactivo</div>
+                        <div class="option">Inicial, Intermedio, Avanzado, Experto</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">3</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Qué tipo de mantenimiento se aplica cuando se añade un nuevo módulo de facturación electrónica a un sistema existente?</h3>
+                    <div class="options">
+                        <div class="option">Mantenimiento Correctivo</div>
+                        <div class="option">Mantenimiento Adaptativo</div>
+                        <div class="option correct">Mantenimiento Evolutivo</div>
+                        <div class="option">Mantenimiento Perfectivo</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">4</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Qué característica de la mantenibilidad se refiere a evitar efectos inesperados por las modificaciones?</h3>
+                    <div class="options">
+                        <div class="option">Analizabilidad</div>
+                        <div class="option">Cambiabilidad</div>
+                        <div class="option correct">Estabilidad</div>
+                        <div class="option">Comprobabilidad</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">5</div>
+                        <div class="difficulty avanzado">Avanzado</div>
+                    </div>
+                    <h3>En la fórmula TCA de Boehm (EMA = TCA × E), si un sistema requirió 120 personas-mes para desarrollarse y anualmente se modifica el 20%, ¿cuál será el esfuerzo de mantenimiento anual?</h3>
+                    <div class="options">
+                        <div class="option">18 personas-mes</div>
+                        <div class="option correct">24 personas-mes</div>
+                        <div class="option">30 personas-mes</div>
+                        <div class="option">36 personas-mes</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">6</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Qué porcentaje aproximado representan los costes de mantenimiento en el ciclo de vida total del software?</h3>
+                    <div class="options">
+                        <div class="option">20-30%</div>
+                        <div class="option">40-50%</div>
+                        <div class="option correct">60-80%</div>
+                        <div class="option">90-95%</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">7</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Cuál es la diferencia principal entre Ingeniería Inversa y Reingeniería?</h3>
+                    <div class="options">
+                        <div class="option correct">Ingeniería Inversa analiza para comprender, Reingeniería incluye reconstrucción</div>
+                        <div class="option">No hay diferencia, son sinónimos</div>
+                        <div class="option">Ingeniería Inversa es más costosa que Reingeniería</div>
+                        <div class="option">Reingeniería solo se aplica a sistemas legacy</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">8</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Qué factor externo influye significativamente en los costes de mantenimiento?</h3>
+                    <div class="options">
+                        <div class="option">El color de la interfaz de usuario</div>
+                        <div class="option correct">La rotación del personal</div>
+                        <div class="option">El nombre del proyecto</div>
+                        <div class="option">La fecha de entrega inicial</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">9</div>
+                        <div class="difficulty avanzado">Avanzado</div>
+                    </div>
+                    <h3>¿Qué técnica sería más apropiada para mejorar la estructura interna del código sin cambiar su comportamiento externo?</h3>
+                    <div class="options">
+                        <div class="option">Ingeniería Inversa</div>
+                        <div class="option correct">Reestructuración</div>
+                        <div class="option">Ingeniería hacia delante</div>
+                        <div class="option">Mantenimiento Correctivo</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">10</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Cuál de los siguientes NO es una característica de la mantenibilidad?</h3>
+                    <div class="options">
+                        <div class="option">Analizabilidad</div>
+                        <div class="option">Cambiabilidad</div>
+                        <div class="option correct">Portabilidad</div>
+                        <div class="option">Comprobabilidad</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">11</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Qué tipo de mantenimiento se realiza para migrar una aplicación a una nueva versión del sistema operativo?</h3>
+                    <div class="options">
+                        <div class="option">Correctivo</div>
+                        <div class="option correct">Adaptativo</div>
+                        <div class="option">Evolutivo</div>
+                        <div class="option">Perfectivo</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 12 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">12</div>
+                        <div class="difficulty avanzado">Avanzado</div>
+                    </div>
+                    <h3>¿Qué relación existe entre cohesión, acoplamiento y costes de mantenimiento?</h3>
+                    <div class="options">
+                        <div class="option">Alta cohesión y alto acoplamiento reducen costes</div>
+                        <div class="option correct">Alta cohesión y bajo acoplamiento reducen costes</div>
+                        <div class="option">Baja cohesión y bajo acoplamiento reducen costes</div>
+                        <div class="option">No existe relación entre estos factores</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 13 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">13</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Cuál es el objetivo principal del mantenimiento perfectivo?</h3>
+                    <div class="options">
+                        <div class="option">Corregir errores funcionales</div>
+                        <div class="option">Añadir nuevas funcionalidades</div>
+                        <div class="option correct">Mejorar la calidad interna del sistema</div>
+                        <div class="option">Adaptar el sistema a nuevos entornos</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 14 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">14</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Qué metodología española específica define los tipos de mantenimiento estudiados?</h3>
+                    <div class="options">
+                        <div class="option">CMMI</div>
+                        <div class="option correct">MÉTRICA v.3</div>
+                        <div class="option">ISO 9001</div>
+                        <div class="option">ITIL</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 15 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">15</div>
+                        <div class="difficulty avanzado">Avanzado</div>
+                    </div>
+                    <h3>¿Qué proceso combina ingeniería inversa, reestructuración e ingeniería hacia delante?</h3>
+                    <div class="options">
+                        <div class="option">Refactoring</div>
+                        <div class="option">Debugging</div>
+                        <div class="option correct">Reingeniería</div>
+                        <div class="option">Testing</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 16 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">16</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Cuál es la distribución típica de costes más alta en el mantenimiento?</h3>
+                    <div class="options">
+                        <div class="option">Correctivo (15-20%)</div>
+                        <div class="option">Adaptativo (20-25%)</div>
+                        <div class="option correct">Evolutivo (50-60%)</div>
+                        <div class="option">Perfectivo (5-10%)</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 17 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">17</div>
+                        <div class="difficulty basico">Básico</div>
+                    </div>
+                    <h3>¿Qué característica permite validar el software modificado?</h3>
+                    <div class="options">
+                        <div class="option">Analizabilidad</div>
+                        <div class="option">Estabilidad</div>
+                        <div class="option">Cambiabilidad</div>
+                        <div class="option correct">Comprobabilidad</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 18 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">18</div>
+                        <div class="difficult avanzado">Avanzado</div>
+                    </div>
+                    <h3>¿Qué factor relacionado con el software NO influye directamente en los costes de mantenimiento?</h3>
+                    <div class="options">
+                        <div class="option">Calidad de la documentación</div>
+                        <div class="option">Lenguaje de programación</div>
+                        <div class="option correct">Color del logotipo de la empresa</div>
+                        <div class="option">Configuración del producto</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 19 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">19</div>
+                        <div class="difficulty intermedio">Intermedio</div>
+                    </div>
+                    <h3>¿Cuál es el proceso que va desde abstracciones de alto nivel hacia la implementación física?</h3>
+                    <div class="options">
+                        <div class="option">Ingeniería Inversa</div>
+                        <div class="option correct">Ingeniería hacia delante</div>
+                        <div class="option">Reestructuración</div>
+                        <div class="option">Reingeniería</div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 20 -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">20</div>
+                        <div class="difficulty avanzado">Avanzado</div>
+                    </div>
+                    <h3>¿Qué debe incluir una estrategia integral de mantenimiento de sistemas?</h3>
+                    <div class="options">
+                        <div class="option">Solo herramientas de debugging</div>
+                        <div class="option">Únicamente documentación técnica</div>
+                        <div class="option correct">Combinación de técnicas, herramientas, procesos y gestión de costes</div>
+                        <div class="option">Exclusivamente personal especializado</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos Clave</h2>
+                
+                <div class="glossary-grid">
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mantenibilidad</div>
+                        <p>Capacidad del software para ser modificado, incluyendo correcciones, mejoras o adaptaciones después de su entrega.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Analizabilidad</div>
+                        <p>Capacidad del producto software para permitir el diagnóstico de deficiencias y la identificación de partes a modificar.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Cambiabilidad</div>
+                        <p>Capacidad del producto software para permitir que una determinada modificación sea implementada.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Estabilidad</div>
+                        <p>Capacidad del producto software para evitar efectos inesperados debidos a las modificaciones.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Comprobabilidad</div>
+                        <p>Capacidad del producto software para permitir que el software modificado sea validado.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mantenimiento Correctivo</div>
+                        <p>Cambios realizados para corregir errores del software detectados durante su operación.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mantenimiento Adaptativo</div>
+                        <p>Modificaciones que afectan a los entornos en los que el sistema opera (hardware, software base, regulaciones).</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mantenimiento Evolutivo</div>
+                        <p>Modificaciones para cubrir expansiones o cambios en las necesidades del usuario, añadiendo nuevas funcionalidades.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Mantenimiento Perfectivo</div>
+                        <p>Acciones para mejorar la calidad interna del sistema sin cambiar su funcionalidad externa.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Ingeniería Inversa</div>
+                        <p>Proceso de análisis de un sistema para identificar componentes e interrelaciones, creando representaciones en niveles de abstracción más altos.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Reestructuración</div>
+                        <p>Transformación de una representación a otra en el mismo nivel de abstracción, preservando el comportamiento externo.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Reingeniería</div>
+                        <p>Examen y modificación de un sistema para reconstruirlo en una nueva forma, combinando múltiples técnicas de mantenimiento.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">TCA (Tráfico de Cambio Anual)</div>
+                        <p>Porcentaje del sistema que se modifica anualmente, utilizado en la fórmula de Boehm para calcular esfuerzo de mantenimiento.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Cohesión</div>
+                        <p>Grado en que los elementos de un módulo están relacionados funcionalmente. Alta cohesión facilita el mantenimiento.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">Acoplamiento</div>
+                        <p>Grado de interdependencia entre módulos. Bajo acoplamiento facilita el mantenimiento y reduce costes.</p>
+                    </div>
+                    
+                    <div class="glossary-item">
+                        <div class="glossary-term">MÉTRICA v.3</div>
+                        <p>Metodología española para el desarrollo de sistemas de información que define los procesos de mantenimiento.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--bg-secondary); margin-top: 2rem;">
+                    <h3>🎯 Consejos para el Examen</h3>
+                    <ul style="margin-left: 2rem;">
+                        <li><strong>Memoriza los 4 tipos de mantenimiento MÉTRICA v.3:</strong> Correctivo, Adaptativo, Evolutivo, Perfectivo</li>
+                        <li><strong>Recuerda las 5 características de mantenibilidad:</strong> Analizabilidad, Cambiabilidad, Estabilidad, Comprobabilidad, Conformidad</li>
+                        <li><strong>Conoce la fórmula TCA de Boehm:</strong> EMA = TCA × E</li>
+                        <li><strong>Los costes de mantenimiento representan 60-80% del ciclo de vida total</strong></li>
+                        <li><strong>Diferencia las 4 técnicas:</strong> Ingeniería Inversa, Reestructuración, Ingeniería hacia delante, Reingeniería</li>
+                        <li><strong>El mantenimiento evolutivo suele tener mayor coste (50-60%)</strong></li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: var(--accent-color); color: white; margin-top: 2rem;">
+                    <h3>📖 Referencias y Enlaces</h3>
+                    <ul style="margin-left: 2rem;">
+                        <li>MÉTRICA v.3 - Metodología oficial española</li>
+                        <li>Norma ANSI-IEEE para terminología de mantenimiento</li>
+                        <li>Modelos de coste de Boehm</li>
+                        <li>Técnicas de ingeniería de software IEEE</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        }
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Quiz Progress
+        function updateQuizProgress() {
+            const questions = document.querySelectorAll('.question-card');
+            const progressBar = document.getElementById('quiz-progress');
+            if (progressBar) {
+                const progress = (questions.length / 20) * 100;
+                progressBar.style.width = progress + '%';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            updateQuizProgress();
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close any open modals or reset to first tab
+                showTab('resumen');
+                document.querySelector('.tab').classList.add('active');
+            }
+        });
+
+        // Add smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

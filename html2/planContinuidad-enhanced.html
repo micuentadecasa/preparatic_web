@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Continuidad y Contingencia del Negocio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #4ade80;
+            --error-color: #f87171;
+            --warning-color: #fbbf24;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color), #3b82f6);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .list-styled {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-styled li {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .list-styled li:before {
+            content: "✓";
+            position: absolute;
+            left: 1rem;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .phase-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .phase-timeline:before {
+            content: "";
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .phase-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .phase-item:before {
+            content: attr(data-phase);
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+            width: 3rem;
+            height: 3rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+        }
+
+        .options li.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .options li.correct:before {
+            content: "✓ CORRECTO: ";
+            font-weight: bold;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .difficulty.avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .glossary-term {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .glossary-term strong {
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .header { padding: 1rem; flex-direction: column; gap: 1rem; }
+            .header h1 { font-size: 1.4rem; text-align: center; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
+            .info-grid { grid-template-columns: 1fr; }
+            .comparison-table { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Plan de Continuidad y Contingencia del Negocio</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab(0)">Resumen General</div>
+            <div class="tab" onclick="showTab(1)">Normativa y Estándares</div>
+            <div class="tab" onclick="showTab(2)">Tipos de Planes</div>
+            <div class="tab" onclick="showTab(3)">Metodología INCIBE</div>
+            <div class="tab" onclick="showTab(4)">Implementación</div>
+            <div class="tab" onclick="showTab(5)">Ejercicios Prácticos</div>
+            <div class="tab" onclick="showTab(6)">Recursos y FAQ</div>
+        </div>
+
+        <!-- Tab 1: Resumen General -->
+        <div id="tab-0" class="tab-content active">
+            <div class="highlight-box">
+                <h3>🎯 Objetivos de Aprendizaje</h3>
+                <ul class="list-styled">
+                    <li>Comprender la gestión de la continuidad del negocio</li>
+                    <li>Conocer las normativas ISO 22301, ENS e ISO 27001</li>
+                    <li>Dominar las fases de implementación según INCIBE</li>
+                    <li>Aplicar conceptos en exámenes de administración pública</li>
+                </ul>
+            </div>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h2>📊 Conceptos Clave</h2>
+                    <h3>Continuidad del Negocio</h3>
+                    <p>Capacidad de una organización para continuar suministrando productos y servicios en plazos aceptables con una capacidad predefinida durante una disrupción.</p>
+                    
+                    <h3>Plan de Continuidad (PCN)</h3>
+                    <p>Información documentada que orienta a una organización para responder a una disrupción y reanudar, recuperar y restablecer la entrega de productos y servicios.</p>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Beneficios y Objetivos</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <h3>Beneficios</h3>
+                            <ul class="list-styled">
+                                <li>Previene o minimiza pérdidas</li>
+                                <li>Clasifica activos para priorizar protección</li>
+                                <li>Mejora imagen y confianza</li>
+                                <li>Conoce tiempos críticos de recuperación</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Objetivos</h3>
+                            <ul class="list-styled">
+                                <li>Análisis crítico de la organización</li>
+                                <li>Identificación y evaluación de riesgos</li>
+                                <li>Establecimiento de medidas preventivas</li>
+                                <li>Guía para el personal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📈 Estadísticas Importantes</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Definición</th>
+                            <th>Importancia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RPO</strong></td>
+                            <td>Punto de Recuperación Objetivo</td>
+                            <td>Determina la política de backup necesaria</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RTO</strong></td>
+                            <td>Tiempo de Recuperación Objetivo</td>
+                            <td>Tiempo máximo aceptable sin operación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MTD</strong></td>
+                            <td>Tiempo Máximo Tolerable de Caída</td>
+                            <td>Evita consecuencias desastrosas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ROL</strong></td>
+                            <td>Nivel de Recuperación de Servicio</td>
+                            <td>Define el servicio mínimo aceptable</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: Normativa y Estándares -->
+        <div id="tab-1" class="tab-content">
+            <div class="info-grid">
+                <div class="card">
+                    <h2>🏛️ ISO 22301</h2>
+                    <h3>Características Principales</h3>
+                    <ul class="list-styled">
+                        <li>Basada en BS 25999-2</li>
+                        <li>Define requisitos para SGCN</li>
+                        <li>Estructurada en 10 capítulos</li>
+                        <li>Enfoque Plan-Do-Check-Act</li>
+                        <li>Estándar certificable y auditable</li>
+                    </ul>
+
+                    <h3>Política de Continuidad del Negocio</h3>
+                    <ul class="list-styled">
+                        <li>Compromiso de la Dirección</li>
+                        <li>Alineada con propósito organizacional</li>
+                        <li>Marco para objetivos de continuidad</li>
+                        <li>Compromiso de mejora continua</li>
+                        <li>Información documentada disponible</li>
+                        <li>Comunicada y revisada periódicamente</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>🛡️ ENS - Plan de Continuidad</h2>
+                    <h3>Requisitos Legales</h3>
+                    <p><strong>Artículo 25 RD 3/2010:</strong> "Los sistemas dispondrán de copias de seguridad y establecerán los mecanismos necesarios para garantizar la continuidad de las operaciones"</p>
+                    
+                    <h3>Aplicabilidad</h3>
+                    <div class="highlight-box">
+                        <h3>⚠️ Importante</h3>
+                        <p>Solo aplica a valoraciones de dimensión de Disponibilidad de <strong>nivel ALTO</strong>. No aplica a niveles medio ni bajo.</p>
+                    </div>
+
+                    <h3>Aspectos del Plan (Nivel Alto)</h3>
+                    <ul class="list-styled">
+                        <li>Identificar funciones y responsabilidades</li>
+                        <li>Previsión de medios alternativos</li>
+                        <li>Acuerdos/contratos con proveedores</li>
+                        <li>Formación específica del personal</li>
+                        <li>Integración con otros planes organizacionales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔒 ISO 27001 - Seguridad de la Información</h2>
+                <h3>Objetivos de Control</h3>
+                <p><strong>Objetivo 17.1:</strong> "La continuidad de la seguridad de la información se debe incluir en los sistemas de gestión de la continuidad de negocio de la organización"</p>
+                
+                <h3>Controles Relacionados</h3>
+                <ul class="list-styled">
+                    <li>Planificación de la continuidad</li>
+                    <li>Implementación y verificación</li>
+                    <li>Revisión y evaluación periódica</li>
+                    <li>Preservación de confidencialidad, integridad y disponibilidad</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>📋 Documentación del SGCN</h2>
+                <div class="phase-timeline">
+                    <div class="phase-item" data-phase="1">
+                        <h3>Contexto Organizacional</h3>
+                        <p>Alcance, partes interesadas, requisitos legales y reglamentarios</p>
+                    </div>
+                    <div class="phase-item" data-phase="2">
+                        <h3>Política y Objetivos</h3>
+                        <p>Política de continuidad del negocio y objetivos específicos</p>
+                    </div>
+                    <div class="phase-item" data-phase="3">
+                        <h3>Análisis y Evaluación</h3>
+                        <p>BIA (Análisis del Impacto) y evaluación de riesgos</p>
+                    </div>
+                    <div class="phase-item" data-phase="4">
+                        <h3>Estrategias y Planes</h3>
+                        <p>Soluciones de continuidad y procedimientos de recuperación</p>
+                    </div>
+                    <div class="phase-item" data-phase="5">
+                        <h3>Pruebas y Mejora</h3>
+                        <p>Programas de pruebas, evaluación del desempeño y mejora continua</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Tipos de Planes -->
+        <div id="tab-2" class="tab-content">
+            <div class="info-grid">
+                <div class="card">
+                    <h2>🏢 Plan de Continuidad de Negocio (PCN)</h2>
+                    <h3>Alcance Integral</h3>
+                    <p>Establece la continuidad de una organización desde múltiples perspectivas:</p>
+                    <ul class="list-styled">
+                        <li>Infraestructura TIC</li>
+                        <li>Recursos humanos</li>
+                        <li>Mobiliario y equipamiento</li>
+                        <li>Sistemas de comunicación</li>
+                        <li>Logística empresarial</li>
+                        <li>Sistemas industriales</li>
+                        <li>Infraestructuras físicas</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <h3>💡 Nota Importante</h3>
+                        <p>Cada ámbito tendrá su plan específico, ya que no es lo mismo una inundación en almacén que un corte eléctrico en sala de servidores.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>💻 Plan de Continuidad TIC (PCTIC)</h2>
+                    <h3>Características</h3>
+                    <ul class="list-styled">
+                        <li>Forma parte del PCN general</li>
+                        <li>Restringido al ámbito tecnológico</li>
+                        <li>Mismo proceso de elaboración que PCN</li>
+                        <li>Alcance generalmente menor que PCN</li>
+                    </ul>
+
+                    <h3>Tres Subplanes del PCTIC</h3>
+                    <div class="phase-timeline">
+                        <div class="phase-item" data-phase="1">
+                            <h3>Plan de Respaldo</h3>
+                            <p><strong>ANTES</strong> de la materialización de la amenaza</p>
+                            <p>Contempla todas las medidas preventivas necesarias</p>
+                        </div>
+                        <div class="phase-item" data-phase="2">
+                            <h3>Plan de Emergencia</h3>
+                            <p><strong>DURANTE</strong> la materialización de la amenaza</p>
+                            <p>Medidas paliativas y minimizadoras. Incluye árboles de decisión y hojas de contactos</p>
+                        </div>
+                        <div class="phase-item" data-phase="3">
+                            <h3>Plan de Recuperación</h3>
+                            <p><strong>DESPUÉS</strong> de controlar la amenaza</p>
+                            <p>Acciones: Preparación → Movilización → Recuperación → Verificación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🚨 Plan de Recuperación ante Desastres (PRD)</h2>
+                <h3>Características</h3>
+                <ul class="list-styled">
+                    <li>Análisis menos profundo</li>
+                    <li>Enfoque más técnico</li>
+                    <li>Plan reactivo ante catástrofes</li>
+                    <li>Respuesta específica a desastres</li>
+                </ul>
+
+                <h3>Diferencias entre Tipos de Plan</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>PCN</th>
+                            <th>PCTIC</th>
+                            <th>PRD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Alcance</strong></td>
+                            <td>Toda la organización</td>
+                            <td>Solo ámbito TIC</td>
+                            <td>Técnico específico</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enfoque</strong></td>
+                            <td>Integral y preventivo</td>
+                            <td>Tecnológico completo</td>
+                            <td>Reactivo ante desastre</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Análisis</strong></td>
+                            <td>Profundo y completo</td>
+                            <td>Profundo en TIC</td>
+                            <td>Menos profundo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Aplicación</strong></td>
+                            <td>Múltiples escenarios</td>
+                            <td>Incidentes tecnológicos</td>
+                            <td>Catástrofes específicas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Prioridades en Planes de Continuidad</h2>
+                <div class="phase-timeline">
+                    <div class="phase-item" data-phase="1">
+                        <h3>Evitar Pérdidas Humanas</h3>
+                        <p>Máxima prioridad: protección de vidas y seguridad del personal</p>
+                    </div>
+                    <div class="phase-item" data-phase="2">
+                        <h3>Reanudar Operaciones</h3>
+                        <p>Restaurar servicios críticos en el menor tiempo posible</p>
+                    </div>
+                    <div class="phase-item" data-phase="3">
+                        <h3>Conexiones Críticas</h3>
+                        <p>Mantener contacto con clientes principales y proveedores esenciales</p>
+                    </div>
+                    <div class="phase-item" data-phase="4">
+                        <h3>Confianza Organizacional</h3>
+                        <p>Preservar la reputación y credibilidad de la organización</p>
+                    </div>
+                    <div class="phase-item" data-phase="5">
+                        <h3>Protección Ambiental</h3>
+                        <p>Minimizar impacto medioambiental de la interrupción</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Metodología INCIBE -->
+        <div id="tab-3" class="tab-content">
+            <div class="highlight-box">
+                <h3>📊 Metodología INCIBE - 6 Fases</h3>
+                <p>Instituto Nacional de Ciberseguridad de España establece una metodología estructurada para la elaboración de planes de continuidad</p>
+            </div>
+
+            <div class="phase-timeline">
+                <div class="phase-item" data-phase="0">
+                    <h3>FASE 0: Determinación del Alcance</h3>
+                    <div class="card">
+                        <h3>Objetivo</h3>
+                        <p>Determinar el coste del proyecto y su viabilidad</p>
+                        
+                        <h3>Actividades</h3>
+                        <ul class="list-styled">
+                            <li>Definir elementos foco del plan de continuidad</li>
+                            <li>Evaluar viabilidad económica del proyecto</li>
+                            <li>Establecer límites y restricciones</li>
+                        </ul>
+
+                        <h3>Enfoques Posibles</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Por Activo</th>
+                                    <th>Por Proceso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Apropiado cuando lo dirige el equipo Informático</td>
+                                    <td>Apropiado cuando lo lidera el Negocio</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="phase-item" data-phase="1">
+                    <h3>FASE 1: Análisis de la Organización</h3>
+                    <div class="card">
+                        <h3>Proceso</h3>
+                        <p>Se inicia con entrevistas a usuarios finales para elaborar el <strong>Análisis de Impacto sobre el Negocio (BIA)</strong></p>
+
+                        <h3>Métricas a Determinar</h3>
+                        <div class="info-grid">
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4><strong>RPO</strong> - Punto de Recuperación Objetivo</h4>
+                                <p>Cantidad de pérdida de datos tolerable durante un desastre. Determina la política de backup necesaria.</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4><strong>RTO</strong> - Tiempo de Recuperación Objetivo</h4>
+                                <p>Tiempo máximo aceptable que el negocio puede estar no operativo.</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4><strong>MTD</strong> - Tiempo Máximo Tolerable</h4>
+                                <p>Tiempo antes de que se produzcan consecuencias desastrosas. Relacionado con el negocio.</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4><strong>ROL</strong> - Niveles Mínimos de Recuperación</h4>
+                                <p>Nivel de servicio mínimo de recuperación aunque no sea óptimo.</p>
+                            </div>
+                        </div>
+
+                        <h3>Análisis de Riesgos</h3>
+                        <ul class="list-styled">
+                            <li>Amenazas que impliquen indisponibilidad</li>
+                            <li>Probabilidad e impacto de cada amenaza</li>
+                            <li>Producto probabilidad × impacto</li>
+                            <li>Plan de tratamiento de riesgos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="phase-item" data-phase="2">
+                    <h3>FASE 2: Estrategia de Continuidad</h3>
+                    <div class="card">
+                        <h3>Evaluación de Recursos</h3>
+                        <p>Determinar si recursos actuales permiten cubrir el MTD establecido</p>
+                        
+                        <h3>Recursos Afectables</h3>
+                        <div class="info-grid">
+                            <div style="background: var(--success-color); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <h4>👥 Personal</h4>
+                            </div>
+                            <div style="background: var(--accent-color); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <h4>🏢 Locales</h4>
+                            </div>
+                            <div style="background: var(--warning-color); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <h4>💻 Tecnología</h4>
+                            </div>
+                            <div style="background: var(--error-color); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <h4>📊 Información</h4>
+                            </div>
+                            <div style="background: var(--text-secondary); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <h4>🤝 Proveedores</h4>
+                            </div>
+                        </div>
+
+                        <h3>Definiciones Clave</h3>
+                        <ul class="list-styled">
+                            <li>Equipo de crisis multidisciplinar</li>
+                            <li>Roles y responsabilidades</li>
+                            <li>Plan de comunicación (único interlocutor)</li>
+                            <li>Coste y viabilidad de implantación</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="phase-item" data-phase="3">
+                    <h3>FASE 3: Respuesta a la Contingencia</h3>
+                    <div class="card">
+                        <h3>Flujo de Decisiones</h3>
+                        <p>Determina el proceso de toma de decisiones según particularidades de la interrupción</p>
+                        
+                        <h3>Documentación Principal</h3>
+                        <ul class="list-styled">
+                            <li>Plan de Crisis o de Incidentes</li>
+                            <li>Planes operativos de recuperación de entornos</li>
+                            <li>Procedimientos técnicos de trabajo</li>
+                        </ul>
+
+                        <h3>Implementación de Estrategias</h3>
+                        <p>Se implementan las iniciativas definidas en la fase anterior, creando la documentación operativa necesaria</p>
+                    </div>
+                </div>
+
+                <div class="phase-item" data-phase="4">
+                    <h3>FASE 4: Pruebas, Mantenimiento y Revisión</h3>
+                    <div class="card">
+                        <h3>Requisitos de Pruebas</h3>
+                        <div class="highlight-box">
+                            <h3>⏰ Frecuencia Mínima</h3>
+                            <p><strong>Al menos una vez al año</strong> con planificación previa</p>
+                        </div>
+
+                        <h3>Personal Implicado</h3>
+                        <ul class="list-styled">
+                            <li>Personal técnico de la prueba</li>
+                            <li>Usuario del aplicativo</li>
+                            <li>Personal externo implicado</li>
+                        </ul>
+
+                        <h3>Tipos de Fallos a Probar</h3>
+                        <div class="info-grid">
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4>⚡ Fallo Eléctrico</h4>
+                                <p>Interrupción del suministro eléctrico</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4>📚 Repositorios</h4>
+                                <p>Tiempos de recuperación documentales</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4>💼 Aplicaciones Críticas</h4>
+                                <p>Recuperación de sistemas de negocio</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4>🌐 Acceso Remoto</h4>
+                                <p>Conexión desde ubicación externa</p>
+                            </div>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4>🔄 Entornos Replicados</h4>
+                                <p>Funcionamiento de clusters</p>
+                            </div>
+                        </div>
+
+                        <h3>Planes de Mantenimiento</h3>
+                        <ul class="list-styled">
+                            <li>Actualización ante cambios organizacionales</li>
+                            <li>Revisión periódica de información</li>
+                            <li>Garantía de capacidad de recuperación</li>
+                            <li>Cohesión del personal implicado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="phase-item" data-phase="5">
+                    <h3>FASE 5: Plan de Concienciación</h3>
+                    <div class="card">
+                        <h3>Público Objetivo</h3>
+                        <ul class="list-styled">
+                            <li>Todo el personal de la organización</li>
+                            <li>Especial énfasis en personal responsable</li>
+                            <li>Personal técnico especializado</li>
+                            <li>Participantes en equipo de crisis</li>
+                        </ul>
+
+                        <h3>Objetivos de Concienciación</h3>
+                        <ul class="list-styled">
+                            <li>Conocimiento del Plan de Continuidad</li>
+                            <li>Comprensión de su importancia</li>
+                            <li>Claridad sobre expectativas individuales</li>
+                            <li>Preparación para actuación en crisis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Implementación -->
+        <div id="tab-4" class="tab-content">
+            <div class="card">
+                <h2>🎯 Ayuda y Beneficios del Plan</h2>
+                <div class="info-grid">
+                    <div>
+                        <h3>El Plan Ayuda A:</h3>
+                        <ul class="list-styled">
+                            <li>Mantener nivel de servicios en límites definidos</li>
+                            <li>Establecer punto de recuperación mínimo</li>
+                            <li>Recuperar situación antes del incidente</li>
+                            <li>Analizar resultados y motivos</li>
+                            <li>Evitar interrupciones de actividad</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Beneficios Clave:</h3>
+                        <ul class="list-styled">
+                            <li>Prevención o minimización de pérdidas</li>
+                            <li>Clasificación de activos por prioridad</li>
+                            <li>Conocimiento de tiempos críticos</li>
+                            <li>Mejora de imagen organizacional</li>
+                            <li>Revalorización de confianza</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🚀 Proceso de Implementación Completo</h2>
+                <div class="phase-timeline">
+                    <div class="phase-item" data-phase="1">
+                        <h3>Análisis Inicial</h3>
+                        <ul class="list-styled">
+                            <li>Determinar alcance del proyecto</li>
+                            <li>Realizar entrevistas con usuarios</li>
+                            <li>Elaborar BIA (Business Impact Analysis)</li>
+                            <li>Establecer métricas críticas (RPO, RTO, MTD, ROL)</li>
+                        </ul>
+                    </div>
+
+                    <div class="phase-item" data-phase="2">
+                        <h3>Análisis de Riesgos</h3>
+                        <ul class="list-styled">
+                            <li>Identificar amenazas de indisponibilidad</li>
+                            <li>Evaluar probabilidad e impacto</li>
+                            <li>Crear matriz de riesgos</li>
+                            <li>Desarrollar plan de tratamiento</li>
+                        </ul>
+                    </div>
+
+                    <div class="phase-item" data-phase="3">
+                        <h3>Estrategia y Recursos</h3>
+                        <ul class="list-styled">
+                            <li>Evaluar recursos actuales vs MTD</li>
+                            <li>Formar equipo de crisis multidisciplinar</li>
+                            <li>Definir plan de comunicación</li>
+                            <li>Calcular coste de implementación</li>
+                        </ul>
+                    </div>
+
+                    <div class="phase-item" data-phase="4">
+                        <h3>Documentación</h3>
+                        <ul class="list-styled">
+                            <li>Crear Plan de Crisis</li>
+                            <li>Desarrollar planes operativos</li>
+                            <li>Establecer procedimientos técnicos</li>
+                            <li>Definir flujo de toma de decisiones</li>
+                        </ul>
+                    </div>
+
+                    <div class="phase-item" data-phase="5">
+                        <h3>Pruebas y Validación</h3>
+                        <ul class="list-styled">
+                            <li>Planificar pruebas anuales mínimas</li>
+                            <li>Probar escenarios de fallos críticos</li>
+                            <li>Validar tiempos de recuperación</li>
+                            <li>Documentar resultados y mejoras</li>
+                        </ul>
+                    </div>
+
+                    <div class="phase-item" data-phase="6">
+                        <h3>Mantenimiento Continuo</h3>
+                        <ul class="list-styled">
+                            <li>Actualizar ante cambios organizacionales</li>
+                            <li>Formar y concienciar personal</li>
+                            <li>Revisar y mejorar continuamente</li>
+                            <li>Mantener cohesión del equipo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Lista de Verificación para Implementación</h2>
+                <h3>Preparación</h3>
+                <ul class="list-styled">
+                    <li>Compromiso de la dirección obtenido</li>
+                    <li>Presupuesto aprobado y recursos asignados</li>
+                    <li>Equipo de proyecto constituido</li>
+                    <li>Alcance del proyecto definido claramente</li>
+                </ul>
+
+                <h3>Desarrollo</h3>
+                <ul class="list-styled">
+                    <li>BIA completado con métricas definidas</li>
+                    <li>Análisis de riesgos finalizado</li>
+                    <li>Estrategias de continuidad establecidas</li>
+                    <li>Documentación de planes creada</li>
+                </ul>
+
+                <h3>Validación</h3>
+                <ul class="list-styled">
+                    <li>Pruebas piloto realizadas</li>
+                    <li>Personal formado adecuadamente</li>
+                    <li>Procedimientos validados</li>
+                    <li>Plan de mantenimiento establecido</li>
+                </ul>
+
+                <h3>Operación</h3>
+                <ul class="list-styled">
+                    <li>Monitorización continua implementada</li>
+                    <li>Revisiones periódicas programadas</li>
+                    <li>Actualizaciones ante cambios</li>
+                    <li>Mejora continua aplicada</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 6: Ejercicios Prácticos -->
+        <div id="tab-5" class="tab-content">
+            <div class="quiz-container">
+                <div class="highlight-box">
+                    <h3>📝 Examen de Preparación: Planes de Continuidad y Contingencia</h3>
+                    <p>20 preguntas tipo test basadas en el contenido del tema. Las respuestas correctas están marcadas para facilitar el estudio.</p>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>1. Según la ISO 22301, ¿qué es la continuidad del negocio?</h4>
+                    <ul class="options">
+                        <li>Un proceso de recuperación tras desastres</li>
+                        <li class="correct">La capacidad de continuar suministrando productos y servicios en plazos aceptables durante una disrupción</li>
+                        <li>Un plan de emergencias para evacuación</li>
+                        <li>Un sistema de copias de seguridad</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>2. ¿En qué norma anterior se basa la ISO 22301?</h4>
+                    <ul class="options">
+                        <li>ISO 27001</li>
+                        <li class="correct">BS 25999-2</li>
+                        <li>ISO 9001</li>
+                        <li>COBIT 5</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>3. En el ENS, ¿a qué nivel de disponibilidad aplica la medida del Plan de Continuidad?</h4>
+                    <ul class="options">
+                        <li>Nivel bajo y medio</li>
+                        <li>Solo nivel medio</li>
+                        <li class="correct">Solo nivel alto</li>
+                        <li>Todos los niveles</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>4. ¿Qué significa RPO?</h4>
+                    <ul class="options">
+                        <li>Tiempo de Recuperación Objetivo</li>
+                        <li class="correct">Punto de Recuperación Objetivo</li>
+                        <li>Plan de Respuesta Operativo</li>
+                        <li>Proceso de Recuperación Óptimo</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>5. ¿Cuántos tipos de planes establece INCIBE en su metodología?</h4>
+                    <ul class="options">
+                        <li>2 tipos</li>
+                        <li class="correct">3 tipos</li>
+                        <li>4 tipos</li>
+                        <li>5 tipos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>6. ¿Cuál es la primera prioridad en un plan de continuidad?</h4>
+                    <ul class="options">
+                        <li>Reanudar operaciones</li>
+                        <li class="correct">Evitar pérdidas humanas</li>
+                        <li>Proteger datos</li>
+                        <li>Mantener la reputación</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>7. ¿Cuántas fases tiene la metodología INCIBE para planes de continuidad?</h4>
+                    <ul class="options">
+                        <li>5 fases (0-4)</li>
+                        <li class="correct">6 fases (0-5)</li>
+                        <li>7 fases (1-7)</li>
+                        <li>4 fases (1-4)</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>8. ¿Qué enfoque es más apropiado cuando el proyecto lo dirige el equipo informático?</h4>
+                    <ul class="options">
+                        <li>Por proceso</li>
+                        <li class="correct">Por activo</li>
+                        <li>Por funciones</li>
+                        <li>Por departamentos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>9. ¿Qué es el BIA en el contexto de planes de continuidad?</h4>
+                    <ul class="options">
+                        <li>Business Intelligence Analysis</li>
+                        <li class="correct">Business Impact Analysis (Análisis de Impacto en el Negocio)</li>
+                        <li>Basic Information Assessment</li>
+                        <li>Business Integration Approach</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>10. ¿Cuál es la diferencia entre MTD y RTO?</h4>
+                    <ul class="options">
+                        <li>Son el mismo concepto</li>
+                        <li class="correct">MTD está relacionado con el negocio, RTO es determinado por personal técnico</li>
+                        <li>MTD es técnico, RTO es de negocio</li>
+                        <li>MTD es mayor que RTO siempre</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>11. ¿Cuántos subplanes componen típicamente un PCTIC?</h4>
+                    <ul class="options">
+                        <li>2 subplanes</li>
+                        <li class="correct">3 subplanes</li>
+                        <li>4 subplanes</li>
+                        <li>5 subplanes</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>12. ¿Qué subplan del PCTIC actúa DURANTE la materialización de la amenaza?</h4>
+                    <ul class="options">
+                        <li>Plan de Respaldo</li>
+                        <li class="correct">Plan de Emergencia</li>
+                        <li>Plan de Recuperación</li>
+                        <li>Plan de Contingencia</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>13. ¿Cuál es la frecuencia mínima para realizar pruebas del plan según INCIBE?</h4>
+                    <ul class="options">
+                        <li>Cada 6 meses</li>
+                        <li class="correct">Al menos una vez al año</li>
+                        <li>Cada 2 años</li>
+                        <li>Cuando sea necesario</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>14. ¿Cuántos recursos afectables identifica INCIBE en la Fase 2?</h4>
+                    <ul class="options">
+                        <li>3 recursos</li>
+                        <li>4 recursos</li>
+                        <li class="correct">5 recursos</li>
+                        <li>6 recursos</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>15. ¿Qué artículo del RD 3/2010 regula la continuidad de la actividad en el ENS?</h4>
+                    <ul class="options">
+                        <li>Artículo 24</li>
+                        <li class="correct">Artículo 25</li>
+                        <li>Artículo 26</li>
+                        <li>Artículo 27</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>16. ¿Qué metodología de mejora continua sigue la ISO 22301?</h4>
+                    <ul class="options">
+                        <li>Six Sigma</li>
+                        <li>Kaizen</li>
+                        <li class="correct">Plan-Do-Check-Act</li>
+                        <li>Lean Management</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>17. ¿Cuál es el objetivo 17.1 de la ISO 27001 relacionado con continuidad?</h4>
+                    <ul class="options">
+                        <li>Implementar copias de seguridad</li>
+                        <li class="correct">La continuidad de la seguridad de la información se debe incluir en los sistemas de gestión de continuidad del negocio</li>
+                        <li>Establecer planes de recuperación ante desastres</li>
+                        <li>Definir roles y responsabilidades</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>18. En la secuencia de acciones del Plan de Recuperación, ¿cuál es el orden correcto?</h4>
+                    <ul class="options">
+                        <li>Movilización → Preparación → Recuperación → Verificación</li>
+                        <li class="correct">Preparación → Movilización → Recuperación → Verificación</li>
+                        <li>Recuperación → Preparación → Movilización → Verificación</li>
+                        <li>Verificación → Preparación → Movilización → Recuperación</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>19. ¿Qué significa ROL en el contexto de planes de continuidad?</h4>
+                    <ul class="options">
+                        <li>Roles y Responsabilidades</li>
+                        <li>Recuperación Operativa Limitada</li>
+                        <li class="correct">Niveles mínimos de recuperación de servicio</li>
+                        <li>Recursos Operativos Locales</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>20. ¿Cuál es el enfoque más apropiado cuando el proyecto es liderado por el Negocio?</h4>
+                    <ul class="options">
+                        <li class="correct">Por proceso</li>
+                        <li>Por activo</li>
+                        <li>Por tecnología</li>
+                        <li>Por ubicación</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: Recursos y FAQ -->
+        <div id="tab-6" class="tab-content">
+            <div class="card">
+                <h2>📚 Glosario de Términos Clave</h2>
+                
+                <div class="glossary-term">
+                    <strong>Continuidad del Negocio</strong>
+                    Capacidad de una organización para continuar suministrando productos y servicios en plazos aceptables con una capacidad predefinida durante una disrupción.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Plan de Continuidad del Negocio (PCN)</strong>
+                    Información documentada que orienta a una organización para responder a una disrupción y reanudar, recuperar y restablecer la entrega de productos y servicios.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Análisis de Impacto en el Negocio (BIA)</strong>
+                    Proceso de análisis del impacto de una disrupción en la organización a lo largo del tiempo.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Disrupción</strong>
+                    Incidente, ya sea previsto o imprevisto, que causa una desviación negativa no planificada de la provisión prevista de productos y servicios.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Incidente</strong>
+                    Evento que puede ser, o podría conducir a una disrupción, pérdida, emergencia o crisis.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>Sistema de Gestión</strong>
+                    Conjunto de elementos de una organización interrelacionados que actúan entre sí para establecer políticas y objetivos y procesos para alcanzarlos.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>RPO (Recovery Point Objective)</strong>
+                    Punto de Recuperación Objetivo. Cantidad de pérdida de datos tolerable durante un desastre.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>RTO (Recovery Time Objective)</strong>
+                    Tiempo de Recuperación Objetivo. Tiempo máximo aceptable que el negocio puede estar no operativo.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>MTD (Maximum Tolerable Downtime)</strong>
+                    Tiempo Máximo Tolerable de Caída antes de que se produzcan consecuencias desastrosas.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>ROL (Recovery Operating Level)</strong>
+                    Niveles mínimos de recuperación de servicio aunque no sea óptimo.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>SGCN</strong>
+                    Sistema de Gestión de la Continuidad del Negocio según ISO 22301.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>PCTIC</strong>
+                    Plan de Continuidad TIC. Plan específico para el ámbito tecnológico dentro del PCN general.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>PRD</strong>
+                    Plan de Recuperación ante Desastres. Plan reactivo ante catástrofes con enfoque técnico.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>ENS</strong>
+                    Esquema Nacional de Seguridad. Marco normativo español para la seguridad de la información.
+                </div>
+
+                <div class="glossary-term">
+                    <strong>INCIBE</strong>
+                    Instituto Nacional de Ciberseguridad de España. Organismo que establece metodologías para planes de continuidad.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❓ Preguntas Frecuentes (FAQ)</h2>
+
+                <h3>¿Es obligatorio tener un plan de continuidad?</h3>
+                <p>Para el sector público español, sí es obligatorio en sistemas con categoría ALTA en la dimensión de disponibilidad según el ENS (RD 3/2010, Artículo 25). Para otras organizaciones, aunque no sea legalmente obligatorio, es altamente recomendable.</p>
+
+                <h3>¿Cuál es la diferencia entre PCN, PCTIC y PRD?</h3>
+                <p>El PCN abarca toda la organización, el PCTIC se limita al ámbito TIC y forma parte del PCN, mientras que el PRD es un plan reactivo específico ante desastres con análisis menos profundo.</p>
+
+                <h3>¿Con qué frecuencia se debe probar el plan?</h3>
+                <p>Según INCIBE, al menos una vez al año con planificación previa, considerando el personal implicado y minimizando el impacto en el servicio.</p>
+
+                <h3>¿Qué normas aplican a los planes de continuidad?</h3>
+                <p>Principalmente ISO 22301:2019, ENS (RD 3/2010) e ISO 27001:2013. También pueden aplicar normativas sectoriales específicas.</p>
+
+                <h3>¿Cuáles son las métricas más importantes?</h3>
+                <p>RPO (punto de recuperación), RTO (tiempo de recuperación), MTD (tiempo máximo tolerable) y ROL (nivel mínimo de servicio).</p>
+
+                <h3>¿Quién debe formar parte del equipo de crisis?</h3>
+                <p>Debe ser multidisciplinar, incluyendo representantes del negocio, TI, RRHH, comunicación, legal y dirección general.</p>
+
+                <h3>¿Cuándo se debe actualizar el plan?</h3>
+                <p>Cada vez que se produzca un cambio significativo en la organización, y como mínimo durante las revisiones anuales.</p>
+
+                <h3>¿Qué recursos se consideran críticos?</h3>
+                <p>Personal, locales, tecnología, información y proveedores son los cinco recursos principales que identifica INCIBE.</p>
+
+                <h3>¿Es certificable un SGCN?</h3>
+                <p>Sí, el sistema de gestión de continuidad del negocio es certificable y auditable según la norma ISO 22301.</p>
+
+                <h3>¿Qué diferencia hay entre incidente y disrupción?</h3>
+                <p>Un incidente puede conducir a una disrupción, pero no necesariamente. La disrupción es la interrupción efectiva de los servicios.</p>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Referencias Normativas</h2>
+                <ul class="list-styled">
+                    <li><strong>ISO 22301:2019</strong> - Sistemas de gestión de la continuidad del negocio</li>
+                    <li><strong>UNE-EN ISO 22301:2020</strong> - Versión española de la norma</li>
+                    <li><strong>RD 3/2010</strong> - Esquema Nacional de Seguridad</li>
+                    <li><strong>ISO 27001:2013</strong> - Sistemas de gestión de la seguridad de la información</li>
+                    <li><strong>ISO 27002</strong> - Código de práctica para controles de seguridad</li>
+                    <li><strong>BS 25999-2</strong> - Norma británica precursora de ISO 22301</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>📖 Recursos Adicionales</h2>
+                <ul class="list-styled">
+                    <li>Guías metodológicas de INCIBE</li>
+                    <li>Portal del ENS (CCN-CERT)</li>
+                    <li>Documentación oficial ISO</li>
+                    <li>Manuales de buenas prácticas</li>
+                    <li>Casos de estudio sector público</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            
+            document.querySelectorAll('.tab-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+            
+            localStorage.setItem('activeTab', index);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+            
+            const savedTab = localStorage.getItem('activeTab');
+            if (savedTab) {
+                showTab(parseInt(savedTab));
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key >= '1' && e.key <= '7') {
+                e.preventDefault();
+                showTab(parseInt(e.key) - 1);
+            }
+            
+            if (e.key === 'T' || e.key === 't') {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    toggleTheme();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

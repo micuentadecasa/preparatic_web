@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protección de Datos Personales - RGPD y Garantía de Derechos Digitales</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --info-color: #17a2b8;
+            --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --shadow-dark: var(--shadow-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #6c5ce7);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .tabs-container {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow-dark);
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background-color: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .tab.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-dark);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)20, var(--warning-color)10);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, var(--error-color)20, var(--error-color)10);
+            border-left: 4px solid var(--error-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)20, var(--info-color)10);
+            border-left: 4px solid var(--info-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .question {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .difficulty {
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty.basico {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background-color: var(--warning-color);
+            color: #000;
+        }
+
+        .difficulty.avanzado {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: var(--bg-hover);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .options li:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-color);
+        }
+
+        .correct-answer {
+            background-color: rgba(40, 167, 69, 0.2) !important;
+            border-color: var(--success-color) !important;
+        }
+
+        .correct-answer::after {
+            content: "✓ Respuesta Correcta";
+            color: var(--success-color);
+            font-weight: bold;
+            float: right;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background-color: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--bg-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), #6c5ce7);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .rights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .right-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .right-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .principles-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .principle-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term dt {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .glossary-term dd {
+            color: var(--text-secondary);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="container">
+            <h1>Protección de Datos Personales</h1>
+            <p>RGPD y Garantía de Derechos Digitales en la Administración Pública</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(1)">Resumen General</button>
+                <button class="tab" onclick="showTab(2)">Marco Normativo</button>
+                <button class="tab" onclick="showTab(3)">RGPD Fundamentos</button>
+                <button class="tab" onclick="showTab(4)">Derechos y Obligaciones</button>
+                <button class="tab" onclick="showTab(5)">Ley Orgánica 3/2018</button>
+                <button class="tab" onclick="showTab(6)">Ejercicios Prácticos</button>
+                <button class="tab" onclick="showTab(7)">Recursos y FAQ</button>
+            </div>
+
+            <!-- Tab 1: Resumen General -->
+            <div id="tab1" class="tab-content active">
+                <div class="card">
+                    <h3>🛡️ Resumen Ejecutivo</h3>
+                    <p>Esta guía abarca el marco normativo completo de protección de datos personales en España y la UE, centrándose en el <strong>Reglamento General de Protección de Datos (RGPD)</strong> y la <strong>Ley Orgánica 3/2018</strong> de protección de datos personales y garantía de los derechos digitales.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">2016</span>
+                        <span>Año del RGPD</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2018</span>
+                        <span>Aplicación plena</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <span>Principios RGPD</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">8</span>
+                        <span>Derechos reconocidos</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Objetivos de Aprendizaje</h4>
+                    <ul>
+                        <li>Comprender el marco normativo de protección de datos</li>
+                        <li>Dominar los principios del RGPD y sus aplicaciones</li>
+                        <li>Conocer los derechos de los interesados y obligaciones de responsables</li>
+                        <li>Aplicar la normativa en el ámbito de la administración pública</li>
+                    </ul>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>⚖️ Marco Legal</h4>
+                        <p>RGPD UE 2016/679 y Ley Orgánica 3/2018 como pilares normativos.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔐 Derechos Digitales</h4>
+                        <p>Garantías específicas para la era digital y nuevas tecnologías.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🏛️ Administración Pública</h4>
+                        <p>Aplicación especial en el sector público y servicios ciudadanos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Marco Normativo -->
+            <div id="tab2" class="tab-content">
+                <div class="card">
+                    <h3>📋 Evolución Normativa</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>1992 - Ley Orgánica 5/1992</h4>
+                            <p>Primera ley de tratamiento automatizado de datos personales en España</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>1995 - Directiva 95/46/CE</h4>
+                            <p>Directiva europea sobre protección de personas físicas</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>1999 - Ley Orgánica 15/1999 (LOPD)</h4>
+                            <p>Ley de protección de datos de carácter personal (derogada)</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2016 - RGPD UE 2016/679</h4>
+                            <p>Reglamento General de Protección de Datos (entrada en vigor 2018)</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>2018 - Ley Orgánica 3/2018</h4>
+                            <p>Protección de datos personales y garantía de derechos digitales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🌍 Ámbito de Aplicación</h3>
+                    <div class="grid">
+                        <div class="info-box">
+                            <h4>Ámbito Material</h4>
+                            <ul>
+                                <li>Tratamiento total o parcialmente automatizado</li>
+                                <li>Tratamiento no automatizado en ficheros</li>
+                                <li><strong>Excepciones:</strong> Actividades fuera del Derecho UE, uso doméstico, fines policiales</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>Ámbito Territorial</h4>
+                            <ul>
+                                <li>Tratamiento en contexto de establecimiento UE</li>
+                                <li>Independientemente del lugar de tratamiento</li>
+                                <li>Aplicación extraterritorial</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Jerarquía Normativa</h3>
+                    <div class="highlight-box">
+                        <h4>Primacía del Derecho de la UE</h4>
+                        <p>En caso de conflicto entre el RGPD y la Ley Orgánica 3/2018, <strong>prima el RGPD</strong> como norma de Derecho de la Unión Europea.</p>
+                    </div>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Norma</th>
+                                <th>Rango</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>RGPD UE 2016/679</td>
+                                <td>Reglamento UE</td>
+                                <td>Aplicación directa, no requiere transposición</td>
+                            </tr>
+                            <tr>
+                                <td>LO 3/2018</td>
+                                <td>Ley Orgánica</td>
+                                <td>Desarrollo y aclaración del RGPD</td>
+                            </tr>
+                            <tr>
+                                <td>RD-Ley 5/2018</td>
+                                <td>Medidas urgentes</td>
+                                <td>Derogado por LO 3/2018</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: RGPD Fundamentos -->
+            <div id="tab3" class="tab-content">
+                <div class="card">
+                    <h3>🔑 Definiciones Fundamentales</h3>
+                    <div class="grid">
+                        <div class="glossary-term">
+                            <dt>Datos Personales</dt>
+                            <dd>Toda información sobre una persona física identificada o identificable</dd>
+                        </div>
+                        <div class="glossary-term">
+                            <dt>Responsable de Tratamiento</dt>
+                            <dd>Persona física/jurídica que determina los fines y medios del tratamiento</dd>
+                        </div>
+                        <div class="glossary-term">
+                            <dt>Encargado de Tratamiento</dt>
+                            <dd>Persona que trata datos personales por cuenta del responsable</dd>
+                        </div>
+                        <div class="glossary-term">
+                            <dt>Seudonimización</dt>
+                            <dd>Proceso por el que los datos ya no pueden atribuirse sin información adicional</dd>
+                        </div>
+                        <div class="glossary-term">
+                            <dt>Anonimización</dt>
+                            <dd>Tratamiento que hace imposible atribuir datos a una persona</dd>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📐 Los 7 Principios del RGPD</h3>
+                    <div class="principles-list">
+                        <div class="principle-card">
+                            <h4>1. Licitud, Transparencia y Lealtad</h4>
+                            <p>Base jurídica para el tratamiento y información clara al interesado</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>2. Limitación de Finalidad</h4>
+                            <p>Fines determinados, explícitos y legítimos</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>3. Minimización de Datos</h4>
+                            <p>Adecuados, pertinentes y limitados a lo necesario</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>4. Exactitud</h4>
+                            <p>Rectificación o supresión de datos inexactos</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>5. Limitación del Plazo</h4>
+                            <p>Conservación limitada al logro de finalidades</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>6. Integridad y Confidencialidad</h4>
+                            <p>Protección frente a riesgos de seguridad</p>
+                        </div>
+                        <div class="principle-card">
+                            <h4>7. Responsabilidad Proactiva</h4>
+                            <p>Demostrar cumplimiento del Reglamento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>✅ Bases de Licitud del Tratamiento</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>📝 Consentimiento</h4>
+                            <p>Libre, específico, informado e inequívoco</p>
+                        </div>
+                        <div class="card">
+                            <h4>📋 Ejecución de Contrato</h4>
+                            <p>Necesario para cumplir obligaciones contractuales</p>
+                        </div>
+                        <div class="card">
+                            <h4>⚖️ Obligación Legal</h4>
+                            <p>Cumplimiento de obligación jurídica</p>
+                        </div>
+                        <div class="card">
+                            <h4>🆘 Intereses Vitales</h4>
+                            <p>Protección de intereses vitales esenciales</p>
+                        </div>
+                        <div class="card">
+                            <h4>🏛️ Interés Público</h4>
+                            <p>Misión de interés público o ejercicio de poderes públicos</p>
+                        </div>
+                        <div class="card">
+                            <h4>⚖️ Interés Legítimo</h4>
+                            <p>Satisfacción de intereses legítimos del responsable</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔒 Categorías Especiales de Datos</h3>
+                    <div class="error-box">
+                        <h4>Datos Sensibles - Prohibición General</h4>
+                        <ul>
+                            <li>Origen étnico o racial</li>
+                            <li>Opiniones políticas</li>
+                            <li>Convicciones religiosas o filosóficas</li>
+                            <li>Afiliación sindical</li>
+                            <li>Datos genéticos y biométricos</li>
+                            <li>Datos de salud</li>
+                            <li>Vida sexual u orientación sexual</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <h4>⚠️ Excepciones al Tratamiento</h4>
+                        <ul>
+                            <li>Consentimiento explícito</li>
+                            <li>Cumplimiento de obligaciones laborales</li>
+                            <li>Protección de intereses vitales</li>
+                            <li>Datos hechos públicos por el interesado</li>
+                            <li>Interés público esencial</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Derechos y Obligaciones -->
+            <div id="tab4" class="tab-content">
+                <div class="card">
+                    <h3>👥 Derechos de los Interesados</h3>
+                    <div class="rights-grid">
+                        <div class="right-card">
+                            <span class="icon">👁️</span>
+                            <h4>Transparencia</h4>
+                            <p>Respuesta en 1 mes, gratuita</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">📋</span>
+                            <h4>Acceso</h4>
+                            <p>Acceso a sus datos personales</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">✏️</span>
+                            <h4>Rectificación</h4>
+                            <p>Corrección de datos inexactos</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">🗑️</span>
+                            <h4>Supresión</h4>
+                            <p>Derecho al olvido</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">⏸️</span>
+                            <h4>Limitación</h4>
+                            <p>Marcado para limitar tratamiento</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">📦</span>
+                            <h4>Portabilidad</h4>
+                            <p>Datos en formato estructurado</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">🚫</span>
+                            <h4>Oposición</h4>
+                            <p>Oposición al tratamiento</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">🤖</span>
+                            <h4>Decisiones Automatizadas</h4>
+                            <p>No ser objeto de decisiones automáticas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Obligaciones del Responsable</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>📊 Registro de Actividades</h4>
+                            <p><strong>Artículo 30 RGPD:</strong> Registro de tratamientos (excepto empresas &lt;250 empleados sin riesgo)</p>
+                        </div>
+                        <div class="card">
+                            <h4>🛡️ Protección desde el Diseño</h4>
+                            <p>Privacy by Design y Privacy by Default</p>
+                        </div>
+                        <div class="card">
+                            <h4>🔒 Seguridad de Datos</h4>
+                            <p>Medidas técnicas y organizativas apropiadas</p>
+                        </div>
+                        <div class="card">
+                            <h4>⚠️ Notificación de Brechas</h4>
+                            <p><strong>72 horas</strong> a autoridad de control si hay riesgo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Evaluación de Impacto (EIPD)</h3>
+                    <div class="highlight-box">
+                        <h4>¿Cuándo es obligatoria?</h4>
+                        <p>Cuando un tipo de tratamiento sea probable que entrañe <strong>alto riesgo</strong> para los derechos y libertades, especialmente con nuevas tecnologías.</p>
+                    </div>
+                    
+                    <h4>Contenido de la EIPD:</h4>
+                    <ul>
+                        <li>Descripción de operaciones de tratamiento</li>
+                        <li>Evaluación de necesidad y proporcionalidad</li>
+                        <li>Evaluación de riesgos</li>
+                        <li>Medidas para afrontar riesgos</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>💰 Régimen Sancionador</h3>
+                    <div class="grid">
+                        <div class="error-box">
+                            <h4>Infracciones Graves</h4>
+                            <p><strong>Hasta 10.000.000€</strong> o <strong>2% del volumen de negocio</strong> anual</p>
+                        </div>
+                        <div class="error-box">
+                            <h4>Infracciones Muy Graves</h4>
+                            <p><strong>Hasta 20.000.000€</strong> o <strong>4% del volumen de negocio</strong> anual</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Impacto en las AAPP</h3>
+                    <div class="info-box">
+                        <h4>Esquema Nacional de Seguridad</h4>
+                        <p>Las AAPP deben aplicar medidas del ENS para tratamientos de datos personales según la Disposición Adicional Primera de la LO 3/2018.</p>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h4>🔧 Herramienta ASSI-RGPD</h4>
+                        <p>Aplicación para responsables de tratamiento que permite:</p>
+                        <ul>
+                            <li>Realizar análisis de riesgos y evaluación de impacto</li>
+                            <li>Determinar medidas ENS aplicables</li>
+                            <li>Generar información para el Registro de Actividades</li>
+                            <li>Verificar cumplimiento normativo RGPD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Ley Orgánica 3/2018 -->
+            <div id="tab5" class="tab-content">
+                <div class="card">
+                    <h3>📜 Aspectos Destacados de la LO 3/2018</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>⚱️ Datos de Personas Fallecidas</h4>
+                            <p>Familiares y herederos pueden solicitar acceso, rectificación o supresión, sujeto a instrucciones del fallecido.</p>
+                        </div>
+                        <div class="card">
+                            <h4>👶 Menores de Edad</h4>
+                            <p><strong>14 años</strong> para consentimiento autónomo. Derecho de supresión en redes sociales.</p>
+                        </div>
+                        <div class="card">
+                            <h4>📚 Sistema Educativo</h4>
+                            <p>Formación obligatoria en uso seguro de internet en currículums académicos.</p>
+                        </div>
+                        <div class="card">
+                            <h4>💳 Ficheros de Morosos</h4>
+                            <p>Reducción de 6 a <strong>5 años</strong> máximo. Cuantía mínima <strong>50€</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💻 Garantía de Derechos Digitales - Título X</h3>
+                    <div class="info-box">
+                        <h4>🎯 Objetivo</h4>
+                        <p>"Garantizar los derechos digitales de la ciudadanía conforme al mandato del artículo 18.4 de la Constitución" - 19 artículos (79-97)</p>
+                    </div>
+                    
+                    <div class="rights-grid">
+                        <div class="right-card">
+                            <span class="icon">🌐</span>
+                            <h4>Internet Universal</h4>
+                            <p>Acceso universal, asequible y de calidad</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">⚖️</span>
+                            <h4>Neutralidad de Red</h4>
+                            <p>Sin discriminación técnica o económica</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">🛡️</span>
+                            <h4>Seguridad Digital</h4>
+                            <p>Seguridad de comunicaciones en internet</p>
+                        </div>
+                        <div class="right-card">
+                            <span class="icon">📚</span>
+                            <h4>Educación Digital</h4>
+                            <p>Formación en uso seguro y respetuoso</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>👔 Derechos en el Ámbito Laboral</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>📱 Intimidad y Dispositivos</h4>
+                            <p>Protección de intimidad en uso de dispositivos digitales laborales</p>
+                        </div>
+                        <div class="card">
+                            <h4>🔌 Desconexión Digital</h4>
+                            <p>Respeto del tiempo de descanso, permisos y vacaciones</p>
+                        </div>
+                        <div class="card">
+                            <h4>📹 Videovigilancia</h4>
+                            <p>Limitaciones en lugares de descanso. Información previa obligatoria</p>
+                        </div>
+                        <div class="card">
+                            <h4>📍 Geolocalización</h4>
+                            <p>Solo para control laboral legal con información expresa</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>👶 Protección Específica de Menores</h3>
+                    <div class="highlight-box">
+                        <h4>Derechos Específicos</h4>
+                        <ul>
+                            <li><strong>Consentimiento:</strong> 14 años para prestarlo de forma autónoma</li>
+                            <li><strong>Derecho al olvido:</strong> Supresión de datos facilitados durante minoría</li>
+                            <li><strong>Protección en internet:</strong> Uso equilibrado y responsable</li>
+                            <li><strong>Educación digital:</strong> Inserción plena en sociedad digital</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📺 Medios de Comunicación Digital</h3>
+                    <div class="grid">
+                        <div class="info-box">
+                            <h4>Derecho de Rectificación</h4>
+                            <p>Protocolos en redes sociales para ejercer rectificación con aviso aclaratorio</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Actualización de Informaciones</h4>
+                            <p>Derecho a que se refleje la situación actual del individuo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🗑️ Derecho al Olvido Digital</h3>
+                    <div class="warning-box">
+                        <h4>Ámbito de Aplicación</h4>
+                        <p>Redes sociales y servicios de la sociedad de la información, excepto cuando los datos hubieran sido facilitados por terceros en actividades personales o domésticas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="tab6" class="tab-content">
+                <div class="card">
+                    <h3>🎯 Ejercicios de Evaluación</h3>
+                    <p>20 preguntas tipo examen basadas en RGPD y LO 3/2018</p>
+                </div>
+
+                <!-- Pregunta 1 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">1</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿En qué fecha entró en plena aplicación el RGPD en toda la Unión Europea?</strong></p>
+                    <ul class="options">
+                        <li>A) 27 de abril de 2016</li>
+                        <li class="correct-answer">B) 25 de mayo de 2018</li>
+                        <li>C) 5 de diciembre de 2018</li>
+                        <li>D) 1 de enero de 2019</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">2</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuántos principios establece el RGPD para el tratamiento de datos personales?</strong></p>
+                    <ul class="options">
+                        <li>A) 5 principios</li>
+                        <li>B) 6 principios</li>
+                        <li class="correct-answer">C) 7 principios</li>
+                        <li>D) 8 principios</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">3</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el plazo máximo para responder a una solicitud de ejercicio de derechos según el RGPD?</strong></p>
+                    <ul class="options">
+                        <li>A) 15 días</li>
+                        <li class="correct-answer">B) 1 mes (prorrogable a 2)</li>
+                        <li>C) 45 días</li>
+                        <li>D) 3 meses</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">4</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿En cuánto tiempo debe notificarse una violación de seguridad a la autoridad de control?</strong></p>
+                    <ul class="options">
+                        <li>A) 24 horas</li>
+                        <li>B) 48 horas</li>
+                        <li class="correct-answer">C) 72 horas</li>
+                        <li>D) 1 semana</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">5</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál es la cuantía máxima de las sanciones por infracciones muy graves del RGPD?</strong></p>
+                    <ul class="options">
+                        <li>A) 10.000.000€ o 2% del volumen de negocio</li>
+                        <li class="correct-answer">B) 20.000.000€ o 4% del volumen de negocio</li>
+                        <li>C) 50.000.000€ o 5% del volumen de negocio</li>
+                        <li>D) No hay límite establecido</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">6</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿A qué edad pueden los menores prestar consentimiento de forma autónoma según la LO 3/2018?</strong></p>
+                    <ul class="options">
+                        <li>A) 12 años</li>
+                        <li>B) 13 años</li>
+                        <li class="correct-answer">C) 14 años</li>
+                        <li>D) 16 años</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">7</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál de estos NO es un derecho reconocido en el RGPD?</strong></p>
+                    <ul class="options">
+                        <li>A) Derecho de portabilidad</li>
+                        <li>B) Derecho de rectificación</li>
+                        <li>C) Derecho de oposición</li>
+                        <li class="correct-answer">D) Derecho de compensación económica</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">8</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué empresas están exentas de llevar registro de actividades de tratamiento?</strong></p>
+                    <ul class="options">
+                        <li>A) Empresas de menos de 100 empleados</li>
+                        <li class="correct-answer">B) Empresas de menos de 250 empleados sin riesgo para derechos</li>
+                        <li>C) Empresas familiares</li>
+                        <li>D) Todas las empresas deben llevar registro</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">9</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es la cuantía mínima para incluir una deuda en ficheros de morosos según la LO 3/2018?</strong></p>
+                    <ul class="options">
+                        <li>A) 25 euros</li>
+                        <li class="correct-answer">B) 50 euros</li>
+                        <li>C) 100 euros</li>
+                        <li>D) 300 euros</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">10</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuántos años es el período máximo de inclusión en sistemas de información crediticia según la LO 3/2018?</strong></p>
+                    <ul class="options">
+                        <li>A) 4 años</li>
+                        <li class="correct-answer">B) 5 años</li>
+                        <li>C) 6 años</li>
+                        <li>D) 7 años</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">11</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuál de estos es un principio del RGPD?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) Minimización de datos</li>
+                        <li>B) Maximización de beneficios</li>
+                        <li>C) Centralización de información</li>
+                        <li>D) Comercialización de datos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 12 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">12</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál de estas NO es una categoría especial de datos según el RGPD?</strong></p>
+                    <ul class="options">
+                        <li>A) Datos de salud</li>
+                        <li>B) Opiniones políticas</li>
+                        <li>C) Datos biométricos</li>
+                        <li class="correct-answer">D) Datos académicos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 13 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">13</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué herramienta utiliza la AEPD para ayudar a las AAPP con el RGPD?</strong></p>
+                    <ul class="options">
+                        <li>A) SARA-RGPD</li>
+                        <li class="correct-answer">B) ASSI-RGPD</li>
+                        <li>C) TESTA-RGPD</li>
+                        <li>D) ENS-RGPD</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 14 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">14</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué significa las siglas AEPD?</strong></p>
+                    <ul class="options">
+                        <li>A) Autoridad Europea de Protección de Datos</li>
+                        <li class="correct-answer">B) Agencia Española de Protección de Datos</li>
+                        <li>C) Asociación Española de Protección Digital</li>
+                        <li>D) Administración Estatal de Privacidad de Datos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 15 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">15</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el fundamento constitucional del derecho a la protección de datos en España?</strong></p>
+                    <ul class="options">
+                        <li>A) Artículo 15 CE</li>
+                        <li>B) Artículo 17 CE</li>
+                        <li class="correct-answer">C) Artículo 18.4 CE</li>
+                        <li>D) Artículo 20 CE</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 16 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">16</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué artículo del RGPD regula el registro de actividades de tratamiento?</strong></p>
+                    <ul class="options">
+                        <li>A) Artículo 28</li>
+                        <li>B) Artículo 29</li>
+                        <li class="correct-answer">C) Artículo 30</li>
+                        <li>D) Artículo 32</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 17 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">17</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuántos artículos componen el Título X sobre Garantía de Derechos Digitales de la LO 3/2018?</strong></p>
+                    <ul class="options">
+                        <li>A) 15 artículos</li>
+                        <li>B) 17 artículos</li>
+                        <li class="correct-answer">C) 19 artículos</li>
+                        <li>D) 21 artículos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 18 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">18</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿En qué casos es obligatorio realizar una Evaluación de Impacto de Protección de Datos (EIPD)?</strong></p>
+                    <ul class="options">
+                        <li>A) En todos los tratamientos de datos</li>
+                        <li>B) Solo en tratamientos automatizados</li>
+                        <li class="correct-answer">C) Cuando sea probable un alto riesgo para derechos y libertades</li>
+                        <li>D) Solo en tratamientos de categorías especiales</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 19 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">19</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué significa la seudonimización de datos?</strong></p>
+                    <ul class="options">
+                        <li>A) Eliminar completamente los datos</li>
+                        <li class="correct-answer">B) Los datos ya no pueden atribuirse sin información adicional</li>
+                        <li>C) Cambiar el nombre de los ficheros</li>
+                        <li>D) Encriptar todos los datos</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 20 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">20</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>Según la Disposición Adicional Primera de la LO 3/2018, ¿qué medidas deben aplicar las AAPP?</strong></p>
+                    <ul class="options">
+                        <li>A) Medidas específicas de protección de datos</li>
+                        <li class="correct-answer">B) Medidas del Esquema Nacional de Seguridad</li>
+                        <li>C) Medidas de la LOPD derogada</li>
+                        <li>D) Medidas exclusivamente del RGPD</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="tab7" class="tab-content">
+                <div class="card">
+                    <h3>📚 Glosario de Términos Clave</h3>
+                    
+                    <dl>
+                        <div class="glossary-term">
+                            <dt>RGPD (Reglamento General de Protección de Datos)</dt>
+                            <dd>Reglamento UE 2016/679 sobre protección de personas físicas en tratamiento de datos personales.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>AEPD (Agencia Española de Protección de Datos)</dt>
+                            <dd>Autoridad de control española para la protección de datos personales.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Interesado</dt>
+                            <dd>Persona física identificada o identificable a quien se refieren los datos personales.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Consentimiento</dt>
+                            <dd>Manifestación de voluntad libre, específica, informada e inequívoca.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Violación de Seguridad</dt>
+                            <dd>Brecha que ocasiona destrucción, pérdida o alteración accidental o ilícita de datos.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>DPO (Delegado de Protección de Datos)</dt>
+                            <dd>Persona designada para supervisar el cumplimiento de la normativa de protección de datos.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Privacy by Design</dt>
+                            <dd>Protección de datos desde el diseño, incorporando salvaguardas desde el inicio.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Privacy by Default</dt>
+                            <dd>Protección de datos por defecto, aplicando automáticamente la configuración más restrictiva.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Transferencia Internacional</dt>
+                            <dd>Comunicación de datos personales a un tercer país u organización internacional.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>ENS (Esquema Nacional de Seguridad)</dt>
+                            <dd>Marco normativo español que establece medidas de seguridad para las AAPP.</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces de Interés</h3>
+                    <ul>
+                        <li><strong>AEPD:</strong> <a href="https://www.aepd.es/" target="_blank" style="color: var(--accent-color);">Agencia Española de Protección de Datos</a></li>
+                        <li><strong>RGPD Oficial:</strong> <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" style="color: var(--accent-color);">Reglamento UE 2016/679</a></li>
+                        <li><strong>LO 3/2018:</strong> <a href="https://www.boe.es/eli/es/lo/2018/12/05/3" target="_blank" style="color: var(--accent-color);">Ley Orgánica 3/2018</a></li>
+                        <li><strong>ASSI-RGPD:</strong> Herramienta para análisis de riesgos en AAPP</li>
+                        <li><strong>Guías AEPD:</strong> Documentos orientativos para cumplimiento</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Consejos para el Examen</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Fechas Clave</h4>
+                        <ul>
+                            <li><strong>27 abril 2016:</strong> Aprobación RGPD</li>
+                            <li><strong>25 mayo 2018:</strong> Aplicación plena RGPD</li>
+                            <li><strong>5 diciembre 2018:</strong> LO 3/2018</li>
+                            <li><strong>14 años:</strong> Edad consentimiento autónomo</li>
+                            <li><strong>72 horas:</strong> Notificación brechas seguridad</li>
+                            <li><strong>1 mes:</strong> Respuesta ejercicio derechos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <h4>⚠️ Errores Comunes</h4>
+                        <ul>
+                            <li>Confundir fechas de aprobación y aplicación del RGPD</li>
+                            <li>Mezclar plazos (72h para brechas, 1 mes para derechos)</li>
+                            <li>Olvidar las cuantías de ficheros de morosos (50€)</li>
+                            <li>Confundir seudonimización con anonimización</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Cuadro Resumen - Derechos del Interesado</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Derecho</th>
+                                <th>Artículo RGPD</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Transparencia</td>
+                                <td>Art. 12</td>
+                                <td>Información clara y accesible</td>
+                            </tr>
+                            <tr>
+                                <td>Acceso</td>
+                                <td>Art. 15</td>
+                                <td>Confirmar si se tratan sus datos</td>
+                            </tr>
+                            <tr>
+                                <td>Rectificación</td>
+                                <td>Art. 16</td>
+                                <td>Corrección de datos inexactos</td>
+                            </tr>
+                            <tr>
+                                <td>Supresión</td>
+                                <td>Art. 17</td>
+                                <td>Derecho al olvido</td>
+                            </tr>
+                            <tr>
+                                <td>Limitación</td>
+                                <td>Art. 18</td>
+                                <td>Marcado para restricción</td>
+                            </tr>
+                            <tr>
+                                <td>Portabilidad</td>
+                                <td>Art. 20</td>
+                                <td>Datos en formato estructurado</td>
+                            </tr>
+                            <tr>
+                                <td>Oposición</td>
+                                <td>Art. 21</td>
+                                <td>Oponerse al tratamiento</td>
+                            </tr>
+                            <tr>
+                                <td>Decisiones automatizadas</td>
+                                <td>Art. 22</td>
+                                <td>No ser objeto de decisiones automáticas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Aplicación en la Administración Pública</h3>
+                    <div class="info-box">
+                        <h4>Especialidades del Sector Público</h4>
+                        <ul>
+                            <li><strong>Base jurídica:</strong> Principalmente interés público y obligación legal</li>
+                            <li><strong>Medidas de seguridad:</strong> Aplicación del ENS</li>
+                            <li><strong>DPO obligatorio:</strong> En todas las AAPP</li>
+                            <li><strong>Transparencia:</strong> Compatible con normativa de acceso a información pública</li>
+                            <li><strong>Transferencias:</strong> Coordinación entre administraciones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
+        }
+
+        // Tab management
+        function showTab(tabNumber) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`tab${tabNumber}`).classList.add('active');
+            
+            // Add active class to selected tab
+            document.querySelectorAll('.tab')[tabNumber - 1].classList.add('active');
+        }
+
+        // Interactive quiz functionality
+        function initializeQuiz() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from siblings
+                    const siblings = this.parentNode.querySelectorAll('li');
+                    siblings.forEach(sibling => {
+                        sibling.style.backgroundColor = '';
+                        sibling.style.borderColor = '';
+                    });
+                    
+                    // Highlight selected option
+                    if (!this.classList.contains('correct-answer')) {
+                        this.style.backgroundColor = 'var(--bg-secondary)';
+                        this.style.borderColor = 'var(--warning-color)';
+                    }
+                });
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            initializeQuiz();
+        });
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                return;
+            }
+            
+            // Tab switching with arrow keys
+            if (e.target.classList.contains('tab')) {
+                const tabs = Array.from(document.querySelectorAll('.tab'));
+                const currentIndex = tabs.indexOf(e.target);
+                
+                if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    e.preventDefault();
+                    tabs[currentIndex - 1].focus();
+                    tabs[currentIndex - 1].click();
+                } else if (e.key === 'ArrowRight' && currentIndex < tabs.length - 1) {
+                    e.preventDefault();
+                    tabs[currentIndex + 1].focus();
+                    tabs[currentIndex + 1].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
