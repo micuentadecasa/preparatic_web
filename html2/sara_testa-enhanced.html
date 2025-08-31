@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red SARA y TESTA - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header h1 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            gap: 0.25rem;
+        }
+        
+        .tab-button {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .tab-button.active {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .tab-button:hover:not(.active) {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .card h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+            font-size: 1.2rem;
+        }
+        
+        .card p, .card li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card ul, .card ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, var(--accent-color), #6366f1);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .question {
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .question h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .option {
+            background: var(--bg-card);
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background: var(--bg-hover);
+        }
+        
+        .option.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .option.incorrect {
+            background: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .difficulty.basico {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .difficulty.intermedio {
+            background: var(--warning-color);
+            color: #000;
+        }
+        
+        .difficulty.avanzado {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .glossary-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .glossary-term {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="header">
+        <div class="header-content">
+            <h1>Red SARA y TESTA - Guía de Estudio</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                🌙 Modo Claro
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab(event, 'resumen')">Resumen General</button>
+            <button class="tab-button" onclick="switchTab(event, 'sara')">Red SARA</button>
+            <button class="tab-button" onclick="switchTab(event, 'testa')">Red TESTA</button>
+            <button class="tab-button" onclick="switchTab(event, 'planificacion')">Planificación y Gestión</button>
+            <button class="tab-button" onclick="switchTab(event, 'servicios')">Servicios y Arquitectura</button>
+            <button class="tab-button" onclick="switchTab(event, 'ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab-button" onclick="switchTab(event, 'recursos')">Recursos y FAQ</button>
+        </div>
+
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h2>Resumen Ejecutivo</h2>
+                <div class="highlight">
+                    <h3>📋 Objetivos de Aprendizaje</h3>
+                    <ul>
+                        <li>Conocer las características de la Red SARA y TESTA</li>
+                        <li>Comprender los objetivos y servicios de ambas redes</li>
+                        <li>Dominar los conceptos de planificación y gestión de redes</li>
+                        <li>Identificar roles y responsabilidades en la Red SARA</li>
+                    </ul>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3>Red SARA</h3>
+                        <p>Sistemas de Aplicaciones y Redes para las Administraciones. Conecta redes de AAPP españolas e instituciones europeas.</p>
+                        <strong>Características:</strong> Fiabilidad, Seguridad, Capacidad (10 Gbps), QoS, Interoperabilidad IPv6
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3>Red TESTA</h3>
+                        <p>Trans European Services for Telematics between Administrations. Red backbone europea para intercambio entre administraciones.</p>
+                        <strong>Tecnología:</strong> MPLS encriptada con IPSEC, gestión SOC y CSD
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Estadísticas Clave</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Capacidad SARA:</strong> 10 Gbps en Ministerios, 100 Mbps en CCAA
+                        </div>
+                        <div class="info-item">
+                            <strong>TESTA:</strong> Más de 91 aplicaciones utilizando la red
+                        </div>
+                        <div class="info-item">
+                            <strong>Direccionamiento:</strong> 10.252.0.0/16 y 10.253.0.0/16 para SARA
+                        </div>
+                        <div class="info-item">
+                            <strong>Soporte:</strong> 24x7x365 días al año
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sara" class="tab-content">
+            <div class="card">
+                <h2>Red SARA - Sistemas de Aplicaciones y Redes para las Administraciones</h2>
+                
+                <h3>🎯 Definición y Objetivos</h3>
+                <p>Conjunto de infraestructuras de comunicaciones y servicios básicos que conecta las redes de las Administraciones Públicas Españolas e Instituciones Europeas.</p>
+                
+                <div class="highlight">
+                    <h3>Objetivos Principales</h3>
+                    <ul>
+                        <li>Comunicar AGE, CCAA y Entes Locales con criterios técnicos y económicos</li>
+                        <li>Proporcionar servicios telemáticos seguros</li>
+                        <li>Establecer Política de Seguridad Común</li>
+                    </ul>
+                </div>
+
+                <h3>⚙️ Características Técnicas</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>Fiabilidad</h4>
+                        <p>Red completamente mallada, sin puntos únicos de fallo, tecnología última generación, soporte 24x7x365</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Seguridad</h4>
+                        <p>Tráfico cifrado, Sistema Alerta Temprana con CCN-CERT</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Capacidad</h4>
+                        <p>10 Gbps en Ministerios, 100 Mbps en CCAA</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>QoS</h4>
+                        <p>Cada dato tratado según su naturaleza</p>
+                    </div>
+                </div>
+
+                <h3>🏛️ Marco Normativo</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Norma</th>
+                            <th>Estado</th>
+                            <th>Aspectos Relevantes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ley 11/2007</td>
+                            <td>DEROGADA</td>
+                            <td>Art. 43 - Red comunicaciones AAPP</td>
+                        </tr>
+                        <tr>
+                            <td>RD 4/2010 (ENI)</td>
+                            <td>VIGENTE</td>
+                            <td>Art. 13-14 - SARA como red comunicaciones</td>
+                        </tr>
+                        <tr>
+                            <td>Resolución 19/07/2011</td>
+                            <td>VIGENTE</td>
+                            <td>NTI requisitos conexión</td>
+                        </tr>
+                        <tr>
+                            <td>RD 806/2014</td>
+                            <td>VIGENTE</td>
+                            <td>Servicios Compartidos - nube SARA</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="testa" class="tab-content">
+            <div class="card">
+                <h2>Red TESTA - Trans European Services for Telematics between Administrations</h2>
+                
+                <h3>📈 Evolución Histórica</h3>
+                <p>Desde 1996, las instituciones UE se conectan a través de TESTA, implementada bajo programa IDA (predecesor ISA).</p>
+                
+                <div class="highlight">
+                    <h3>Red Backbone Europea</h3>
+                    <p>Proporciona intercambio de datos entre administraciones públicas usando protocolos IP, operada por Comisión Europea separada de Internet.</p>
+                </div>
+
+                <h3>🎯 Objetivos TESTA</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>Conectividad</h4>
+                        <p>Infraestructura altamente confiable, extensible, flexible y segura entre administraciones europeas</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Consolidación</h4>
+                        <p>Redes existentes en diferentes contratos y gestiones</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Seguridad</h4>
+                        <p>Infraestructura segura, restringida a UE, acreditable</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Soporte</h4>
+                        <p>Única infraestructura para problemas, alertas e informes</p>
+                    </div>
+                </div>
+
+                <h3>👥 Usuarios de TESTA</h3>
+                <ul>
+                    <li><strong>Estados miembros y administraciones públicas</strong></li>
+                    <li><strong>Redes sectoriales:</strong> OLAF, DG TREN, ESTAT, DG JLIS, DG SANCO, FISH, DG ENV, DG TRADE</li>
+                    <li><strong>Instituciones europeas y agencias</strong></li>
+                    <li><strong>DG HOME:</strong> SIS II, VIS II (Schengen), EUROPOL</li>
+                    <li><strong>Secretaría Consejo:</strong> FADO, extranet, redes cortesía</li>
+                    <li><strong>Proyectos no comunitarios:</strong> Tratado Prüm, FIUNET</li>
+                </ul>
+
+                <h3>🏗️ Enfoque Técnico</h3>
+                <div class="card">
+                    <h4>Infraestructura</h4>
+                    <p>Basada en infraestructura completamente resiliente <strong>MPLS encriptada mediante IPSEC</strong>.</p>
+                    
+                    <h4>Componentes Clave</h4>
+                    <ul>
+                        <li><strong>SOC (Security Operations Center):</strong> Centro seguridad operacional</li>
+                        <li><strong>CSD (Central Service Domain):</strong> Dominio altamente securizado para servicios genéricos</li>
+                        <li><strong>Backup resiliente:</strong> Localizaciones backup para SOC y CSD</li>
+                    </ul>
+                </div>
+
+                <h3>📊 Datos Relevantes</h3>
+                <div class="highlight">
+                    <p><strong>Más de 91 aplicaciones</strong> utilizan TESTA: EURODAC, CECIS, FIDES, entre otras.</p>
+                    <p><strong>España:</strong> Red SARA es la "National Network" con punto único acceso al Eurodomain.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="planificacion" class="tab-content">
+            <div class="card">
+                <h2>Planificación y Gestión de Redes</h2>
+                
+                <h3>📋 Planificación Estratégica</h3>
+                <p>La planificación debe integrarse al Plan de sistemas y comunicaciones de la organización.</p>
+                
+                <div class="highlight">
+                    <h3>Plan Director de Telecomunicaciones (RD 541/2001)</h3>
+                    <ul>
+                        <li><strong>Período:</strong> 5 años con revisiones anuales</li>
+                        <li><strong>Programas:</strong> Vigencia 2 años</li>
+                        <li><strong>Servicios:</strong> Telefonía fija/móvil, circuitos, datos, corporativas, Internet</li>
+                    </ul>
+                </div>
+
+                <h3>🔄 Proceso de Planificación</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>1. Recogida Información</h4>
+                        <p>Distribución física, estructura, servicios, requerimientos. Métodos: cuestionarios y herramientas gestión.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>2. Análisis Situación</h4>
+                        <p>Tecnología, equipamiento, direccionamiento, presupuestos, personal para determinar mejoras.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>3. Solución Propuesta</h4>
+                        <p>Agrupación mejoras en proyectos con programación temporal, RRHH, financiación y priorización.</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>4. Contratación</h4>
+                        <p>Procedimientos contratación administrativa, licitación conjunta, contratación centralizada.</p>
+                    </div>
+                </div>
+
+                <h3>⚡ Modelo de Gestión ISO</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Área Funcional</th>
+                            <th>Descripción</th>
+                            <th>Enfoque</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Gestión de Fallos</td>
+                            <td>Detección, aislamiento, diagnóstico y corrección</td>
+                            <td>Preventivo/Correctivo</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión Contabilidad</td>
+                            <td>Evaluación uso recursos, costes, tarificación</td>
+                            <td>Control uso</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión Configuración</td>
+                            <td>Seguimiento elementos, software, parámetros</td>
+                            <td>Base datos inventario</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión Prestaciones</td>
+                            <td>Parámetros rendimiento, tiempos respuesta</td>
+                            <td>Reactivo/Proactivo</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión Seguridad</td>
+                            <td>Control acceso recursos según políticas</td>
+                            <td>Autenticación/Autorización</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="servicios" class="tab-content">
+            <div class="card">
+                <h2>Servicios y Arquitectura SARA</h2>
+                
+                <h3>🌐 Servicios de Red</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>Conectividad</h4>
+                        <ul>
+                            <li>Transporte cifrado VPLS</li>
+                            <li>VoIP, MallaB</li>
+                            <li>Videoconferencia</li>
+                            <li>QoS por naturaleza datos</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>Servicios Telemáticos Básicos</h4>
+                        <ul>
+                            <li>DNS (Domain Name System)</li>
+                            <li>SMTP (Simple Mail Transfer)</li>
+                            <li>NTP (Network Time Protocol)</li>
+                            <li>Proxy/Proxy Inverso</li>
+                            <li>Videocolaboración (Reúnete)</li>
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <h4>Seguridad Perimetral</h4>
+                        <ul>
+                            <li>Cortafuegos</li>
+                            <li>IDS (Intrusion Detection)</li>
+                            <li>Análisis Vulnerabilidades</li>
+                            <li>Correlación Logs</li>
+                            <li>Coordinación CCN-CERT</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🏢 Tipos de Servicios</h3>
+                <div class="card">
+                    <h4>Servicios Horizontales</h4>
+                    <p>Servicios comunes promovidos por SGAD para consolidación:</p>
+                    <ul>
+                        <li>Suite productos Firma Electrónica</li>
+                        <li>Sistema Intermediación Datos</li>
+                        <li>Centro Transferencia Tecnología</li>
+                        <li>Correo Multidominio, Acceda, ORVE, InSIDE, SIR</li>
+                        <li>Reuniones Virtuales (Reúnete)</li>
+                    </ul>
+                    
+                    <h4>Servicios Verticales</h4>
+                    <p>Servicios específicos administraciones en marco competencias:</p>
+                    <ul>
+                        <li>Protección Civil y Emergencias (112)</li>
+                        <li>Peticiones becas universitarias</li>
+                        <li>Otros servicios específicos por competencias</li>
+                    </ul>
+                </div>
+
+                <h3>🏗️ Arquitectura y Roles</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rol</th>
+                            <th>Responsabilidades Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MAETD</td>
+                            <td>Instalación AC, documentación técnica, soporte 24x7, gestión portal, seguridad</td>
+                        </tr>
+                        <tr>
+                            <td>PAS</td>
+                            <td>Conectividad dependencias, gestión elementos activos, condiciones AC, soporte</td>
+                        </tr>
+                        <tr>
+                            <td>Usuario Final</td>
+                            <td>Aplicación condiciones PAS y servicios horizontales/verticales</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>📍 Puntos de Presencia (PdP)</h3>
+                <div class="highlight">
+                    <h4>Tipos de PdP:</h4>
+                    <ol>
+                        <li><strong>PAS:</strong> Ministerios, AEAT, TGSS, SPEE, CCAA, Órganos Constitucionales</li>
+                        <li><strong>CPD SARA</strong></li>
+                        <li><strong>Red TESTA</strong></li>
+                        <li><strong>Centros externos monitorización</strong></li>
+                        <li><strong>Prestadores certificación</strong></li>
+                        <li><strong>Otros:</strong> Ventanillas Únicas Empresariales</li>
+                    </ol>
+                </div>
+
+                <h3>🔢 Plan de Direccionamiento</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rango IP</th>
+                            <th>Entidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10.252.0.0/16</td>
+                            <td>Red SARA</td>
+                        </tr>
+                        <tr>
+                            <td>10.253.0.0/16</td>
+                            <td>Red SARA</td>
+                        </tr>
+                        <tr>
+                            <td>10.254.0.0/16</td>
+                            <td>Cloud AGE</td>
+                        </tr>
+                        <tr>
+                            <td>62.62.0.0</td>
+                            <td>TESTA (RIPE)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h2>Ejercicios Prácticos</h2>
+                <p>Test de conocimientos sobre Red SARA y TESTA con 20 preguntas de diferentes niveles de dificultad.</p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>1. ¿Qué significa SARA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Sistema Avanzado de Redes Administrativas</li>
+                        <li class="option" onclick="selectOption(this, true)">b) Sistemas de Aplicaciones y Redes para las Administraciones</li>
+                        <li class="option" onclick="selectOption(this, false)">c) Servicio Automático de Redes Administrativas</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Sistema de Aplicaciones Remotas Administrativas</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>2. ¿Cuál es la capacidad de ancho de banda en los Ministerios?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 100 Mbps</li>
+                        <li class="option" onclick="selectOption(this, false)">b) 1 Gbps</li>
+                        <li class="option" onclick="selectOption(this, true)">c) 10 Gbps</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 100 Gbps</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>3. ¿Qué significa TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, true)">a) Trans European Services for Telematics between Administrations</li>
+                        <li class="option" onclick="selectOption(this, false)">b) Transmission European System for Telematic Applications</li>
+                        <li class="option" onclick="selectOption(this, false)">c) Technical European Services for Administrative Tasks</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Trans European System for Technical Applications</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>4. ¿En qué año se implementó por primera vez TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 1994</li>
+                        <li class="option" onclick="selectOption(this, true)">b) 1996</li>
+                        <li class="option" onclick="selectOption(this, false)">c) 1998</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 2000</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>5. ¿Cuál es el rango de direcciones IP principal asignado a la Red SARA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, true)">a) 10.252.0.0/16 y 10.253.0.0/16</li>
+                        <li class="option" onclick="selectOption(this, false)">b) 192.168.0.0/16</li>
+                        <li class="option" onclick="selectOption(this, false)">c) 172.16.0.0/16</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 10.0.0.0/8</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>6. ¿Qué tipo de soporte ofrece la Red SARA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 8x5</li>
+                        <li class="option" onclick="selectOption(this, false)">b) 12x7</li>
+                        <li class="option" onclick="selectOption(this, true)">c) 24x7x365</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 24x5</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>7. ¿Qué protocolo de gestión de red es más simple y pragmático?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) CMIP</li>
+                        <li class="option" onclick="selectOption(this, true)">b) SNMP</li>
+                        <li class="option" onclick="selectOption(this, false)">c) CMOT</li>
+                        <li class="option" onclick="selectOption(this, false)">d) OSI</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>8. ¿Cuántas aplicaciones aproximadamente utilizan TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Más de 50</li>
+                        <li class="option" onclick="selectOption(this, false)">b) Más de 75</li>
+                        <li class="option" onclick="selectOption(this, true)">c) Más de 91</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Más de 150</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>9. ¿Qué significa QoS en el contexto de SARA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Quality of Systems</li>
+                        <li class="option" onclick="selectOption(this, true)">b) Quality of Service</li>
+                        <li class="option" onclick="selectOption(this, false)">c) Quick Operation System</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Quality Operations Standard</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>10. ¿Qué Real Decreto regula el Plan Director de Telecomunicaciones?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, true)">a) RD 541/2001</li>
+                        <li class="option" onclick="selectOption(this, false)">b) RD 4/2010</li>
+                        <li class="option" onclick="selectOption(this, false)">c) RD 806/2014</li>
+                        <li class="option" onclick="selectOption(this, false)">d) RD 203/2021</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>11. ¿Con qué organización colabora SARA para la detección temprana de amenazas?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) INCIBE</li>
+                        <li class="option" onclick="selectOption(this, true)">b) CCN-CERT</li>
+                        <li class="option" onclick="selectOption(this, false)">c) CNPIC</li>
+                        <li class="option" onclick="selectOption(this, false)">d) AEPD</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>12. ¿Qué tecnología utiliza TESTA para su infraestructura?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) VPLS</li>
+                        <li class="option" onclick="selectOption(this, true)">b) MPLS encriptada con IPSEC</li>
+                        <li class="option" onclick="selectOption(this, false)">c) ATM</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Frame Relay</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>13. ¿Qué áreas funcionales define el modelo ISO para gestión de redes?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 3 áreas</li>
+                        <li class="option" onclick="selectOption(this, false)">b) 4 áreas</li>
+                        <li class="option" onclick="selectOption(this, true)">c) 5 áreas</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 6 áreas</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>14. ¿Cuál es la capacidad de ancho de banda en Comunidades Autónomas?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 10 Mbps</li>
+                        <li class="option" onclick="selectOption(this, true)">b) 100 Mbps</li>
+                        <li class="option" onclick="selectOption(this, false)">c) 1 Gbps</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 10 Gbps</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>15. ¿Qué significa SOC en el contexto de TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Service Operations Center</li>
+                        <li class="option" onclick="selectOption(this, true)">b) Security Operations Center</li>
+                        <li class="option" onclick="selectOption(this, false)">c) System Operations Control</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Secure Operations Console</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty basico">Básico</span>
+                    <h3>16. ¿Qué tipo de red es SARA en términos de topología?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Estrella</li>
+                        <li class="option" onclick="selectOption(this, false)">b) Anillo</li>
+                        <li class="option" onclick="selectOption(this, true)">c) Completamente mallada</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Bus</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>17. ¿Cuál es el rango de direcciones IP utilizado por TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 10.62.0.0</li>
+                        <li class="option" onclick="selectOption(this, true)">b) 62.62.0.0</li>
+                        <li class="option" onclick="selectOption(this, false)">c) 192.62.0.0</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 172.62.0.0</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>18. ¿Qué significa CSD en la arquitectura TESTA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) Central Security Domain</li>
+                        <li class="option" onclick="selectOption(this, true)">b) Central Service Domain</li>
+                        <li class="option" onclick="selectOption(this, false)">c) Common Service Directory</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Centralized System Domain</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty intermedio">Intermedio</span>
+                    <h3>19. ¿Cuál es la vigencia de los programas del Plan Director de Telecomunicaciones?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) 1 año</li>
+                        <li class="option" onclick="selectOption(this, true)">b) 2 años</li>
+                        <li class="option" onclick="selectOption(this, false)">c) 3 años</li>
+                        <li class="option" onclick="selectOption(this, false)">d) 5 años</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <span class="difficulty avanzado">Avanzado</span>
+                    <h3>20. ¿Qué servicio proporciona la hora oficial española en SARA?</h3>
+                    <ul class="options">
+                        <li class="option" onclick="selectOption(this, false)">a) DNS</li>
+                        <li class="option" onclick="selectOption(this, false)">b) SMTP</li>
+                        <li class="option" onclick="selectOption(this, true)">c) NTP (proporcionado por ROA)</li>
+                        <li class="option" onclick="selectOption(this, false)">d) Proxy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h2>Glosario de Términos Clave</h2>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">SARA</div>
+                    <p>Sistemas de Aplicaciones y Redes para las Administraciones. Conjunto de infraestructuras que conecta las redes de AAPP españolas e instituciones europeas.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">TESTA</div>
+                    <p>Trans European Services for Telematics between Administrations. Red backbone europea para intercambio de datos entre administraciones públicas.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">PAS</div>
+                    <p>Proveedores de Acceso a la Red SARA. Organizaciones que proporcionan conectividad a SARA (Ministerios, CCAA, etc.).</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">AC (Área de Conexión)</div>
+                    <p>Punto único de conexión entre la red de una Administración y las redes de otras administraciones conectadas a SARA.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">PdP (Punto de Presencia)</div>
+                    <p>Sede donde existe una conexión directa a la Red SARA, sin presencia de ninguna organización intermedia.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">QoS (Quality of Service)</div>
+                    <p>Calidad de Servicio. Cada tipo de dato se trata según su naturaleza específica en la red.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">VPLS</div>
+                    <p>Virtual Private LAN Service. Tecnología de red troncal utilizada por SARA para el transporte cifrado.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">MPLS</div>
+                    <p>Multiprotocol Label Switching. Tecnología utilizada por TESTA, encriptada mediante IPSEC.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">SOC</div>
+                    <p>Security Operations Center. Centro de seguridad operacional que gestiona la infraestructura TESTA.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">CSD</div>
+                    <p>Central Service Domain. Dominio altamente securizado que proporciona servicios genéricos en TESTA.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">CCN-CERT</div>
+                    <p>Centro Criptológico Nacional - Computer Emergency Response Team. Colabora con SARA en detección temprana de amenazas.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">ENI</div>
+                    <p>Esquema Nacional de Interoperabilidad. Marco regulatorio establecido por RD 4/2010.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">SNMP</div>
+                    <p>Simple Network Management Protocol. Protocolo estándar para gestión de redes TCP/IP, más simple que OSI.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">MIB</div>
+                    <p>Management Information Base. Repositorio conceptual de datos sobre objetos gestionados en redes.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">IDS</div>
+                    <p>Intrusion Detection System. Sistema de detección de intrusos implementado en SARA para seguridad perimetral.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">NTP</div>
+                    <p>Network Time Protocol. Servicio que proporciona la hora oficial española a través del ROA (Real Observatorio Astronómico).</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">CTT</div>
+                    <p>Centro de Transferencia de Tecnología. Repositorio común de software para reutilización de aplicaciones.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">MAETD</div>
+                    <p>Ministerio de Asuntos Económicos y Transformación Digital. Responsable de gestión y administración de la Red SARA.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '🌙 Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function selectOption(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.option');
+            
+            // Remove all previous selections
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark selected option
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                // Also show the correct answer
+                options.forEach(option => {
+                    if (option.onclick.toString().includes('true')) {
+                        option.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        // Load theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                themeToggle.innerHTML = '🌙 Modo Oscuro';
+            } else {
+                themeToggle.innerHTML = '☀️ Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

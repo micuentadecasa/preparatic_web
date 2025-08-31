@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redes IP: IPv4 e IPv6 - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: translateY(-1px);
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            gap: 0.5rem;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+        
+        .tab:hover:not(.active) {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .highlight {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        
+        .quiz-container {
+            margin-top: 2rem;
+        }
+        
+        .question {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .question h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-color);
+        }
+        
+        .option input {
+            margin-right: 0.75rem;
+            accent-color: var(--accent-color);
+        }
+        
+        .option.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+        
+        .option.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .difficulty.basico {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .difficulty.intermedio {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .difficulty.avanzado {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        .glossary-term {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .glossary-term .term {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: none;
+                min-width: 100px;
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Redes IP: IPv4 e IPv6 - Guía de Estudio</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab" onclick="showTab('ipv4')">IPv4 Fundamentos</button>
+            <button class="tab" onclick="showTab('protocolos')">Protocolos y Routing</button>
+            <button class="tab" onclick="showTab('ipv6')">IPv6 y Transición</button>
+            <button class="tab" onclick="showTab('avanzado')">Conceptos Avanzados</button>
+            <button class="tab" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+        
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h3>📋 Resumen Ejecutivo</h3>
+                <p>Este tema abarca la arquitectura de redes IP, desde los fundamentos de IPv4 hasta las características avanzadas de IPv6 y los mecanismos de transición entre ambos protocolos.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Datos Clave</h3>
+                    <ul>
+                        <li><span class="highlight">IPv4</span>: 32 bits = 4.3 mil millones de direcciones</li>
+                        <li><span class="highlight">IPv6</span>: 128 bits = 2^128 direcciones</li>
+                        <li><span class="highlight">Cabecera IPv4</span>: 20-60 bytes (variable)</li>
+                        <li><span class="highlight">Cabecera IPv6</span>: 40 bytes (fija)</li>
+                        <li><span class="highlight">CIDR</span>: Notación /n para máscaras</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>🎯 Conceptos Principales</h3>
+                    <ul>
+                        <li>Arquitectura TCP/IP</li>
+                        <li>Direccionamiento y subnetting</li>
+                        <li>Protocolos de enrutamiento</li>
+                        <li>Calidad de servicio (QoS)</li>
+                        <li>Transición IPv4-IPv6</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🎓 Objetivos de Aprendizaje</h3>
+                <ol>
+                    <li>Comprender la estructura y funcionamiento del protocolo IPv4</li>
+                    <li>Dominar técnicas de direccionamiento y subnetting</li>
+                    <li>Analizar protocolos de enrutamiento interno y externo</li>
+                    <li>Evaluar las ventajas y características de IPv6</li>
+                    <li>Implementar estrategias de transición IPv4-IPv6</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div id="ipv4" class="tab-content">
+            <div class="card">
+                <h3>🌐 Protocolo IPv4 - Fundamentos</h3>
+                <p>IPv4 es un protocolo <strong>sin conexión</strong> y de <strong>mejor esfuerzo</strong> que opera en la capa 3 del modelo OSI.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📋 Cabecera IPv4</h3>
+                    <div class="code-block">
+Version (4 bits) | IHL (4 bits) | ToS (8 bits) | Total Length (16 bits)
+Identification (16 bits) | Flags (3 bits) | Fragment Offset (13 bits)
+TTL (8 bits) | Protocol (8 bits) | Header Checksum (16 bits)
+Source Address (32 bits)
+Destination Address (32 bits)
+Options (variable) | Padding
+                    </div>
+                    <ul>
+                        <li><strong>Tamaño mínimo:</strong> 20 bytes</li>
+                        <li><strong>Tamaño máximo:</strong> 60 bytes</li>
+                        <li><strong>IHL:</strong> Internet Header Length</li>
+                        <li><strong>TTL:</strong> Time To Live</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>📍 Direccionamiento IPv4</h3>
+                    <ul>
+                        <li><strong>32 bits</strong> divididos en 4 octetos</li>
+                        <li><strong>Notación decimal punteada:</strong> 192.168.1.1</li>
+                        <li><strong>Estructura:</strong> NET_ID + HOST_ID</li>
+                        <li><strong>Máscara de subred:</strong> Define límites de red</li>
+                    </ul>
+                    
+                    <h4>Clases de Direcciones (Classfull)</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Clase</th>
+                                <th>Rango</th>
+                                <th>Máscara</th>
+                                <th>Hosts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>1.0.0.0 - 126.255.255.255</td>
+                                <td>/8</td>
+                                <td>16,777,214</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>128.0.0.0 - 191.255.255.255</td>
+                                <td>/16</td>
+                                <td>65,534</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>192.0.0.0 - 223.255.255.255</td>
+                                <td>/24</td>
+                                <td>254</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🔢 CIDR y Subnetting</h3>
+                <p><strong>CIDR (Classless Inter-Domain Routing)</strong> permite un direccionamiento más flexible que las clases tradicionales.</p>
+                
+                <div class="code-block">
+Ejemplo: 192.168.1.0/24
+- Red: 192.168.1.0
+- Máscara: 255.255.255.0 (/24)
+- Hosts disponibles: 2^8 - 2 = 254
+- Primera IP útil: 192.168.1.1
+- Última IP útil: 192.168.1.254
+- Broadcast: 192.168.1.255
+                </div>
+                
+                <p><strong>Fórmula de cálculo:</strong> Número de hosts = 2^n - 2 (donde n = bits de host)</p>
+            </div>
+        </div>
+        
+        <div id="protocolos" class="tab-content">
+            <div class="card">
+                <h3>🔧 Protocolos de Control</h3>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📡 ICMP (Internet Control Message Protocol)</h3>
+                    <p>Protocolo de control y diagnóstico que opera sobre IP.</p>
+                    <ul>
+                        <li><strong>Echo Request/Reply:</strong> ping</li>
+                        <li><strong>Destination Unreachable:</strong> Destino inalcanzable</li>
+                        <li><strong>Time Exceeded:</strong> TTL expirado</li>
+                        <li><strong>Redirect:</strong> Redirección de ruta</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>🔍 ARP/RARP</h3>
+                    <p><strong>ARP (Address Resolution Protocol):</strong> Resuelve direcciones IP a MAC</p>
+                    <p><strong>RARP (Reverse ARP):</strong> Resuelve direcciones MAC a IP</p>
+                    <div class="code-block">
+Proceso ARP:
+1. Host A quiere comunicarse con IP B
+2. Verifica si B está en caché ARP
+3. Si no, envía ARP Request broadcast
+4. Host B responde con ARP Reply (unicast)
+5. Host A actualiza tabla ARP
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🌐 DHCP (Dynamic Host Configuration Protocol)</h3>
+                <p>Asignación automática de configuración de red.</p>
+                
+                <h4>Métodos de Asignación:</h4>
+                <ul>
+                    <li><strong>Manual:</strong> Reserva específica por MAC</li>
+                    <li><strong>Automática:</strong> Asignación permanente desde pool</li>
+                    <li><strong>Dinámica:</strong> Asignación temporal con lease time</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🛣️ Protocolos de Enrutamiento</h3>
+                
+                <h4>IGP (Internal Gateway Protocols)</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Tipo</th>
+                            <th>Métrica</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RIP v1/v2</td>
+                            <td>Distance Vector</td>
+                            <td>Hop Count</td>
+                            <td>Max 15 hops, convergencia lenta</td>
+                        </tr>
+                        <tr>
+                            <td>IGRP/EIGRP</td>
+                            <td>Distance Vector</td>
+                            <td>Compuesta</td>
+                            <td>Cisco propietario, convergencia rápida</td>
+                        </tr>
+                        <tr>
+                            <td>OSPF</td>
+                            <td>Link State</td>
+                            <td>Cost</td>
+                            <td>Estándar, escalable, áreas jerárquicas</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>EGP (External Gateway Protocols)</h4>
+                <ul>
+                    <li><strong>EGP:</strong> Protocolo original, obsoleto</li>
+                    <li><strong>BGP:</strong> Border Gateway Protocol, actual estándar de Internet</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🔀 NAT (Network Address Translation)</h3>
+                <p>Traducción de direcciones IP para conservar direcciones públicas.</p>
+                
+                <h4>Tipos de NAT:</h4>
+                <ul>
+                    <li><strong>Static NAT:</strong> Mapeo 1:1 fijo</li>
+                    <li><strong>Dynamic NAT:</strong> Mapeo 1:1 desde pool</li>
+                    <li><strong>PAT (Port Address Translation):</strong> Mapeo many:1 con puertos</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="ipv6" class="tab-content">
+            <div class="card">
+                <h3>🚀 IPv6 - Fundamentos</h3>
+                <p>IPv6 fue diseñado para resolver las limitaciones de IPv4, principalmente el agotamiento de direcciones.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Características Principales</h3>
+                    <ul>
+                        <li><span class="highlight">128 bits</span> = 2^128 direcciones</li>
+                        <li><span class="highlight">Cabecera fija</span> de 40 bytes</li>
+                        <li><span class="highlight">No broadcast</span> (unicast, anycast, multicast)</li>
+                        <li><span class="highlight">Multicast obligatorio</span></li>
+                        <li><span class="highlight">Autoconfiguración</span> SLAAC</li>
+                        <li><span class="highlight">QoS nativo</span></li>
+                        <li><span class="highlight">IPSec integrado</span></li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>📍 Formato de Direcciones IPv6</h3>
+                    <div class="code-block">
+Formato completo:
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+Reglas de abreviación:
+1. Eliminar ceros iniciales: 2001:db8:85a3:0:0:8a2e:370:7334
+2. Comprimir ceros consecutivos (::): 2001:db8:85a3::8a2e:370:7334
+3. Solo un :: por dirección
+
+Ejemplos:
+- ::1 (loopback)
+- :: (all zeros)
+- 2001:db8::/32 (documentation prefix)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🔧 Cabecera IPv6</h3>
+                <div class="code-block">
+Version (4) | Traffic Class (8) | Flow Label (20)
+Payload Length (16) | Next Header (8) | Hop Limit (8)
+Source Address (128 bits)
+Destination Address (128 bits)
+                </div>
+                
+                <h4>Diferencias con IPv4:</h4>
+                <ul>
+                    <li><strong>Tamaño fijo:</strong> Siempre 40 bytes</li>
+                    <li><strong>No fragmentación en routers:</strong> Solo en hosts origen</li>
+                    <li><strong>Extension Headers:</strong> Funcionalidad opcional</li>
+                    <li><strong>Hop Limit:</strong> Reemplaza TTL</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🔄 Transición IPv4-IPv6</h3>
+                <p>Mecanismos para la coexistencia y migración entre protocolos.</p>
+                
+                <h4>Estrategias Principales:</h4>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3>📱 Dual Stack</h3>
+                        <p>Implementación simultánea de IPv4 e IPv6 en el mismo dispositivo.</p>
+                        <ul>
+                            <li>Configuración paralela</li>
+                            <li>Selección automática de protocolo</li>
+                            <li>Compatibilidad completa</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🚇 Tunneling</h3>
+                        <p>Encapsulación de IPv6 sobre IPv4 (o viceversa).</p>
+                        <ul>
+                            <li><strong>6to4:</strong> Automático, usa 2002::/16</li>
+                            <li><strong>Teredo:</strong> Atraviesa NAT</li>
+                            <li><strong>ISATAP:</strong> Intra-Site Automatic</li>
+                            <li><strong>6in4:</strong> Túnel manual configurado</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🔄 Traducción (NAT64)</h3>
+                    <p>Traducción de protocolos para comunicación entre redes IPv4 e IPv6.</p>
+                    <ul>
+                        <li><strong>Stateful NAT64:</strong> Con tabla de estado</li>
+                        <li><strong>Stateless NAT64:</strong> Mapeo directo</li>
+                        <li><strong>DNS64:</strong> Traduce consultas DNS</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="avanzado" class="tab-content">
+            <div class="card">
+                <h3>🎯 Calidad de Servicio (QoS)</h3>
+                <p>Mecanismos para garantizar rendimiento de aplicaciones críticas.</p>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Parámetros QoS</h3>
+                    <ul>
+                        <li><strong>Bandwidth:</strong> Ancho de banda garantizado</li>
+                        <li><strong>Latency:</strong> Retardo máximo</li>
+                        <li><strong>Jitter:</strong> Variación del retardo</li>
+                        <li><strong>Packet Loss:</strong> Pérdida de paquetes</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>🔧 Mecanismos QoS</h3>
+                    <ul>
+                        <li><strong>Classification:</strong> Identificación de tráfico</li>
+                        <li><strong>Marking:</strong> Etiquetado de paquetes</li>
+                        <li><strong>Queuing:</strong> Gestión de colas</li>
+                        <li><strong>Shaping:</strong> Control de velocidad</li>
+                        <li><strong>Policing:</strong> Limitación de tráfico</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📡 Multicast</h3>
+                <p>Transmisión uno-a-muchos eficiente para aplicaciones como streaming.</p>
+                
+                <h4>IPv4 Multicast:</h4>
+                <ul>
+                    <li><strong>Rango:</strong> 224.0.0.0/4 (Class D)</li>
+                    <li><strong>Protocolos:</strong> IGMP, PIM, DVMRP</li>
+                    <li><strong>Direcciones especiales:</strong> 224.0.0.1 (all hosts), 224.0.0.2 (all routers)</li>
+                </ul>
+                
+                <h4>IPv6 Multicast:</h4>
+                <ul>
+                    <li><strong>Prefijo:</strong> FF00::/8</li>
+                    <li><strong>Obligatorio:</strong> Todos los nodos deben soportarlo</li>
+                    <li><strong>Reemplaza broadcast:</strong> No existe broadcast en IPv6</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🔐 Seguridad en Redes IP</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h3>🛡️ IPv4 Security</h3>
+                        <ul>
+                            <li><strong>IPSec:</strong> Opcional, implementación externa</li>
+                            <li><strong>Firewalls:</strong> Control de acceso por paquetes</li>
+                            <li><strong>VPN:</strong> Túneles seguros</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔒 IPv6 Security</h3>
+                        <ul>
+                            <li><strong>IPSec integrado:</strong> Soporte nativo obligatorio</li>
+                            <li><strong>Autoconfiguración segura:</strong> SEND protocol</li>
+                            <li><strong>Privacy Extensions:</strong> Direcciones temporales</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h3>📝 Ejercicios Prácticos - Redes IP</h3>
+                <p>Preguntas tipo examen para preparar oposiciones de administración pública.</p>
+            </div>
+            
+            <div class="quiz-container">
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>1. ¿Cuál es el tamaño mínimo de la cabecera IPv4?</h4>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q1" id="q1a">
+                        <label for="q1a">20 bytes</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b">
+                        <label for="q1b">32 bytes</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c">
+                        <label for="q1c">40 bytes</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d">
+                        <label for="q1d">60 bytes</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>2. ¿Cuántos bits tiene una dirección IPv6?</h4>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2a">
+                        <label for="q2a">32 bits</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2b">
+                        <label for="q2b">64 bits</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q2" id="q2c">
+                        <label for="q2c">128 bits</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2d">
+                        <label for="q2d">256 bits</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>3. ¿Cuántos hosts pueden direccionarse en una red /26?</h4>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3a">
+                        <label for="q3a">32</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q3" id="q3b">
+                        <label for="q3b">62</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3c">
+                        <label for="q3c">64</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3d">
+                        <label for="q3d">126</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>4. ¿Qué protocolo resuelve direcciones IP a direcciones MAC?</h4>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q4" id="q4a">
+                        <label for="q4a">ARP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4b">
+                        <label for="q4b">RARP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4c">
+                        <label for="q4c">ICMP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4d">
+                        <label for="q4d">DHCP</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>5. ¿Cuál es el límite máximo de saltos en RIP?</h4>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5a">
+                        <label for="q5a">10</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q5" id="q5b">
+                        <label for="q5b">15</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5c">
+                        <label for="q5c">16</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5d">
+                        <label for="q5d">255</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>6. ¿Qué característica distingue principalmente a IPv6 de IPv4?</h4>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6a">
+                        <label for="q6a">Mayor velocidad de transmisión</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q6" id="q6b">
+                        <label for="q6b">Espacio de direccionamiento expandido</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6c">
+                        <label for="q6c">Menor latencia</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6d">
+                        <label for="q6d">Compatibilidad con IPv4</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>7. ¿Qué tipo de NAT permite que múltiples hosts internos compartan una sola IP pública?</h4>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7a">
+                        <label for="q7a">Static NAT</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7b">
+                        <label for="q7b">Dynamic NAT</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q7" id="q7c">
+                        <label for="q7c">PAT (Port Address Translation)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7d">
+                        <label for="q7d">Proxy NAT</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>8. ¿Cuál es el prefijo reservado para documentación en IPv6?</h4>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q8" id="q8a">
+                        <label for="q8a">2001:db8::/32</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8b">
+                        <label for="q8b">fc00::/7</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8c">
+                        <label for="q8c">fe80::/10</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8d">
+                        <label for="q8d">ff00::/8</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>9. ¿Qué mecanismo de transición IPv6 usa el prefijo 2002::/16?</h4>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q9" id="q9a">
+                        <label for="q9a">6to4</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9b">
+                        <label for="q9b">Teredo</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9c">
+                        <label for="q9c">ISATAP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9d">
+                        <label for="q9d">6in4</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>10. ¿Cuál es la dirección de loopback en IPv6?</h4>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q10" id="q10a">
+                        <label for="q10a">::1</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10b">
+                        <label for="q10b">::0</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10c">
+                        <label for="q10c">127.0.0.1</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10d">
+                        <label for="q10d">fe80::1</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>11. ¿Qué protocolo de enrutamiento usa el algoritmo de estado de enlace?</h4>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11a">
+                        <label for="q11a">RIP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11b">
+                        <label for="q11b">IGRP</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q11" id="q11c">
+                        <label for="q11c">OSPF</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11d">
+                        <label for="q11d">BGP</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>12. ¿Cuál es el tamaño fijo de la cabecera IPv6?</h4>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12a">
+                        <label for="q12a">20 bytes</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12b">
+                        <label for="q12b">32 bytes</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q12" id="q12c">
+                        <label for="q12c">40 bytes</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12d">
+                        <label for="q12d">60 bytes</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>13. ¿Qué significan las siglas SLAAC en IPv6?</h4>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13a">
+                        <label for="q13a">Secure Link Access Control</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q13" id="q13b">
+                        <label for="q13b">StateLess Address AutoConfiguration</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13c">
+                        <label for="q13c">Static Local Address Assignment</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13d">
+                        <label for="q13d">Service Level Access Agreement</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>14. ¿Cuál es el rango de direcciones multicast IPv4?</h4>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14a">
+                        <label for="q14a">192.0.0.0/4</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14b">
+                        <label for="q14b">169.254.0.0/16</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q14" id="q14c">
+                        <label for="q14c">224.0.0.0/4</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14d">
+                        <label for="q14d">240.0.0.0/4</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>15. ¿Qué campo de la cabecera IPv4 se incrementa en cada salto?</h4>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15a">
+                        <label for="q15a">Identification</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q15" id="q15b">
+                        <label for="q15b">TTL (Time To Live)</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15c">
+                        <label for="q15c">Fragment Offset</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15d">
+                        <label for="q15d">Header Checksum</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>16. ¿Cuál es una ventaja principal del protocolo EIGRP sobre RIP?</h4>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16a">
+                        <label for="q16a">Es un estándar abierto</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q16" id="q16b">
+                        <label for="q16b">Convergencia más rápida</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16c">
+                        <label for="q16c">Menor uso de CPU</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16d">
+                        <label for="q16d">Compatible con IPv6</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>17. ¿Qué tipo de direcciones IPv6 NO existe?</h4>
+                    <div class="option">
+                        <input type="radio" name="q17" id="q17a">
+                        <label for="q17a">Unicast</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q17" id="q17b">
+                        <label for="q17b">Broadcast</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q17" id="q17c">
+                        <label for="q17c">Anycast</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q17" id="q17d">
+                        <label for="q17d">Multicast</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty avanzado">Avanzado</div>
+                    <h4>18. ¿Qué protocolo se usa para la traducción entre IPv4 e IPv6?</h4>
+                    <div class="option">
+                        <input type="radio" name="q18" id="q18a">
+                        <label for="q18a">ISATAP</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q18" id="q18b">
+                        <label for="q18b">6to4</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q18" id="q18c">
+                        <label for="q18c">NAT64</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q18" id="q18d">
+                        <label for="q18d">Teredo</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty intermedio">Intermedio</div>
+                    <h4>19. ¿Cuál es el prefijo para direcciones multicast en IPv6?</h4>
+                    <div class="option">
+                        <input type="radio" name="q19" id="q19a">
+                        <label for="q19a">fe80::/10</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q19" id="q19b">
+                        <label for="q19b">fc00::/7</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q19" id="q19c">
+                        <label for="q19c">ff00::/8</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q19" id="q19d">
+                        <label for="q19d">2001::/16</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="difficulty basico">Básico</div>
+                    <h4>20. ¿Qué significa CIDR en el contexto de redes IP?</h4>
+                    <div class="option">
+                        <input type="radio" name="q20" id="q20a">
+                        <label for="q20a">Central Internet Data Registry</label>
+                    </div>
+                    <div class="option" data-correct="true">
+                        <input type="radio" name="q20" id="q20b">
+                        <label for="q20b">Classless Inter-Domain Routing</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q20" id="q20c">
+                        <label for="q20c">Centralized IP Distribution Routing</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q20" id="q20d">
+                        <label for="q20d">Common Internet Domain Resolution</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 2rem;">
+                <button onclick="checkAllAnswers()" style="background: var(--accent-color); color: white; border: none; padding: 1rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                    📊 Verificar Todas las Respuestas
+                </button>
+            </div>
+        </div>
+        
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h3>📚 Glosario de Términos</h3>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">ARP (Address Resolution Protocol)</div>
+                <div>Protocolo que resuelve direcciones IP a direcciones MAC en redes locales.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">BGP (Border Gateway Protocol)</div>
+                <div>Protocolo de enrutamiento externo utilizado para intercambio de información entre sistemas autónomos en Internet.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">CIDR (Classless Inter-Domain Routing)</div>
+                <div>Sistema de direccionamiento que permite subredes de tamaño variable mediante notación /n.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">DHCP (Dynamic Host Configuration Protocol)</div>
+                <div>Protocolo para asignación automática de configuración IP a dispositivos de red.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">Dual Stack</div>
+                <div>Implementación simultánea de IPv4 e IPv6 en el mismo dispositivo o red.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">ICMP (Internet Control Message Protocol)</div>
+                <div>Protocolo de control utilizado para diagnóstico y reporte de errores en redes IP.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">IGP (Interior Gateway Protocol)</div>
+                <div>Protocolos de enrutamiento utilizados dentro de un sistema autónomo (RIP, OSPF, EIGRP).</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">NAT (Network Address Translation)</div>
+                <div>Técnica para traducir direcciones IP privadas a públicas, conservando el espacio de direcciones.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">OSPF (Open Shortest Path First)</div>
+                <div>Protocolo de enrutamiento de estado de enlace que utiliza el algoritmo de Dijkstra.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">PAT (Port Address Translation)</div>
+                <div>Tipo de NAT que permite múltiples hosts internos compartir una dirección IP pública usando diferentes puertos.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">QoS (Quality of Service)</div>
+                <div>Conjunto de tecnologías para garantizar rendimiento de red para aplicaciones críticas.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">RIP (Routing Information Protocol)</div>
+                <div>Protocolo de enrutamiento de vector distancia que utiliza conteo de saltos como métrica.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">SLAAC (StateLess Address AutoConfiguration)</div>
+                <div>Mecanismo de IPv6 que permite autoconfiguración automática de direcciones sin servidor DHCP.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">Subnetting</div>
+                <div>Técnica de dividir una red IP en subredes más pequeñas para optimizar el direccionamiento.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">TTL (Time To Live)</div>
+                <div>Campo de la cabecera IPv4 que limita la vida útil de un paquete en la red.</div>
+            </div>
+            
+            <div class="glossary-term">
+                <div class="term">Tunneling</div>
+                <div>Técnica de encapsular un protocolo dentro de otro para transporte a través de redes incompatibles.</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        function checkAllAnswers() {
+            const questions = document.querySelectorAll('.question');
+            let score = 0;
+            let total = questions.length;
+            
+            questions.forEach((question, index) => {
+                const options = question.querySelectorAll('.option');
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                const correctOption = question.querySelector('.option[data-correct="true"]');
+                
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect');
+                });
+                
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+                
+                if (selectedOption) {
+                    const selectedOptionDiv = selectedOption.closest('.option');
+                    if (selectedOptionDiv.getAttribute('data-correct') === 'true') {
+                        score++;
+                    } else {
+                        selectedOptionDiv.classList.add('incorrect');
+                    }
+                }
+            });
+            
+            const percentage = Math.round((score / total) * 100);
+            let message = `📊 Resultados: ${score}/${total} correctas (${percentage}%)\n\n`;
+            
+            if (percentage >= 90) {
+                message += "🏆 ¡Excelente! Dominas perfectamente el tema.";
+            } else if (percentage >= 75) {
+                message += "👍 ¡Muy bien! Tienes un buen conocimiento del tema.";
+            } else if (percentage >= 60) {
+                message += "📚 Bien, pero necesitas repasar algunos conceptos.";
+            } else {
+                message += "📖 Necesitas estudiar más este tema. ¡No te desanimes!";
+            }
+            
+            alert(message);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+</html>

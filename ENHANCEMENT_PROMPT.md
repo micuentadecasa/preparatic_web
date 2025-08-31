@@ -104,13 +104,10 @@ Transform the existing content into a comprehensive 7-tab system:
 ### 5. CONTENT QUALITY STANDARDS
 - **Spanish language throughout**
 - **Exam-focused content**:
-  - Emphasize concepts likely to appear in public administration exams
   - Include mnemonics and memory aids
   - Provide practice questions format
 - **Technical accuracy**:
-  - Up-to-date information
-  - Industry standards compliance
-  - Cross-references to official documentation
+  - Cross-references to documentation in the pdf
 
 ### 6. FILE NAMING CONVENTION
 Save enhanced files with `-enhanced.html` suffix:
@@ -125,7 +122,7 @@ Before completing each enhancement:
 2. Select the first unprocessed PDF file
 3. Read the PDF content directly of the unprocessed file from the pdfs/ folder
 4. Structure PDF content into the 7-tab system
-5. For Tab 6 (Ejercicios Prácticos): External search is allowed to create relevant exam questions
+5. For Tab 6 (Ejercicios Prácticos): use the content read from the pdf
 6. Apply all design and technical enhancements
 7. Create the new enhanced file in html2/ folder using PDF filename as base
 8. Update pdfs_list.py to mark the file as `processed: True`

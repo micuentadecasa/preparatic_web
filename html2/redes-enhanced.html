@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redes de Área Local - Administración y Gestión de Redes LAN</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --info-color: #17a2b8;
+            --ethernet-color: #00d4aa;
+            --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+            --shadow-dark: var(--shadow-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #00d4aa);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .tabs-container {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow-dark);
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background-color: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .tab.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-dark);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)10);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .ethernet-box {
+            background: linear-gradient(135deg, var(--ethernet-color)20, var(--ethernet-color)10);
+            border-left: 4px solid var(--ethernet-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, var(--warning-color)20, var(--warning-color)10);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--info-color)20, var(--info-color)10);
+            border-left: 4px solid var(--info-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .question {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .difficulty {
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty.basico {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .difficulty.intermedio {
+            background-color: var(--warning-color);
+            color: #000;
+        }
+
+        .difficulty.avanzado {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: var(--bg-hover);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .options li:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-color);
+        }
+
+        .correct-answer {
+            background-color: rgba(40, 167, 69, 0.2) !important;
+            border-color: var(--success-color) !important;
+        }
+
+        .correct-answer::after {
+            content: "✓ Respuesta Correcta";
+            color: var(--success-color);
+            font-weight: bold;
+            float: right;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-color), #00d4aa);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .protocol-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .protocol-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .ethernet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ethernet-table th,
+        .ethernet-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ethernet-table th {
+            background-color: var(--ethernet-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .ethernet-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .frame-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .frame-field {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            background-color: var(--bg-hover);
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .vlan-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .vlan-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .snmp-versions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .snmp-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .glossary-term dt {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .glossary-term dd {
+            color: var(--text-secondary);
+        }
+
+        .topology-diagram {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background-color: var(--bg-hover);
+            border-radius: 8px;
+        }
+
+        .device-icon {
+            display: inline-block;
+            margin: 1rem;
+            padding: 1rem;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .frame-diagram {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Cambiar Tema</button>
+        <div class="container">
+            <h1>Redes de Área Local</h1>
+            <p>Arquitectura, Dispositivos, Gestión y Administración de Redes LAN</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(1)">Resumen General</button>
+                <button class="tab" onclick="showTab(2)">Ethernet y LAN</button>
+                <button class="tab" onclick="showTab(3)">Dispositivos Red</button>
+                <button class="tab" onclick="showTab(4)">VLAN y STP</button>
+                <button class="tab" onclick="showTab(5)">Gestión SNMP</button>
+                <button class="tab" onclick="showTab(6)">Ejercicios Prácticos</button>
+                <button class="tab" onclick="showTab(7)">Recursos y FAQ</button>
+            </div>
+
+            <!-- Tab 1: Resumen General -->
+            <div id="tab1" class="tab-content active">
+                <div class="card">
+                    <h3>🌐 Resumen Ejecutivo</h3>
+                    <p>Esta guía completa aborda las <strong>Redes de Área Local (LAN)</strong>, incluyendo arquitecturas Ethernet, dispositivos de interconexión, administración de redes virtuales (VLAN) y gestión mediante protocolos SNMP.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">802.3</span>
+                        <span>Estándar Ethernet</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">48</span>
+                        <span>bits dirección MAC</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1518</span>
+                        <span>bytes trama máxima</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">161</span>
+                        <span>Puerto UDP SNMP</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Objetivos de Aprendizaje</h4>
+                    <ul>
+                        <li>Comprender arquitecturas y topologías de redes LAN</li>
+                        <li>Dominar el funcionamiento de Ethernet y sus especificaciones</li>
+                        <li>Conocer dispositivos de interconexión: switches, bridges, routers</li>
+                        <li>Administrar redes virtuales (VLAN) y protocolos STP</li>
+                        <li>Gestionar redes mediante SNMP y herramientas de monitorización</li>
+                    </ul>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h4>🔌 Tecnologías LAN</h4>
+                        <p>Ethernet, Token Ring, métodos de acceso CSMA/CD, medios de transmisión.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔄 Dispositivos</h4>
+                        <p>Switches, bridges, routers, gestión de dominios de colisión y broadcast.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🏷️ VLAN</h4>
+                        <p>Redes virtuales, etiquetado 802.1Q, STP/RSTP/MSTP.</p>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Gestión</h4>
+                        <p>SNMP, RMON, modelo FCAPS, herramientas de monitorización.</p>
+                    </div>
+                </div>
+
+                <div class="topology-diagram">
+                    <h4>🏗️ Arquitectura de Red LAN Típica</h4>
+                    <div>
+                        <span class="device-icon">Router</span>
+                        <span style="font-size: 1.5rem;">⬇️</span>
+                        <span class="device-icon">Switch Core</span>
+                        <span style="font-size: 1.5rem;">⬇️</span>
+                        <span class="device-icon">Switch Acceso</span>
+                        <span style="font-size: 1.5rem;">⬇️</span>
+                        <span class="device-icon">Estaciones</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Ethernet y LAN -->
+            <div id="tab2" class="tab-content">
+                <div class="card">
+                    <h3>🔌 Redes LAN Ethernet (802.3)</h3>
+                    <div class="ethernet-box">
+                        <h4>Características Fundamentales</h4>
+                        <ul>
+                            <li><strong>Topología:</strong> Física en ESTRELLA, lógica en BUS</li>
+                            <li><strong>Método de acceso:</strong> CSMA/CD (Carrier Sense Multiple Access/Collision Detection)</li>
+                            <li><strong>Tramas:</strong> 64-1518 bytes (sin preámbulo)</li>
+                            <li><strong>Dirección MAC:</strong> 48 bits únicos por interfaz</li>
+                            <li><strong>Velocidades:</strong> 10 Mbps - 10 Gbps</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Especificaciones Ethernet por Velocidad</h3>
+                    <table class="ethernet-table">
+                        <thead>
+                            <tr>
+                                <th>Velocidad</th>
+                                <th>Estándar</th>
+                                <th>Medio UTP/STP</th>
+                                <th>Medio Fibra Óptica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10 Mbps</td>
+                                <td>802.3</td>
+                                <td>10BASE-T</td>
+                                <td>10BASE-FL</td>
+                            </tr>
+                            <tr>
+                                <td>100 Mbps</td>
+                                <td>802.3u (Fast Ethernet)</td>
+                                <td>100BASE-TX</td>
+                                <td>100BASE-FX</td>
+                            </tr>
+                            <tr>
+                                <td>1 Gbps</td>
+                                <td>802.3z/ab</td>
+                                <td>1000BASE-T</td>
+                                <td>1000BASE-LX</td>
+                            </tr>
+                            <tr>
+                                <td>10 Gbps</td>
+                                <td>802.3ae</td>
+                                <td>10GBASE-T (Cat6)</td>
+                                <td>10GBASE-LX4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🗂️ Estructura de Trama Ethernet</h3>
+                    <div class="frame-diagram">
+                        <div class="frame-field">Preámbulo<br>8B</div>
+                        <div class="frame-field">MAC Destino<br>6B</div>
+                        <div class="frame-field">MAC Origen<br>6B</div>
+                        <div class="frame-field">Tipo/Longitud<br>2B</div>
+                        <div class="frame-field">Datos<br>46-1500B</div>
+                        <div class="frame-field">CRC<br>4B</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h4>📏 Tamaños de Trama</h4>
+                        <ul>
+                            <li><strong>Mínimo:</strong> 64 bytes (sin preámbulo)</li>
+                            <li><strong>Máximo:</strong> 1518 bytes (sin preámbulo)</li>
+                            <li><strong>Jumbo Frames:</strong> MTU de 9000 bytes</li>
+                            <li><strong>Etiqueta 802.1Q:</strong> +4 bytes (máximo 1522)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Subniveles de Enlace 802.3</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>LLC (Logical Link Control)</h4>
+                            <ul>
+                                <li>Identifica protocolo de capa de red</li>
+                                <li>Control de errores y flujo</li>
+                                <li>Envía trama al subnivel MAC</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>MAC (Media Access Control)</h4>
+                            <ul>
+                                <li>Encapsulación: delimitación y direccionamiento</li>
+                                <li>Detección de errores</li>
+                                <li>Control de acceso al medio</li>
+                                <li>Recuperación de colisiones</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Técnicas de Acceso al Medio</h3>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <span class="icon">🗳️</span>
+                            <h4>Por Selección</h4>
+                            <p><strong>Polling:</strong> Nodo sondea al resto</p>
+                            <p><strong>Token:</strong> Paso de testigo</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">⚔️</span>
+                            <h4>Por Contienda</h4>
+                            <p><strong>ALOHA:</strong> Puro y ranurado</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">👂</span>
+                            <h4>CSMA (Escucha)</h4>
+                            <p><strong>1-Persistente:</strong> Espera escuchando</p>
+                            <p><strong>No-Persistente:</strong> Tiempo aleatorio</p>
+                            <p><strong>p-Persistente:</strong> Probabilidad p</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">💥</span>
+                            <h4>CSMA/CD</h4>
+                            <p><strong>Ethernet:</strong> Detecta colisiones</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🔍 Conceptos Clave</h4>
+                        <ul>
+                            <li><strong>Dominio de Colisión:</strong> Área donde pueden ocurrir colisiones</li>
+                            <li><strong>Dominio de Difusión:</strong> Área alcanzada por broadcast</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Dispositivos de Red -->
+            <div id="tab3" class="tab-content">
+                <div class="card">
+                    <h3>🌉 Bridges (Puentes)</h3>
+                    <div class="info-box">
+                        <h4>Funcionamiento</h4>
+                        <p>Capturan tramas de un segmento y las reenvían selectivamente a otro segmento, operando a <strong>nivel MAC</strong>.</p>
+                    </div>
+
+                    <h4>🎯 Objetivos:</h4>
+                    <ul>
+                        <li><strong>Interoperabilidad:</strong> Redes heterogéneas (Ethernet ↔ Token Ring)</li>
+                        <li><strong>Medios físicos:</strong> Unión de diferentes medios (UTP ↔ FO)</li>
+                        <li><strong>Fiabilidad:</strong> Redundancia y tolerancia a fallos</li>
+                        <li><strong>Seguridad:</strong> Segmentación evita modo promiscuo</li>
+                    </ul>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Bridge con Encaminamiento desde Origen</h4>
+                            <p>Las estaciones indican el camino que seguirá la trama</p>
+                        </div>
+                        <div class="card">
+                            <h4>Bridge Transparente</h4>
+                            <p>No requiere modificación en las estaciones. Funcionamiento automático.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Switches (Conmutadores)</h3>
+                    <div class="highlight-box">
+                        <h4>Ventajas sobre Bridges</h4>
+                        <p>Interconectan <strong>múltiples segmentos</strong> a nivel de enlace con mayor rendimiento y <strong>transmisión full-duplex</strong>.</p>
+                    </div>
+
+                    <h4>🔀 Formas de Conmutación:</h4>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <span class="icon">📦</span>
+                            <h4>Store-and-Forward</h4>
+                            <p>Almacena toda la trama antes de reenviar</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">⚡</span>
+                            <h4>Cut-Through</h4>
+                            <p>Reenvía inmediatamente al leer destino</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">🧩</span>
+                            <h4>Fragment-Free</h4>
+                            <p>Lee primeros 64 bytes antes de reenviar</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">🔀</span>
+                            <h4>Híbrido</h4>
+                            <p>Cambia según frecuencia de errores</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛣️ Routers (Encaminadores)</h3>
+                    <div class="ethernet-box">
+                        <h4>Características</h4>
+                        <ul>
+                            <li>Interconexión de redes LAN separadas físicamente</li>
+                            <li>Separan <strong>dominios de colisión</strong> y <strong>dominios de broadcast</strong></li>
+                            <li>Utilizan esquema de direccionamiento <strong>IP</strong></li>
+                            <li>Opciones de filtrado y conmutación más potentes que switches</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Diferencias Clave</h4>
+                        <table style="width: 100%; margin-top: 1rem;">
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem; font-weight: bold;">Dispositivo</td>
+                                <td style="padding: 0.5rem; font-weight: bold;">Nivel OSI</td>
+                                <td style="padding: 0.5rem; font-weight: bold;">Dominios</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Bridge</td>
+                                <td style="padding: 0.5rem;">Enlace (MAC)</td>
+                                <td style="padding: 0.5rem;">Separa colisiones</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.5rem;">Switch</td>
+                                <td style="padding: 0.5rem;">Enlace (MAC)</td>
+                                <td style="padding: 0.5rem;">Separa colisiones</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem;">Router</td>
+                                <td style="padding: 0.5rem;">Red (IP)</td>
+                                <td style="padding: 0.5rem;">Separa colisiones y broadcast</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: VLAN y STP -->
+            <div id="tab4" class="tab-content">
+                <div class="card">
+                    <h3>🏷️ VLAN (Redes Virtuales)</h3>
+                    <div class="highlight-box">
+                        <h4>Definición</h4>
+                        <p>Agrupación lógica de dispositivos y estaciones definida en uno o más switches, permitiendo agrupación aunque estén <strong>separados físicamente</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔧 Tipos de VLAN</h3>
+                    <div class="vlan-types">
+                        <div class="vlan-card">
+                            <h4>VLAN de Nivel 1 (Puerto)</h4>
+                            <p><strong>Port Switching:</strong> Se especifica qué puertos pertenecen a la VLAN. Es el método más común pero no permite movilidad.</p>
+                        </div>
+                        <div class="vlan-card">
+                            <h4>VLAN de Nivel 2 (MAC)</h4>
+                            <p>Asignación por <strong>dirección MAC</strong>. Permite movilidad pero requiere asignación individual.</p>
+                        </div>
+                        <div class="vlan-card">
+                            <h4>VLAN por Protocolo</h4>
+                            <p>Determinada por el <strong>campo tipo</strong> de la trama MAC (IPv4, IPv6, AppleTalk, IPX).</p>
+                        </div>
+                        <div class="vlan-card">
+                            <h4>VLAN de Nivel 3 (Subred)</h4>
+                            <p>Por <strong>direcciones de subred</strong>. Subred virtual basada en IP.</p>
+                        </div>
+                        <div class="vlan-card">
+                            <h4>VLAN por Aplicación</h4>
+                            <p>Una VLAN específica para cada <strong>aplicación</strong> de niveles superiores.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏷️ Etiquetado 802.1Q</h3>
+                    <div class="ethernet-box">
+                        <h4>Características del Etiquetado</h4>
+                        <ul>
+                            <li><strong>Tamaño:</strong> 4 bytes adicionales en la trama</li>
+                            <li><strong>Trama máxima:</strong> 1522 bytes (1518 + 4)</li>
+                            <li><strong>Ubicación:</strong> Entre MAC origen y tipo/longitud</li>
+                            <li><strong>MSTP:</strong> Multiple Spanning Tree Protocol para múltiples VLAN</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>🔧 VTP (VLAN Trunking Protocol)</h4>
+                        <p>Protocolo propietario de <strong>Cisco</strong> que permite gestión centralizada de todas las VLAN en la red.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🌳 STP (Spanning Tree Protocol)</h3>
+                    <div class="highlight-box">
+                        <h4>IEEE 802.1d</h4>
+                        <p>Protocolo de nivel 2 que gestiona bucles por <strong>enlaces redundantes</strong> mediante la definición de un único camino entre dos nodos.</p>
+                    </div>
+
+                    <h4>🔄 Estados de Puertos STP:</h4>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <span class="icon">🚫</span>
+                            <h4>Bloqueo</h4>
+                            <p>Recibe BPDUs pero no las envía</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">👂</span>
+                            <h4>Escucha</h4>
+                            <p>Determina rutas al puente raíz. Procesa BPDUs</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">📚</span>
+                            <h4>Aprendizaje</h4>
+                            <p>Actualiza tabla MAC. Descarta tramas de datos</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">✅</span>
+                            <h4>Envío</h4>
+                            <p>Envía y recibe datos. Actualiza tabla MAC</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">❌</span>
+                            <h4>Desactivado</h4>
+                            <p>Puerto deshabilitado o con fallo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ RSTP y MSTP</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>RSTP (IEEE 802.1w)</h4>
+                            <ul>
+                                <li><strong>Rapid STP:</strong> Tiempo de convergencia reducido</li>
+                                <li><strong>Compatibilidad:</strong> Mantiene compatibilidad con STP</li>
+                                <li><strong>Puertos:</strong> 2048-4096 puertos soportados</li>
+                                <li><strong>Estados:</strong> Learning, Forwarding, Discarding</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>MSTP (IEEE 802.1s)</h4>
+                            <ul>
+                                <li><strong>Multiple STP:</strong> Extensión para múltiples VLAN</li>
+                                <li><strong>Regiones:</strong> Grupos de switches con mismo ID</li>
+                                <li><strong>Instancias:</strong> Múltiples instancias STP por VLAN</li>
+                                <li><strong>Escalabilidad:</strong> Mejor para organizaciones grandes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Gestión SNMP -->
+            <div id="tab5" class="tab-content">
+                <div class="card">
+                    <h3>📊 Modelo de Gestión FCAPS</h3>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <span class="icon">🚨</span>
+                            <h4>Fault Management</h4>
+                            <p>Gestión de fallos y incidencias</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">⚙️</span>
+                            <h4>Configuration</h4>
+                            <p>Gestión de configuración</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">💰</span>
+                            <h4>Accounting</h4>
+                            <p>Gestión de contabilidad</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">📈</span>
+                            <h4>Performance</h4>
+                            <p>Gestión de rendimiento</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">🔒</span>
+                            <h4>Security</h4>
+                            <p>Gestión de seguridad</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📡 SNMP (Simple Network Management Protocol)</h3>
+                    <div class="info-box">
+                        <h4>Características Generales</h4>
+                        <ul>
+                            <li><strong>Capa:</strong> Protocolo de aplicación</li>
+                            <li><strong>Transporte:</strong> UDP</li>
+                            <li><strong>Puertos:</strong> 161 (gestión) y 162 (traps)</li>
+                            <li><strong>Modelo:</strong> Agentes ↔ Gestores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔢 Versiones SNMP</h3>
+                    <div class="snmp-versions">
+                        <div class="snmp-card">
+                            <h4>SNMP v1</h4>
+                            <ul>
+                                <li><strong>Modo:</strong> Pregunta-respuesta sobre UDP</li>
+                                <li><strong>Limitación:</strong> No permite recuperar grandes bloques</li>
+                                <li><strong>Operaciones:</strong></li>
+                                <ul>
+                                    <li>GetRequest</li>
+                                    <li>GetNextRequest</li>
+                                    <li>Response</li>
+                                    <li>SetRequest</li>
+                                    <li>Trap</li>
+                                </ul>
+                            </ul>
+                        </div>
+                        <div class="snmp-card">
+                            <h4>SNMP v2</h4>
+                            <ul>
+                                <li><strong>Mejoras:</strong> Operaciones adicionales</li>
+                                <li><strong>Nuevas operaciones:</strong></li>
+                                <ul>
+                                    <li>GetBulk (recuperación masiva)</li>
+                                    <li>Inform (confirmación de traps)</li>
+                                    <li>Report (informes de estado)</li>
+                                </ul>
+                            </ul>
+                        </div>
+                        <div class="snmp-card">
+                            <h4>SNMP v3</h4>
+                            <ul>
+                                <li><strong>Seguridad:</strong> Mecanismos avanzados</li>
+                                <li><strong>VACM:</strong> Views-Based Access Control Model</li>
+                                <li><strong>USM:</strong> User-based Security Model</li>
+                                <li><strong>Características:</strong> Autenticación y cifrado</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 MIB y SMI</h3>
+                    <div class="grid">
+                        <div class="info-box">
+                            <h4>SMI (Structure of Management Information)</h4>
+                            <p><strong>Lenguaje basado en ASN.1</strong> para definir la estructura de la información de gestión.</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>MIB (Management Information Base)</h4>
+                            <ul>
+                                <li><strong>MIB-I:</strong> Estándar básico</li>
+                                <li><strong>MIB-II:</strong> Específica de cada fabricante</li>
+                                <li><strong>MIB propietarias:</strong> Extensiones del fabricante</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 RMON (Remote MONitoring MIB)</h3>
+                    <div class="highlight-box">
+                        <h4>Funcionalidad</h4>
+                        <p>MIB que permite al gestor <strong>delegar la monitorización</strong> en agentes especiales (sondas RMON), reduciendo el tráfico de red.</p>
+                    </div>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h4>RMON v1</h4>
+                            <ul>
+                                <li>Monitorización nivel físico y enlace</li>
+                                <li>Nivel 2 (MAC)</li>
+                                <li>Funciona off-line</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>RMON v2</h4>
+                            <ul>
+                                <li>Monitorización nivel de red</li>
+                                <li>Nivel 3 (IP) y aplicación</li>
+                                <li>Chequeo de tráfico completo</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4>SMON</h4>
+                            <ul>
+                                <li>Switched MONitoring</li>
+                                <li>Gestión de dispositivos de red</li>
+                                <li>Monitorización de VPNs</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>✅ Ventajas RMON</h4>
+                        <ul>
+                            <li>Funcionamiento off-line</li>
+                            <li>Disminución del tráfico de red</li>
+                            <li>Detección y reporte automático de fallos</li>
+                            <li>Datos con valor agregado</li>
+                            <li>Soporte para múltiples gestores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Herramientas de Gestión</h3>
+                    <div class="protocol-grid">
+                        <div class="protocol-card">
+                            <span class="icon">🟢</span>
+                            <h4>Open Source</h4>
+                            <p>Nagios, Zabbix, OpenNMS, Icinga, Pandora FMS</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">💼</span>
+                            <h4>Comerciales</h4>
+                            <p>BMC Patrol, SolarWinds, HP SIM, IBM Tivoli</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">🌐</span>
+                            <h4>Cisco</h4>
+                            <p>Prime NCS, DUDE</p>
+                        </div>
+                        <div class="protocol-card">
+                            <span class="icon">📊</span>
+                            <h4>Monitorización</h4>
+                            <p>MRTG, PRTG, Zenoss, Monitis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Ejercicios Prácticos -->
+            <div id="tab6" class="tab-content">
+                <div class="card">
+                    <h3>🎯 Ejercicios de Evaluación</h3>
+                    <p>20 preguntas tipo examen sobre redes LAN y gestión de redes</p>
+                </div>
+
+                <!-- Pregunta 1 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">1</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuál es el estándar IEEE para redes Ethernet?</strong></p>
+                    <ul class="options">
+                        <li>A) 802.1</li>
+                        <li>B) 802.2</li>
+                        <li class="correct-answer">C) 802.3</li>
+                        <li>D) 802.4</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">2</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuántos bits tiene una dirección MAC?</strong></p>
+                    <ul class="options">
+                        <li>A) 32 bits</li>
+                        <li class="correct-answer">B) 48 bits</li>
+                        <li>C) 64 bits</li>
+                        <li>D) 128 bits</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">3</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el tamaño máximo de una trama Ethernet estándar (sin preámbulo)?</strong></p>
+                    <ul class="options">
+                        <li>A) 1500 bytes</li>
+                        <li class="correct-answer">B) 1518 bytes</li>
+                        <li>C) 1522 bytes</li>
+                        <li>D) 1600 bytes</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">4</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué método de acceso al medio utiliza Ethernet?</strong></p>
+                    <ul class="options">
+                        <li>A) Token Ring</li>
+                        <li>B) CSMA/CA</li>
+                        <li class="correct-answer">C) CSMA/CD</li>
+                        <li>D) TDMA</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">5</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el puerto UDP utilizado por SNMP para gestión?</strong></p>
+                    <ul class="options">
+                        <li>A) 160</li>
+                        <li class="correct-answer">B) 161</li>
+                        <li>C) 162</li>
+                        <li>D) 163</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">6</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Qué puerto UDP utiliza SNMP para traps?</strong></p>
+                    <ul class="options">
+                        <li>A) 160</li>
+                        <li>B) 161</li>
+                        <li class="correct-answer">C) 162</li>
+                        <li>D) 163</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">7</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál es el tamaño de la etiqueta 802.1Q en VLAN?</strong></p>
+                    <ul class="options">
+                        <li>A) 2 bytes</li>
+                        <li class="correct-answer">B) 4 bytes</li>
+                        <li>C) 6 bytes</li>
+                        <li>D) 8 bytes</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">8</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué topología física utiliza Ethernet?</strong></p>
+                    <ul class="options">
+                        <li>A) Bus</li>
+                        <li>B) Anillo</li>
+                        <li class="correct-answer">C) Estrella</li>
+                        <li>D) Malla</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">9</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál de estas NO es una forma de conmutación en switches?</strong></p>
+                    <ul class="options">
+                        <li>A) Store-and-Forward</li>
+                        <li>B) Cut-Through</li>
+                        <li>C) Fragment-Free</li>
+                        <li class="correct-answer">D) Token-Passing</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">10</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué protocolo utiliza VTP de Cisco?</strong></p>
+                    <ul class="options">
+                        <li>A) Es un estándar IEEE</li>
+                        <li class="correct-answer">B) Es un protocolo propietario de Cisco</li>
+                        <li>C) Es parte del estándar 802.1Q</li>
+                        <li>D) Es un protocolo de routing</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">11</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuál es el estándar IEEE para STP?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) 802.1d</li>
+                        <li>B) 802.1q</li>
+                        <li>C) 802.1w</li>
+                        <li>D) 802.1s</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 12 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">12</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Qué significa CSMA/CD?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) Carrier Sense Multiple Access/Collision Detection</li>
+                        <li>B) Circuit Switch Multiple Access/Collision Detection</li>
+                        <li>C) Carrier Sense Multiple Access/Collision Delay</li>
+                        <li>D) Circuit Sense Multiple Access/Collision Detection</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 13 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">13</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál es la diferencia principal entre RMON v1 y RMON v2?</strong></p>
+                    <ul class="options">
+                        <li>A) v1 es más rápido que v2</li>
+                        <li class="correct-answer">B) v1 monitoriza nivel 2, v2 monitoriza niveles 3 y superiores</li>
+                        <li>C) v2 es más inseguro que v1</li>
+                        <li>D) No hay diferencias significativas</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 14 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">14</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Cuántos bytes tiene el tamaño mínimo de una trama Ethernet?</strong></p>
+                    <ul class="options">
+                        <li>A) 46 bytes</li>
+                        <li class="correct-answer">B) 64 bytes</li>
+                        <li>C) 72 bytes</li>
+                        <li>D) 128 bytes</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 15 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">15</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Qué significa MTU en el contexto de Jumbo Frames?</strong></p>
+                    <ul class="options">
+                        <li>A) Maximum Transfer Unit</li>
+                        <li class="correct-answer">B) Maximum Transmission Unit</li>
+                        <li>C) Multiple Transfer Unit</li>
+                        <li>D) Media Transmission Unit</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 16 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">16</span>
+                        <span class="difficulty basico">Básico</span>
+                    </div>
+                    <p><strong>¿Cuál de estos dispositivos separa dominios de broadcast?</strong></p>
+                    <ul class="options">
+                        <li>A) Bridge</li>
+                        <li>B) Switch</li>
+                        <li class="correct-answer">C) Router</li>
+                        <li>D) Hub</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 17 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">17</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Qué significa FCAPS en gestión de redes?</strong></p>
+                    <ul class="options">
+                        <li class="correct-answer">A) Fault, Configuration, Accounting, Performance, Security</li>
+                        <li>B) Function, Control, Access, Performance, Security</li>
+                        <li>C) Fault, Control, Access, Performance, System</li>
+                        <li>D) Function, Configuration, Access, Protocol, Security</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 18 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">18</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál es la principal mejora de RSTP sobre STP?</strong></p>
+                    <ul class="options">
+                        <li>A) Mayor seguridad</li>
+                        <li class="correct-answer">B) Tiempo de convergencia reducido</li>
+                        <li>C) Soporte para más VLANs</li>
+                        <li>D) Menor consumo de CPU</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 19 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">19</span>
+                        <span class="difficulty intermedio">Intermedio</span>
+                    </div>
+                    <p><strong>¿Qué operación añadió SNMP v2 que no existía en v1?</strong></p>
+                    <ul class="options">
+                        <li>A) GetRequest</li>
+                        <li class="correct-answer">B) GetBulk</li>
+                        <li>C) SetRequest</li>
+                        <li>D) Trap</li>
+                    </ul>
+                </div>
+
+                <!-- Pregunta 20 -->
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">20</span>
+                        <span class="difficulty avanzado">Avanzado</span>
+                    </div>
+                    <p><strong>¿Cuál es el MTU típico de los Jumbo Frames?</strong></p>
+                    <ul class="options">
+                        <li>A) 1518 bytes</li>
+                        <li>B) 1522 bytes</li>
+                        <li>C) 4096 bytes</li>
+                        <li class="correct-answer">D) 9000 bytes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab 7: Recursos y FAQ -->
+            <div id="tab7" class="tab-content">
+                <div class="card">
+                    <h3>📚 Glosario de Términos Clave</h3>
+                    
+                    <dl>
+                        <div class="glossary-term">
+                            <dt>CSMA/CD</dt>
+                            <dd>Carrier Sense Multiple Access with Collision Detection. Método de acceso al medio utilizado por Ethernet.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Dominio de Colisión</dt>
+                            <dd>Área de red donde pueden ocurrir colisiones entre tramas. Separado por bridges y switches.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Dominio de Broadcast</dt>
+                            <dd>Área de red donde se propagan las tramas de broadcast. Separado por routers.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>VLAN</dt>
+                            <dd>Virtual Local Area Network. Agrupación lógica de dispositivos independiente de su ubicación física.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>STP</dt>
+                            <dd>Spanning Tree Protocol. Previene bucles en redes con enlaces redundantes.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>SNMP</dt>
+                            <dd>Simple Network Management Protocol. Protocolo para gestión y monitorización de redes.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>MIB</dt>
+                            <dd>Management Information Base. Base de datos de objetos gestionables en SNMP.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>RMON</dt>
+                            <dd>Remote MONitoring. Extensión de SNMP para monitorización remota mediante sondas.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Trunking</dt>
+                            <dd>Método para transportar múltiples VLANs a través de un enlace usando etiquetado.</dd>
+                        </div>
+                        
+                        <div class="glossary-term">
+                            <dt>Jumbo Frames</dt>
+                            <dd>Tramas Ethernet de tamaño superior al estándar (típicamente 9000 bytes MTU).</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Tablas de Referencia Rápida</h3>
+                    
+                    <h4>🔌 Especificaciones Ethernet</h4>
+                    <table class="ethernet-table">
+                        <thead>
+                            <tr>
+                                <th>Velocidad</th>
+                                <th>Estándar</th>
+                                <th>Cable UTP</th>
+                                <th>Distancia Max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10 Mbps</td>
+                                <td>10BASE-T</td>
+                                <td>Cat3/5</td>
+                                <td>100m</td>
+                            </tr>
+                            <tr>
+                                <td>100 Mbps</td>
+                                <td>100BASE-TX</td>
+                                <td>Cat5</td>
+                                <td>100m</td>
+                            </tr>
+                            <tr>
+                                <td>1 Gbps</td>
+                                <td>1000BASE-T</td>
+                                <td>Cat5e</td>
+                                <td>100m</td>
+                            </tr>
+                            <tr>
+                                <td>10 Gbps</td>
+                                <td>10GBASE-T</td>
+                                <td>Cat6/6a</td>
+                                <td>55m/100m</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>🔢 Puertos y Protocolos</h3>
+                    <table class="ethernet-table">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Puerto</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SNMP</td>
+                                <td>UDP 161</td>
+                                <td>Gestión de red</td>
+                            </tr>
+                            <tr>
+                                <td>SNMP Traps</td>
+                                <td>UDP 162</td>
+                                <td>Notificaciones de eventos</td>
+                            </tr>
+                            <tr>
+                                <td>Telnet</td>
+                                <td>TCP 23</td>
+                                <td>Acceso remoto</td>
+                            </tr>
+                            <tr>
+                                <td>SSH</td>
+                                <td>TCP 22</td>
+                                <td>Acceso remoto seguro</td>
+                            </tr>
+                            <tr>
+                                <td>HTTP</td>
+                                <td>TCP 80</td>
+                                <td>Gestión web</td>
+                            </tr>
+                            <tr>
+                                <td>HTTPS</td>
+                                <td>TCP 443</td>
+                                <td>Gestión web segura</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Consejos para el Examen</h3>
+                    <div class="highlight-box">
+                        <h4>🎯 Puntos Clave</h4>
+                        <ul>
+                            <li><strong>802.3:</strong> Estándar Ethernet</li>
+                            <li><strong>48 bits:</strong> Tamaño dirección MAC</li>
+                            <li><strong>64-1518 bytes:</strong> Rango trama Ethernet</li>
+                            <li><strong>CSMA/CD:</strong> Método acceso Ethernet</li>
+                            <li><strong>161/162:</strong> Puertos SNMP</li>
+                            <li><strong>4 bytes:</strong> Etiqueta 802.1Q</li>
+                            <li><strong>9000 bytes:</strong> MTU Jumbo Frames</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <h4>⚠️ Errores Comunes</h4>
+                        <ul>
+                            <li>Confundir topología física (estrella) con lógica (bus) en Ethernet</li>
+                            <li>Mezclar puertos SNMP (161 gestión, 162 traps)</li>
+                            <li>Olvidar que routers separan dominios broadcast, switches solo colisiones</li>
+                            <li>Confundir STP (802.1d) con RSTP (802.1w) y MSTP (802.1s)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Enlaces de Interés</h3>
+                    <ul>
+                        <li><strong>IEEE 802.3:</strong> Estándares Ethernet oficiales</li>
+                        <li><strong>RFC 1157:</strong> SNMP v1 especificación</li>
+                        <li><strong>RFC 3416:</strong> SNMP v2c especificación</li>
+                        <li><strong>RFC 3414:</strong> SNMP v3 especificación</li>
+                        <li><strong>IEEE 802.1Q:</strong> Estándar VLAN tagging</li>
+                        <li><strong>IEEE 802.1d:</strong> Spanning Tree Protocol</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Aplicación en Administración Pública</h3>
+                    <div class="info-box">
+                        <h4>Consideraciones Especiales</h4>
+                        <ul>
+                            <li><strong>Seguridad:</strong> Segregación mediante VLANs por departamentos</li>
+                            <li><strong>Monitorización:</strong> SNMP para supervisión centralizada</li>
+                            <li><strong>Redundancia:</strong> STP/RSTP para alta disponibilidad</li>
+                            <li><strong>Gestión:</strong> Herramientas open source vs comerciales</li>
+                            <li><strong>Cumplimiento:</strong> ENS y normativas de seguridad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
+        }
+
+        // Tab management
+        function showTab(tabNumber) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`tab${tabNumber}`).classList.add('active');
+            
+            // Add active class to selected tab
+            document.querySelectorAll('.tab')[tabNumber - 1].classList.add('active');
+        }
+
+        // Interactive quiz functionality
+        function initializeQuiz() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from siblings
+                    const siblings = this.parentNode.querySelectorAll('li');
+                    siblings.forEach(sibling => {
+                        sibling.style.backgroundColor = '';
+                        sibling.style.borderColor = '';
+                    });
+                    
+                    // Highlight selected option
+                    if (!this.classList.contains('correct-answer')) {
+                        this.style.backgroundColor = 'var(--bg-secondary)';
+                        this.style.borderColor = 'var(--warning-color)';
+                    }
+                });
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            initializeQuiz();
+        });
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                return;
+            }
+            
+            // Tab switching with arrow keys
+            if (e.target.classList.contains('tab')) {
+                const tabs = Array.from(document.querySelectorAll('.tab'));
+                const currentIndex = tabs.indexOf(e.target);
+                
+                if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    e.preventDefault();
+                    tabs[currentIndex - 1].focus();
+                    tabs[currentIndex - 1].click();
+                } else if (e.key === 'ArrowRight' && currentIndex < tabs.length - 1) {
+                    e.preventDefault();
+                    tabs[currentIndex + 1].focus();
+                    tabs[currentIndex + 1].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

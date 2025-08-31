@@ -171,25 +171,25 @@ pdfs = [
         "filename": "redes.pdf",
         "title": "Redes de Comunicaciones",
         "category": "Redes",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "redes_ipv4.pdf",
         "title": "Redes IPv4",
         "category": "Redes",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "riesgos.pdf",
         "title": "Gestión de Riesgos",
         "category": "Gestión",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "sara_testa.pdf",
         "title": "SARA - Testa",
         "category": "Redes",
-        "processed": False
+        "processed": True
     },
     {
         "filename": "seguridad_redes.pdf",

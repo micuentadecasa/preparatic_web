@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Riesgos - Guía de Estudio</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --bg-hover: #2f2f2f;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #f8f9fa;
+            --bg-hover: #e9ecef;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #0066cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 2rem 0 0 0;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background: var(--bg-card);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem 0;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            background: var(--bg-hover);
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .definition-list {
+            list-style: none;
+        }
+
+        .definition-list li {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 0.3rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .definition-term {
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-badge {
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        .difficulty-basico { background: #28a745; color: white; }
+        .difficulty-intermedio { background: #ffc107; color: #000; }
+        .difficulty-avanzado { background: #dc3545; color: white; }
+
+        .options {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .options li {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .options li:hover {
+            background: var(--bg-hover);
+        }
+
+        .options li.correct {
+            border-left-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        .options li.incorrect {
+            border-left-color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        .correct-answer {
+            color: #28a745;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .glossary-term {
+            display: flex;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 0.3rem;
+        }
+
+        .glossary-word {
+            font-weight: 700;
+            color: var(--accent-color);
+            min-width: 150px;
+            margin-right: 1rem;
+        }
+
+        .responsive-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+            
+            .tabs {
+                margin: 1rem 0 0 0;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .timeline {
+                padding-left: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">TEMA 047: Análisis y Gestión de Riesgos</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Claro</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('resumen')">Resumen General</button>
+            <button class="tab-btn" onclick="showTab('seguridad')">Seguridad de Sistemas</button>
+            <button class="tab-btn" onclick="showTab('analisis')">Análisis de Riesgos</button>
+            <button class="tab-btn" onclick="showTab('tratamiento')">Tratamiento de Riesgos</button>
+            <button class="tab-btn" onclick="showTab('marcos')">Marcos de Referencia</button>
+            <button class="tab-btn" onclick="showTab('ejercicios')">Ejercicios Prácticos</button>
+            <button class="tab-btn" onclick="showTab('recursos')">Recursos y FAQ</button>
+        </div>
+
+        <div id="resumen" class="tab-content active">
+            <div class="card">
+                <h3>📊 Resumen Ejecutivo</h3>
+                <p>El <strong>Tema 047</strong> aborda la seguridad de sistemas de información con enfoque específico en el análisis y gestión de riesgos. Este tema es fundamental para las oposiciones de informática en la Administración Pública.</p>
+                
+                <h4>🎯 Objetivos de Aprendizaje</h4>
+                <ul>
+                    <li>Comprender la definición y dimensiones de la seguridad de sistemas de información según el ENS</li>
+                    <li>Dominar el proceso de análisis y gestión de riesgos</li>
+                    <li>Conocer los marcos de referencia principales (ISO, COBIT, COSO, MAGERIT)</li>
+                    <li>Aplicar técnicas y herramientas para la gestión de riesgos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📈 Estadísticas Clave</h3>
+                <div class="responsive-table">
+                    <table>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Valor/Información Clave</th>
+                        </tr>
+                        <tr>
+                            <td>Fecha de actualización</td>
+                            <td>28 de abril de 2023</td>
+                        </tr>
+                        <tr>
+                            <td>Real Decreto ENS</td>
+                            <td>RD 311/2022, de 3 de mayo</td>
+                        </tr>
+                        <tr>
+                            <td>Dimensiones de seguridad</td>
+                            <td>5 (Disponibilidad, Integridad, Confidencialidad, Autenticidad, Trazabilidad)</td>
+                        </tr>
+                        <tr>
+                            <td>Estrategias de tratamiento</td>
+                            <td>4 (Evitar, Mitigar, Compartir/transferir, Aceptar)</td>
+                        </tr>
+                        <tr>
+                            <td>Versión actual MAGERIT</td>
+                            <td>v3.0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔑 Conceptos Principales</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Seguridad de Sistemas de Información</h4>
+                        <p>Capacidad de resistir acciones que comprometan las dimensiones de seguridad de datos y servicios.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Gestión de Riesgos</h4>
+                        <p>Proceso destinado a modificar el riesgo buscando equilibrio entre riesgos y costes de control.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Marcos de Referencia</h4>
+                        <p>Estándares y metodologías como ISO 27000, COBIT, COSO y MAGERIT para gestionar riesgos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="seguridad" class="tab-content">
+            <div class="card">
+                <h3>🛡️ Seguridad de Sistemas de Información</h3>
+                <p>Según el <strong>Anexo IV del Real Decreto 311/2022</strong>, la seguridad de los sistemas de información se define como:</p>
+                <blockquote style="background: var(--bg-secondary); padding: 1rem; border-left: 4px solid var(--accent-color); margin: 1rem 0; font-style: italic;">
+                    "La capacidad de las redes y sistemas de información de resistir, con un nivel determinado de fiabilidad, toda acción que comprometa la disponibilidad, autenticidad, integridad o confidencialidad de los datos almacenados, transmitidos o tratados, o los servicios correspondientes ofrecidos por tales redes y sistemas de información o accesibles a través de ellos."
+                </blockquote>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Las 5 Dimensiones de la Seguridad</h3>
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">🟢 Disponibilidad</div>
+                        <div>Disposición de los servicios a ser usados cuando sea necesario. Los servicios deben estar accesibles cuando los usuarios los requieran.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🔒 Integridad</div>
+                        <div>Mantenimiento de las características de completitud y corrección de los datos. La información no debe ser alterada de manera no autorizada.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">👁️ Confidencialidad</div>
+                        <div>Que la información llegue solamente a las personas autorizadas. Control del acceso a la información sensible.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">✅ Autenticidad</div>
+                        <div>Propiedad consistente en que una entidad es quien dice ser o bien que garantiza la fuente de la que proceden los datos.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">📋 Trazabilidad</div>
+                        <div>En todo momento se podrá determinar quién hizo qué y en qué momento. Registro de actividades y responsabilidades.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Sistemas de Gestión de la Seguridad (SGSI)</h3>
+                <p>Los SGSI juegan un papel clave para gestionar la seguridad de manera continua, a partir del tratamiento y gestión efectiva de los riesgos.</p>
+                
+                <h4>Características principales:</h4>
+                <ul>
+                    <li><strong>Gestión continua:</strong> Proceso permanente de mejora</li>
+                    <li><strong>Basado en riesgos:</strong> Fundamentado en análisis y tratamiento de riesgos</li>
+                    <li><strong>Protección de activos:</strong> Salvaguarda diferentes clases de información</li>
+                    <li><strong>Orientado a objetivos:</strong> Permite conseguir objetivos organizacionales</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="analisis" class="tab-content">
+            <div class="card">
+                <h3>🔍 Análisis de Riesgos</h3>
+                <p>El análisis de riesgos es el <strong>proceso sistemático para estimar la magnitud de los riesgos</strong> a que está expuesta una organización.</p>
+                
+                <h4>Objetivos del Análisis:</h4>
+                <ul>
+                    <li>Determinar <strong>cómo es</strong> el sistema</li>
+                    <li>Determinar <strong>cuánto vale</strong> el sistema</li>
+                    <li>Determinar <strong>cómo de protegido</strong> se encuentra</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📋 Definiciones Fundamentales</h3>
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">🎯 Activos</div>
+                        <div>Componente o funcionalidad de un sistema de información susceptible de ser atacado con consecuencias para la organización. Los esenciales son información y servicios.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">⚡ Amenazas</div>
+                        <div>Eventos que pueden originar un incidente produciendo daños materiales o inmateriales. Tipos: desastres naturales, origen industrial, errores no intencionados, ataques intencionados.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">💥 Impacto</div>
+                        <div>Medida del daño sobre el activo derivado de la materialización de una amenaza.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🚨 Incidente</div>
+                        <div>Cualquier evento que no es parte de la operación normal y causa o puede causar interrupción o reducción en la calidad del servicio.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">⚖️ Riesgo</div>
+                        <div>Estimación del grado de exposición a que una amenaza se materialice causando daños. Probabilidad de materialización de una vulnerabilidad.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🛡️ Salvaguardas</div>
+                        <div>Procedimientos o mecanismos tecnológicos que reducen el riesgo. Defensas para que las amenazas no causen tanto daño.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🔓 Vulnerabilidades</div>
+                        <div>Posibilidad de materialización de una amenaza sobre un activo. Toda debilidad que puede ser aprovechada por una amenaza.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Fases del Análisis de Riesgos (MAGERIT)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Caracterización de Activos</h4>
+                        <p><strong>a)</strong> Identificación (esenciales: información y servicios; relevantes: SW, HW, soportes, equipos, redes, instalaciones, personal)<br>
+                        <strong>b)</strong> Identificación de dependencias<br>
+                        <strong>c)</strong> Valoración del activo</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2. Caracterización de Amenazas</h4>
+                        <p><strong>a)</strong> Identificación de amenazas (naturales, del entorno, defectos, accidentales)<br>
+                        <strong>b)</strong> Valoración según frecuencia y degradación</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>3. Determinación del Impacto</h4>
+                        <p>Daño producido en el activo como consecuencia de materialización de amenaza</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>4. Determinación del Riesgo Potencial</h4>
+                        <p>En función de probabilidad e impacto</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>5. Caracterización de Salvaguardas</h4>
+                        <p><strong>a)</strong> Identificación de salvaguardas existentes<br>
+                        <strong>b)</strong> Valoración de salvaguardas</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>6. Estimación del Estado de Riesgo</h4>
+                        <p>Impacto y riesgo residual tras implementar salvaguardas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Análisis de Riesgos en el ENS</h3>
+                <div class="responsive-table">
+                    <table>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Requisito</th>
+                            <th>Descripción</th>
+                        </tr>
+                        <tr>
+                            <td><strong>BÁSICA</strong></td>
+                            <td>Análisis informal</td>
+                            <td>Exposición textual en lenguaje natural identificando activos, amenazas, salvaguardas y riesgos residuales</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MEDIA</strong></td>
+                            <td>Análisis semiformal (R1)</td>
+                            <td>Presentación con tablas usando lenguaje específico, valoración cualitativa y cuantificación de amenazas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ALTA</strong></td>
+                            <td>Análisis formal (R1)</td>
+                            <td>Análisis con fundamento matemático reconocido internacionalmente, valoración y priorización formal</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tratamiento" class="tab-content">
+            <div class="card">
+                <h3>🎯 Tratamiento de Riesgos</h3>
+                <p>El tratamiento de riesgos es el <strong>conjunto de actividades destinadas a modificar el estado de los riesgos</strong> determinado en la etapa de análisis.</p>
+                <p>Permite organizar las defensas hasta alcanzar el <strong>nivel residual de riesgo</strong> que se desea asumir.</p>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Estrategias de Tratamiento</h3>
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">🚫 EVITAR</div>
+                        <div>Eliminando la causa se elimina el riesgo. Es la estrategia más drástica pero efectiva cuando es factible.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🔧 MITIGAR</div>
+                        <div>Reducir la probabilidad o impacto de riesgo estableciendo los controles oportunos. Es la estrategia más común.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">🤝 COMPARTIR/TRANSFERIR</div>
+                        <div>Se comparte o transfiere el riesgo a través de cobertura de seguro, acuerdo contractual u otros métodos.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">✅ ACEPTAR</div>
+                        <div>Reconocimiento formal de la existencia del riesgo y de las posibles consecuencias. Se asume conscientemente.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Consideraciones de Coste-Beneficio</h3>
+                <p>Es fundamental considerar los costes en la gestión de riesgos:</p>
+                <blockquote style="background: var(--bg-secondary); padding: 1rem; border-left: 4px solid var(--accent-color); margin: 1rem 0; font-style: italic;">
+                    "El coste de las contramedidas o salvaguardas a aplicar no puede ser mayor que el posible coste de la materialización de las amenazas, ya que en este caso la relación coste-beneficio sería negativa para la organización."
+                </blockquote>
+            </div>
+
+            <div class="card">
+                <h3>🔐 Tipos de Controles</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>PREVENTIVOS</h4>
+                        <p><strong>Objetivo:</strong> Impedir problemas antes de que ocurran<br>
+                        <strong>Características:</strong></p>
+                        <ul>
+                            <li>Visualizar entradas y operaciones</li>
+                            <li>Predecir potenciales problemas</li>
+                            <li>Evitar errores, omisiones y actos maliciosos</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>DETECTIVOS</h4>
+                        <p><strong>Objetivo:</strong> Detectar cuándo se ha producido un error, omisión o acto indebido<br>
+                        <strong>Función:</strong> Informar de la ocurrencia de incidentes de seguridad</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>CORRECTIVOS</h4>
+                        <p><strong>Objetivo:</strong> Minimizar el impacto de una amenaza<br>
+                        <strong>Funciones:</strong></p>
+                        <ul>
+                            <li>Remediar problemas identificados</li>
+                            <li>Identificar la causa del problema</li>
+                            <li>Corregir errores surgidos</li>
+                            <li>Modificar sistemas para evitar futuras repeticiones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="marcos" class="tab-content">
+            <div class="card">
+                <h3>🏛️ Marcos de Referencia</h3>
+                <p>Los principales marcos de referencia relacionados con análisis y gestión de riesgos son fundamentales para establecer metodologías reconocidas internacionalmente.</p>
+            </div>
+
+            <div class="card">
+                <h3>📋 Normas ISO</h3>
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">ISO/IEC 27000:2018</div>
+                        <div>Familia de normas en seguridad de la información. Contiene descripción general y vocabulario claramente definido.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">ISO/IEC 27001:2018</div>
+                        <div>Norma principal de la serie. Contiene los requisitos del Sistema de Gestión de Seguridad de la Información (SGSI).</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">ISO/IEC 27005:2018</div>
+                        <div>Describe las fases recomendadas para analizar riesgos: establecer contexto, evaluación, tratamiento, aceptación, comunicación, monitorización y revisión.</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">ISO 31000:2018</div>
+                        <div>Estándar internacional para el sistema de gestión de riesgos, incluyendo análisis, tratamiento, comunicación, responsabilidades y seguimiento.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ COBIT</h3>
+                <p><strong>Guía de mejores prácticas</strong> dirigida al control y supervisión de tecnología de la información.</p>
+                <p>Hay varios objetos de gobierno/gestión del core COBIT dedicados a la gestión del riesgo: <strong>EDM03/APO12</strong>.</p>
+            </div>
+
+            <div class="card">
+                <h3>🏢 COSO</h3>
+                <p><strong>Committee of Sponsoring Organizations of the Treadway Commission</strong></p>
+                <p>Marco de referencia que proporciona directrices y orientaciones generales relacionadas con:</p>
+                <ul>
+                    <li>Gestión del riesgo</li>
+                    <li>Control interno</li>
+                    <li>Disuasión del fraude</li>
+                </ul>
+                <p><strong>Versión actual:</strong> COSO ERM 2017</p>
+            </div>
+
+            <div class="card">
+                <h3>🇪🇸 MAGERIT v3</h3>
+                <p><strong>Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información</strong></p>
+                <p>Promovida por el <strong>CSAE</strong> (Comisión Sectorial de Administración Electrónica)</p>
+                
+                <h4>🎯 Procesos que requieren análisis de riesgos según MAGERIT:</h4>
+                <ul>
+                    <li><strong>Evaluación:</strong> Medir el grado de confianza de un sistema</li>
+                    <li><strong>Certificación:</strong> Asegurar responsablemente un comportamiento
+                        <ul>
+                            <li>Productos: características técnicas</li>
+                            <li>Sistemas: componente humano y explotación</li>
+                        </ul>
+                    </li>
+                    <li><strong>Auditorías:</strong> Internas/externas, cumplimiento, dirección, entidades colaboradoras</li>
+                    <li><strong>Acreditación:</strong> Legitimar sistema para formar parte de sistemas más amplios</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📊 Informes Principales de MAGERIT</h3>
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">Modelo de valor</div>
+                        <div>Detalla activos, dependencias, dimensiones de valor y estimación por dimensión</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">Mapa de riesgos</div>
+                        <div>Amenazas significativas por activo, caracterizadas por frecuencia y degradación</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">Declaración de aplicabilidad</div>
+                        <div>Contramedidas consideradas apropiadas para defender el sistema</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">Evaluación de salvaguardas</div>
+                        <div>Salvaguardas existentes calificadas según eficacia para reducir riesgo</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">Informe de insuficiencias</div>
+                        <div>Salvaguardas necesarias pero ausentes o insuficientemente eficaces</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">Estado de riesgo</div>
+                        <div>Impacto y riesgo potenciales y residuales por activo frente a cada amenaza</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Herramientas EAR (Entorno de Análisis de Riesgos)</h3>
+                <p>Desarrolladas y financiadas parcialmente por el <strong>CCN</strong>, soportan análisis y gestión de riesgos siguiendo metodología MAGERIT:</p>
+                
+                <ul class="definition-list">
+                    <li>
+                        <div class="definition-term">PILAR</div>
+                        <div>Versión íntegra de la herramienta para análisis completo de riesgos</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">PILAR Basic</div>
+                        <div>Versión sencilla destinada a Pymes y Administración Local</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">μPILAR</div>
+                        <div>Versión reducida de PILAR para análisis de riesgos muy rápidos</div>
+                    </li>
+                    <li>
+                        <div class="definition-term">RMAT</div>
+                        <div>Risk Management Additional Tools - Personalización de herramientas</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="ejercicios" class="tab-content">
+            <div class="card">
+                <h3>🎯 Ejercicios Prácticos - Análisis y Gestión de Riesgos</h3>
+                <p>Practica con estas 20 preguntas de examen estilo oposición. Las respuestas correctas están marcadas para facilitar el estudio.</p>
+            </div>
+
+            <div class="quiz-container">
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">1</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>Según el Real Decreto 311/2022, ¿cuáles son las cinco dimensiones de la seguridad de los sistemas de información?</h4>
+                    <ul class="options">
+                        <li>Disponibilidad, Integridad, Confidencialidad, Accesibilidad, Trazabilidad</li>
+                        <li class="correct">Disponibilidad, Integridad, Confidencialidad, Autenticidad, Trazabilidad</li>
+                        <li>Disponibilidad, Integridad, Privacidad, Autenticidad, Auditabilidad</li>
+                        <li>Accesibilidad, Integridad, Confidencialidad, Autenticidad, Trazabilidad</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) Las cinco dimensiones según el ENS son Disponibilidad, Integridad, Confidencialidad, Autenticidad y Trazabilidad.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">2</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué significa la dimensión "Disponibilidad" en seguridad de sistemas?</h4>
+                    <ul class="options">
+                        <li>Que la información llegue solo a personas autorizadas</li>
+                        <li class="correct">Disposición de los servicios a ser usados cuando sea necesario</li>
+                        <li>Mantenimiento de características de completitud de los datos</li>
+                        <li>Capacidad de determinar quién hizo qué y cuándo</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) La disponibilidad es la disposición de los servicios a ser usados cuando sea necesario.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">3</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Cuáles son las cuatro estrategias principales de tratamiento de riesgos?</h4>
+                    <ul class="options">
+                        <li class="correct">Evitar, Mitigar, Compartir/transferir, Aceptar</li>
+                        <li>Prevenir, Detectar, Corregir, Eliminar</li>
+                        <li>Identificar, Evaluar, Controlar, Monitorizar</li>
+                        <li>Analizar, Gestionar, Implementar, Revisar</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: A) Las cuatro estrategias son Evitar, Mitigar, Compartir/transferir y Aceptar.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">4</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué son los activos en el contexto de análisis de riesgos?</h4>
+                    <ul class="options">
+                        <li>Solo la información que maneja la organización</li>
+                        <li>Únicamente el hardware y software del sistema</li>
+                        <li class="correct">Componente o funcionalidad susceptible de ser atacado con consecuencias para la organización</li>
+                        <li>Exclusivamente los servicios que presta la organización</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) Los activos son cualquier componente o funcionalidad susceptible de ser atacado con consecuencias para la organización.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">5</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Cuál es la versión actual de la metodología MAGERIT?</h4>
+                    <ul class="options">
+                        <li>MAGERIT v2.0</li>
+                        <li class="correct">MAGERIT v3.0</li>
+                        <li>MAGERIT v4.0</li>
+                        <li>MAGERIT v1.5</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) La versión actual es MAGERIT v3.0.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">6</span>
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </div>
+                    <h4>En el ENS, ¿qué tipo de análisis de riesgos se requiere para la categoría ALTA?</h4>
+                    <ul class="options">
+                        <li>Análisis informal en lenguaje natural</li>
+                        <li>Análisis semiformal con catálogo básico</li>
+                        <li class="correct">Análisis formal con fundamento matemático reconocido internacionalmente</li>
+                        <li>Cualquiera de los anteriores es válido</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) Para categoría ALTA se requiere análisis formal con fundamento matemático reconocido internacionalmente.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">7</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué son las vulnerabilidades en el contexto de gestión de riesgos?</h4>
+                    <ul class="options">
+                        <li>Eventos que pueden originar un incidente</li>
+                        <li class="correct">Toda debilidad que puede ser aprovechada por una amenaza</li>
+                        <li>Medida del daño sobre el activo</li>
+                        <li>Procedimientos que reducen el riesgo</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) Las vulnerabilidades son toda debilidad que puede ser aprovechada por una amenaza.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">8</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Cuáles son los tres tipos de controles según su función temporal?</h4>
+                    <ul class="options">
+                        <li>Internos, Externos, Mixtos</li>
+                        <li class="correct">Preventivos, Detectivos, Correctivos</li>
+                        <li>Técnicos, Administrativos, Físicos</li>
+                        <li>Activos, Pasivos, Reactivos</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) Los tres tipos son Preventivos, Detectivos y Correctivos.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">9</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué significa SGSI?</h4>
+                    <ul class="options">
+                        <li>Sistemas de Gestión de Seguridad Informática</li>
+                        <li class="correct">Sistemas de Gestión de la Seguridad de la Información</li>
+                        <li>Servicios de Gestión de Sistemas de Información</li>
+                        <li>Sistemas Generales de Seguridad Integral</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) SGSI significa Sistemas de Gestión de la Seguridad de la Información.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">10</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Cuántas fases tiene el análisis de riesgos según MAGERIT?</h4>
+                    <ul class="options">
+                        <li>4 fases</li>
+                        <li>5 fases</li>
+                        <li class="correct">6 fases</li>
+                        <li>7 fases</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) MAGERIT contempla 6 fases en el análisis de riesgos.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">11</span>
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </div>
+                    <h4>¿Cuál de las siguientes herramientas EAR está destinada específicamente a Pymes y Administración Local?</h4>
+                    <ul class="options">
+                        <li>PILAR</li>
+                        <li class="correct">PILAR Basic</li>
+                        <li>μPILAR</li>
+                        <li>RMAT</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) PILAR Basic es la versión sencilla para Pymes y Administración Local.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">12</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Qué significa la sigla COSO en el contexto de gestión de riesgos?</h4>
+                    <ul class="options">
+                        <li>Control Operations Security Organization</li>
+                        <li class="correct">Committee of Sponsoring Organizations of the Treadway Commission</li>
+                        <li>Comprehensive Security Operations Standards</li>
+                        <li>Corporate Security and Operations Standards</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) COSO significa Committee of Sponsoring Organizations of the Treadway Commission.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">13</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué es un incidente en términos de seguridad de sistemas?</h4>
+                    <ul class="options">
+                        <li>Una amenaza potencial al sistema</li>
+                        <li class="correct">Cualquier evento que no es parte de la operación normal del servicio</li>
+                        <li>Un activo vulnerable del sistema</li>
+                        <li>Una salvaguarda implementada</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) Un incidente es cualquier evento que no es parte de la operación normal del servicio.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">14</span>
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </div>
+                    <h4>¿Qué norma ISO describe específicamente las fases recomendadas para analizar riesgos?</h4>
+                    <ul class="options">
+                        <li>ISO/IEC 27000:2018</li>
+                        <li>ISO/IEC 27001:2018</li>
+                        <li class="correct">ISO/IEC 27005:2018</li>
+                        <li>ISO 31000:2018</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) ISO/IEC 27005:2018 describe las fases recomendadas para analizar riesgos.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">15</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Cuáles son los activos esenciales según MAGERIT?</h4>
+                    <ul class="options">
+                        <li>Hardware y software</li>
+                        <li class="correct">Información que se maneja y servicios que se prestan</li>
+                        <li>Personal e instalaciones</li>
+                        <li>Redes y equipamiento auxiliar</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) Los activos esenciales son la información que se maneja y los servicios que se prestan.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">16</span>
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </div>
+                    <h4>¿Cuál de los siguientes NO es un informe resultado del análisis de riesgos con MAGERIT?</h4>
+                    <ul class="options">
+                        <li>Modelo de valor</li>
+                        <li>Mapa de riesgos</li>
+                        <li class="correct">Plan de contingencia</li>
+                        <li>Estado de riesgo</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) El plan de contingencia no es uno de los informes específicos de MAGERIT mencionados en el documento.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">17</span>
+                        <span class="difficulty-badge difficulty-basico">Básico</span>
+                    </div>
+                    <h4>¿Qué son las salvaguardas?</h4>
+                    <ul class="options">
+                        <li>Eventos que pueden causar daños</li>
+                        <li>Debilidades del sistema</li>
+                        <li class="correct">Procedimientos o mecanismos que reducen el riesgo</li>
+                        <li>Medida del impacto de una amenaza</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: C) Las salvaguardas son procedimientos o mecanismos tecnológicos que reducen el riesgo.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">18</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Qué principio básico establece el artículo 7 del ENS sobre gestión de riesgos?</h4>
+                    <ul class="options">
+                        <li class="correct">La gestión de seguridad basada en los riesgos debe mantenerse permanentemente actualizada</li>
+                        <li>Los riesgos deben eliminarse completamente</li>
+                        <li>Solo se requiere análisis de riesgos inicial</li>
+                        <li>La gestión de riesgos es opcional en sistemas básicos</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: A) El artículo 7 establece que la gestión basada en riesgos debe mantenerse permanentemente actualizada.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">19</span>
+                        <span class="difficulty-badge difficulty-avanzado">Avanzado</span>
+                    </div>
+                    <h4>¿Cuál es la relación correcta entre coste de contramedidas y materialización de amenazas?</h4>
+                    <ul class="options">
+                        <li>El coste de contramedidas siempre debe ser el máximo posible</li>
+                        <li class="correct">El coste de contramedidas no puede ser mayor que el coste de materialización de amenazas</li>
+                        <li>El coste de contramedidas debe ser igual al de materialización</li>
+                        <li>No existe relación entre ambos costes</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) El coste de contramedidas no puede superar el coste de materialización, o la relación coste-beneficio sería negativa.</div>
+                </div>
+
+                <div class="question">
+                    <div class="question-header">
+                        <span class="question-number">20</span>
+                        <span class="difficulty-badge difficulty-intermedio">Intermedio</span>
+                    </div>
+                    <h4>¿Qué significa μPILAR en las herramientas EAR?</h4>
+                    <ul class="options">
+                        <li>La versión más completa de PILAR</li>
+                        <li class="correct">Versión reducida de PILAR para análisis de riesgos muy rápidos</li>
+                        <li>Herramientas de personalización adicional</li>
+                        <li>Versión para Administración Local</li>
+                    </ul>
+                    <div class="correct-answer">✅ Respuesta correcta: B) μPILAR es la versión reducida de PILAR destinada a análisis de riesgos muy rápidos.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recursos" class="tab-content">
+            <div class="card">
+                <h3>📚 Glosario de Términos Clave</h3>
+                <div class="glossary-term">
+                    <div class="glossary-word">Activo</div>
+                    <div>Componente o funcionalidad de un sistema de información susceptible de ser atacado con consecuencias para la organización.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Amenaza</div>
+                    <div>Evento que puede originar un incidente produciendo daños materiales o inmateriales.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Autenticidad</div>
+                    <div>Propiedad consistente en que una entidad es quien dice ser o garantiza la fuente de los datos.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">COBIT</div>
+                    <div>Guía de mejores prácticas dirigida al control y supervisión de tecnología de la información.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Confidencialidad</div>
+                    <div>Que la información llegue solamente a las personas autorizadas.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">COSO</div>
+                    <div>Committee of Sponsoring Organizations of the Treadway Commission. Marco de referencia para gestión de riesgo y control interno.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">CSAE</div>
+                    <div>Comisión Sectorial de Administración Electrónica que promueve MAGERIT.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Desastre</div>
+                    <div>Interrupción que deja recursos críticos de información inoperantes por un período de tiempo.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Disponibilidad</div>
+                    <div>Disposición de los servicios a ser usados cuando sea necesario.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">EAR</div>
+                    <div>Entorno de Análisis de Riesgos. Conjunto de herramientas que soportan análisis según MAGERIT.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">ENS</div>
+                    <div>Esquema Nacional de Seguridad. Marco normativo español para seguridad de sistemas de información.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Impacto</div>
+                    <div>Medida del daño sobre el activo derivado de la materialización de una amenaza.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Incidente</div>
+                    <div>Evento que no es parte de la operación normal y causa o puede causar interrupción del servicio.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Integridad</div>
+                    <div>Mantenimiento de las características de completitud y corrección de los datos.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">MAGERIT</div>
+                    <div>Metodología de Análisis y Gestión de Riesgos de los Sistemas de Información.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">PILAR</div>
+                    <div>Herramienta integral del entorno EAR para análisis completo de riesgos según MAGERIT.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Riesgo</div>
+                    <div>Estimación del grado de exposición a que una amenaza se materialice causando daños.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">RMAT</div>
+                    <div>Risk Management Additional Tools. Herramientas de personalización del entorno EAR.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Salvaguarda</div>
+                    <div>Procedimiento o mecanismo tecnológico que reduce el riesgo.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">SGSI</div>
+                    <div>Sistema de Gestión de la Seguridad de la Información.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Trazabilidad</div>
+                    <div>En todo momento se podrá determinar quién hizo qué y en qué momento.</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="glossary-word">Vulnerabilidad</div>
+                    <div>Toda debilidad que puede ser aprovechada por una amenaza.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❓ Preguntas Frecuentes (FAQ)</h3>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Cuál es la diferencia entre riesgo potencial y riesgo residual?</h4>
+                    <p><strong>Riesgo potencial:</strong> Es el riesgo que existe antes de implementar salvaguardas o contramedidas.</p>
+                    <p><strong>Riesgo residual:</strong> Es el riesgo que permanece después de implementar las salvaguardas. Es el nivel de riesgo que la organización acepta asumir.</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Por qué es importante la relación coste-beneficio en gestión de riesgos?</h4>
+                    <p>Es fundamental porque implementar contramedidas que cuesten más que el posible daño de la amenaza haría que la relación coste-beneficio fuera negativa, siendo económicamente inviable para la organización.</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Cuándo es obligatorio realizar análisis de riesgos según MAGERIT?</h4>
+                    <p>Es obligatorio para procesos de evaluación, certificación, auditoría y acreditación de sistemas de información en la Administración Pública.</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Qué herramienta EAR recomendarías para una pequeña administración local?</h4>
+                    <p><strong>PILAR Basic</strong> es la versión específicamente diseñada para Pymes y Administración Local, al ser más sencilla pero completa para sus necesidades.</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Cuál es la diferencia principal entre las categorías BÁSICA, MEDIA y ALTA del ENS?</h4>
+                    <p><strong>BÁSICA:</strong> Análisis informal en lenguaje natural<br>
+                    <strong>MEDIA:</strong> Análisis semiformal con tablas y valoración cualitativa<br>
+                    <strong>ALTA:</strong> Análisis formal con fundamento matemático reconocido internacionalmente</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>¿Qué relación existe entre amenazas, vulnerabilidades y riesgos?</h4>
+                    <p>Las <strong>amenazas</strong> son eventos que pueden causar daño. Las <strong>vulnerabilidades</strong> son debilidades que pueden ser explotadas. El <strong>riesgo</strong> es la probabilidad de que una amenaza explote una vulnerabilidad y cause impacto.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️ Modo Oscuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️ Modo Oscuro';
+            }
+        });
+
+        // Add click functionality to quiz options
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove previous selections in this question
+                    const questionOptions = this.parentNode.querySelectorAll('li');
+                    questionOptions.forEach(opt => {
+                        opt.classList.remove('selected', 'incorrect');
+                    });
+                    
+                    // Mark this option as selected
+                    this.classList.add('selected');
+                    
+                    // Show correct/incorrect feedback
+                    if (!this.classList.contains('correct')) {
+                        this.classList.add('incorrect');
+                    }
+                    
+                    // Show correct answer
+                    const correctAnswer = this.parentNode.parentNode.querySelector('.correct-answer');
+                    correctAnswer.style.display = 'block';
+                });
+            });
+            
+            // Initially hide correct answers
+            const correctAnswers = document.querySelectorAll('.correct-answer');
+            correctAnswers.forEach(answer => {
+                answer.style.display = 'none';
+            });
+        });
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                const focusedElement = document.activeElement;
+                if (focusedElement.classList.contains('tab-btn')) {
+                    e.preventDefault();
+                    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+                    const currentIndex = tabs.indexOf(focusedElement);
+                    const nextIndex = e.shiftKey ? currentIndex - 1 : currentIndex + 1;
+                    
+                    if (nextIndex >= 0 && nextIndex < tabs.length) {
+                        tabs[nextIndex].focus();
+                    }
+                }
+            } else if (e.key === 'Enter' && document.activeElement.classList.contains('tab-btn')) {
+                document.activeElement.click();
+            }
+        });
+    </script>
+</body>
+</html>
